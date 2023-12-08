@@ -1,0 +1,103 @@
+import ol from 'openlayers'
+
+var raster = new ol.layer.Tile({
+  source: new ol.source.OSM()
+});
+
+var source = new ol.source.Vector();
+var vector = new ol.layer.Vector({
+  source: source
+});
+
+var map = new ol.Map({
+  layers: [raster, vector],
+  target: 'map',
+  view: new ol.View({
+    projection: 'EPSG:3857',
+    center: [1232651.8535029977,6353568.446631506],
+    zoom: 12,
+    constrainResolution: true
+  })
+});
+
+var draw = new ol.interaction.Draw({
+  source: source,
+  type: 'Polygon'
+});
+
+var modify = new ol.interaction.Modify({source: source});
+var changes = [];
+
+
+
+document.getElementById('draw').addEventListener('click', function() {
+  map.removeInteraction(modify);
+  map.addInteraction(draw);
+});
+
+document.getElementById('modify').addEventListener('click', function() {
+  map.removeInteraction(draw);
+  map.addInteraction(modify);
+});
+
+modify.on(['modifystart'], function(e) {
+  console.log('Modify start');
+  changes.push({
+    type: 'modify',
+    features: e.features.getArray().map(function(feature) {
+      console.log('Storing geometry: ' + feature.getGeometry());
+      return {
+        feature: feature,
+        geometry: feature.getGeometry().clone()
+      };
+    })
+  });
+});
+
+modify.on('modifyend', function(e) {
+  console.log('Feature has been modified');
+  e.features.getArray().map(function(feature) {
+    printFeatureAsGeoJSON(feature)
+  })
+});
+
+draw.on('drawend', function(e) {
+  console.log('Feature has been created');
+  e.feature.setId(Math.random().toString(16).slice(2));
+  changes.push({
+    type: 'add',
+    feature: e.feature
+  });
+  printFeatureAsGeoJSON(e.feature)
+});
+
+
+document.getElementById('undo').addEventListener('click', function() {
+  if (changes.length > 0) {
+    var lastChange = changes.pop();
+    if (lastChange.type === 'add') {
+      source.removeFeature(lastChange.feature);
+    } else if (lastChange.type === 'modify') {
+      lastChange.features.forEach(function(changedFeature) {
+        changedFeature.feature.setGeometry(changedFeature.geometry);
+      });
+    }
+  }
+});
+
+function printFeatureAsGeoJSON(feature) {
+  var format = new ol.format.GeoJSON();
+  var geoJSON = format.writeFeature(feature);
+  console.log(geoJSON);
+}
+
+if(!navigator.geolocation) {
+    console.log("Your browser doesn't support geolocation")
+} else {
+    console.log("Detecting geolocation")
+    navigator.geolocation.getCurrentPosition(function(position) {
+     var coordinates = ol.proj.fromLonLat([position.coords.longitude, position.coords.latitude]);
+     console.log("Setting " + coordinates)
+     map.getView().setCenter(coordinates);
+    });
+}
