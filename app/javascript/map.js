@@ -1,4 +1,5 @@
 import ol from 'openlayers'
+import { mapChannel } from './channels/map_channel.js'
 
 var raster = new ol.layer.Tile({
   source: new ol.source.OSM()
@@ -57,7 +58,7 @@ modify.on(['modifystart'], function(e) {
 modify.on('modifyend', function(e) {
   console.log('Feature has been modified');
   e.features.getArray().map(function(feature) {
-    printFeatureAsGeoJSON(feature)
+    mapChannel.perform('update_feature', printFeatureAsGeoJSON(feature));
   })
 });
 
@@ -87,8 +88,9 @@ document.getElementById('undo').addEventListener('click', function() {
 
 function printFeatureAsGeoJSON(feature) {
   var format = new ol.format.GeoJSON();
-  var geoJSON = format.writeFeature(feature);
+  var geoJSON = format.writeFeatureObject(feature);
   console.log(geoJSON);
+  return geoJSON
 }
 
 if(!navigator.geolocation) {
