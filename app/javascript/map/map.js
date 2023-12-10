@@ -1,11 +1,11 @@
 import ol from 'openlayers'
-import { mapChannel } from './channels/map_channel.js'
+import { mapChannel } from 'channels/map_channel'
 
 var raster = new ol.layer.Tile({
   source: new ol.source.OSM()
 });
 
-var source = new ol.source.Vector();
+export var source = new ol.source.Vector();
 var vector = new ol.layer.Vector({
   source: source
 });
@@ -58,6 +58,7 @@ modify.on(['modifystart'], function(e) {
 modify.on('modifyend', function(e) {
   console.log('Feature has been modified');
   e.features.getArray().map(function(feature) {
+    // TODO: add map id
     mapChannel.perform('update_feature', printFeatureAsGeoJSON(feature));
   })
 });
@@ -69,7 +70,8 @@ draw.on('drawend', function(e) {
     type: 'add',
     feature: e.feature
   });
-  printFeatureAsGeoJSON(e.feature)
+  // TODO: add map id
+  mapChannel.perform('new_feature', printFeatureAsGeoJSON(e.feature));
 });
 
 
@@ -91,6 +93,11 @@ function printFeatureAsGeoJSON(feature) {
   var geoJSON = format.writeFeatureObject(feature);
   console.log(geoJSON);
   return geoJSON
+}
+
+export function addFeature(data) {
+   var feature = new ol.format.GeoJSON().readFeature(data)
+   source.addFeature(feature);
 }
 
 if(!navigator.geolocation) {

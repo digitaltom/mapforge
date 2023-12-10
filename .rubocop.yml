@@ -1,0 +1,14 @@
+AllCops:
+  TargetRubyVersion: 3.2
+  DisplayCopNames: true
+  DisplayStyleGuide: true
+  ExtraDetails: true
+  NewCops: enable
+  SuggestExtensions: false
+
+require:
+  - rubocop-performance
+  - rubocop-rails
+  - rubocop-rspec
+  - rubocop-thread_safety
+
