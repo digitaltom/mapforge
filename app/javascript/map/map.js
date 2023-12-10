@@ -26,6 +26,11 @@ var draw = new ol.interaction.Draw({
   type: 'Polygon'
 });
 
+var point = new ol.interaction.Draw({
+  source: source,
+  type: 'Point'
+});
+
 var modify = new ol.interaction.Modify({source: source});
 var changes = [];
 
@@ -33,11 +38,19 @@ var changes = [];
 
 document.getElementById('draw').addEventListener('click', function() {
   map.removeInteraction(modify);
+  map.removeInteraction(point);
   map.addInteraction(draw);
+});
+
+document.getElementById('point').addEventListener('click', function() {
+  map.removeInteraction(modify);
+  map.removeInteraction(point);
+  map.addInteraction(point);
 });
 
 document.getElementById('modify').addEventListener('click', function() {
   map.removeInteraction(draw);
+  map.removeInteraction(point);
   map.addInteraction(modify);
 });
 
@@ -65,6 +78,17 @@ modify.on('modifyend', function(e) {
 
 draw.on('drawend', function(e) {
   console.log('Feature has been created');
+  e.feature.setId(Math.random().toString(16).slice(2));
+  changes.push({
+    type: 'add',
+    feature: e.feature
+  });
+  // TODO: add map id
+  mapChannel.perform('new_feature', printFeatureAsGeoJSON(e.feature));
+});
+
+point.on('drawend', function(e) {
+  console.log('Point has been created');
   e.feature.setId(Math.random().toString(16).slice(2));
   changes.push({
     type: 'add',
