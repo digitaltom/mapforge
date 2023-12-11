@@ -59,7 +59,7 @@ modify.on(['modifystart'], function(e) {
   changes.push({
     type: 'modify',
     features: e.features.getArray().map(function(feature) {
-      console.log('Storing geometry: ' + feature.getGeometry());
+      console.log("Storing geometry to 'undo' stack");
       return {
         feature: feature,
         geometry: feature.getGeometry().clone()
@@ -71,8 +71,7 @@ modify.on(['modifystart'], function(e) {
 modify.on('modifyend', function(e) {
   console.log('Feature has been modified');
   e.features.getArray().map(function(feature) {
-    // TODO: add map id
-    mapChannel.perform('update_feature', printFeatureAsGeoJSON(feature));
+    mapChannel.send_message('update_feature', featureAsGeoJSON(feature));
   })
 });
 
@@ -83,8 +82,7 @@ draw.on('drawend', function(e) {
     type: 'add',
     feature: e.feature
   });
-  // TODO: add map id
-  mapChannel.perform('new_feature', printFeatureAsGeoJSON(e.feature));
+  mapChannel.send_message('new_feature', featureAsGeoJSON(e.feature));
 });
 
 point.on('drawend', function(e) {
@@ -94,8 +92,7 @@ point.on('drawend', function(e) {
     type: 'add',
     feature: e.feature
   });
-  // TODO: add map id
-  mapChannel.perform('new_feature', printFeatureAsGeoJSON(e.feature));
+  mapChannel.send_message('new_feature', featureAsGeoJSON(e.feature));
 });
 
 
@@ -112,17 +109,27 @@ document.getElementById('undo').addEventListener('click', function() {
   }
 });
 
-function printFeatureAsGeoJSON(feature) {
+function featureAsGeoJSON(feature) {
   var format = new ol.format.GeoJSON();
   var geoJSON = format.writeFeatureObject(feature);
-  console.log(geoJSON);
+  // console.log(geoJSON);
   return geoJSON
 }
 
-export function addFeature(data) {
-   var feature = new ol.format.GeoJSON().readFeature(data)
-   source.addFeature(feature);
+export function updateFeature(data) {
+  let newFeature = new ol.format.GeoJSON().readFeature(data)
+  let feature = source.getFeatureById(data['id']);
+  if(feature) {
+    console.log('updating feature ' + data['id']);
+    feature.setGeometry(newFeature.getGeometry());
+    feature.setProperties(newFeature.getProperties());
+    feature.changed();
+  } else {
+    source.addFeature(newFeature);
+  }
 }
+
+export var mapId = document.getElementById('map').dataset.mapId;
 
 if(!navigator.geolocation) {
     console.log("Your browser doesn't support geolocation")

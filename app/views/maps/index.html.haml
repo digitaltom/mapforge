@@ -1,11 +1,11 @@
-- content_for :headers do
-  %link{rel: "stylesheet", href: "https://cdn.jsdelivr.net/npm/ol@v8.2.0/ol.css", type: "text/css"}
+%h1
+  Maps
 
-= javascript_import_module_tag "map/map"
-= javascript_import_module_tag "map/buttons"
+#maps
+  - @maps.each do |map|
+    = render map
+    %p
+      = link_to "Show this map", map
+      = button_to "Destroy this map", map, method: :delete
 
-#map.map
-
-%button#draw Draw
-%button#modify Modify
-%button#undo Undo
+= link_to "New map", new_map_path

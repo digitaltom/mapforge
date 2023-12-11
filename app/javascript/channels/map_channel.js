@@ -1,14 +1,14 @@
 import consumer from "channels/consumer"
-import {addFeature} from 'map/map'
+import { updateFeature } from 'map/map'
 import ol from 'openlayers'
 
 let mapChannel;
 export { mapChannel };
 
-consumer.subscriptions.create({ channel: "MapChannel", id: 1 }, {
+consumer.subscriptions.create({ channel: "MapChannel", map_id: gon.map_id }, {
   connected() {
     // Called when the subscription is ready for use on the server
-    console.log('connected to map_channel');
+    console.log('connected to map_channel ' + gon.map_id);
     mapChannel = this;
   },
 
@@ -18,9 +18,14 @@ consumer.subscriptions.create({ channel: "MapChannel", id: 1 }, {
   },
 
   received(data) {
-   console.log('received from map_channel: ' + JSON.stringify(data));
+    console.log('received from map_channel: ' + JSON.stringify(data));
+    updateFeature(data)
+  },
 
-   // TODO: assuming new feature
-   addFeature(data)
+  send_message(action, data) {
+    data['map_id'] = gon.map_id
+    console.log('Sending: ' + JSON.stringify(data))
+    // Call the original perform method
+    this.perform(action, data);
   }
 });

@@ -22,6 +22,7 @@ gem 'turbo-rails'
 
 # Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
 gem 'stimulus-rails'
+gem 'gon'
 
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem 'jbuilder'
@@ -48,6 +49,8 @@ gem 'mongoid'
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem 'debug', platforms: %i[mri windows]
+  gem 'byebug'
+  gem 'listen'
   gem 'dotenv-rails', require: 'dotenv/rails-now'
 end
 

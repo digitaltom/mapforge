@@ -21,9 +21,6 @@ class Feature
   private
 
   def broadcast_update
-    # MapChannel.broadcast_to('map_channel', self.as_json)
-
-    feature = self
-    ActionCable.server.broadcast('map_channel', geojson.as_json)
+    ActionCable.server.broadcast("map_channel_#{map.id}", geojson.as_json)
   end
 end
