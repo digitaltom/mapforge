@@ -44,7 +44,7 @@ document.getElementById('draw').addEventListener('click', function() {
 
 document.getElementById('point').addEventListener('click', function() {
   map.removeInteraction(modify);
-  map.removeInteraction(point);
+  map.removeInteraction(draw);
   map.addInteraction(point);
 });
 
