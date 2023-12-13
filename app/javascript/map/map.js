@@ -1,13 +1,33 @@
 import ol from 'openlayers'
 import { mapChannel } from 'channels/map_channel'
 
+
+var projection = 'EPSG:3857'
+var geoJsonFormat = new ol.format.GeoJSON();
+
 var raster = new ol.layer.Tile({
   source: new ol.source.OSM()
 });
 
-export var source = new ol.source.Vector();
+var vectorSource = new ol.source.Vector({
+ format: geoJsonFormat,
+ loader: function(extent, resolution, projection) {
+   // TODO only load visible features via bbox
+   var url = '/maps/' + gon.map_id + '/features?bbox=' + extent.join(',') + ',EPSG:3857';
+   fetch(url)
+     .then(response => response.json())
+     .then(data => {
+      // console.log(JSON.stringify(data))
+      let features = geoJsonFormat.readFeatures(data)
+      vectorSource.addFeatures(features);
+     })
+    .catch(error => console.error('Error:', error));
+ },
+ strategy: ol.loadingstrategy.bbox
+});
+
 var vector = new ol.layer.Vector({
-  source: source
+  source: vectorSource
 });
 
 var map = new ol.Map({
@@ -22,16 +42,16 @@ var map = new ol.Map({
 });
 
 var draw = new ol.interaction.Draw({
-  source: source,
+  source: vectorSource,
   type: 'Polygon'
 });
 
 var point = new ol.interaction.Draw({
-  source: source,
+  source: vectorSource,
   type: 'Point'
 });
 
-var modify = new ol.interaction.Modify({source: source});
+var modify = new ol.interaction.Modify({source: vectorSource});
 var changes = [];
 
 
@@ -100,7 +120,7 @@ document.getElementById('undo').addEventListener('click', function() {
   if (changes.length > 0) {
     var lastChange = changes.pop();
     if (lastChange.type === 'add') {
-      source.removeFeature(lastChange.feature);
+      vectorSource.removeFeature(lastChange.feature);
     } else if (lastChange.type === 'modify') {
       lastChange.features.forEach(function(changedFeature) {
         changedFeature.feature.setGeometry(changedFeature.geometry);
@@ -110,26 +130,25 @@ document.getElementById('undo').addEventListener('click', function() {
 });
 
 function featureAsGeoJSON(feature) {
-  var format = new ol.format.GeoJSON();
-  var geoJSON = format.writeFeatureObject(feature);
+  var geoJSON = geoJsonFormat.writeFeatureObject(feature);
   // console.log(geoJSON);
   return geoJSON
 }
 
 export function updateFeature(data) {
+  // TODO: only create/update in bbox
   let newFeature = new ol.format.GeoJSON().readFeature(data)
-  let feature = source.getFeatureById(data['id']);
+  let feature = vectorSource.getFeatureById(data['id']);
   if(feature) {
     console.log('updating feature ' + data['id']);
     feature.setGeometry(newFeature.getGeometry());
     feature.setProperties(newFeature.getProperties());
     feature.changed();
   } else {
-    source.addFeature(newFeature);
+    // addFeature will not add if id already exists
+    vectorSource.addFeature(newFeature);
   }
 }
-
-export var mapId = document.getElementById('map').dataset.mapId;
 
 if(!navigator.geolocation) {
     console.log("Your browser doesn't support geolocation")

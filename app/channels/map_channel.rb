@@ -3,7 +3,7 @@ class MapChannel < ApplicationCable::Channel
     # TODO: validate client access to map id
     map = Map.find(params[:map_id])
     stream_from "map_channel_#{map.id}"
-    Rails.logger.debug "MapChannel subscribed for '#{map.id}'"
+    Rails.logger.debug { "MapChannel subscribed for '#{map.id}'" }
   end
 
   def unsubscribed

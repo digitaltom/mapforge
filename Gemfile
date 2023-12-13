@@ -21,8 +21,8 @@ gem 'importmap-rails'
 gem 'turbo-rails'
 
 # Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
-gem 'stimulus-rails'
 gem 'gon'
+gem 'stimulus-rails'
 
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem 'jbuilder'
@@ -48,10 +48,10 @@ gem 'mongoid'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
-  gem 'debug', platforms: %i[mri windows]
   gem 'byebug'
-  gem 'listen'
+  gem 'debug', platforms: %i[mri windows]
   gem 'dotenv-rails', require: 'dotenv/rails-now'
+  gem 'listen'
 end
 
 group :development do
