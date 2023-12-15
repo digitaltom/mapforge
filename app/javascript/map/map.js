@@ -1,6 +1,7 @@
 import ol from 'openlayers'
 import { mapChannel } from 'channels/map_channel'
 import { vectorStyle } from 'map/styles'
+import { initializeInteractions } from 'map/interactions'
 
 
 var defaults = { 'center': [1232651.8535029977,6353568.446631506],
@@ -13,10 +14,6 @@ export var changes = [];
 export var changedFeatureQueue = [];
 export var vectorSource;
 export var map;
-
-var raster = new ol.layer.Tile({
-  source: new ol.source.OSM()
-});
 
 
 class ChangeListenerVectorSource extends ol.source.Vector {
@@ -36,43 +33,59 @@ class ChangeListenerVectorSource extends ol.source.Vector {
  }
 }
 
-vectorSource = new ChangeListenerVectorSource({
- format: geoJsonFormat,
- loader: function(extent, resolution, projection) {
-   // TODO only load visible features via bbox
-   var url = '/maps/' + gon.map_id + '/features?bbox=' + extent.join(',') + ',EPSG:3857';
-   fetch(url)
-     .then(response => response.json())
-     .then(data => {
-      // console.log(JSON.stringify(data))
-      let features = geoJsonFormat.readFeatures(data)
-      vectorSource.addFeatures(features);
-     })
-    .catch(error => console.error('Error:', error));
- },
- strategy: ol.loadingstrategy.bbox
-});
-
-var vector = new ol.layer.Vector({
-  source: vectorSource,
-  style: vectorStyle
-});
-
-map = new ol.Map({
-  layers: [raster, vector],
-  target: 'map',
-  view: new ol.View({
-    projection: defaults['projection'],
-    center: defaults['center'],
-    zoom: defaults['zoom'],
-    constrainResolution: true
-  }),
-  controls: ol.control.defaults({
-    zoom: true,
-    attribution: true,
-    rotate: false
-  }),
+document.addEventListener("turbo:load", function(){
+console.log('turbo:load map show')
+  if (document.getElementById('map')) {
+    initializeMap()
+    initializeInteractions()
+  }
 })
+
+function initializeMap() {
+  console.log('init map show')
+  changedFeatureQueue = []
+  vectorSource = new ChangeListenerVectorSource({
+   format: geoJsonFormat,
+   loader: function(extent, resolution, projection) {
+     // TODO only load visible features via bbox
+     var url = '/maps/' + gon.map_id + '/features?bbox=' + extent.join(',') + ',EPSG:3857';
+     fetch(url)
+       .then(response => response.json())
+       .then(data => {
+        // console.log(JSON.stringify(data))
+        let features = geoJsonFormat.readFeatures(data)
+        vectorSource.addFeatures(features);
+       })
+      .catch(error => console.error('Error:', error));
+   },
+   strategy: ol.loadingstrategy.bbox
+  })
+
+  var vector = new ol.layer.Vector({
+    source: vectorSource,
+    style: vectorStyle
+  });
+
+  var raster = new ol.layer.Tile({
+    source: new ol.source.OSM()
+  });
+
+  map = new ol.Map({
+    layers: [raster, vector],
+    target: 'map',
+    view: new ol.View({
+      projection: defaults['projection'],
+      center: defaults['center'],
+      zoom: defaults['zoom'],
+      constrainResolution: true
+    }),
+    controls: ol.control.defaults({
+      zoom: true,
+      attribution: true,
+      rotate: false
+    }),
+  })
+}
 
 export function featureAsGeoJSON(feature) {
   var geoJSON = geoJsonFormat.writeFeatureObject(feature);
@@ -92,7 +105,7 @@ export function updateFeature(data) {
     // addFeature will not add if id already exists
     vectorSource.addFeature(newFeature);
   }
-  // drop from changedFeatureQueue
+  // drop from changedFeatureQueue, it's coming from server
   arrayRemove(changedFeatureQueue, newFeature)
 }
 

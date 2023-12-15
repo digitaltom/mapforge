@@ -1,11 +1,6 @@
 - content_for :headers do
   %link{rel: "stylesheet", href: "https://cdn.jsdelivr.net/npm/ol@v8.2.0/ol.css", type: "text/css"}
 
-= javascript_import_module_tag "map/map"
-= javascript_import_module_tag "map/interactions"
-= javascript_import_module_tag "map/styles"
-
-
 #map.map
 
 %button#draw Draw

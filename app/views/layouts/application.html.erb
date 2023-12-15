@@ -3,7 +3,6 @@
   <head>
     <title>Ourmaps</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <%= Gon::Base.render_data %>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
@@ -14,6 +13,7 @@
   </head>
 
   <body>
+    <%= Gon::Base.render_data %>
     <p style="color: green"><%= notice %></p>
     <%= yield %>
   </body>

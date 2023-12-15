@@ -11,4 +11,4 @@ pin_all_from 'app/javascript/controllers', under: 'controllers'
 pin '@rails/actioncable', to: 'actioncable.esm.js'
 pin_all_from 'app/javascript/channels', under: 'channels'
 
-pin_all_from 'app/javascript/map', under: 'map'
+pin_all_from 'app/javascript/map', under: 'map', preload: true
