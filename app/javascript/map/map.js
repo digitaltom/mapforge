@@ -1,5 +1,6 @@
 import ol from 'openlayers'
 import { mapChannel } from 'channels/map_channel'
+import { vectorStyle } from 'map/styles'
 
 
 var defaults = { 'center': [1232651.8535029977,6353568.446631506],
@@ -9,6 +10,7 @@ var defaults = { 'center': [1232651.8535029977,6353568.446631506],
 var geoJsonFormat = new ol.format.GeoJSON();
 
 export var changes = [];
+export var changedFeatureQueue = [];
 export var vectorSource;
 export var map;
 
@@ -16,7 +18,25 @@ var raster = new ol.layer.Tile({
   source: new ol.source.OSM()
 });
 
-vectorSource = new ol.source.Vector({
+
+class ChangeListenerVectorSource extends ol.source.Vector {
+ constructor(opt_options) {
+  super(opt_options)
+  this.on('addfeature', function(e) {
+    // collecting changed features in changedFeatureQueue, so we only push those
+    // to the server on modifyend
+    e.feature.on('change', function(e) {
+      let exists = changedFeatureQueue.some(obj => obj.getId() === e.target.getId())
+      if (!exists) {
+        // console.log("feature changed: " + e.target.getId())
+        changedFeatureQueue.push(e.target)
+      }
+    })
+  })
+ }
+}
+
+vectorSource = new ChangeListenerVectorSource({
  format: geoJsonFormat,
  loader: function(extent, resolution, projection) {
    // TODO only load visible features via bbox
@@ -34,7 +54,8 @@ vectorSource = new ol.source.Vector({
 });
 
 var vector = new ol.layer.Vector({
-  source: vectorSource
+  source: vectorSource,
+  style: vectorStyle
 });
 
 map = new ol.Map({
@@ -45,7 +66,12 @@ map = new ol.Map({
     center: defaults['center'],
     zoom: defaults['zoom'],
     constrainResolution: true
-  })
+  }),
+  controls: ol.control.defaults({
+    zoom: true,
+    attribution: true,
+    rotate: false
+  }),
 })
 
 export function featureAsGeoJSON(feature) {
@@ -66,6 +92,8 @@ export function updateFeature(data) {
     // addFeature will not add if id already exists
     vectorSource.addFeature(newFeature);
   }
+  // drop from changedFeatureQueue
+  arrayRemove(changedFeatureQueue, newFeature)
 }
 
 export function locate() {
@@ -79,4 +107,10 @@ export function locate() {
        map.getView().setCenter(coordinates);
       });
   }
+}
+
+function arrayRemove(arr, value) {
+    return arr.filter(function(ele){
+        return ele != value;
+    })
 }

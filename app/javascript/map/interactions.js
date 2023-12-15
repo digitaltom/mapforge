@@ -1,4 +1,4 @@
-import { map, vectorSource, changes, featureAsGeoJSON, locate } from 'map/map'
+import { map, vectorSource, changes, featureAsGeoJSON, locate, changedFeatureQueue } from 'map/map'
 import { mapChannel } from 'channels/map_channel'
 import ol from 'openlayers'
 
@@ -17,6 +17,7 @@ var line = new ol.interaction.Draw({
   type: 'LineString'
 });
 
+// https://openlayers.org/en/latest/apidoc/module-ol_interaction_Modify-Modify.html
 var modify = new ol.interaction.Modify({source: vectorSource});
 
 document.getElementById('draw').addEventListener('click', function() {
@@ -57,11 +58,10 @@ document.getElementById('undo').addEventListener('click', function() {
 });
 
 modify.on(['modifystart'], function(e) {
-  console.log('Modify start');
+  // TODO: find way to only store modified feature
   changes.push({
     type: 'modify',
     features: e.features.getArray().map(function(feature) {
-      console.log("Storing geometry to 'undo' stack");
       return {
         feature: feature,
         geometry: feature.getGeometry().clone()
@@ -71,16 +71,19 @@ modify.on(['modifystart'], function(e) {
 });
 
 modify.on('modifyend', function(e) {
-  console.log('Feature has been modified');
-  e.features.getArray().map(function(feature) {
-    mapChannel.send_message('update_feature', featureAsGeoJSON(feature));
-  })
+  // console.log('changedFeatureQueue: ' + changedFeatureQueue);
+  // don't use e.features.getArray() here, because it contains all map/selected features
+  while(changedFeatureQueue.length > 0) {
+      var feature = changedFeatureQueue.pop()
+      console.log('Feature ' + feature.getId() + ' has been modified');
+      mapChannel.send_message('update_feature', featureAsGeoJSON(feature));
+  }
 });
 
 [draw, point, line].forEach(function(element) {
   element.on('drawend', function(e) {
-    console.log('Feature has been created');
     e.feature.setId(createFeatureId());
+    console.log('Feature ' + e.feature.getId() + ' has been created');
     changes.push({
       type: 'add',
       feature: e.feature
