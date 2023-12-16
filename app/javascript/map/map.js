@@ -34,7 +34,6 @@ class ChangeListenerVectorSource extends ol.source.Vector {
 }
 
 document.addEventListener("turbo:load", function(){
-console.log('turbo:load map show')
   if (document.getElementById('map')) {
     initializeMap()
     initializeInteractions()
@@ -42,7 +41,6 @@ console.log('turbo:load map show')
 })
 
 function initializeMap() {
-  console.log('init map show')
   changedFeatureQueue = []
   vectorSource = new ChangeListenerVectorSource({
    format: geoJsonFormat,
@@ -54,11 +52,12 @@ function initializeMap() {
        .then(data => {
         // console.log(JSON.stringify(data))
         let features = geoJsonFormat.readFeatures(data)
+        console.log('loaded ' + features.length + ' features');
         vectorSource.addFeatures(features);
        })
       .catch(error => console.error('Error:', error));
    },
-   strategy: ol.loadingstrategy.bbox
+   // strategy: ol.loadingstrategy.bbox
   })
 
   var vector = new ol.layer.Vector({

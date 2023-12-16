@@ -2,7 +2,6 @@ import { map, vectorSource, changes, featureAsGeoJSON, locate, changedFeatureQue
 import { mapChannel } from 'channels/map_channel'
 import ol from 'openlayers'
 
-
 var draw, point, line, modify
 
 export function initializeInteractions() {
