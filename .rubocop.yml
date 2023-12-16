@@ -21,3 +21,6 @@ Style/Documentation:
 
 Rails/I18nLocaleTexts:
   Enabled: false
+
+Bundler/OrderedGems:
+  Enabled: false
