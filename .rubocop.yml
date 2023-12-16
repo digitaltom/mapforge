@@ -12,3 +12,12 @@ require:
   - rubocop-rspec
   - rubocop-thread_safety
 
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Rails/I18nLocaleTexts:
+  Enabled: false

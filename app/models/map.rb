@@ -9,5 +9,4 @@ class Map
     { type: 'FeatureCollection',
       features: features.map(&:geojson) }
   end
-
 end

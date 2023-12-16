@@ -1,14 +1,13 @@
 namespace :seed do
   desc 'Seed example map data from a .geojson file'
   task :from_file, %i[path] => :environment do |_, args|
-
     web_mercator_factory = RGeo::Cartesian.factory(srid: 3857)
     gps_factory = RGeo::Cartesian.factory(srid: 4326)
 
-    file = File.read(args.fetch :path)
-    #feature_collection = JSON.parse(file)
+    file = File.read(args.fetch(:path))
+    # feature_collection = JSON.parse(file)
 
-    map_name = File.basename(args.fetch :path).gsub('.', '_')
+    map_name = File.basename(args.fetch(:path)).tr('.', '_')
     map = Map.find_or_create_by(id: map_name)
     map.features.delete_all
     feature_collection = RGeo::GeoJSON.decode(file, geo_factory: gps_factory)
