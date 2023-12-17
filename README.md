@@ -2,11 +2,12 @@
 
 ## Development Setup
 
-Install dependencies:
+Dependencies:
 
 
 ```
-zypper in proj-devel # for rgeo-proj4
+zypper in proj-devel # (libproj-dev) for building rgeo-proj4
+zypper in proj # (proj-bin) for running rgeo-proj4
 bundle
 ```
 
@@ -16,6 +17,10 @@ Run develoment server:
 ```
 rails s
 ```
+
+* MongoDB backend is expected at: `ENV.fetch("MONGO_URL") { "localhost:27017" }`
+* Redis (for action cable) is expected at: `ENV.fetch("REDIS_URL") { "redis://localhost:6379/1" }`
+
 
 ### Tasks
 
