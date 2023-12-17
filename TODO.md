@@ -5,11 +5,11 @@
 * undo: only store the changed feature, not all
 * send undo updates to server
 * send delete updates to server
-* dev Procfile
-
-
-* Admin view: Map list with screenshots
 * CSS framework, https://www.simplethread.com/how-to-create-a-new-rails-7-app-with-tailwind/
+* use bbox to only load visible features when moving/zooming map
+  * only update features received by action_cable that are visible
+* dev Procfile
+* Admin view: Map list with screenshots
 * About page: https://icons8.com
 * Learn Stimulus
 

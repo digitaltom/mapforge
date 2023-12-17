@@ -57,6 +57,7 @@ group :development, :test do
   gem 'debug', platforms: %i[mri windows]
   gem 'dotenv-rails', require: 'dotenv/rails-now'
   gem 'listen'
+  gem 'mongo_logs_on_roids'
 end
 
 group :development do

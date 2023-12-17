@@ -1,7 +1,6 @@
 namespace :seed do
   desc 'Seed example map data from a .geojson file'
   task :from_file, %i[path] => :environment do |_, args|
-
     web_mercator_factory = RGeo::Cartesian.factory(srid: 3857)
     gps_factory = RGeo::Cartesian.factory(srid: 4326)
 

@@ -10,6 +10,8 @@ var defaults = { 'center': [1232651.8535029977,6353568.446631506],
 
 var geoJsonFormat = new ol.format.GeoJSON();
 
+// changes stack in format: [{type: 'modify', features: [{ feature: <feature ref>, geometry: <old geometry>}]},
+//                           {type: 'add', feature: <feature ref>}]
 export var changes = [];
 export var changedFeatureQueue = [];
 export var vectorSource;
@@ -20,14 +22,11 @@ class ChangeListenerVectorSource extends ol.source.Vector {
  constructor(opt_options) {
   super(opt_options)
   this.on('addfeature', function(e) {
-    // collecting changed features in changedFeatureQueue, so we only push those
-    // to the server on modifyend
+    // collecting reference to changed features in changedFeatureQueue,
+    // so we only push those to the server on modifyend
     e.feature.on('change', function(e) {
       let exists = changedFeatureQueue.some(obj => obj.getId() === e.target.getId())
-      if (!exists) {
-        // console.log("feature changed: " + e.target.getId())
-        changedFeatureQueue.push(e.target)
-      }
+      if (!exists) { changedFeatureQueue.push(e.target) }
     })
   })
  }

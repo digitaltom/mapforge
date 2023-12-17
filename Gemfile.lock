@@ -164,6 +164,8 @@ GEM
     minitest (5.20.0)
     mongo (2.19.3)
       bson (>= 4.14.1, < 5.0.0)
+    mongo_logs_on_roids (1.1.0)
+      mongo (~> 2.1)
     mongoid (8.1.4)
       activemodel (>= 5.1, < 7.2, != 7.0.0)
       concurrent-ruby (>= 1.0.5, < 2.0)
@@ -365,6 +367,7 @@ DEPENDENCIES
   importmap-rails
   jbuilder
   listen
+  mongo_logs_on_roids
   mongoid
   puma (>= 5.0)
   rails (~> 7.1.2)
