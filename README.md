@@ -2,10 +2,18 @@
 
 ## Development Setup
 
+Install dependencies:
+
+
+```
+zypper in proj-devel # for rgeo-proj4
+bundle
+```
+
+
 Run develoment server:
 
 ```
-bundle
 rails s
 ```
 

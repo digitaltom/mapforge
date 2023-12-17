@@ -49,6 +49,7 @@ gem 'mongoid'
 # map + coordinates libraries
 gem 'rgeo'
 gem 'rgeo-geojson'
+gem 'rgeo-proj4'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
