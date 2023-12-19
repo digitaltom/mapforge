@@ -1,6 +1,5 @@
 import consumer from "channels/consumer"
 import { updateFeature } from 'map/map'
-import ol from 'openlayers'
 
 let mapChannel;
 export { mapChannel };

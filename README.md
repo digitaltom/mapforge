@@ -1,3 +1,6 @@
+[![Tests](https://github.com/digitaltom/ourmaps/actions/workflows/rubyonrails.yml/badge.svg)](https://github.com/digitaltom/ourmaps/actions/workflows/rubyonrails.yml)
+[![Docker](https://github.com/digitaltom/ourmaps/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/digitaltom/ourmaps/actions/workflows/docker-publish.yml)
+
 # README
 
 ## Development Setup
