@@ -2,7 +2,7 @@ import * as ol from 'ol'
 import * as control from 'ol/control'
 import { fromLonLat } from 'ol/proj'
 import { GeoJSON } from 'ol/format'
-import { Vector as VectorSource, OSM } from 'ol/source'
+import { Vector as VectorSource, OSM, XYZ } from 'ol/source'
 import { Vector as VectorLayer, Tile }  from 'ol/layer'
 
 import { mapChannel } from 'channels/map_channel'
@@ -70,8 +70,17 @@ function initializeMap() {
     style: vectorStyle
   });
 
+  var satellite_tiles = new XYZ({
+    attributions: ['Powered by Esri',
+                   'Source: Esri, DigitalGlobe, GeoEye, Earthstar Geographics, CNES/Airbus DS, USDA, USGS, AeroGRID, IGN, and the GIS User Community'],
+    attributionsCollapsible: false,
+    url: 'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    maxZoom: 23
+  })
+  var osm_tiles = new OSM()
+
   var raster = new Tile({
-    source: new OSM()
+    source: satellite_tiles
   });
 
   map = new ol.Map({
