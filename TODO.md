@@ -5,6 +5,7 @@
 * undo: only store the changed feature, not all
 * send undo updates to server
 * send delete updates to server
+* show error on change when not connected to websocket
 * CSS framework, https://www.simplethread.com/how-to-create-a-new-rails-7-app-with-tailwind/
 * use bbox to only load visible features when moving/zooming map
   * only update features received by action_cable that are visible
@@ -29,7 +30,7 @@
 * Image upload as feature property, read geolocation
 * Multi-select (change all at once)
 * Filter view by feature group / category
-* Map Tour (define steps with descriptions)
+* Map Tour (define steps with descriptions) (ol-ext: Storymap control)
 * geojson import / export
 * document geojson spec extension
 * Text listing of map features
