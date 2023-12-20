@@ -5,6 +5,7 @@
 * undo: only store the changed feature, not all
 * send undo updates to server
 * send delete updates to server
+* button to delete
 * show error on change when not connected to websocket
 * CSS framework, https://www.simplethread.com/how-to-create-a-new-rails-7-app-with-tailwind/
 * use bbox to only load visible features when moving/zooming map
@@ -21,6 +22,7 @@
 ## Feature Ideas
 
 * New map gets private + public (read-only) url
+  * validate access on update
 * New feature type text (is this a point with 'hide icon'?)
 * Map properties: Name, description
   * Initial location center, zoom
@@ -37,7 +39,7 @@
 * Show pointer or connected state of other users
 
 
-Data Integrations:
+## Data Integrations:
 
 * On uploading geojson, define how property keys map to ourmaps properties
 * Connect to external APIs, define mapping

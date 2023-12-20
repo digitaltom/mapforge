@@ -2,4 +2,5 @@
 import "@hotwired/turbo-rails"
 import "controllers"
 
-import "map/map"
+// always load map js, so it can initialize on 'turbo:load'
+import 'map/map'

@@ -5,7 +5,7 @@ import { GeoJSON } from 'ol/format'
 import { Vector as VectorSource, OSM, XYZ } from 'ol/source'
 import { Vector as VectorLayer, Tile }  from 'ol/layer'
 
-import { mapChannel } from 'channels/map_channel'
+import { mapChannel, initializeSocket } from 'channels/map_channel'
 import { vectorStyle } from 'map/styles'
 import { initializeInteractions } from 'map/interactions'
 
@@ -41,6 +41,7 @@ class ChangeListenerVectorSource extends VectorSource {
 document.addEventListener("turbo:load", function(){
   if (document.getElementById('map')) {
     initializeMap()
+    initializeSocket()
     initializeInteractions()
   }
 })
