@@ -37,5 +37,17 @@ Import map from .geojson:
 
 ### Container build
 
-Build: `docker build -t ourmaps .`
-Run: `docker run -e SECRET_KEY_BASE=e3c9f2... ourmaps`
+* Build: `docker build -t ourmaps .`
+* Run: `docker run -e SECRET_KEY_BASE=e3c9f2... ourmaps`
+
+Github builds a new container on each commit to `main`: ghcr.io/digitaltom/ourmaps
+
+### Public instance
+
+https://ourmaps.port0.org/
+
+`watchtower` updates the running container each 20 minutes when there is a new image.
+
+Manual update: `podman pull ghcr.io/digitaltom/ourmaps:main; systemctl restart container-ourmaps.service`
+
+

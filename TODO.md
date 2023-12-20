@@ -23,10 +23,11 @@
 
 * New map gets private + public (read-only) url
   * validate access on update
+  * add view location to shareable public url
 * New feature type text (is this a point with 'hide icon'?)
 * Map properties: Name, description
   * Initial location center, zoom
-  * Base map selector
+  * Base map selector (+ min/max zoom)
 * Editor for feature properties (name, description, style)
   * Select icon for pointer, icon upload
 * Image upload as feature property, read geolocation
