@@ -1,27 +1,26 @@
 import { map, vectorSource, changes, featureAsGeoJSON, locate, changedFeatureQueue } from 'map/map'
 import { mapChannel } from 'channels/map_channel'
-import * as interaction from 'ol/interaction'
 
 var draw, point, line, modify
 
 export function initializeInteractions() {
-  draw = new interaction.Draw({
+  draw = new ol.interaction.Draw({
     source: vectorSource,
     type: 'Polygon'
   });
 
-  point = new interaction.Draw({
+  point = new ol.interaction.Draw({
     source: vectorSource,
     type: 'Point'
   });
 
-  line = new interaction.Draw({
+  line = new ol.interaction.Draw({
     source: vectorSource,
     type: 'LineString'
   });
 
   // https://openlayers.org/en/latest/apidoc/module-ol_interaction_Modify-Modify.html
-  modify = new interaction.Modify({source: vectorSource});
+  modify = new ol.interaction.Modify({source: vectorSource});
 
   document.getElementById('draw').addEventListener('click', function() {
     resetInteractions()

@@ -1,5 +1,8 @@
 - content_for :head do
   %link{rel: "stylesheet", href: "https://cdn.jsdelivr.net/npm/ol@v8.1.0/ol.css", type: "text/css"}
+  %link{rel: "stylesheet", href: "https://ga.jspm.io/npm:ol-ext@4.0.13/dist/ol-ext.css", type: "text/css"}
+  = javascript_include_tag "https://cdn.jsdelivr.net/npm/ol@latest/dist/ol.js"
+  = javascript_include_tag "https://ga.jspm.io/npm:ol-ext@4.0.13/dist/ol-ext.js"
 
 #map.map
 
