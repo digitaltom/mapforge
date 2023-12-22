@@ -1,6 +1,6 @@
 import { mapChannel, initializeSocket } from 'channels/map_channel'
 import { vectorStyle } from 'map/styles'
-import { initializeInteractions } from 'map/interactions'
+import { initializeInteractions, undoInteraction } from 'map/interactions'
 
 var defaults = { 'center': [1232651.8535029977,6353568.446631506],
                  'zoom': 12,
@@ -8,9 +8,6 @@ var defaults = { 'center': [1232651.8535029977,6353568.446631506],
 
 var geoJsonFormat = new ol.format.GeoJSON()
 
-// changes stack in format: [{type: 'modify', features: [{ feature: <feature ref>, geometry: <old geometry>}]},
-//                           {type: 'add', feature: <feature ref>}]
-export var changes = [];
 export var changedFeatureQueue = [];
 export var vectorSource;
 export var map;
@@ -52,7 +49,8 @@ function initializeMap() {
         // console.log(JSON.stringify(data))
         let features = geoJsonFormat.readFeatures(data)
         console.log('loaded ' + features.length + ' features');
-        vectorSource.addFeatures(features);
+        vectorSource.addFeatures(features)
+        undoInteraction.clear()
        })
       .catch(error => console.error('Error:', error));
    },
@@ -134,7 +132,7 @@ export function locate() {
   } else {
       console.log("Detecting geolocation")
       navigator.geolocation.getCurrentPosition(function(position) {
-       var coordinates = fromLonLat([position.coords.longitude, position.coords.latitude]);
+       var coordinates = ol.proj.fromLonLat([position.coords.longitude, position.coords.latitude]);
        console.log("Setting " + coordinates)
        map.getView().setCenter(coordinates);
       });

@@ -1,80 +1,83 @@
-import { map, mainBar, vectorSource, changes, featureAsGeoJSON, locate, changedFeatureQueue } from 'map/map'
+import { map, mainBar, vectorSource, featureAsGeoJSON, locate, changedFeatureQueue } from 'map/map'
 import { mapChannel } from 'channels/map_channel'
 
-var draw, point, line, modify
+var drawInteraction, pointInteraction, lineInteraction, modifyInteraction, selectInteraction
+export var undoInteraction
 
 export function initializeInteractions() {
 
   // Undo redo interaction (https://github.com/Viglino/ol-ext/blob/master/src/interaction/UndoRedo.js)
-  var undoInteraction = new ol.interaction.UndoRedo()
+  undoInteraction = new ol.interaction.UndoRedo()
   map.addInteraction(undoInteraction)
 
   // Select interaction
   const selectedFeatures = new ol.Collection()
-  const selectInteraction = new ol.interaction.Select({
+  selectInteraction = new ol.interaction.Select({
    features: selectedFeatures,
   })
 
-  selectedFeatures.on('add', function(event) {
-   const feature = event.element;
-   const source = feature.get('source');
-   const deleteButton = document.createElement('button');
-   deleteButton.textContent = 'Delete';
-   deleteButton.addEventListener('click', function() {
-     vectorSource.removeFeature(feature)
-     mapChannel.send_message('delete_feature', featureAsGeoJSON(feature))
-   });
-   console.log('selected ' + feature)
-   document.getElementById('buttons').appendChild(deleteButton)
-  });
-
-  selectedFeatures.on('remove', function(event) {
-   const feature = event.element;
-   // Remove the delete button for the feature
-  });
-
-  undoInteraction.on('undo', function(e) {
-    console.log(e)
-    const feature = e.action.feature
-    // undo changed/added feature -> remove from server
-    if (e.action.type === 'addfeature') {
-      mapChannel.send_message('delete_feature', featureAsGeoJSON(feature))
-    }
-    // undo removed feature -> add to server
-
+  drawInteraction = new ol.interaction.Draw({
+    source: vectorSource,
+    type: 'Polygon'
   })
 
-  undoInteraction.on('redo', function(e) {
-    console.log(e)
-   const feature = e.action.feature
-    // redo changed/added feature -> add to server
-    if (e.action.type === 'addfeature') {
-      mapChannel.send_message('update_feature', featureAsGeoJSON(feature))
-    }
-    // redo removed feature -> remove from server
-
-
-  })
-
-  // Handle undo/redo stack
-  undoInteraction.on('stack:add', function (e) {
+  pointInteraction = new ol.interaction.Draw({
+    source: vectorSource,
+    type: 'Point'
   });
-  // Append to redo stack
-  undoInteraction.on('stack:remove', function (e) {
+
+  lineInteraction = new ol.interaction.Draw({
+    source: vectorSource,
+    type: 'LineString'
   });
-  // Clear stack
-  undoInteraction.on('stack:clear', function (e) {
-  });
+
+  // https://openlayers.org/en/latest/apidoc/module-ol_interaction_Modify-Modify.html
+  modifyInteraction = new ol.interaction.Modify({source: vectorSource})
 
   // Add buttons to the bar
-  var bar = new ol.control.Bar({
+  var editBar = new ol.control.Bar({
     group: true,
     controls: [
       new ol.control.Button({
         html: 'select',
         title: 'select...',
+        className: "buttons button-select",
         handleClick: function() {
+          resetInteractions()
           map.addInteraction(selectInteraction)
+        }
+      }),
+      new ol.control.Button({
+        html: 'modify',
+        title: 'modify...',
+        className: "buttons button-modify",
+        handleClick: function() {
+          resetInteractions()
+          map.addInteraction(modifyInteraction)
+        }
+      }),
+      new ol.control.Button({
+        html: 'draw',
+        title: 'draw...',
+        handleClick: function() {
+          resetInteractions()
+          map.addInteraction(drawInteraction)
+        }
+      }),
+      new ol.control.Button({
+        html: 'Point',
+        title: 'point...',
+        handleClick: function() {
+          resetInteractions()
+          map.addInteraction(pointInteraction)
+        }
+      }),
+      new ol.control.Button({
+        html: 'Line',
+        title: 'line...',
+        handleClick: function() {
+          resetInteractions()
+          map.addInteraction(lineInteraction)
         }
       }),
       new ol.control.Button({
@@ -90,110 +93,105 @@ export function initializeInteractions() {
         handleClick: function() {
           undoInteraction.redo()
         }
+      }),
+      new ol.control.Button({
+        html: 'locate',
+        title: 'locate...',
+        handleClick: function() {
+          locate()
+        }
       })
     ]
   })
-  mainBar.addControl(bar)
+  mainBar.addControl(editBar)
 
+  // Popup overlay: https://viglino.github.io/ol-ext/doc/doc-pages/ol.Overlay.Popup.html
+  var popup = new ol.Overlay.Popup ({
+    popupClass: "", //"tooltips", "warning" "black" "default", "tips", "shadow",
+    closeBox: true,
+    positioning: 'auto',
+    autoPan: {
+      animation: { duration: 250 }
+    }
+  })
+  map.addOverlay(popup)
 
+  // On selected => show popup
+  selectInteraction.getFeatures().on(['add'], function(e) {
+    var feature = e.element;
+    var content = "<div id='feature-popup-content'>test</div>"
+    popup.show(feature.getGeometry().getCoordinates(), content);
+    const deleteButton = document.createElement('button')
+    deleteButton.textContent = 'Delete'
+    deleteButton.addEventListener('click', function() {
+      vectorSource.removeFeature(feature)
+      popup.hide()
 
+      mapChannel.send_message('delete_feature', featureAsGeoJSON(feature))
+    })
+    document.getElementById('feature-popup-content').innerHTML = ''
+    document.getElementById('feature-popup-content').appendChild(deleteButton)
+  })
+  // hide popup on outside click
+  selectInteraction.getFeatures().on(['remove'], function(e) {
+    popup.hide()
+  })
 
-  draw = new ol.interaction.Draw({
-    source: vectorSource,
-    type: 'Polygon'
-  });
-
-  point = new ol.interaction.Draw({
-    source: vectorSource,
-    type: 'Point'
-  });
-
-  line = new ol.interaction.Draw({
-    source: vectorSource,
-    type: 'LineString'
-  });
-
-  // https://openlayers.org/en/latest/apidoc/module-ol_interaction_Modify-Modify.html
-  modify = new ol.interaction.Modify({source: vectorSource});
-
-  document.getElementById('draw').addEventListener('click', function() {
-    resetInteractions()
-    map.addInteraction(draw);
-  });
-
-  document.getElementById('point').addEventListener('click', function() {
-    resetInteractions()
-    map.addInteraction(point);
-  });
-
-  document.getElementById('line').addEventListener('click', function() {
-    resetInteractions()
-    map.addInteraction(line);
-  });
-
-  document.getElementById('modify').addEventListener('click', function() {
-    resetInteractions()
-    map.addInteraction(modify);
-  });
-
-  document.getElementById('locate').addEventListener('click', function() {
-    locate();
-  });
-
-  document.getElementById('undo').addEventListener('click', function() {
-    if (changes.length > 0) {
-      var lastChange = changes.pop()
-      if (lastChange.type === 'add') {
-        vectorSource.removeFeature(lastChange.feature)
-      } else if (lastChange.type === 'modify') {
-        lastChange.features.forEach(function(changedFeature) {
-          changedFeature.feature.setGeometry(changedFeature.geometry)
-        })
-      }
+  undoInteraction.on('undo', function(e) {
+    const feature = e.action.feature
+    // undo changed/added feature -> remove from server
+    if (e.action.type === 'addfeature') {
+      mapChannel.send_message('delete_feature', featureAsGeoJSON(feature))
+    }
+    // undo removed feature -> add to server
+    if (e.action.type === 'removefeature') {
+      mapChannel.send_message('new_feature', featureAsGeoJSON(feature))
+    }
+    if (e.action.type === 'changegeometry') {
+      mapChannel.send_message('update_feature', featureAsGeoJSON(feature))
     }
   })
 
-  modify.on(['modifystart'], function(e) {
-    // TODO: find way to only store modified feature
-    changes.push({
-      type: 'modify',
-      features: e.features.getArray().map(function(feature) {
-        return {
-          feature: feature,
-          geometry: feature.getGeometry().clone()
-        };
-      })
-    });
-  });
+  undoInteraction.on('redo', function(e) {
+   const feature = e.action.feature
+    // redo changed/added feature -> add to server
+    if (e.action.type === 'addfeature') {
+      mapChannel.send_message('new_feature', featureAsGeoJSON(feature))
+    }
+    // redo removed feature -> remove from server
+    if (e.action.type === 'removefeature') {
+      mapChannel.send_message('delete_feature', featureAsGeoJSON(feature))
+    }
+    if (e.action.type === 'changegeometry') {
+      mapChannel.send_message('update_feature', featureAsGeoJSON(feature))
+    }
+  })
 
-  modify.on('modifyend', function(e) {
+  modifyInteraction.on('modifyend', function(e) {
     // console.log('changedFeatureQueue: ' + changedFeatureQueue);
     // don't use e.features.getArray() here, because it contains all map/selected features
     while(changedFeatureQueue.length > 0) {
         var feature = changedFeatureQueue.pop()
-        console.log('Feature ' + feature.getId() + ' has been modified');
-        mapChannel.send_message('update_feature', featureAsGeoJSON(feature));
+        console.log('Feature ' + feature.getId() + ' has been modified')
+        mapChannel.send_message('update_feature', featureAsGeoJSON(feature))
     }
   });
 
-  [draw, point, line].forEach(function(element) {
+  [drawInteraction, pointInteraction, lineInteraction].forEach(function(element) {
     element.on('drawend', function(e) {
-      e.feature.setId(createFeatureId());
-      console.log('Feature ' + e.feature.getId() + ' has been created');
-      changes.push({
-        type: 'add',
-        feature: e.feature
-      });
-      mapChannel.send_message('new_feature', featureAsGeoJSON(e.feature));
-    });
+      e.feature.setId(createFeatureId())
+      console.log('Feature ' + e.feature.getId() + ' has been created')
+      mapChannel.send_message('new_feature', featureAsGeoJSON(e.feature))
+    })
   })
 }
 
 function resetInteractions() {
-  map.removeInteraction(draw)
-  map.removeInteraction(point)
-  map.removeInteraction(line)
-  map.removeInteraction(modify)
+  map.removeInteraction(drawInteraction)
+  map.removeInteraction(pointInteraction)
+  map.removeInteraction(lineInteraction)
+  map.removeInteraction(modifyInteraction)
+  map.removeInteraction(selectInteraction)
 }
 
 function createFeatureId() {
