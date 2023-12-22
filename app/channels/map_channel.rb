@@ -16,14 +16,19 @@ class MapChannel < ApplicationCable::Channel
     map = Map.find(data['map_id'])
     feature = map.features.find(feature_atts(data)['id'])
     feature.update!(feature_atts(data))
-
-    # ActionCable.server.broadcast "map_channel", message: "update"
   end
 
   def new_feature(data)
     # TODO: validate client access to map id
     map = Map.find(data['map_id'])
     map.features.create!(feature_atts(data))
+  end
+
+  def delete_feature(data)
+    # TODO: validate client access to map id
+    map = Map.find(data['map_id'])
+    feature = map.features.find(feature_atts(data)['id'])
+    feature.destroy
   end
 
   private

@@ -9,6 +9,7 @@ class Feature
   field :geometry, type: Hash, default: {}
   field :properties, type: Hash, default: {}
 
+  after_destroy :broadcast_destroy
   after_save :broadcast_update
 
   def geojson
@@ -21,6 +22,12 @@ class Feature
   private
 
   def broadcast_update
-    ActionCable.server.broadcast("map_channel_#{map.id}", geojson.as_json)
+    ActionCable.server.broadcast("map_channel_#{map.id}",
+                                 { event: 'update_feature', feature: geojson.as_json })
+  end
+
+  def broadcast_destroy
+    ActionCable.server.broadcast("map_channel_#{map.id}",
+                                 { event: 'delete_feature', feature: geojson.as_json })
   end
 end

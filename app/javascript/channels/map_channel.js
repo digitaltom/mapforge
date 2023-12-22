@@ -1,5 +1,5 @@
 import consumer from "channels/consumer"
-import { updateFeature } from 'map/map'
+import { updateFeature, deleteFeature } from 'map/map'
 
 let mapChannel;
 export { mapChannel };
@@ -18,13 +18,20 @@ export function initializeSocket() {
     },
 
     received(data) {
-      console.log('received from map_channel: ' + JSON.stringify(data));
-      updateFeature(data)
+      console.log('received from map_channel: ' + JSON.stringify(data))
+      switch (data.event) {
+        case 'update_feature':
+          updateFeature(data['feature'])
+          break;
+        case 'delete_feature':
+          deleteFeature(data['feature'])
+          break;
+      }
     },
 
     send_message(action, data) {
       data['map_id'] = gon.map_id
-      console.log('Sending: ' + JSON.stringify(data))
+      console.log('Sending: [' + action + '] ' + JSON.stringify(data))
       // Call the original perform method
       this.perform(action, data);
     }

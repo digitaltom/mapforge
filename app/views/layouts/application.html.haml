@@ -1,0 +1,21 @@
+!!!
+%html{ lang: 'en' }
+  %head
+    %title= content_for?(:title) ? yield(:title) : 'Ourmaps'
+    %meta{ content: 'width=device-width,initial-scale=1', name: 'viewport' }
+
+    = csrf_meta_tags
+    = csp_meta_tag
+
+    %link{rel: "stylesheet", href: "https://cdn.jsdelivr.net/npm/ol@v8.1.0/ol.css", type: "text/css"}
+    %link{rel: "stylesheet", href: "https://ga.jspm.io/npm:ol-ext@4.0.13/dist/ol-ext.css", type: "text/css"}
+
+    = stylesheet_link_tag "application", "data-turbo-track": "reload"
+    = javascript_importmap_tags
+    = yield(:head)
+
+  %body
+    = Gon::Base.render_data
+    %p{style: "color: green"}= notice
+    = yield
+

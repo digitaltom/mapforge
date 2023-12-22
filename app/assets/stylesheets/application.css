@@ -20,3 +20,9 @@ html, body, #map {
     margin: 0;
     padding: 0;
 }
+
+.ol-control button {
+    width: unset;
+    min-width: 1.375em;
+}
+

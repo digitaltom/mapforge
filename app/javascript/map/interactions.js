@@ -1,9 +1,72 @@
-import { map, vectorSource, changes, featureAsGeoJSON, locate, changedFeatureQueue } from 'map/map'
+import { map, mainBar, vectorSource, changes, featureAsGeoJSON, locate, changedFeatureQueue } from 'map/map'
 import { mapChannel } from 'channels/map_channel'
 
 var draw, point, line, modify
 
 export function initializeInteractions() {
+
+  // Undo redo interaction (https://github.com/Viglino/ol-ext/blob/master/src/interaction/UndoRedo.js)
+  var undoInteraction = new ol.interaction.UndoRedo()
+  map.addInteraction(undoInteraction)
+
+  undoInteraction.on('undo', function(e) {
+    console.log(e)
+    const feature = e.action.feature
+    // undo changed/added feature -> remove from server
+    if (e.action.type === 'addfeature') {
+      mapChannel.send_message('delete_feature', featureAsGeoJSON(feature))
+    }
+    // undo removed feature -> add to server
+
+  })
+
+  undoInteraction.on('redo', function(e) {
+    console.log(e)
+   const feature = e.action.feature
+    // redo changed/added feature -> add to server
+    if (e.action.type === 'addfeature') {
+      mapChannel.send_message('update_feature', featureAsGeoJSON(feature))
+    }
+    // redo removed feature -> remove from server
+
+
+  })
+
+  // Handle undo/redo stack
+  undoInteraction.on('stack:add', function (e) {
+  });
+  // Append to redo stack
+  undoInteraction.on('stack:remove', function (e) {
+  });
+  // Clear stack
+  undoInteraction.on('stack:clear', function (e) {
+  });
+
+  // Add buttons to the bar
+  var bar = new ol.control.Bar({
+    group: true,
+    controls: [
+      new ol.control.Button({
+        html: 'undo',
+        title: 'undo...',
+        handleClick: function() {
+          undoInteraction.undo()
+        }
+      }),
+      new ol.control.Button({
+        html: 'redo',
+        title: 'redo...',
+        handleClick: function() {
+          undoInteraction.redo()
+        }
+      })
+    ]
+  })
+  mainBar.addControl(bar)
+
+
+
+
   draw = new ol.interaction.Draw({
     source: vectorSource,
     type: 'Polygon'

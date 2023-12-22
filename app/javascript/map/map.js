@@ -14,6 +14,7 @@ export var changes = [];
 export var changedFeatureQueue = [];
 export var vectorSource;
 export var map;
+export var mainBar;
 
 
 class ChangeListenerVectorSource extends ol.source.Vector {
@@ -93,42 +94,8 @@ function initializeMap() {
   })
 
   // Main control bar
-  var mainbar = new ol.control.Bar();
-  map.addControl(mainbar);
-
-  // Editbar
-
-  const editBar = new ol.control.EditBar({
-   interactions: {
-     Select: true,
-     Delete: true,
-     Info: false,
-     // Add other interactions here
-   }
-  })
-  mainbar.addControl(editBar);
-
-  // Add buttons to the bar
-  var bar = new ol.control.Bar({
-    group: true,
-    controls: [
-      new ol.control.Button({
-        html: '<i class="fa fa-undo" ></i>',
-        title: 'undo...',
-        handleClick: function() {
-          undoInteraction.undo();
-        }
-      }),
-      new ol.control.Button({
-        html: '<i class="fa fa-repeat" ></i>',
-        title: 'redo...',
-        handleClick: function() {
-          undoInteraction.redo();
-        }
-      })
-    ]
-  });
-  mainbar.addControl(bar);
+  mainBar = new ol.control.Bar()
+  map.addControl(mainBar)
 }
 
 export function featureAsGeoJSON(feature) {
@@ -151,6 +118,14 @@ export function updateFeature(data) {
   }
   // drop from changedFeatureQueue, it's coming from server
   arrayRemove(changedFeatureQueue, newFeature)
+}
+
+export function deleteFeature(data) {
+  // TODO: only delete if visible in bbox
+  let feature = vectorSource.getFeatureById(data['id']);
+  if(feature) {
+    console.log('deleting feature ' + data['id'])
+  }
 }
 
 export function locate() {

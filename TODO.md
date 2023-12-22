@@ -2,9 +2,9 @@
 
 ## TODO:
 
-* undo: only store the changed feature, not all
 * send undo updates to server
-* send delete updates to server
+* send delete updates to server: channel method delete
+* undoInteraction.clear() after initial feature load
 * button to delete
 * show error on change when not connected to websocket
 * CSS framework, https://www.simplethread.com/how-to-create-a-new-rails-7-app-with-tailwind/
