@@ -9,6 +9,30 @@ export function initializeInteractions() {
   var undoInteraction = new ol.interaction.UndoRedo()
   map.addInteraction(undoInteraction)
 
+  // Select interaction
+  const selectedFeatures = new ol.Collection()
+  const selectInteraction = new ol.interaction.Select({
+   features: selectedFeatures,
+  })
+
+  selectedFeatures.on('add', function(event) {
+   const feature = event.element;
+   const source = feature.get('source');
+   const deleteButton = document.createElement('button');
+   deleteButton.textContent = 'Delete';
+   deleteButton.addEventListener('click', function() {
+     vectorSource.removeFeature(feature)
+     mapChannel.send_message('delete_feature', featureAsGeoJSON(feature))
+   });
+   console.log('selected ' + feature)
+   document.getElementById('buttons').appendChild(deleteButton)
+  });
+
+  selectedFeatures.on('remove', function(event) {
+   const feature = event.element;
+   // Remove the delete button for the feature
+  });
+
   undoInteraction.on('undo', function(e) {
     console.log(e)
     const feature = e.action.feature
@@ -46,6 +70,13 @@ export function initializeInteractions() {
   var bar = new ol.control.Bar({
     group: true,
     controls: [
+      new ol.control.Button({
+        html: 'select',
+        title: 'select...',
+        handleClick: function() {
+          map.addInteraction(selectInteraction)
+        }
+      }),
       new ol.control.Button({
         html: 'undo',
         title: 'undo...',

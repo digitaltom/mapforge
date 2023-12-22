@@ -6,7 +6,7 @@ var defaults = { 'center': [1232651.8535029977,6353568.446631506],
                  'zoom': 12,
                  'projection': 'EPSG:3857' }
 
-var geoJsonFormat = new ol.format.GeoJSON();
+var geoJsonFormat = new ol.format.GeoJSON()
 
 // changes stack in format: [{type: 'modify', features: [{ feature: <feature ref>, geometry: <old geometry>}]},
 //                           {type: 'add', feature: <feature ref>}]

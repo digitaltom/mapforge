@@ -1,12 +1,9 @@
-- content_for :head do
-  = javascript_include_tag "https://cdn.jsdelivr.net/npm/ol@latest/dist/ol.js"
-  = javascript_include_tag "https://ga.jspm.io/npm:ol-ext@4.0.13/dist/ol-ext.js"
-
 #map.map
 
-%button#draw Draw
-%button#point Point
-%button#line Line
-%button#modify Modify
-%button#undo Undo
-%button#locate Locate
+#buttons
+  %button#draw Draw
+  %button#point Point
+  %button#line Line
+  %button#modify Modify
+  %button#undo Undo
+  %button#locate Locate

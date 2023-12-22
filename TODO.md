@@ -6,6 +6,7 @@
 * send delete updates to server: channel method delete
 * undoInteraction.clear() after initial feature load
 * button to delete
+* Flash messages about what's happening on the map
 * show error on change when not connected to websocket
 * CSS framework, https://www.simplethread.com/how-to-create-a-new-rails-7-app-with-tailwind/
 * use bbox to only load visible features when moving/zooming map
