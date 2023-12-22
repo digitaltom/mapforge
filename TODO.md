@@ -3,6 +3,7 @@
 ## TODO:
 
 * Handle other change events than 'changegeometry' in undo/redo
+* popover position
 * Flash messages about what's happening on the map
 * show error on change when not connected to websocket
 * CSS framework, https://www.simplethread.com/how-to-create-a-new-rails-7-app-with-tailwind/

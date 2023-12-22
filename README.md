@@ -27,9 +27,12 @@ rails s
 
 ### Tasks
 
-Import map from .geojson:
+Import map from .geojson (samples in db/seeds):
 
 `bin/rake seed:from_file['db/seeds/germany_areas.json']`
+
+More .geojson example files at: https://exploratory.io/map
+
 
 ### Tests
 

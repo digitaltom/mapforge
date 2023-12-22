@@ -11,6 +11,8 @@ namespace :seed do
     feature_collection = RGeo::GeoJSON.decode(file, geo_factory: gps_factory)
 
     feature_collection.each do |feature|
+      next unless feature.geometry
+
       # transform coords from EPSG:4326 to EPSG:3857
       transformed_geometry = RGeo::Feature.cast(feature.geometry, factory: web_mercator_factory, project: true)
       transformed_feature = RGeo::GeoJSON::Feature.new(transformed_geometry, nil, feature.properties)
