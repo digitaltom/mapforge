@@ -3,6 +3,10 @@
 
 # README
 
+![plan](public/ourmaps-plan.png)
+https://excalidraw.com/#json=m0CjM7w_E-dtFDKmvQvIf,K07A5jDq8rCCqgmJMkjElw
+
+
 ## Development Setup
 
 Dependencies:
