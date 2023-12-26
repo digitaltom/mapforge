@@ -34,13 +34,14 @@ export function initializeInteractions() {
   // https://openlayers.org/en/latest/apidoc/module-ol_interaction_Modify-Modify.html
   modifyInteraction = new ol.interaction.Modify({source: vectorSource})
 
-  // Add buttons to the bar
+  // Control bar: https://viglino.github.io/ol-ext/doc/doc-pages/ol.control.Bar.html
   var editBar = new ol.control.Bar({
     group: true,
+    toggleOne: true,
     controls: [
       new ol.control.Button({
-        html: 'select',
-        title: 'select...',
+        html: "<i class='las la-mouse-pointer'></i>",
+        title: 'Select',
         className: "buttons button-select",
         handleClick: function() {
           resetInteractions()
@@ -48,7 +49,7 @@ export function initializeInteractions() {
         }
       }),
       new ol.control.Button({
-        html: 'modify',
+        html: "<i class='lar la-edit'></i>",
         title: 'modify...',
         className: "buttons button-modify",
         handleClick: function() {
@@ -57,53 +58,69 @@ export function initializeInteractions() {
         }
       }),
       new ol.control.Button({
-        html: 'draw',
-        title: 'draw...',
-        handleClick: function() {
-          resetInteractions()
-          map.addInteraction(drawInteraction)
-        }
-      }),
-      new ol.control.Button({
-        html: 'Point',
-        title: 'point...',
+        html: "<i class='las la-map-marker'></i>",
+        title: 'Add map marker',
         handleClick: function() {
           resetInteractions()
           map.addInteraction(pointInteraction)
         }
       }),
       new ol.control.Button({
-        html: 'Line',
-        title: 'line...',
+        html: "<i class='las la-pencil-alt'></i>",
+        title: 'Add a line to the map',
         handleClick: function() {
           resetInteractions()
           map.addInteraction(lineInteraction)
         }
       }),
       new ol.control.Button({
-        html: 'undo',
-        title: 'undo...',
+        html: "<i class='las la-draw-polygon'></i>",
+        title: 'Add a polygon to the map',
+        handleClick: function() {
+          resetInteractions()
+          map.addInteraction(drawInteraction)
+        }
+      })
+    ]
+  })
+  mainBar.addControl(editBar)
+
+  var undoBar = new ol.control.Bar({
+    group: true,
+    controls: [
+      new ol.control.Button({
+        html: "<i class='las la-undo-alt'></i>",
+        title: 'Undo last change',
         handleClick: function() {
           undoInteraction.undo()
         }
       }),
       new ol.control.Button({
-        html: 'redo',
-        title: 'redo...',
+        html: "<i class='las la-redo-alt'></i>",
+        title: 'Redo last change',
         handleClick: function() {
           undoInteraction.redo()
         }
-      }),
+      })
+    ]
+  })
+  mainBar.addControl(undoBar)
+
+  var mapNavBar = new ol.control.Bar({
+    group: true,
+    position: 'left',
+    controls: [
       new ol.control.Button({
-        html: 'locate',
-        title: 'locate...',
+        html: "<i class='las la-location-arrow'></i>",
+        title: 'Center at your current location',
         handleClick: function() {
           locate()
         }
       })
     ]
   })
-  mainBar.addControl(editBar)
+  map.addControl(mapNavBar)
+  mapNavBar.setPosition('top-left')
 
   // Popup overlay: https://viglino.github.io/ol-ext/doc/doc-pages/ol.Overlay.Popup.html
   var popup = new ol.Overlay.Popup ({

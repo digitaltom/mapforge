@@ -24,5 +24,26 @@ html, body, #map {
 .ol-control button {
     width: unset;
     min-width: 1.375em;
+    font-size: 1.4em;
 }
 
+.ol-left {
+    left: 0.6em !important;
+}
+
+.ol-button > button:hover, .ol-button > button.active {
+    color: #000;
+    font-weight: bold;
+    background-color: #c0c0c0;
+}
+
+/* Active buttons */
+.ol-control.ol-bar .ol-toggle.ol-active > button,
+.ol-control.ol-bar .ol-toggle.ol-active button:hover {
+    color: #000;
+    font-weight: bold;
+    background-color: #c0c0c0;
+}
+.ol-control.ol-toggle button:disabled {
+  background-color: #ccc;
+}

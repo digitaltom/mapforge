@@ -2,7 +2,7 @@
 
 ## TODO:
 
-* Handle other change events than 'changegeometry' in undo/redo
+* Handle 'changeproperties' in undo/redo
 * popover position
 * Flash messages about what's happening on the map
 * animate point position moves
@@ -12,7 +12,7 @@
   * only update features received by action_cable that are visible
 * dev Procfile
 * Admin view: Map list with screenshots
-* About page: https://icons8.com
+* About page: https://icons8.com/icons, https://icons8.com/line-awesome
 * Learn Stimulus
 
 * domain options: mapforge.org, ourmaps.org, mapcrafting.org
