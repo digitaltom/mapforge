@@ -1,5 +1,6 @@
 import { map, mainBar, vectorSource, featureAsGeoJSON, locate, changedFeatureQueue } from 'map/map'
 import { mapChannel } from 'channels/map_channel'
+import { hoverStyle } from 'map/styles'
 
 var drawInteraction, pointInteraction, lineInteraction, modifyInteraction, selectInteraction
 export var undoInteraction
@@ -42,10 +43,10 @@ export function initializeInteractions() {
       new ol.control.Button({
         html: "<i class='las la-mouse-pointer'></i>",
         title: 'Select',
-        className: "buttons button-select",
+        className: "buttons button-select active",
         handleClick: function() {
           resetInteractions()
-          map.addInteraction(selectInteraction)
+          document.getElementsByClassName('button-select')[0].classList.add("active")
         }
       }),
       new ol.control.Button({
@@ -54,30 +55,37 @@ export function initializeInteractions() {
         className: "buttons button-modify",
         handleClick: function() {
           resetInteractions()
+          document.getElementsByClassName('button-modify')[0].classList.add("active")
           map.addInteraction(modifyInteraction)
         }
       }),
       new ol.control.Button({
         html: "<i class='las la-map-marker'></i>",
         title: 'Add map marker',
+        className: "buttons button-marker",
         handleClick: function() {
           resetInteractions()
+          document.getElementsByClassName('button-marker')[0].classList.add("active")
           map.addInteraction(pointInteraction)
         }
       }),
       new ol.control.Button({
         html: "<i class='las la-pencil-alt'></i>",
         title: 'Add a line to the map',
+        className: "buttons button-line",
         handleClick: function() {
           resetInteractions()
+          document.getElementsByClassName('button-line')[0].classList.add("active")
           map.addInteraction(lineInteraction)
         }
       }),
       new ol.control.Button({
         html: "<i class='las la-draw-polygon'></i>",
         title: 'Add a polygon to the map',
+        className: "buttons button-polygon",
         handleClick: function() {
           resetInteractions()
+          document.getElementsByClassName('button-polygon')[0].classList.add("active")
           map.addInteraction(drawInteraction)
         }
       })
@@ -91,15 +99,24 @@ export function initializeInteractions() {
       new ol.control.Button({
         html: "<i class='las la-undo-alt'></i>",
         title: 'Undo last change',
+        className: "button-undo hidden",
         handleClick: function() {
           undoInteraction.undo()
+          document.getElementsByClassName('button-redo')[0].classList.remove("hidden")
+          console.log(undoInteraction.length())
+          if (undoInteraction.length() === 0) {
+            document.getElementsByClassName('button-undo')[0].classList.add("hidden")
+          }
         }
       }),
       new ol.control.Button({
         html: "<i class='las la-redo-alt'></i>",
         title: 'Redo last change',
+        className: "button-redo hidden",
         handleClick: function() {
           undoInteraction.redo()
+          if (undoInteraction.length('redo') === 0) { document.getElementsByClassName('button-redo')[0].classList.add("hidden")}
+          document.getElementsByClassName('button-undo')[0].classList.remove("hidden")
         }
       })
     ]
@@ -123,36 +140,11 @@ export function initializeInteractions() {
   mapNavBar.setPosition('top-left')
 
   // Popup overlay: https://viglino.github.io/ol-ext/doc/doc-pages/ol.Overlay.Popup.html
-  var popup = new ol.Overlay.Popup ({
-    popupClass: "", //"tooltips", "warning" "black" "default", "tips", "shadow",
-    closeBox: true,
-    positioning: 'auto',
-    autoPan: {
-      animation: { duration: 250 }
-    }
+  const popup2 = new ol.Overlay({
+   element: document.getElementById('feature-popup'),
+   stopEvent: false, // Don't stop mousemove events from reaching the map
   })
-  map.addOverlay(popup)
-
-  // On selected => show popup
-  selectInteraction.getFeatures().on(['add'], function(e) {
-    var feature = e.element;
-    var content = "<div id='feature-popup-content'>test</div>"
-    popup.show(feature.getGeometry().getCoordinates(), content);
-    const deleteButton = document.createElement('button')
-    deleteButton.textContent = 'Delete'
-    deleteButton.addEventListener('click', function() {
-      vectorSource.removeFeature(feature)
-      popup.hide()
-
-      mapChannel.send_message('delete_feature', featureAsGeoJSON(feature))
-    })
-    document.getElementById('feature-popup-content').innerHTML = ''
-    document.getElementById('feature-popup-content').appendChild(deleteButton)
-  })
-  // hide popup on outside click
-  selectInteraction.getFeatures().on(['remove'], function(e) {
-    popup.hide()
-  })
+  map.addOverlay(popup2);
 
   undoInteraction.on('undo', function(e) {
     const feature = e.action.feature
@@ -191,6 +183,7 @@ export function initializeInteractions() {
         var feature = changedFeatureQueue.pop()
         console.log('Feature ' + feature.getId() + ' has been modified')
         mapChannel.send_message('update_feature', featureAsGeoJSON(feature))
+        document.getElementsByClassName('button-undo')[0].classList.remove("hidden")
     }
   });
 
@@ -199,8 +192,41 @@ export function initializeInteractions() {
       e.feature.setId(createFeatureId())
       console.log('Feature ' + e.feature.getId() + ' has been created')
       mapChannel.send_message('new_feature', featureAsGeoJSON(e.feature))
+      document.getElementsByClassName('button-undo')[0].classList.remove("hidden")
     })
   })
+
+  let selectedFeature = null;
+  map.on('pointermove', function (event) {
+   if (selectedFeature !== null) { selectedFeature.setStyle(null) }
+
+   map.forEachFeatureAtPixel(event.pixel, function (feature) {
+    selectedFeature = feature;
+    selectedFeature.setStyle(hoverStyle)
+
+    const geometry = feature.getGeometry()
+    const coordinates = geometry.getCoordinates()
+    popup2.setPosition(coordinates)
+    // Update the popup's content with the feature's data
+    const element = popup2.getElement()
+
+    element.innerHTML = "<div id='feature-popup-content'>" + feature.getId() + "</div>"
+    const deleteButton = document.createElement('button')
+    deleteButton.textContent = 'Delete'
+    deleteButton.addEventListener('click', function() {
+     vectorSource.removeFeature(feature)
+     element.innerHTML = ""
+     mapChannel.send_message('delete_feature', featureAsGeoJSON(feature))
+     document.getElementsByClassName('button-undo')[0].classList.remove("hidden")
+    })
+    document.getElementById('feature-popup-content').appendChild(deleteButton)
+
+    return true;
+   }, {
+    hitTolerance: 5 // Tolerance in pixels
+   })
+  })
+
 }
 
 function resetInteractions() {
@@ -209,6 +235,9 @@ function resetInteractions() {
   map.removeInteraction(lineInteraction)
   map.removeInteraction(modifyInteraction)
   map.removeInteraction(selectInteraction)
+  Array.from(document.getElementsByClassName('buttons')).forEach(function(button) {
+      button.classList.remove("active")
+  })
 }
 
 function createFeatureId() {

@@ -3,7 +3,7 @@
 export function vectorStyle(feature) {
   var style = new ol.style.Style({
     fill: new ol.style.Fill({
-      color: 'rgba(255, 255, 255, 0.2)'
+      color: 'rgba(255, 255, 255, 0.3)'
     }),
     stroke: new ol.style.Stroke({
       color: 'green',
@@ -13,12 +13,37 @@ export function vectorStyle(feature) {
       radius: 8,
       stroke: new ol.style.Stroke({
         color: 'white',
-        width: 3
+        width: 2
       }),
       fill: new ol.style.Fill({
         color: 'green'
       })
     })
-  });
-  return [style];
+  })
+  return [style]
 }
+
+
+export function hoverStyle(feature) {
+  var style = new ol.style.Style({
+    fill: new ol.style.Fill({
+      color: 'rgba(255, 255, 255, 0.7)'
+    }),
+    stroke: new ol.style.Stroke({
+      color: 'darkgreen',
+      width: 4
+    }),
+    image: new ol.style.Circle({
+      radius: 8,
+      stroke: new ol.style.Stroke({
+        color: 'white',
+        width: 2
+      }),
+      fill: new ol.style.Fill({
+        color: 'darkgreen'
+      })
+    })
+  })
+  return style
+}
+

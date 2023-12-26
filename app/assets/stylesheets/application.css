@@ -21,17 +21,21 @@ html, body, #map {
     padding: 0;
 }
 
+.hidden {
+    display: none !important;
+}
+
 .ol-control button {
     width: unset;
     min-width: 1.375em;
-    font-size: 1.4em;
+    font-size: 1.6em;
 }
 
 .ol-left {
     left: 0.6em !important;
 }
 
-.ol-button > button:hover, .ol-button > button.active {
+.ol-button > button:hover, .ol-button.active > button {
     color: #000;
     font-weight: bold;
     background-color: #c0c0c0;

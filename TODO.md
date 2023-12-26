@@ -2,11 +2,13 @@
 
 ## TODO:
 
-* Handle 'changeproperties' in undo/redo
-* popover position
+* popover position + layout
+  * handle popover on map move/zoom
+* show popover on click for mobile
 * Flash messages about what's happening on the map
 * animate point position moves
 * show error on change when not connected to websocket
+* Handle 'changeproperties' in undo/redo
 * CSS framework, https://www.simplethread.com/how-to-create-a-new-rails-7-app-with-tailwind/
 * use bbox to only load visible features when moving/zooming map
   * only update features received by action_cable that are visible
