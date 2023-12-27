@@ -1,6 +1,6 @@
 import { map, flash, mainBar, vectorSource, featureAsGeoJSON, locate, changedFeatureQueue } from 'map/map'
 import { mapChannel } from 'channels/map_channel'
-import { hoverStyle } from 'map/styles'
+import { hoverStyle, vectorStyle } from 'map/styles'
 
 var drawInteraction, pointInteraction, lineInteraction, modifyInteraction, selectInteraction
 export var undoInteraction
@@ -204,36 +204,47 @@ export function initializeInteractions() {
     })
   })
 
-  let selectedFeature = null;
+  let previouslySelectedFeature = null;
+  let currentlySelectedFeature = null;
+
   map.on('pointermove', function (event) {
-   if (selectedFeature !== null) { selectedFeature.setStyle(null) }
+    currentlySelectedFeature = null
+    map.forEachFeatureAtPixel(event.pixel, function (feature) {
+      currentlySelectedFeature = feature
+    if (previouslySelectedFeature == null || feature.getId() !== previouslySelectedFeature.getId()) {
+      feature.setStyle(hoverStyle(feature))
 
-   map.forEachFeatureAtPixel(event.pixel, function (feature) {
-    selectedFeature = feature;
-    selectedFeature.setStyle(hoverStyle)
+      const geometry = feature.getGeometry()
+      const coordinates = geometry.getCoordinates()
+      popup2.setPosition(coordinates)
+      // Update the popup's content with the feature's data
+      const element = popup2.getElement()
 
-    const geometry = feature.getGeometry()
-    const coordinates = geometry.getCoordinates()
-    popup2.setPosition(coordinates)
-    // Update the popup's content with the feature's data
-    const element = popup2.getElement()
-
-    element.innerHTML = "<div id='feature-popup-content'>" + feature.getId() + "</div>"
-    const deleteButton = document.createElement('button')
-    deleteButton.textContent = 'Delete'
-    deleteButton.addEventListener('click', function() {
-     vectorSource.removeFeature(feature)
-     element.innerHTML = ""
-     mapChannel.send_message('delete_feature', featureAsGeoJSON(feature))
-     flash('Feature deleted', 'success')
-     document.getElementsByClassName('button-undo')[0].classList.remove("hidden")
-    })
-    document.getElementById('feature-popup-content').appendChild(deleteButton)
+      element.innerHTML = "<div id='feature-popup-content'>" + feature.getId() + "</div>"
+      const deleteButton = document.createElement('button')
+      deleteButton.textContent = 'Delete'
+      deleteButton.addEventListener('click', function() {
+       vectorSource.removeFeature(feature)
+       element.innerHTML = ""
+       mapChannel.send_message('delete_feature', featureAsGeoJSON(feature))
+       flash('Feature deleted', 'success')
+       document.getElementsByClassName('button-undo')[0].classList.remove("hidden")
+      })
+      document.getElementById('feature-popup-content').appendChild(deleteButton)
+    }
 
     return true;
    }, {
     hitTolerance: 5 // Tolerance in pixels
    })
+
+    // reset feature style if no more highlighted
+    if (previouslySelectedFeature &&
+        (currentlySelectedFeature == null ||
+          currentlySelectedFeature.getId() !== previouslySelectedFeature.getId())) {
+      previouslySelectedFeature.setStyle(vectorStyle(previouslySelectedFeature))
+    }
+    previouslySelectedFeature = currentlySelectedFeature
   })
 
 }
