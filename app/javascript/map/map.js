@@ -11,6 +11,7 @@ var geoJsonFormat = new ol.format.GeoJSON()
 export var changedFeatureQueue = [];
 export var vectorSource;
 export var map;
+export var raster;
 export var mainBar;
 
 
@@ -65,18 +66,14 @@ function initializeMap() {
   var satellite_tiles = new ol.source.XYZ({
     attributions: ['Powered by Esri',
                    'Source: Esri, DigitalGlobe, GeoEye, Earthstar Geographics, CNES/Airbus DS, USDA, USGS, AeroGRID, IGN, and the GIS User Community'],
-    attributionsCollapsible: false,
+    attributionsCollapsible: true,
     url: 'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
     maxZoom: 23
   })
   var osm_tiles = new ol.source.OSM()
 
-  var raster = new ol.layer.Tile({
+  raster = new ol.layer.Tile({
     source: satellite_tiles
-  });
-
-  const attribution = new ol.control.Attribution({
-    collapsible: true,
   });
 
   map = new ol.Map({
@@ -90,9 +87,9 @@ function initializeMap() {
     }),
     controls: ol.control.defaults.defaults({
       zoom: true,
-      attribution: false,
+      attribution: true,
       rotate: false
-    }).extend([attribution])
+    })
   })
 
   // Main control bar
@@ -105,12 +102,16 @@ export function featureAsGeoJSON(feature) {
   return geoJSON
 }
 
+// This method gets called from the hotwire channel
 export function updateFeature(data) {
   // TODO: only create/update if visible in bbox
   let newFeature = geoJsonFormat.readFeature(data)
   let feature = vectorSource.getFeatureById(data['id'])
   if(feature) {
     console.log('updating feature ' + data['id'])
+    if (data['geometry']['type'] === 'Point') {
+      animateMarker(newFeature, feature.getGeometry().getCoordinates(), newFeature.getGeometry().getCoordinates())
+    }
     feature.setGeometry(newFeature.getGeometry())
     feature.setProperties(newFeature.getProperties())
     feature.changed()
@@ -120,6 +121,29 @@ export function updateFeature(data) {
   }
   // drop from changedFeatureQueue, it's coming from server
   arrayRemove(changedFeatureQueue, newFeature)
+}
+
+function animateMarker(feature, start, end) {
+  console.log('Animating ' + feature.getId() + ' from ' + JSON.stringify(start) + ' to ' + JSON.stringify(end))
+  const startTime = Date.now();
+  const listenerKey = raster.on('postrender', animate);
+
+  const duration = 300;
+  function animate(event) {
+    const frameState = event.frameState;
+    const elapsed = frameState.time - startTime;
+    if (elapsed >= duration) {
+      ol.Observable.unByKey(listenerKey);
+      return;
+    }
+   const elapsedRatio = elapsed / duration;
+   const currentCoordinate = [
+     start[0] + elapsedRatio * (end[0] - start[0]),
+     start[1] + elapsedRatio * (end[1] - start[1]),
+   ];
+     feature.getGeometry().setCoordinates(currentCoordinate);
+     map.render();
+   }
 }
 
 export function deleteFeature(data) {
