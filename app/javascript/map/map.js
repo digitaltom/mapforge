@@ -98,7 +98,7 @@ function initializeMap() {
 }
 
 export function featureAsGeoJSON(feature) {
-  var geoJSON = geoJsonFormat.writeFeatureObject(feature);
+  var geoJSON = geoJsonFormat.writeFeatureObject(feature)
   return geoJSON
 }
 
@@ -107,10 +107,11 @@ export function updateFeature(data) {
   // TODO: only create/update if visible in bbox
   let newFeature = geoJsonFormat.readFeature(data)
   let feature = vectorSource.getFeatureById(data['id'])
-  if(feature) {
+  if(feature && changed(feature, newFeature)) {
     console.log('updating feature ' + data['id'])
     if (data['geometry']['type'] === 'Point') {
-      animateMarker(newFeature, feature.getGeometry().getCoordinates(), newFeature.getGeometry().getCoordinates())
+      animateMarker(newFeature, feature.getGeometry().getCoordinates(),
+        newFeature.getGeometry().getCoordinates())
     }
     feature.setGeometry(newFeature.getGeometry())
     feature.setProperties(newFeature.getProperties())
@@ -121,6 +122,20 @@ export function updateFeature(data) {
   }
   // drop from changedFeatureQueue, it's coming from server
   arrayRemove(changedFeatureQueue, newFeature)
+}
+
+export function deleteFeature(data) {
+  // TODO: only delete if visible in bbox
+  let feature = vectorSource.getFeatureById(data['id'])
+  if(feature) {
+    console.log('deleting feature ' + data['id'])
+  }
+}
+
+function changed(feature, newFeature) {
+  var changed_coords = (JSON.stringify(feature.getGeometry().getCoordinates()) !== JSON.stringify(newFeature.getGeometry().getCoordinates()))
+  var changed_props =  (JSON.stringify(feature.getGeometry().getProperties()) !== JSON.stringify(newFeature.getGeometry().getProperties()))
+  return (changed_coords || changed_props)
 }
 
 function animateMarker(feature, start, end) {
@@ -144,14 +159,6 @@ function animateMarker(feature, start, end) {
      feature.getGeometry().setCoordinates(currentCoordinate);
      map.render();
    }
-}
-
-export function deleteFeature(data) {
-  // TODO: only delete if visible in bbox
-  let feature = vectorSource.getFeatureById(data['id'])
-  if(feature) {
-    console.log('deleting feature ' + data['id'])
-  }
 }
 
 export function locate() {
@@ -181,8 +188,10 @@ export function flash(message, type='info', timeout=3000) {
   flash_container.appendChild(flash_message)
   document.getElementById('flash').appendChild(flash_container)
   flash_container.style.opacity = '1'
+  flash_container.style.bottom = '0.5em';
   setTimeout(function() {
     flash_container.style.opacity = '0'
+    flash_container.style.bottom = '-1em';
   }, timeout)
   setTimeout(function() {
     flash_container.remove()

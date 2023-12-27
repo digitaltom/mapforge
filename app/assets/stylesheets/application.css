@@ -28,11 +28,11 @@ html, body, #map {
 #flash-container {
  position: fixed;
  z-index: 99;
- bottom: 0.5em;
+ bottom: -1em;
  left: 50%;
  transform: translateX(-50%);
  opacity: 0;
- transition: opacity 0.7s ease-in-out;
+ transition: opacity 0.7s linear, bottom 0.7s ease-in-out;
 }
 
 .flash-message {
@@ -49,6 +49,10 @@ html, body, #map {
 
 .flash-message.success {
  background-color: #dff0d8;
+}
+
+.flash-message.error {
+ background-color: #ffb3b3;
 }
 
 .ol-control button {
