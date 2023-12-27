@@ -75,6 +75,10 @@ function initializeMap() {
     source: satellite_tiles
   });
 
+  const attribution = new ol.control.Attribution({
+    collapsible: true,
+  });
+
   map = new ol.Map({
     layers: [raster, vector],
     target: 'map',
@@ -86,9 +90,9 @@ function initializeMap() {
     }),
     controls: ol.control.defaults.defaults({
       zoom: true,
-      attribution: true,
+      attribution: false,
       rotate: false
-    })
+    }).extend([attribution])
   })
 
   // Main control bar
@@ -104,12 +108,12 @@ export function featureAsGeoJSON(feature) {
 export function updateFeature(data) {
   // TODO: only create/update if visible in bbox
   let newFeature = geoJsonFormat.readFeature(data)
-  let feature = vectorSource.getFeatureById(data['id']);
+  let feature = vectorSource.getFeatureById(data['id'])
   if(feature) {
-    console.log('updating feature ' + data['id']);
-    feature.setGeometry(newFeature.getGeometry());
-    feature.setProperties(newFeature.getProperties());
-    feature.changed();
+    console.log('updating feature ' + data['id'])
+    feature.setGeometry(newFeature.getGeometry())
+    feature.setProperties(newFeature.getProperties())
+    feature.changed()
   } else {
     // addFeature will not add if id already exists
     vectorSource.addFeature(newFeature);
@@ -120,7 +124,7 @@ export function updateFeature(data) {
 
 export function deleteFeature(data) {
   // TODO: only delete if visible in bbox
-  let feature = vectorSource.getFeatureById(data['id']);
+  let feature = vectorSource.getFeatureById(data['id'])
   if(feature) {
     console.log('deleting feature ' + data['id'])
   }
@@ -128,14 +132,14 @@ export function deleteFeature(data) {
 
 export function locate() {
   if(!navigator.geolocation) {
-      console.log("Your browser doesn't support geolocation")
+      flash('Your browser doesn\'t support geolocation', 'info')
   } else {
-      console.log("Detecting geolocation")
+      flash('Detecting your geolocation', 'info')
       navigator.geolocation.getCurrentPosition(function(position) {
        var coordinates = ol.proj.fromLonLat([position.coords.longitude, position.coords.latitude]);
-       console.log("Setting " + coordinates)
+       flash('Location set to: ' + coordinates, 'success')
        map.getView().setCenter(coordinates);
-      });
+      })
   }
 }
 
@@ -143,4 +147,20 @@ function arrayRemove(arr, value) {
     return arr.filter(function(ele){
         return ele != value;
     })
+}
+
+export function flash(message, type='info', timeout=3000) {
+  var flash_container = document.getElementById('flash-container').cloneNode(true)
+  const flash_message = document.createElement('div')
+  flash_message.classList.add('flash-message', type)
+  flash_message.innerHTML = message
+  flash_container.appendChild(flash_message)
+  document.getElementById('flash').appendChild(flash_container)
+  flash_container.style.opacity = '1'
+  setTimeout(function() {
+    flash_container.style.opacity = '0'
+  }, timeout)
+  setTimeout(function() {
+    flash_container.remove()
+  }, timeout + 500) // Delete message after animation is done
 }

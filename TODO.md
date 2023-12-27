@@ -4,7 +4,8 @@
 
 * popover position + layout
   * handle popover on map move/zoom
-* show popover on click for mobile
+  * disable popup in non-select mode
+  * show popover on click for mobile
 * Flash messages about what's happening on the map
 * animate point position moves
 * show error on change when not connected to websocket
@@ -26,6 +27,7 @@
 * New map gets private + public (read-only) url
   * validate access on update
   * add view location to shareable public url
+  * share button
 * New feature type text (is this a point with 'hide icon'?)
 * Map properties: Name, description
   * Initial location center, zoom

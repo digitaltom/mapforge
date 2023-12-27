@@ -1,4 +1,4 @@
-import { map, mainBar, vectorSource, featureAsGeoJSON, locate, changedFeatureQueue } from 'map/map'
+import { map, flash, mainBar, vectorSource, featureAsGeoJSON, locate, changedFeatureQueue } from 'map/map'
 import { mapChannel } from 'channels/map_channel'
 import { hoverStyle } from 'map/styles'
 
@@ -57,6 +57,7 @@ export function initializeInteractions() {
           resetInteractions()
           document.getElementsByClassName('button-modify')[0].classList.add("active")
           map.addInteraction(modifyInteraction)
+          flash('Select a feature on your map to move it or change its shape')
         }
       }),
       new ol.control.Button({
@@ -67,6 +68,7 @@ export function initializeInteractions() {
           resetInteractions()
           document.getElementsByClassName('button-marker')[0].classList.add("active")
           map.addInteraction(pointInteraction)
+          flash('Click on a location to place a marker')
         }
       }),
       new ol.control.Button({
@@ -77,6 +79,7 @@ export function initializeInteractions() {
           resetInteractions()
           document.getElementsByClassName('button-line')[0].classList.add("active")
           map.addInteraction(lineInteraction)
+          flash('Click on a location to start drawing a line')
         }
       }),
       new ol.control.Button({
@@ -87,6 +90,7 @@ export function initializeInteractions() {
           resetInteractions()
           document.getElementsByClassName('button-polygon')[0].classList.add("active")
           map.addInteraction(drawInteraction)
+          flash('Click on a location on your map to start marking an area')
         }
       })
     ]
@@ -107,6 +111,7 @@ export function initializeInteractions() {
           if (undoInteraction.length() === 0) {
             document.getElementsByClassName('button-undo')[0].classList.add("hidden")
           }
+          flash('Reverted one change', 'success')
         }
       }),
       new ol.control.Button({
@@ -117,6 +122,7 @@ export function initializeInteractions() {
           undoInteraction.redo()
           if (undoInteraction.length('redo') === 0) { document.getElementsByClassName('button-redo')[0].classList.add("hidden")}
           document.getElementsByClassName('button-undo')[0].classList.remove("hidden")
+          flash('Re-applied one change', 'success')
         }
       })
     ]
@@ -184,6 +190,7 @@ export function initializeInteractions() {
         console.log('Feature ' + feature.getId() + ' has been modified')
         mapChannel.send_message('update_feature', featureAsGeoJSON(feature))
         document.getElementsByClassName('button-undo')[0].classList.remove("hidden")
+        flash('Feature updated', 'success')
     }
   });
 
@@ -191,6 +198,7 @@ export function initializeInteractions() {
     element.on('drawend', function(e) {
       e.feature.setId(createFeatureId())
       console.log('Feature ' + e.feature.getId() + ' has been created')
+      flash('Feature added', 'success')
       mapChannel.send_message('new_feature', featureAsGeoJSON(e.feature))
       document.getElementsByClassName('button-undo')[0].classList.remove("hidden")
     })
@@ -217,6 +225,7 @@ export function initializeInteractions() {
      vectorSource.removeFeature(feature)
      element.innerHTML = ""
      mapChannel.send_message('delete_feature', featureAsGeoJSON(feature))
+     flash('Feature deleted', 'success')
      document.getElementsByClassName('button-undo')[0].classList.remove("hidden")
     })
     document.getElementById('feature-popup-content').appendChild(deleteButton)
