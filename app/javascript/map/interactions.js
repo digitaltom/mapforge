@@ -15,25 +15,31 @@ export function initializeInteractions() {
   const selectedFeatures = new ol.Collection()
   selectInteraction = new ol.interaction.Select({
    features: selectedFeatures,
+   style: hoverStyle
   })
 
   drawInteraction = new ol.interaction.Draw({
     source: vectorSource,
+    style: hoverStyle,
     type: 'Polygon'
   })
 
   pointInteraction = new ol.interaction.Draw({
     source: vectorSource,
+    style: hoverStyle,
     type: 'Point'
   });
 
   lineInteraction = new ol.interaction.Draw({
     source: vectorSource,
+    style: hoverStyle,
     type: 'LineString'
   });
 
   // https://openlayers.org/en/latest/apidoc/module-ol_interaction_Modify-Modify.html
-  modifyInteraction = new ol.interaction.Modify({source: vectorSource})
+  modifyInteraction = new ol.interaction.Modify({ source: vectorSource,
+                                                  style: hoverStyle,
+                                                  pixelTolerance: 5 })
 
   // Control bar: https://viglino.github.io/ol-ext/doc/doc-pages/ol.control.Bar.html
   var editBar = new ol.control.Bar({
@@ -47,6 +53,7 @@ export function initializeInteractions() {
         handleClick: function() {
           resetInteractions()
           document.getElementsByClassName('button-select')[0].classList.add("active")
+          map.addInteraction(selectInteraction)
         }
       }),
       new ol.control.Button({
@@ -145,13 +152,6 @@ export function initializeInteractions() {
   map.addControl(mapNavBar)
   mapNavBar.setPosition('top-left')
 
-  // Popup overlay: https://viglino.github.io/ol-ext/doc/doc-pages/ol.Overlay.Popup.html
-  const popup2 = new ol.Overlay({
-   element: document.getElementById('feature-popup'),
-   stopEvent: false, // Don't stop mousemove events from reaching the map
-  })
-  map.addOverlay(popup2);
-
   undoInteraction.on('undo', function(e) {
     const feature = e.action.feature
     // undo changed/added feature -> remove from server
@@ -211,34 +211,21 @@ export function initializeInteractions() {
     currentlySelectedFeature = null
     map.forEachFeatureAtPixel(event.pixel, function (feature) {
       currentlySelectedFeature = feature
-    if (previouslySelectedFeature == null || feature.getId() !== previouslySelectedFeature.getId()) {
+    if (previouslySelectedFeature == null ||
+      feature.getId() !== previouslySelectedFeature.getId()) {
       feature.setStyle(hoverStyle(feature))
-
-      const geometry = feature.getGeometry()
-      const coordinates = geometry.getCoordinates()
-      popup2.setPosition(coordinates)
-      // Update the popup's content with the feature's data
-      const element = popup2.getElement()
-
-      element.innerHTML = "<div id='feature-popup-content'>" + feature.getId() + "</div>"
-      const deleteButton = document.createElement('button')
-      deleteButton.textContent = 'Delete'
-      deleteButton.addEventListener('click', function() {
-       vectorSource.removeFeature(feature)
-       element.innerHTML = ""
-       mapChannel.send_message('delete_feature', featureAsGeoJSON(feature))
-       flash('Feature deleted', 'success')
-       document.getElementsByClassName('button-undo')[0].classList.remove("hidden")
-      })
-      document.getElementById('feature-popup-content').appendChild(deleteButton)
+      showFeatureDetails(feature)
     }
-
     return true;
    }, {
     hitTolerance: 5 // Tolerance in pixels
    })
 
     // reset feature style if no more highlighted
+    // if (previouslySelectedFeature && currentlySelectedFeature == null) {
+    //   hideFeatureDetails(previouslySelectedFeature)
+    // }
+
     if (previouslySelectedFeature &&
         (currentlySelectedFeature == null ||
           currentlySelectedFeature.getId() !== previouslySelectedFeature.getId())) {
@@ -248,6 +235,28 @@ export function initializeInteractions() {
   })
 
 }
+
+function showFeatureDetails(feature) {
+  var details_container = document.getElementById('feature-details')
+  details_container.innerHTML = feature.getId()
+  const deleteButton = document.createElement('button')
+  deleteButton.textContent = 'Delete'
+  deleteButton.addEventListener('click', function() {
+    vectorSource.removeFeature(feature)
+    hideFeatureDetails(feature)
+    mapChannel.send_message('delete_feature', featureAsGeoJSON(feature))
+    flash('Feature deleted', 'success')
+    document.getElementsByClassName('button-undo')[0].classList.remove("hidden")
+  })
+  details_container.appendChild(deleteButton)
+  details_container.style.opacity = '1'
+}
+
+function hideFeatureDetails(feature) {
+  var details_container = document.getElementById('feature-details')
+  details_container.style.opacity = '0'
+}
+
 
 function resetInteractions() {
   map.removeInteraction(drawInteraction)

@@ -55,6 +55,16 @@ html, body, #map {
  background-color: #ffb3b3;
 }
 
+#feature-details {
+ position: fixed;
+ z-index: 99;
+ top: 5em;
+ background-color: #fff;
+ right: 10em;
+ opacity: 0;
+ transition: opacity 0.7s linear, right 0.7s ease-in-out;
+}
+
 .ol-control button {
     width: unset;
     min-width: 1.375em;
