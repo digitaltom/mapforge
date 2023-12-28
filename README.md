@@ -1,4 +1,4 @@
-[![Tests](https://github.com/digitaltom/ourmaps/actions/workflows/rubyonrails.yml/badge.svg)](https://github.com/digitaltom/ourmaps/actions/workflows/rubyonrails.yml)
+[![Tests](https://github.com/digitaltom/ourmaps/actions/workflows/ci.yml/badge.svg)](https://github.com/digitaltom/ourmaps/actions/workflows/ci.yml)
 [![Docker](https://github.com/digitaltom/ourmaps/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/digitaltom/ourmaps/actions/workflows/docker-publish.yml)
 
 # README

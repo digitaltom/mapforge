@@ -14,25 +14,29 @@
  *= require_self
  */
 
-html, body, #map {
-    height: 100%;
-    width: 100%;
-    margin: 0;
-    padding: 0;
+html,
+body,
+#map {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 .hidden {
-    display: none !important;
+  display: none !important;
 }
 
 #flash-container {
- position: fixed;
- z-index: 99;
- bottom: -1em;
- left: 50%;
- transform: translateX(-50%);
- opacity: 0;
- transition: opacity 0.7s linear, bottom 0.7s ease-in-out;
+  position: fixed;
+  z-index: 99;
+  bottom: -1em;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition:
+    opacity 0.7s linear,
+    bottom 0.7s ease-in-out;
 }
 
 .flash-message {
@@ -45,49 +49,54 @@ html, body, #map {
 }
 
 .flash-message.info {
+  background-color: #fff;
 }
 
 .flash-message.success {
- background-color: #dff0d8;
+  background-color: #dff0d8;
 }
 
 .flash-message.error {
- background-color: #ffb3b3;
+  background-color: #ffb3b3;
 }
 
 #feature-details {
- position: fixed;
- z-index: 99;
- top: 5em;
- background-color: #fff;
- right: 7em;
- opacity: 0;
- transition: opacity 0.7s linear, right 0.7s ease-in-out;
+  position: fixed;
+  z-index: 99;
+  top: 5em;
+  background-color: #fff;
+  right: 7em;
+  opacity: 0;
+  transition:
+    opacity 0.7s linear,
+    right 0.7s ease-in-out;
 }
 
 .ol-control button {
-    width: unset;
-    min-width: 1.375em;
-    font-size: 1.6em;
+  width: unset;
+  min-width: 1.375em;
+  font-size: 1.6em;
 }
 
 .ol-left {
-    left: 0.6em !important;
+  left: 0.6em !important;
 }
 
-.ol-button > button:hover, .ol-button.active > button {
-    color: #000;
-    font-weight: bold;
-    background-color: #c0c0c0;
+.ol-button > button:hover,
+.ol-button.active > button {
+  color: #000;
+  font-weight: bold;
+  background-color: #c0c0c0;
+}
+
+.ol-control.ol-toggle button:disabled {
+  background-color: #ccc;
 }
 
 /* Active buttons */
 .ol-control.ol-bar .ol-toggle.ol-active > button,
 .ol-control.ol-bar .ol-toggle.ol-active button:hover {
-    color: #000;
-    font-weight: bold;
-    background-color: #c0c0c0;
-}
-.ol-control.ol-toggle button:disabled {
-  background-color: #ccc;
+  color: #000;
+  font-weight: bold;
+  background-color: #c0c0c0;
 }
