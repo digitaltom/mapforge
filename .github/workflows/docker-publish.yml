@@ -8,12 +8,11 @@ name: Docker
 on:
   schedule:
     - cron: '45 7 * * *'
-  push:
-    branches: [ "main" ]
-    # Publish semver tags as releases.
-    tags: [ 'v*.*.*' ]
-  pull_request:
-    branches: [ "main" ]
+  workflow_run:
+    workflows: ["Lint & Tests"]
+    types:
+      - completed
+
 
 env:
   # Use docker.io for Docker Hub if empty

@@ -8,7 +8,6 @@
   * disable popup in non-select mode
   * show popover on click for mobile
 * Handle 'changeproperties' in undo/redo
-* make docker build depend on CI
 * CSS framework, https://www.simplethread.com/how-to-create-a-new-rails-7-app-with-tailwind/
 * use bbox to only load visible features when moving/zooming map
   * only update features received by action_cable that are visible
