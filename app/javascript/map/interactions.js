@@ -15,7 +15,8 @@ export function initializeInteractions() {
   const selectedFeatures = new ol.Collection()
   selectInteraction = new ol.interaction.Select({
    features: selectedFeatures,
-   style: hoverStyle
+   style: hoverStyle,
+   multi: false
   })
 
   drawInteraction = new ol.interaction.Draw({
@@ -103,6 +104,7 @@ export function initializeInteractions() {
     ]
   })
   mainBar.addControl(editBar)
+  map.addInteraction(selectInteraction)
 
   var undoBar = new ol.control.Bar({
     group: true,
@@ -204,10 +206,27 @@ export function initializeInteractions() {
     })
   })
 
-  let previouslySelectedFeature = null;
-  let currentlySelectedFeature = null;
+  selectInteraction.on('select', function(e) {
+    const selectedFeatures = e.selected
+    const deselectedFeatures = e.deselected
+    // hide old details first, then show new one
+    Array.from(deselectedFeatures).forEach(function(feature) {
+        hideFeatureDetails(feature)
+        feature.setStyle(vectorStyle(feature))
+    })
+    Array.from(selectedFeatures).forEach(function(feature) {
+        showFeatureDetails(feature)
+    })
+  })
+
+  let previouslySelectedFeature = null
+  let currentlySelectedFeature = null
 
   map.on('pointermove', function (event) {
+
+    // skip hover effects when features are selected
+    if (selectInteraction.getFeatures().getArray().length) { return true }
+
     currentlySelectedFeature = null
     map.forEachFeatureAtPixel(event.pixel, function (feature) {
       currentlySelectedFeature = feature
@@ -218,18 +237,15 @@ export function initializeInteractions() {
     }
     return true;
    }, {
-    hitTolerance: 5 // Tolerance in pixels
+     hitTolerance: 5 // Tolerance in pixels
    })
 
-    // reset feature style if no more highlighted
-    // if (previouslySelectedFeature && currentlySelectedFeature == null) {
-    //   hideFeatureDetails(previouslySelectedFeature)
-    // }
-
+    // reset style of no more hovered feature
     if (previouslySelectedFeature &&
         (currentlySelectedFeature == null ||
           currentlySelectedFeature.getId() !== previouslySelectedFeature.getId())) {
       previouslySelectedFeature.setStyle(vectorStyle(previouslySelectedFeature))
+      hideFeatureDetails(previouslySelectedFeature)
     }
     previouslySelectedFeature = currentlySelectedFeature
   })

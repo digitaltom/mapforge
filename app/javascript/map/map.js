@@ -140,15 +140,15 @@ function changed(feature, newFeature) {
 
 function animateMarker(feature, start, end) {
   console.log('Animating ' + feature.getId() + ' from ' + JSON.stringify(start) + ' to ' + JSON.stringify(end))
-  const startTime = Date.now();
-  const listenerKey = raster.on('postrender', animate);
+  const startTime = Date.now()
+  const listenerKey = raster.on('postrender', animate)
 
-  const duration = 300;
+  const duration = 300
   function animate(event) {
     const frameState = event.frameState;
-    const elapsed = frameState.time - startTime;
+    const elapsed = frameState.time - startTime
     if (elapsed >= duration) {
-      ol.Observable.unByKey(listenerKey);
+      ol.Observable.unByKey(listenerKey)
       return;
     }
    const elapsedRatio = elapsed / duration;
@@ -156,8 +156,8 @@ function animateMarker(feature, start, end) {
      start[0] + elapsedRatio * (end[0] - start[0]),
      start[1] + elapsedRatio * (end[1] - start[1]),
    ];
-     feature.getGeometry().setCoordinates(currentCoordinate);
-     map.render();
+     feature.getGeometry().setCoordinates(currentCoordinate)
+     map.render()
    }
 }
 
@@ -176,7 +176,7 @@ export function locate() {
 
 function arrayRemove(arr, value) {
     return arr.filter(function(ele){
-        return ele != value;
+        return ele != value
     })
 }
 
@@ -188,10 +188,10 @@ export function flash(message, type='info', timeout=3000) {
   flash_container.appendChild(flash_message)
   document.getElementById('flash').appendChild(flash_container)
   flash_container.style.opacity = '1'
-  flash_container.style.bottom = '0.5em';
+  flash_container.style.bottom = '0.5em'
   setTimeout(function() {
     flash_container.style.opacity = '0'
-    flash_container.style.bottom = '-1em';
+    flash_container.style.bottom = '-1em'
   }, timeout)
   setTimeout(function() {
     flash_container.remove()
