@@ -40,11 +40,15 @@ namespace :animation do
 
     # point
     point = map.features.find_or_create_by(id: "#{args.fetch(:mapid)}_point")
-    point.update(geometry: { 'type' => 'Point', 'coordinates' => linestring.points.first.coordinates })
-    linestring.points.each do |linepoint|
+    i = 0
+    # animate
+    loop do
+      linepoint = linestring.points[i]
+      i += 1
       puts "Moving to: #{linepoint}"
       point.update(geometry: { 'type' => 'Point', 'coordinates' => linepoint.coordinates })
       sleep 0.3
+      i = 0 if i >= linestring.points.size
     end
   end
 end

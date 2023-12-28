@@ -26,3 +26,6 @@ Rails/I18nLocaleTexts:
 
 Bundler/OrderedGems:
   Enabled: false
+
+Layout/LineLength:
+  Max: 120
