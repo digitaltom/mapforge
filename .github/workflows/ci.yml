@@ -4,13 +4,39 @@
 #
 # This workflow will install a prebuilt Ruby version, install dependencies, and
 # run tests and linters.
-name: "Ruby on Rails CI"
+name: "Lint & Tests"
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Install dependencies
+        run: sudo apt-get install -y ruby-dev build-essential git libvips pkg-config libproj-dev proj-bin
+      - name: Install Ruby and gems
+        uses: ruby/setup-ruby@55283cc23133118229fd3f97f9336ee23a179fcf # v1.146.0
+        with:
+          bundler-cache: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 16
+          cache: 'npm'
+      - name: Install eslint
+        run: npm install
+      - name: Security audit dependencies
+        run: bin/bundler-audit --update
+      - name: Security audit application code
+        run: bin/brakeman -q -w2
+      - name: Lint Ruby files
+        run: bin/rubocop --parallel
+      - name: Lint Javascript
+        run: npm run lint
+
   test:
     runs-on: ubuntu-latest
     services:
@@ -29,25 +55,5 @@ jobs:
         uses: ruby/setup-ruby@55283cc23133118229fd3f97f9336ee23a179fcf # v1.146.0
         with:
           bundler-cache: true
-      # Add or replace test runners here
       - name: Run tests
         run: bin/rspec
-
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Install dependencies
-        run: sudo apt-get install -y ruby-dev build-essential git libvips pkg-config libproj-dev proj-bin
-      - name: Install Ruby and gems
-        uses: ruby/setup-ruby@55283cc23133118229fd3f97f9336ee23a179fcf # v1.146.0
-        with:
-          bundler-cache: true
-      # Add or replace any other lints here
-      - name: Security audit dependencies
-        run: bin/bundler-audit --update
-      - name: Security audit application code
-        run: bin/brakeman -q -w2
-      - name: Lint Ruby files
-        run: bin/rubocop --parallel

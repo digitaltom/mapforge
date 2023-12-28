@@ -15,6 +15,7 @@ Dependencies:
 ```
 zypper in proj-devel # (libproj-dev) for building rgeo-proj4
 zypper in proj # (proj-bin) for running rgeo-proj4
+zypper in npm # for running eslint
 bundle
 ```
 
@@ -40,7 +41,11 @@ More .geojson example files at: https://exploratory.io/map
 
 ### Tests
 
-`bundle exec rspec`
+Linters:
+  * `bin/rubocop`
+  * `npm install; npm run lint`
+
+Specs: `bundle exec rspec`
 
 ### Container build
 
