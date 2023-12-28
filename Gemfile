@@ -86,4 +86,7 @@ group :test do
   gem 'rspec'
   gem 'rspec-rails'
   gem 'selenium-webdriver'
+  gem 'simplecov'
+  gem 'database_cleaner-mongoid'
+  gem 'mongoid-rspec', github: 'mongoid-rspec/mongoid-rspec'
 end

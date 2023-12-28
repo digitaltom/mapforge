@@ -7,17 +7,16 @@
   * handle popover on map move/zoom
   * disable popup in non-select mode
   * show popover on click for mobile
+* SimpleCov.minimum_coverage 100
 * Handle 'changeproperties' in undo/redo
 * CSS framework, https://www.simplethread.com/how-to-create-a-new-rails-7-app-with-tailwind/
 * use bbox to only load visible features when moving/zooming map
   * only update features received by action_cable that are visible
-* dev Procfile
+* dev Procfile?
 * Admin view: Map list with screenshots
 * About page: https://icons8.com/icons, https://icons8.com/line-awesome
-* Learn Stimulus
-
-* domain options: mapforge.org, ourmaps.org, mapcrafting.org
-  beautifulmaps.org finemaps.org
+* Do we need Stimulus?
+* domain options: mapforge.org, ourmaps.org, mapcrafting.org finemaps.org
 
 
 ## Feature Ideas
