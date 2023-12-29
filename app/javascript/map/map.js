@@ -3,7 +3,6 @@ import { vectorStyle } from 'map/styles'
 import { initializeInteractions, undoInteraction } from 'map/interactions'
 
 // eslint expects variables to get imported, but we load the full lib in header
-const gon = window.gon
 const ol = window.ol
 
 const defaults = {
@@ -48,7 +47,7 @@ function initializeMap () {
     format: geoJsonFormat,
     loader: function (extent, resolution, projection) {
       // TODO only load visible features via bbox
-      const url = '/maps/' + gon.map_id + '/features?bbox=' + extent.join(',') + ',EPSG:3857'
+      const url = '/maps/' + window.gon.map_id + '/features?bbox=' + extent.join(',') + ',EPSG:3857'
       fetch(url)
         .then(response => response.json())
         .then(data => {
@@ -186,6 +185,7 @@ function arrayRemove (arr, value) {
 }
 
 export function flash (message, type = 'info', timeout = 3000) {
+  if (!document.getElementById('flash-container')) { return false }
   const flashContainer = document.getElementById('flash-container').cloneNode(true)
   const flashMessage = document.createElement('div')
   flashMessage.classList.add('flash-message', type)

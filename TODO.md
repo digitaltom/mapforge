@@ -2,7 +2,6 @@
 
 ## TODO:
 
-* why is the moving point shown on all maps?
 * popover position + layout
   * handle popover on map move/zoom
   * disable popup in non-select mode

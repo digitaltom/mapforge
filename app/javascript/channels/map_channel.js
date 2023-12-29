@@ -4,14 +4,13 @@ import { updateFeature, deleteFeature, flash } from 'map/map'
 let mapChannel
 export { mapChannel }
 
-// eslint expects variables to get imported, but we load the full lib in header
-const gon = window.gon
-
 export function initializeSocket () {
-  consumer.subscriptions.create({ channel: 'MapChannel', map_id: gon.map_id }, {
+  if (mapChannel) { mapChannel.unsubscribe() }
+  console.log('Request socket for ' + window.gon.map_id)
+  consumer.subscriptions.create({ channel: 'MapChannel', map_id: window.gon.map_id }, {
     connected () {
       // Called when the subscription is ready for use on the server
-      console.log('connected to map_channel ' + gon.map_id)
+      console.log('connected to map_channel ' + window.gon.map_id)
       mapChannel = this
       flash('Realtime connection to server established', 'success')
     },
@@ -35,7 +34,7 @@ export function initializeSocket () {
     },
 
     send_message (action, data) {
-      data.map_id = gon.map_id
+      data.map_id = window.gon.map_id
       console.log('Sending: [' + action + '] ' + JSON.stringify(data))
       // Call the original perform method
       this.perform(action, data)

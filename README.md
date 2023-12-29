@@ -43,7 +43,7 @@ More .geojson example files at: https://exploratory.io/map
 
 Linters:
   * `bin/rubocop`
-  * `npm install; npm run lint`
+  * `npm install; npm run lint:css; npm run lint:js`
 
 Specs: `bundle exec rspec`
 
