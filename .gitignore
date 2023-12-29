@@ -36,3 +36,7 @@
 
 # npm
 /node_modules/
+
+# test artifacts 
+capybara-*
+coverage/

@@ -15,6 +15,7 @@
 * Admin view: Map list with screenshots
 * About page: https://icons8.com/icons, https://icons8.com/line-awesome
 * Do we need Stimulus?
+* bump min coverage to 100%
 * domain options: mapforge.org, ourmaps.org, mapcrafting.org finemaps.org
 
 

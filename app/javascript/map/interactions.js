@@ -256,7 +256,7 @@ export function initializeInteractions () {
 
 function showFeatureDetails (feature) {
   const detailsContainer = document.getElementById('feature-details')
-  detailsContainer.innerHTML = feature.getId()
+  detailsContainer.innerHTML = feature.getId() + ' ' + JSON.stringify(featureAsGeoJSON(feature))
   const deleteButton = document.createElement('button')
   deleteButton.textContent = 'Delete'
   deleteButton.addEventListener('click', function () {
