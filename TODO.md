@@ -5,8 +5,9 @@
 * popover position + layout
   * handle popover on map move/zoom
   * disable popup in non-select mode
-  * show popover on click for mobile
+* SimpleStyle Spec: https://github.com/mapbox/simplestyle-spec/tree/master/1.1.0
 * SimpleCov.minimum_coverage 100
+* Add location marker
 * Handle 'changeproperties' in undo/redo
 * CSS framework, https://www.simplethread.com/how-to-create-a-new-rails-7-app-with-tailwind/
 * use bbox to only load visible features when moving/zooming map
@@ -25,7 +26,8 @@
   * validate access on update
   * add view location to shareable public url
   * share button
-* New feature type text (is this a point with 'hide icon'?)
+* New feature type text (point without icon)
+* New feature free draw (line with 'shift'), downsample points
 * Map properties: Name, description
   * Initial location center, zoom
   * Base map selector (+ min/max zoom)

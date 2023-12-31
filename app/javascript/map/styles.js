@@ -35,11 +35,19 @@ const pointHover = new ol.style.Circle({
   fill: new ol.style.Fill({ color: 'darkgreen' })
 })
 
+// const text = new ol.style.Text({
+//   text: 'Mein Text',
+//   font: '12px Calibri,sans-serif',
+//   fill: new ol.style.Fill({ color: '#000' }),
+//   stroke: new ol.style.Stroke({ color: '#fff', width: 3 })
+// })
+
 export function vectorStyle (feature, resolution) {
   const style = new ol.style.Style({
     fill,
     stroke,
     image: point
+    // text: text
   })
   return [style]
 }

@@ -143,12 +143,12 @@ export function initializeInteractions () {
   mainBar.addControl(undoBar)
 
   const mapNavBar = new ol.control.Bar({
-    group: true,
-    position: 'left',
+    group: false,
     controls: [
       new ol.control.Button({
-        html: "<i class='las la-location-arrow'></i>",
+        html: "<i class='las la-crosshairs'></i>",
         title: 'Center at your current location',
+        className: 'button-locate',
         handleClick: function () {
           locate()
         }
@@ -156,7 +156,7 @@ export function initializeInteractions () {
     ]
   })
   map.addControl(mapNavBar)
-  mapNavBar.setPosition('top-left')
+  mapNavBar.setPosition('right-top')
 
   undoInteraction.on('undo', function (e) {
     const feature = e.action.feature
@@ -252,6 +252,21 @@ export function initializeInteractions () {
     }
     previouslySelectedFeature = currentlySelectedFeature
   })
+
+  // // Listen for click events on the map
+  // map.on('click', function (event) {
+  //   // Get the features at the pixel coordinates
+  //   map.forEachFeatureAtPixel(event.pixel, function (feature) {
+  //     // drop selection if a selected feature gets clicked again (for mobile)
+  //     if (selectInteraction.getFeatures().getArray().includes(feature)) {
+  //       selectInteraction.getFeatures().remove(feature)
+  //       hideFeatureDetails(feature)
+  //       feature.setStyle(vectorStyle(feature))
+  //     }
+  //   }, {
+  //     hitTolerance: 5 // Tolerance in pixels
+  //   })
+  // })
 }
 
 function showFeatureDetails (feature) {

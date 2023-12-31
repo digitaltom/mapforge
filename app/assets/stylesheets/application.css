@@ -61,15 +61,26 @@ body,
 }
 
 #feature-details {
+  padding: 0.3em;
   position: fixed;
   z-index: 99;
   top: 5em;
   background-color: #fff;
-  right: 0.5em;
+  left: 0.5em;
+  width: 20em;
   opacity: 0;
   transition:
     opacity 0.7s linear,
     right 0.7s ease-in-out;
+  border-radius: 4px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #000;
+  overflow: hidden;
+}
+
+.ol-left {
+  left: 0.6em !important;
 }
 
 .ol-control button {
@@ -78,12 +89,8 @@ body,
   font-size: 1.6em;
 }
 
-.ol-left {
-  left: 0.6em !important;
-}
-
-.ol-button > button:hover,
-.ol-button.active > button {
+.ol-control button:hover,
+.ol-control.active button {
   color: #000;
   font-weight: bold;
   background-color: #c0c0c0;
@@ -93,10 +100,21 @@ body,
   background-color: #ccc;
 }
 
-/* Active buttons */
+/* Active interactions buttons */
 .ol-control.ol-bar .ol-toggle.ol-active > button,
 .ol-control.ol-bar .ol-toggle.ol-active button:hover {
   color: #000;
   font-weight: bold;
   background-color: #c0c0c0;
 }
+
+.ol-zoom {
+  top: 50%;
+  right: 0.5em;
+  transform: translateY(-50%);
+  left: auto;
+}
+
+
+
+
