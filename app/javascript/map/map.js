@@ -138,7 +138,7 @@ export function deleteFeature (data) {
 
 function changed (feature, newFeature) {
   const changedCoords = (JSON.stringify(feature.getGeometry().getCoordinates()) !== JSON.stringify(newFeature.getGeometry().getCoordinates()))
-  const changedProps = (JSON.stringify(feature.getGeometry().getProperties()) !== JSON.stringify(newFeature.getGeometry().getProperties()))
+  const changedProps = (JSON.stringify(feature.getProperties()) !== JSON.stringify(newFeature.getProperties()))
   return (changedCoords || changedProps)
 }
 

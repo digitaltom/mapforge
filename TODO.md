@@ -41,6 +41,7 @@
 * document geojson spec extension
 * Text listing of map features
 * Show pointer or connected state of other users
+* Debug mode: show coords, sizes, boundaries on map (like editor.mapset.io)
 
 
 ## Data Integrations:

@@ -35,19 +35,21 @@ const pointHover = new ol.style.Circle({
   fill: new ol.style.Fill({ color: 'darkgreen' })
 })
 
-// const text = new ol.style.Text({
-//   text: 'Mein Text',
-//   font: '12px Calibri,sans-serif',
-//   fill: new ol.style.Fill({ color: '#000' }),
-//   stroke: new ol.style.Stroke({ color: '#fff', width: 3 })
-// })
+function title (feature) {
+  return new ol.style.Text({
+    text: feature.get('title') || feature.getId(),
+    font: '15px Calibri,sans-serif',
+    fill: new ol.style.Fill({ color: '#000' }),
+    stroke: new ol.style.Stroke({ color: '#fff', width: 3 }),
+    offsetY: -17
+  })
+}
 
 export function vectorStyle (feature, resolution) {
   const style = new ol.style.Style({
     fill,
     stroke,
     image: point
-    // text: text
   })
   return [style]
 }
@@ -56,7 +58,8 @@ export function hoverStyle (feature, resolution) {
   const style = new ol.style.Style({
     fill: fillHover,
     stroke: strokeHover,
-    image: pointHover
+    image: pointHover,
+    text: title(feature)
   })
   return style
 }

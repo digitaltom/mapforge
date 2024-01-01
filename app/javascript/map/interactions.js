@@ -271,7 +271,8 @@ export function initializeInteractions () {
 
 function showFeatureDetails (feature) {
   const detailsContainer = document.getElementById('feature-details')
-  detailsContainer.innerHTML = feature.getId() + ' ' + JSON.stringify(featureAsGeoJSON(feature))
+  document.getElementById('feature-details-title').innerHTML = feature.get('title') || feature.getId()
+  document.getElementById('feature-details-desc').innerHTML = feature.get('description')
   const deleteButton = document.createElement('button')
   deleteButton.textContent = 'Delete'
   deleteButton.addEventListener('click', function () {
@@ -281,7 +282,8 @@ function showFeatureDetails (feature) {
     flash('Feature deleted', 'success')
     document.getElementsByClassName('button-undo')[0].classList.remove('hidden')
   })
-  detailsContainer.appendChild(deleteButton)
+  document.getElementById('feature-delete').innerHTML = ''
+  document.getElementById('feature-delete').appendChild(deleteButton)
   detailsContainer.style.opacity = '1'
 }
 
