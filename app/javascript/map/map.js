@@ -174,6 +174,14 @@ export function locate () {
       const coordinates = ol.proj.fromLonLat([position.coords.longitude, position.coords.latitude])
       flash('Location set to: ' + coordinates, 'success')
       map.getView().setCenter(coordinates)
+      const point = new ol.geom.Point(coordinates)
+      const feature = new ol.Feature({
+        geometry: point,
+        title: 'You',
+        description: 'You\'re currently detected position',
+        'marker-color': '#f00'
+      })
+      vectorSource.addFeature(feature)
     })
   }
 }

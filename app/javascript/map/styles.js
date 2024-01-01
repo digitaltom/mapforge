@@ -5,9 +5,11 @@ const ol = window.ol
 
 // default styles
 // filling of polygon areas
-const fill = new ol.style.Fill({
-  color: 'rgba(255, 255, 255, 0.3)'
-})
+function fill (feature) {
+  return new ol.style.Fill({
+    color: feature.get('fill') || 'rgba(255, 255, 255, 0.3)'
+  })
+}
 
 const fillHover = new ol.style.Fill({
   color: 'rgba(255, 255, 255, 0.7)'
@@ -23,17 +25,21 @@ const strokeHover = new ol.style.Stroke({
   width: 4
 })
 
-const point = new ol.style.Circle({
-  radius: 6,
-  stroke: new ol.style.Stroke({ color: 'white', width: 2 }),
-  fill: new ol.style.Fill({ color: 'green' })
-})
+function point (feature) {
+  return new ol.style.Circle({
+    radius: 6,
+    stroke: new ol.style.Stroke({ color: 'white', width: 2 }),
+    fill: new ol.style.Fill({ color: (feature.get('marker-color') || 'green') })
+  })
+}
 
-const pointHover = new ol.style.Circle({
-  radius: 8,
-  stroke: new ol.style.Stroke({ color: 'white', width: 2 }),
-  fill: new ol.style.Fill({ color: 'darkgreen' })
-})
+function pointHover (feature) {
+  return new ol.style.Circle({
+    radius: 8,
+    stroke: new ol.style.Stroke({ color: 'white', width: 2 }),
+    fill: new ol.style.Fill({ color: (feature.get('marker-color') || 'darkgreen') })
+  })
+}
 
 function title (feature) {
   return new ol.style.Text({
@@ -47,9 +53,9 @@ function title (feature) {
 
 export function vectorStyle (feature, resolution) {
   const style = new ol.style.Style({
-    fill,
+    fill: fill(feature),
     stroke,
-    image: point
+    image: point(feature)
   })
   return [style]
 }
@@ -58,7 +64,7 @@ export function hoverStyle (feature, resolution) {
   const style = new ol.style.Style({
     fill: fillHover,
     stroke: strokeHover,
-    image: pointHover,
+    image: pointHover(feature),
     text: title(feature)
   })
   return style
