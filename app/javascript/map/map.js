@@ -14,9 +14,9 @@ const defaults = {
 const geoJsonFormat = new ol.format.GeoJSON()
 
 export let changedFeatureQueue = []
-export let vectorSource
+export let vectorSource, fixedSource
 export let map
-export let raster
+export let rasterLayer
 export let mainBar
 
 class ChangeListenerVectorSource extends ol.source.Vector {
@@ -62,8 +62,15 @@ function initializeMap () {
     // strategy: ol.loadingstrategy.bbox
   })
 
-  const vector = new ol.layer.Vector({
+  const vectorLayer = new ol.layer.Vector({
     source: vectorSource,
+    style: vectorStyle
+  })
+
+  // layer for immutable features, like location
+  fixedSource = new ol.source.Vector({ features: [] })
+  const fixedLayer = new ol.layer.Vector({
+    source: fixedSource,
     style: vectorStyle
   })
 
@@ -76,12 +83,12 @@ function initializeMap () {
   })
   const osmTiles = new ol.source.OSM() // eslint-disable-line no-unused-vars
 
-  raster = new ol.layer.Tile({
+  rasterLayer = new ol.layer.Tile({
     source: satelliteTiles
   })
 
   map = new ol.Map({
-    layers: [raster, vector],
+    layers: [rasterLayer, vectorLayer, fixedLayer],
     target: 'map',
     view: new ol.View({
       projection: defaults.projection,
@@ -107,10 +114,10 @@ export function featureAsGeoJSON (feature) {
 }
 
 // This method gets called from the hotwire channel
-export function updateFeature (data) {
+export function updateFeature (data, source = vectorSource) {
   // TODO: only create/update if visible in bbox
   const newFeature = geoJsonFormat.readFeature(data)
-  const feature = vectorSource.getFeatureById(data.id)
+  const feature = source.getFeatureById(data.id)
   if (feature && changed(feature, newFeature)) {
     console.log('updating feature ' + data.id)
     if (data.geometry.type === 'Point') {
@@ -122,7 +129,7 @@ export function updateFeature (data) {
     feature.changed()
   } else {
     // addFeature will not add if id already exists
-    vectorSource.addFeature(newFeature)
+    source.addFeature(newFeature)
   }
   // drop from changedFeatureQueue, it's coming from server
   arrayRemove(changedFeatureQueue, newFeature)
@@ -145,7 +152,7 @@ function changed (feature, newFeature) {
 function animateMarker (feature, start, end) {
   console.log('Animating ' + feature.getId() + ' from ' + JSON.stringify(start) + ' to ' + JSON.stringify(end))
   const startTime = Date.now()
-  const listenerKey = raster.on('postrender', animate)
+  const listenerKey = rasterLayer.on('postrender', animate)
 
   const duration = 300
   function animate (event) {
@@ -166,22 +173,28 @@ function animateMarker (feature, start, end) {
 }
 
 export function locate () {
+  console.log('Getting geolocation')
   if (!navigator.geolocation) {
     flash('Your browser doesn\'t support geolocation', 'info')
   } else {
-    flash('Detecting your geolocation', 'info')
+    const locationFeature = fixedSource.getFeatureById('location')
+    if (!locationFeature) { flash('Detecting your geolocation', 'info') }
     navigator.geolocation.getCurrentPosition(function (position) {
       const coordinates = ol.proj.fromLonLat([position.coords.longitude, position.coords.latitude])
-      flash('Location set to: ' + coordinates, 'success')
-      map.getView().setCenter(coordinates)
-      const point = new ol.geom.Point(coordinates)
+      // only flash + animate on first locate
+      if (!locationFeature) {
+        flash('Location set to: ' + coordinates, 'success')
+        animateMapCenterTo(coordinates)
+      }
       const feature = new ol.Feature({
-        geometry: point,
+        geometry: new ol.geom.Point(coordinates),
         title: 'You',
         description: 'You\'re currently detected position',
         'marker-color': '#f00'
       })
-      vectorSource.addFeature(feature)
+      feature.setId('location')
+      const data = featureAsGeoJSON(feature)
+      updateFeature(data, fixedSource)
     })
   }
 }
@@ -209,4 +222,13 @@ export function flash (message, type = 'info', timeout = 3000) {
   setTimeout(function () {
     flashContainer.remove()
   }, timeout + 500) // Delete message after animation is done
+}
+
+function animateMapCenterTo (coords) {
+  const animationOptions = {
+    center: coords,
+    duration: 1000, // in ms
+    easing: ol.easing.easeIn
+  }
+  map.getView().animate(animationOptions)
 }

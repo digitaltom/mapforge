@@ -45,6 +45,8 @@ Linters:
   * `bin/rubocop`
   * `npm install; npm run lint:css; npm run lint:js`
 
+Fix style with eslint: `eslint --ext .js app/javascript --fix`
+
 Specs: `bundle exec rspec`
 
 ### Container build

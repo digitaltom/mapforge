@@ -6,6 +6,7 @@ import { hoverStyle, vectorStyle } from 'map/styles'
 const ol = window.ol
 
 let drawInteraction, pointInteraction, lineInteraction, modifyInteraction, selectInteraction
+let locationIntervall
 export let undoInteraction
 
 export function initializeInteractions () {
@@ -150,7 +151,15 @@ export function initializeInteractions () {
         title: 'Center at your current location',
         className: 'button-locate',
         handleClick: function () {
-          locate()
+          if (!locationIntervall) {
+            document.getElementsByClassName('button-locate')[0].classList.add('active')
+            locate()
+            locationIntervall = setInterval(locate, 10000)
+          } else {
+            document.getElementsByClassName('button-locate')[0].classList.remove('active')
+            clearInterval(locationIntervall)
+            locationIntervall = null
+          }
         }
       })
     ]
@@ -252,21 +261,6 @@ export function initializeInteractions () {
     }
     previouslySelectedFeature = currentlySelectedFeature
   })
-
-  // // Listen for click events on the map
-  // map.on('click', function (event) {
-  //   // Get the features at the pixel coordinates
-  //   map.forEachFeatureAtPixel(event.pixel, function (feature) {
-  //     // drop selection if a selected feature gets clicked again (for mobile)
-  //     if (selectInteraction.getFeatures().getArray().includes(feature)) {
-  //       selectInteraction.getFeatures().remove(feature)
-  //       hideFeatureDetails(feature)
-  //       feature.setStyle(vectorStyle(feature))
-  //     }
-  //   }, {
-  //     hitTolerance: 5 // Tolerance in pixels
-  //   })
-  // })
 }
 
 function showFeatureDetails (feature) {

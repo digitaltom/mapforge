@@ -96,16 +96,13 @@ body,
   background-color: #c0c0c0;
 }
 
-.ol-control.ol-toggle button:disabled {
-  background-color: #ccc;
+.ol-control.button-locate button:hover,
+.ol-control.button-locate.active button {
+  background-color: #ffc0c0;
 }
 
-/* Active interactions buttons */
-.ol-control.ol-bar .ol-toggle.ol-active > button,
-.ol-control.ol-bar .ol-toggle.ol-active button:hover {
-  color: #000;
-  font-weight: bold;
-  background-color: #c0c0c0;
+.ol-control.ol-toggle button:disabled {
+  background-color: #ccc;
 }
 
 .ol-zoom {
