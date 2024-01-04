@@ -28,7 +28,7 @@ export function initializeSocket () {
           updateFeature(data.feature)
           break
         case 'delete_feature':
-          deleteFeature(data.feature)
+          deleteFeature(data.feature.id)
           break
       }
     },

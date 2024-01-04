@@ -1,6 +1,6 @@
 import { initializeSocket } from 'channels/map_channel'
 import { vectorStyle } from 'map/styles'
-import { initializeInteractions, undoInteraction } from 'map/interactions'
+import { initializeInteractions, undoInteraction, hideFeatureDetails } from 'map/interactions'
 
 // eslint expects variables to get imported, but we load the full lib in header
 const ol = window.ol
@@ -135,11 +135,12 @@ export function updateFeature (data, source = vectorSource) {
   arrayRemove(changedFeatureQueue, newFeature)
 }
 
-export function deleteFeature (data) {
-  // TODO: only delete if visible in bbox
-  const feature = vectorSource.getFeatureById(data.id)
+export function deleteFeature (id) {
+  const feature = vectorSource.getFeatureById(id)
   if (feature) {
-    console.log('deleting feature ' + data.id)
+    console.log('deleting feature ' + id)
+    vectorSource.removeFeature(feature)
+    hideFeatureDetails()
   }
 }
 

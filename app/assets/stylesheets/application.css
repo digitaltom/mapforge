@@ -60,14 +60,14 @@ body,
   background-color: #ffb3b3;
 }
 
-#feature-details {
+.feature-details-window {
   padding: 0.3em;
   position: fixed;
   z-index: 99;
   top: 5em;
   background-color: #fff;
   left: 0.5em;
-  width: 20em;
+  width: 15em;
   opacity: 0;
   transition:
     opacity 0.7s linear,

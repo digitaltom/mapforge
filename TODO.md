@@ -3,10 +3,10 @@
 ## TODO:
 
 * popover position + layout
-  * handle popover on map move/zoom
   * disable popup in non-select mode
 * SimpleStyle Spec: https://github.com/mapbox/simplestyle-spec/tree/master/1.1.0
 * SimpleCov.minimum_coverage 100
+* seperate definition of mobile + desktop style/behavior
 * Handle 'changeproperties' in undo/redo
 * CSS framework, https://www.simplethread.com/how-to-create-a-new-rails-7-app-with-tailwind/
 * use bbox to only load visible features when moving/zooming map

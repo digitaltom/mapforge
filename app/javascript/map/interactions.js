@@ -1,4 +1,4 @@
-import { map, flash, mainBar, vectorSource, featureAsGeoJSON, locate, changedFeatureQueue } from 'map/map'
+import { map, flash, mainBar, vectorSource, featureAsGeoJSON, locate, changedFeatureQueue, deleteFeature } from 'map/map'
 import { mapChannel } from 'channels/map_channel'
 import { hoverStyle, vectorStyle } from 'map/styles'
 
@@ -120,11 +120,6 @@ export function initializeInteractions () {
         className: 'button-undo hidden',
         handleClick: function () {
           undoInteraction.undo()
-          document.getElementsByClassName('button-redo')[0].classList.remove('hidden')
-          console.log(undoInteraction.length())
-          if (undoInteraction.length() === 0) {
-            document.getElementsByClassName('button-undo')[0].classList.add('hidden')
-          }
           flash('Reverted one change', 'success')
         }
       }),
@@ -134,8 +129,6 @@ export function initializeInteractions () {
         className: 'button-redo hidden',
         handleClick: function () {
           undoInteraction.redo()
-          if (undoInteraction.length('redo') === 0) { document.getElementsByClassName('button-redo')[0].classList.add('hidden') }
-          document.getElementsByClassName('button-undo')[0].classList.remove('hidden')
           flash('Re-applied one change', 'success')
         }
       })
@@ -167,8 +160,30 @@ export function initializeInteractions () {
   map.addControl(mapNavBar)
   mapNavBar.setPosition('right-top')
 
+  // feature was changed or redo was called
+  undoInteraction.on('stack:add', function (e) {
+    document.querySelector('.button-undo').classList.remove('hidden')
+    if (undoInteraction.length('redo') === 0) {
+      document.querySelector('.button-redo').classList.add('hidden')
+    }
+  })
+
+  // undo was called
+  undoInteraction.on('stack:remove', function (e) {
+    if (undoInteraction.length('undo') === 0) {
+      document.querySelector('.button-undo').classList.add('hidden')
+    }
+    document.querySelector('.button-redo').classList.remove('hidden')
+  })
+
+  undoInteraction.on('stack:clear', function (e) {
+    document.querySelector('.button-undo').classList.add('hidden')
+    document.querySelector('.button-redo').classList.add('hidden')
+  })
+
   undoInteraction.on('undo', function (e) {
     const feature = e.action.feature
+    console.log(e.action.feature)
     // undo changed/added feature -> remove from server
     if (e.action.type === 'addfeature') {
       mapChannel.send_message('delete_feature', featureAsGeoJSON(feature))
@@ -204,7 +219,6 @@ export function initializeInteractions () {
       const feature = changedFeatureQueue.pop()
       console.log('Feature ' + feature.getId() + ' has been modified')
       mapChannel.send_message('update_feature', featureAsGeoJSON(feature))
-      document.getElementsByClassName('button-undo')[0].classList.remove('hidden')
       flash('Feature updated', 'success')
     }
   });
@@ -215,7 +229,6 @@ export function initializeInteractions () {
       console.log('Feature ' + e.feature.getId() + ' has been created')
       flash('Feature added', 'success')
       mapChannel.send_message('new_feature', featureAsGeoJSON(e.feature))
-      document.getElementsByClassName('button-undo')[0].classList.remove('hidden')
     })
   })
 
@@ -224,7 +237,7 @@ export function initializeInteractions () {
     const deselectedFeatures = e.deselected
     // hide old details first, then show new one
     Array.from(deselectedFeatures).forEach(function (feature) {
-      hideFeatureDetails(feature)
+      hideFeatureDetails()
       feature.setStyle(vectorStyle(feature))
     })
     Array.from(selectedFeatures).forEach(function (feature) {
@@ -257,33 +270,35 @@ export function initializeInteractions () {
         (currentlySelectedFeature == null ||
           currentlySelectedFeature.getId() !== previouslySelectedFeature.getId())) {
       previouslySelectedFeature.setStyle(vectorStyle(previouslySelectedFeature))
-      hideFeatureDetails(previouslySelectedFeature)
+      if (currentlySelectedFeature == null) { hideFeatureDetails() }
     }
     previouslySelectedFeature = currentlySelectedFeature
   })
 }
 
 function showFeatureDetails (feature) {
-  const detailsContainer = document.getElementById('feature-details')
-  document.getElementById('feature-details-title').innerHTML = feature.get('title') || feature.getId()
-  document.getElementById('feature-details-desc').innerHTML = feature.get('description')
-  const deleteButton = document.createElement('button')
-  deleteButton.textContent = 'Delete'
-  deleteButton.addEventListener('click', function () {
-    vectorSource.removeFeature(feature)
-    hideFeatureDetails(feature)
-    mapChannel.send_message('delete_feature', featureAsGeoJSON(feature))
-    flash('Feature deleted', 'success')
-    document.getElementsByClassName('button-undo')[0].classList.remove('hidden')
-  })
-  document.getElementById('feature-delete').innerHTML = ''
-  document.getElementById('feature-delete').appendChild(deleteButton)
-  detailsContainer.style.opacity = '1'
+  const detailsContainer = document.querySelector('.feature-details-window')
+  detailsContainer.dataset.featureId = feature.getId()
+  detailsContainer.querySelector('.feature-details-title').innerHTML = feature.get('title') || feature.getId()
+  detailsContainer.querySelector('.feature-details-desc').innerHTML = feature.get('description')
+  const deleteButton = detailsContainer.querySelector('.feature-delete')
+  deleteButton.removeEventListener('click', deleteClick)
+  deleteButton.addEventListener('click', deleteClick)
+  detailsContainer.style.opacity = '0.9'
 }
 
-function hideFeatureDetails (feature) {
-  const detailsContainer = document.getElementById('feature-details')
-  detailsContainer.style.opacity = '0'
+function deleteClick () {
+  const detailsContainer = document.querySelector('.feature-details-window')
+  const feature = vectorSource.getFeatureById(detailsContainer.dataset.featureId)
+  selectInteraction.getFeatures().remove(feature)
+  deleteFeature(feature)
+  mapChannel.send_message('delete_feature', featureAsGeoJSON(feature))
+  flash('Feature deleted', 'success')
+}
+
+export function hideFeatureDetails () {
+  const el = document.querySelector('.feature-details-window')
+  el.style.opacity = '0'
 }
 
 function resetInteractions () {
