@@ -64,11 +64,13 @@ body,
   padding: 0.3em;
   position: fixed;
   z-index: 99;
-  top: 5em;
+  top: 3em;
   background-color: #fff;
   left: 0.5em;
   width: 15em;
+  max-width: calc(100% - 4.5em);
   opacity: 0;
+  display: none;
   transition:
     opacity 0.7s linear,
     right 0.7s ease-in-out;

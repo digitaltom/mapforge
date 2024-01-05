@@ -19,7 +19,8 @@ export function initializeInteractions () {
   selectInteraction = new ol.interaction.Select({
     features: selectedFeatures,
     style: hoverStyle,
-    multi: false
+    multi: false,
+    hitTolerance: 10
   })
 
   drawInteraction = new ol.interaction.Draw({
@@ -254,6 +255,7 @@ export function initializeInteractions () {
 
     currentlySelectedFeature = null
     map.forEachFeatureAtPixel(event.pixel, function (feature) {
+      if (feature.getId() === undefined) { return false }
       currentlySelectedFeature = feature
       if (previouslySelectedFeature == null ||
       feature.getId() !== previouslySelectedFeature.getId()) {
@@ -284,6 +286,7 @@ function showFeatureDetails (feature) {
   const deleteButton = detailsContainer.querySelector('.feature-delete')
   deleteButton.removeEventListener('click', deleteClick)
   deleteButton.addEventListener('click', deleteClick)
+  detailsContainer.style.display = 'block'
   detailsContainer.style.opacity = '0.9'
 }
 
