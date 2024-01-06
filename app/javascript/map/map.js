@@ -79,12 +79,17 @@ function initializeMap () {
       'Source: Esri, DigitalGlobe, GeoEye, Earthstar Geographics, CNES/Airbus DS, USDA, USGS, AeroGRID, IGN, and the GIS User Community'],
     attributionsCollapsible: true,
     url: 'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-    maxZoom: 23
+    maxZoom: 20
   })
-  const osmTiles = new ol.source.OSM() // eslint-disable-line no-unused-vars
+  const satelliteStreets = new ol.source.XYZ({
+    url: 'https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v10/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiZGlnaXRhbHRvbW0iLCJhIjoiY2wwZHNkc3ZhMGMzMTNjcHN0MXk3bDlzOCJ9.JT98YXrb7_FlaVSroXCq7Q',
+    tileSize: 512
+  })
+  const osmTiles = new ol.source.OSM()
+  const backgroundTiles = { satellite: satelliteTiles, satelliteStreets, osm: osmTiles }
 
   rasterLayer = new ol.layer.Tile({
-    source: satelliteTiles
+    source: backgroundTiles.satelliteStreets
   })
 
   map = new ol.Map({

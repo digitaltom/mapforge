@@ -114,6 +114,14 @@ body,
   left: auto;
 }
 
-
+#map-modal {
+  padding: 0.3em;
+  position: fixed;
+  z-index: 99;
+  top: 3em;
+  background-color: #fff;
+  left: 0.5em;
+  display: none;
+}
 
 

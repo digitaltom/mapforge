@@ -3,9 +3,27 @@
 #flash
   #flash-container
 
-#feature-popup
-
 #feature-details
+  .feature-details-window
+    %h4.feature-details-title Title
+    %p.feature-details-desc Desc
+    %button.feature-delete Delete
+
+#map-modal
+  .modal-content
+    %span.close &times
+    %h2 Configure Map
+    %label{ for: "nameInput"} Name:
+    %br
+    %input#nameInput{type: "text"}
+    %br
+    %label{for: "layerInput"} Background Layer:
+    %br
+    %select#layerInput
+      %option{value: "osm"} OpenStreetMap
+      %option{value: "stamen"} Stamen Terrain
+
+
   .feature-details-window
     %h4.feature-details-title Title
     %p.feature-details-desc Desc

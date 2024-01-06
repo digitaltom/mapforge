@@ -2,7 +2,6 @@
 
 ## TODO:
 
-* fix select/deselect in select+modify mode
 * SimpleStyle Spec: https://github.com/mapbox/simplestyle-spec/tree/master/1.1.0
 * SimpleCov.minimum_coverage 100
 * seperate definition of mobile + desktop style/behavior

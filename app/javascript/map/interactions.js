@@ -8,6 +8,7 @@ const ol = window.ol
 let drawInteraction, pointInteraction, lineInteraction, modifyInteraction, selectInteraction
 let locationIntervall
 export let undoInteraction
+let isModifying = false
 
 export function initializeInteractions () {
   // Undo redo interaction (https://github.com/Viglino/ol-ext/blob/master/src/interaction/UndoRedo.js)
@@ -48,31 +49,42 @@ export function initializeInteractions () {
     pixelTolerance: 10
   })
 
+  const viewButton = new ol.control.Button({
+    html: "<i class='las la-mouse-pointer'></i>",
+    title: 'Select',
+    className: 'buttons button-select active',
+    handleClick: function () {
+      resetInteractions()
+      document.querySelector('.button-select').classList.add('active')
+      map.addInteraction(selectInteraction)
+    }
+  })
+
   // Control bar: https://viglino.github.io/ol-ext/doc/doc-pages/ol.control.Bar.html
   const editBar = new ol.control.Bar({
     group: true,
     toggleOne: true,
     controls: [
       new ol.control.Button({
-        html: "<i class='las la-mouse-pointer'></i>",
-        title: 'Select',
-        className: 'buttons button-select active',
+        html: "<i class='las la-map-marked-alt'></i>",
+        title: 'Map properties',
+        className: 'buttons button-map',
         handleClick: function () {
           resetInteractions()
-          document.getElementsByClassName('button-select')[0].classList.add('active')
-          map.addInteraction(selectInteraction)
+          document.querySelector('.button-map').classList.add('active')
+          document.querySelector('#map-modal').style.display = 'block'
         }
       }),
       new ol.control.Button({
         html: "<i class='lar la-edit'></i>",
-        title: 'modify...',
+        title: 'Modify map elements',
         className: 'buttons button-modify',
         handleClick: function () {
           resetInteractions()
-          document.getElementsByClassName('button-modify')[0].classList.add('active')
+          document.querySelector('.button-modify').classList.add('active')
           map.addInteraction(selectInteraction)
           map.addInteraction(modifyInteraction)
-          flash('Select a feature on your map to move it or change its shape')
+          flash('Click on a map element to modify it')
         }
       }),
       new ol.control.Button({
@@ -81,7 +93,7 @@ export function initializeInteractions () {
         className: 'buttons button-marker',
         handleClick: function () {
           resetInteractions()
-          document.getElementsByClassName('button-marker')[0].classList.add('active')
+          document.querySelector('.button-marker').classList.add('active')
           map.addInteraction(pointInteraction)
           flash('Click on a location to place a marker')
         }
@@ -92,7 +104,7 @@ export function initializeInteractions () {
         className: 'buttons button-line',
         handleClick: function () {
           resetInteractions()
-          document.getElementsByClassName('button-line')[0].classList.add('active')
+          document.querySelector('.button-line').classList.add('active')
           map.addInteraction(lineInteraction)
           flash('Click on a location to start drawing a line')
         }
@@ -103,13 +115,15 @@ export function initializeInteractions () {
         className: 'buttons button-polygon',
         handleClick: function () {
           resetInteractions()
-          document.getElementsByClassName('button-polygon')[0].classList.add('active')
+          document.querySelector('.button-polygon').classList.add('active')
           map.addInteraction(drawInteraction)
           flash('Click on a location on your map to start marking an area')
         }
       })
     ]
   })
+
+  mainBar.addControl(viewButton)
   mainBar.addControl(editBar)
   map.addInteraction(selectInteraction)
 
@@ -147,11 +161,11 @@ export function initializeInteractions () {
         className: 'button-locate',
         handleClick: function () {
           if (!locationIntervall) {
-            document.getElementsByClassName('button-locate')[0].classList.add('active')
+            document.querySelector('.button-locate').classList.add('active')
             locate()
             locationIntervall = setInterval(locate, 10000)
           } else {
-            document.getElementsByClassName('button-locate')[0].classList.remove('active')
+            document.querySelector('.button-locate').classList.remove('active')
             clearInterval(locationIntervall)
             locationIntervall = null
           }
@@ -164,17 +178,8 @@ export function initializeInteractions () {
 
   // feature was changed or redo was called
   undoInteraction.on('stack:add', function (e) {
+    // once first change was done, show undo/redo
     document.querySelector('.button-undo').classList.remove('hidden')
-    if (undoInteraction.length('redo') === 0) {
-      document.querySelector('.button-redo').classList.add('hidden')
-    }
-  })
-
-  // undo was called
-  undoInteraction.on('stack:remove', function (e) {
-    if (undoInteraction.length('undo') === 0) {
-      document.querySelector('.button-undo').classList.add('hidden')
-    }
     document.querySelector('.button-redo').classList.remove('hidden')
   })
 
@@ -214,8 +219,14 @@ export function initializeInteractions () {
     }
   })
 
+  modifyInteraction.on('modifystart', function (event) {
+    isModifying = true
+    console.log('Modification started')
+  })
+
   modifyInteraction.on('modifyend', function (e) {
     // console.log('changedFeatureQueue: ' + changedFeatureQueue);
+    isModifying = false
     // don't use e.features.getArray() here, because it contains all map/selected features
     while (changedFeatureQueue.length > 0) {
       const feature = changedFeatureQueue.pop()
@@ -258,6 +269,8 @@ export function initializeInteractions () {
   let currentlySelectedFeature = null
 
   map.on('pointermove', function (event) {
+    // skip hover effects when in an active modification
+    if (isModifying) { return true }
     // skip hover effects when features are selected
     if (selectInteraction.getFeatures().getArray().length) { return true }
 
@@ -310,6 +323,8 @@ function deleteClick () {
 export function hideFeatureDetails () {
   const el = document.querySelector('.feature-details-window')
   el.style.opacity = '0'
+  // remove from DOM if faded out
+  setTimeout(function () { if (el.style.opacity === '0') { el.style.display = 'none' } }, 1000)
 }
 
 function resetInteractions () {
