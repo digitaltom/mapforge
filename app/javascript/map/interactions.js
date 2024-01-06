@@ -45,7 +45,7 @@ export function initializeInteractions () {
   modifyInteraction = new ol.interaction.Modify({
     source: vectorSource,
     style: hoverStyle,
-    pixelTolerance: 5
+    pixelTolerance: 10
   })
 
   // Control bar: https://viglino.github.io/ol-ext/doc/doc-pages/ol.control.Bar.html
@@ -70,6 +70,7 @@ export function initializeInteractions () {
         handleClick: function () {
           resetInteractions()
           document.getElementsByClassName('button-modify')[0].classList.add('active')
+          map.addInteraction(selectInteraction)
           map.addInteraction(modifyInteraction)
           flash('Select a feature on your map to move it or change its shape')
         }
@@ -236,13 +237,20 @@ export function initializeInteractions () {
   selectInteraction.on('select', function (e) {
     const selectedFeatures = e.selected
     const deselectedFeatures = e.deselected
+    // in case a modify interaction is active, those feautures
+    // are temporary copies in a differenct format
     // hide old details first, then show new one
     Array.from(deselectedFeatures).forEach(function (feature) {
+      if (feature.values_.features) { feature = feature.values_.features[0] }
+      console.log('deselected ' + JSON.stringify(feature.getId()))
       hideFeatureDetails()
       feature.setStyle(vectorStyle(feature))
     })
     Array.from(selectedFeatures).forEach(function (feature) {
+      if (feature.values_.features) { feature = feature.values_.features[0] }
+      console.log('selected ' + JSON.stringify(feature.getId()))
       showFeatureDetails(feature)
+      feature.setStyle(hoverStyle(feature))
     })
   })
 
@@ -264,7 +272,7 @@ export function initializeInteractions () {
       }
       return true
     }, {
-      hitTolerance: 5 // Tolerance in pixels
+      hitTolerance: 10 // Tolerance in pixels
     })
 
     // reset style of no more hovered feature

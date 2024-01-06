@@ -120,7 +120,7 @@ export function updateFeature (data, source = vectorSource) {
   const feature = source.getFeatureById(data.id)
   if (feature && changed(feature, newFeature)) {
     console.log('updating feature ' + data.id)
-    if (data.geometry.type === 'Point') {
+    if (data.geometry.type === 'Point' && changedCoords(feature, newFeature)) {
       animateMarker(newFeature, feature.getGeometry().getCoordinates(),
         newFeature.getGeometry().getCoordinates())
     }
@@ -145,9 +145,15 @@ export function deleteFeature (id) {
 }
 
 function changed (feature, newFeature) {
-  const changedCoords = (JSON.stringify(feature.getGeometry().getCoordinates()) !== JSON.stringify(newFeature.getGeometry().getCoordinates()))
-  const changedProps = (JSON.stringify(feature.getProperties()) !== JSON.stringify(newFeature.getProperties()))
-  return (changedCoords || changedProps)
+  return (changedCoords(feature, newFeature) || changedProps(feature, newFeature))
+}
+
+function changedCoords (feature, newFeature) {
+  return (JSON.stringify(feature.getGeometry().getCoordinates()) !== JSON.stringify(newFeature.getGeometry().getCoordinates()))
+}
+
+function changedProps (feature, newFeature) {
+  return (JSON.stringify(feature.getProperties()) !== JSON.stringify(newFeature.getProperties()))
 }
 
 function animateMarker (feature, start, end) {

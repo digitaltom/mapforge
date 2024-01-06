@@ -2,8 +2,7 @@
 
 ## TODO:
 
-* popover position + layout
-  * disable popup in non-select mode
+* fix select/deselect in select+modify mode
 * SimpleStyle Spec: https://github.com/mapbox/simplestyle-spec/tree/master/1.1.0
 * SimpleCov.minimum_coverage 100
 * seperate definition of mobile + desktop style/behavior
@@ -32,6 +31,7 @@
   * Select icon for pointer, icon upload
 * geojson import / export
 * Layers
+* Search: https://viglino.github.io/ol-ext/examples/search/map.control.searchnominatim.html
 * show line lengths in edit mode
 * New feature free draw (line with 'shift'), downsample points
 * Image upload as feature property, read geolocation
@@ -42,6 +42,8 @@
 * Text listing of map features
 * Show pointer or connected state of other users
 * Debug mode: show coords, sizes, boundaries on map (like editor.mapset.io)
+* Long touch:
+* Draw touch: https://viglino.github.io/ol-ext/examples/mobile/map.interaction.drawtouch.html
 
 
 ## Data Integrations:
