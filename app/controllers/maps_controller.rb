@@ -9,6 +9,7 @@ class MapsController < ApplicationController
   # GET /maps/1 or /maps/1.json
   def show
     gon.map_id = @map.id.to_s
+    gon.map_properties = @map.properties
   end
 
   # GET /maps/new

@@ -1,6 +1,5 @@
 class MapChannel < ApplicationCable::Channel
   def subscribed
-    # TODO: validate client access to map id
     map = Map.find(params[:map_id])
     stream_from "map_channel_#{map.id}"
     Rails.logger.debug { "MapChannel subscribed for '#{map.id}'" }
@@ -12,20 +11,22 @@ class MapChannel < ApplicationCable::Channel
   end
 
   def update_feature(data)
-    # TODO: validate client access to map id
     map = Map.find(data['map_id'])
     feature = map.features.find(feature_atts(data)['id'])
     feature.update!(feature_atts(data))
   end
 
+  def update_map(data)
+    map = Map.find(data['map_id'])
+    map.update!(map_atts(data))
+  end
+
   def new_feature(data)
-    # TODO: validate client access to map id
     map = Map.find(data['map_id'])
     map.features.create!(feature_atts(data))
   end
 
   def delete_feature(data)
-    # TODO: validate client access to map id
     map = Map.find(data['map_id'])
     feature = map.features.find(feature_atts(data)['id'])
     feature.destroy
@@ -34,8 +35,12 @@ class MapChannel < ApplicationCable::Channel
   private
 
   def feature_atts(data)
-    # TODO: validate
+    # TODO: validate nested atts
     # ActionController::Parameters.new(data).permit(:type, :id, geometry: [:type, coordinates: []], properties: {})
     data.slice('type', 'id', 'geometry', 'properties')
+  end
+
+  def map_atts(data)
+    data.slice('name', 'description', 'base_map', 'center', 'zoom')
   end
 end

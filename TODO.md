@@ -2,10 +2,12 @@
 
 ## TODO:
 
+* Workshop: https://openlayers.org/workshop/en/
 * SimpleStyle Spec: https://github.com/mapbox/simplestyle-spec/tree/master/1.1.0
 * SimpleCov.minimum_coverage 100
 * seperate definition of mobile + desktop style/behavior
 * Handle 'changeproperties' in undo/redo
+* handle remote update of map properties
 * CSS framework, https://www.simplethread.com/how-to-create-a-new-rails-7-app-with-tailwind/
 * use bbox to only load visible features when moving/zooming map
   * only update features received by action_cable that are visible
@@ -25,13 +27,15 @@
   * New feature type text (point without icon)
 * Map properties: Name, description
   * Initial location center, zoom
-  * Base map selector (+ min/max zoom)
+  * Base map selector (+ min/max zoom), Stadia Maps
 * Editor for feature properties (name, description, style)
   * Select icon for pointer, icon upload
 * Location: Pulsating icon with radius of accuracy
 * Skala
 * geojson import / export
 * Layers
+* Login
+   * validate client access to map id
 * Search: https://viglino.github.io/ol-ext/examples/search/map.control.searchnominatim.html
 * show line lengths in edit mode
 * New feature free draw (line with 'shift'), downsample points

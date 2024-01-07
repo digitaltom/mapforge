@@ -1,11 +1,15 @@
-import { map, flash, mainBar, vectorSource, featureAsGeoJSON, locate, changedFeatureQueue, deleteFeature } from 'map/map'
+import {
+  map, flash, mainBar, vectorSource, featureAsGeoJSON, locate, changedFeatureQueue,
+  deleteFeature
+} from 'map/map'
+import { mapProperties } from 'map/map_properties'
 import { mapChannel } from 'channels/map_channel'
 import { hoverStyle, vectorStyle } from 'map/styles'
 
 // eslint expects ol to get imported, but we load the full lib in header
 const ol = window.ol
 
-let drawInteraction, pointInteraction, lineInteraction, modifyInteraction, selectInteraction
+export let drawInteraction, pointInteraction, lineInteraction, modifyInteraction, selectInteraction
 let locationIntervall
 export let undoInteraction
 let isModifying = false
@@ -73,6 +77,8 @@ export function initializeInteractions () {
           resetInteractions()
           document.querySelector('.button-map').classList.add('active')
           document.querySelector('#map-modal').style.display = 'block'
+          console.log(mapProperties)
+          document.querySelector('#map-name').value = mapProperties.name
         }
       }),
       new ol.control.Button({
@@ -271,6 +277,9 @@ export function initializeInteractions () {
   map.on('pointermove', function (event) {
     // skip hover effects when in an active modification
     if (isModifying) { return true }
+    if (isMobileDevice()) { return true }
+    // skip hover whe there is a modal shown
+    if (document.querySelector('#map-modal').style.display === 'block') { return true }
     // skip hover effects when features are selected
     if (selectInteraction.getFeatures().getArray().length) { return true }
 
@@ -327,7 +336,7 @@ export function hideFeatureDetails () {
   setTimeout(function () { if (el.style.opacity === '0') { el.style.display = 'none' } }, 1000)
 }
 
-function resetInteractions () {
+export function resetInteractions () {
   map.removeInteraction(drawInteraction)
   map.removeInteraction(pointInteraction)
   map.removeInteraction(lineInteraction)
@@ -342,4 +351,8 @@ function resetInteractions () {
 
 function createFeatureId () {
   return Math.random().toString(16).slice(2)
+}
+
+function isMobileDevice () {
+  return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
 }

@@ -1,22 +1,16 @@
 import { initializeSocket } from 'channels/map_channel'
 import { vectorStyle } from 'map/styles'
 import { initializeInteractions, undoInteraction, hideFeatureDetails } from 'map/interactions'
+import { initializeMapProperties, mapProperties, rasterLayer } from 'map/map_properties'
 
 // eslint expects variables to get imported, but we load the full lib in header
 const ol = window.ol
-
-const defaults = {
-  center: [1232651.8535029977, 6353568.446631506],
-  zoom: 12,
-  projection: 'EPSG:3857'
-}
 
 const geoJsonFormat = new ol.format.GeoJSON()
 
 export let changedFeatureQueue = []
 export let vectorSource, fixedSource
 export let map
-export let rasterLayer
 export let mainBar
 
 class ChangeListenerVectorSource extends ol.source.Vector {
@@ -35,6 +29,7 @@ class ChangeListenerVectorSource extends ol.source.Vector {
 
 document.addEventListener('turbo:load', function () {
   if (document.getElementById('map')) {
+    initializeMapProperties()
     initializeMap()
     initializeSocket()
     initializeInteractions()
@@ -74,31 +69,13 @@ function initializeMap () {
     style: vectorStyle
   })
 
-  const satelliteTiles = new ol.source.XYZ({
-    attributions: ['Powered by Esri',
-      'Source: Esri, DigitalGlobe, GeoEye, Earthstar Geographics, CNES/Airbus DS, USDA, USGS, AeroGRID, IGN, and the GIS User Community'],
-    attributionsCollapsible: true,
-    url: 'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-    maxZoom: 20
-  })
-  const satelliteStreets = new ol.source.XYZ({
-    url: 'https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v10/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiZGlnaXRhbHRvbW0iLCJhIjoiY2wwZHNkc3ZhMGMzMTNjcHN0MXk3bDlzOCJ9.JT98YXrb7_FlaVSroXCq7Q',
-    tileSize: 512
-  })
-  const osmTiles = new ol.source.OSM()
-  const backgroundTiles = { satellite: satelliteTiles, satelliteStreets, osm: osmTiles }
-
-  rasterLayer = new ol.layer.Tile({
-    source: backgroundTiles.satelliteStreets
-  })
-
   map = new ol.Map({
     layers: [rasterLayer, vectorLayer, fixedLayer],
     target: 'map',
     view: new ol.View({
-      projection: defaults.projection,
-      center: defaults.center,
-      zoom: defaults.zoom,
+      projection: mapProperties.projection,
+      center: mapProperties.center,
+      zoom: mapProperties.zoom,
       constrainResolution: true
     }),
     controls: ol.control.defaults.defaults({

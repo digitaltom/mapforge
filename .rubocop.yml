@@ -39,3 +39,11 @@ RSpec/MultipleExpectations:
 RSpec/ExampleLength:
   Max: 15
 
+Rails/Output:
+  Exclude:
+    - 'config/initializers/*'
+
+Rails/Exit:
+  Exclude:
+    - 'config/initializers/*'
+

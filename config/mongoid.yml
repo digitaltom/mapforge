@@ -64,7 +64,7 @@ development:
         # local_threshold: 0.015
 
         # The timeout in seconds for selecting a server for an operation. (default: 30)
-        # server_selection_timeout: 30
+        server_selection_timeout: 10
 
         # The maximum number of connections in the connection pool. (default: 5)
         # max_pool_size: 5
@@ -183,6 +183,7 @@ test:
         read:
           mode: :primary
         max_pool_size: 1
+        server_selection_timeout: 10
 production:
   clients:
     default:
@@ -193,3 +194,4 @@ production:
         read:
           mode: :primary
         max_pool_size: 1
+        server_selection_timeout: 10

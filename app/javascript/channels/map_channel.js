@@ -12,13 +12,14 @@ export function initializeSocket () {
       // Called when the subscription is ready for use on the server
       console.log('connected to map_channel ' + window.gon.map_id)
       mapChannel = this
-      flash('Realtime connection to server established', 'success')
+      flash('Connection to server established', 'success')
     },
 
     disconnected () {
       // Called when the subscription has been terminated by the server
       console.log('disconnected from map_channel')
-      flash('Realtime connection to server lost', 'error')
+      // show error with delay to avoid showing it on unload/refresh
+      setTimeout(function () { flash('Connection to server lost', 'error') }, 500)
     },
 
     received (data) {
