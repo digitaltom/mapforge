@@ -28,6 +28,8 @@
   * Base map selector (+ min/max zoom)
 * Editor for feature properties (name, description, style)
   * Select icon for pointer, icon upload
+* Location: Pulsating icon with radius of accuracy
+* Skala
 * geojson import / export
 * Layers
 * Search: https://viglino.github.io/ol-ext/examples/search/map.control.searchnominatim.html

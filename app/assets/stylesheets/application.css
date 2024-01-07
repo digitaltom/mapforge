@@ -98,7 +98,6 @@ body,
   background-color: #c0c0c0;
 }
 
-.ol-control.button-locate button:hover,
 .ol-control.button-locate.active button {
   background-color: #ffc0c0;
 }

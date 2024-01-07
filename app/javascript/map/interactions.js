@@ -158,7 +158,7 @@ export function initializeInteractions () {
       new ol.control.Button({
         html: "<i class='las la-crosshairs'></i>",
         title: 'Center at your current location',
-        className: 'button-locate',
+        className: 'button button-locate',
         handleClick: function () {
           if (!locationIntervall) {
             document.querySelector('.button-locate').classList.add('active')
@@ -336,6 +336,8 @@ function resetInteractions () {
   Array.from(document.getElementsByClassName('buttons')).forEach(function (button) {
     button.classList.remove('active')
   })
+  document.querySelector('#map-modal').style.display = 'none'
+  hideFeatureDetails()
 }
 
 function createFeatureId () {
