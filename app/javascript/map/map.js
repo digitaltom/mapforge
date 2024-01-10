@@ -88,6 +88,12 @@ function initializeMap () {
   // Main control bar
   mainBar = new ol.control.Bar()
   map.addControl(mainBar)
+  // add current map view to url
+  map.addInteraction(new ol.interaction.Link())
+  // allow double tap/click then drag up/down to zoom
+  map.addInteraction(new ol.interaction.DblClickDragZoom())
+  // snap in on feature changes
+  map.addInteraction(new ol.interaction.Snap({ source: vectorSource, pixelTolerance: 10 }))
 }
 
 export function featureAsGeoJSON (feature) {
@@ -169,11 +175,13 @@ export function locate () {
     const locationFeature = fixedSource.getFeatureById('location')
     if (!locationFeature) { flash('Detecting your geolocation', 'info') }
     navigator.geolocation.getCurrentPosition(function (position) {
-      const coordinates = ol.proj.fromLonLat([position.coords.longitude, position.coords.latitude])
+      const coordinates = [position.coords.longitude, position.coords.latitude]
+      // const accuracy = circular(coords, position.coords.accuracy)
+
       // only flash + animate on first locate
       if (!locationFeature) {
-        flash('Location set to: ' + coordinates, 'success')
-        animateMapCenterTo(coordinates)
+        flash('Location set to: ' + ol.proj.fromLonLat(coordinates), 'success')
+        animateMapCenterTo(ol.proj.fromLonLat(coordinates))
       }
       const feature = new ol.Feature({
         geometry: new ol.geom.Point(coordinates),
@@ -182,6 +190,7 @@ export function locate () {
         'marker-color': '#f00'
       })
       feature.setId('location')
+
       const data = featureAsGeoJSON(feature)
       updateFeature(data, fixedSource)
     })

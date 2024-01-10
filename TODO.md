@@ -2,8 +2,7 @@
 
 ## TODO:
 
-* Workshop: https://openlayers.org/workshop/en/
-* SimpleStyle Spec: https://github.com/mapbox/simplestyle-spec/tree/master/1.1.0
+* use: import {fromLonLat} from 'ol/proj';
 * SimpleCov.minimum_coverage 100
 * seperate definition of mobile + desktop style/behavior
 * Handle 'changeproperties' in undo/redo
@@ -11,15 +10,20 @@
 * CSS framework, https://www.simplethread.com/how-to-create-a-new-rails-7-app-with-tailwind/
 * use bbox to only load visible features when moving/zooming map
   * only update features received by action_cable that are visible
-* dev Procfile?
-* Admin view: Map list with screenshots
 * About page: https://icons8.com/icons, https://icons8.com/line-awesome
-* Do we need Stimulus?
 * domain options: mapforge.org, ourmaps.org, mapcrafting.org finemaps.org
 
 
 ## Feature Ideas
 
+* SimpleStyle Spec, mapbox: https://github.com/mapbox/simplestyle-spec/tree/master/1.1.0
+  * document geojson spec extension
+* Map list
+  * with screenshots
+  * hide private maps
+* Vector maps:
+  * https://protomaps.com/, https://docs.protomaps.com/pmtiles/openlayers
+  * vector map: https://openlayers.org/workshop/en/vectortile/bright.html
 * New map gets private + public (read-only) url
   * validate access on update
   * add view location to shareable public url
@@ -31,23 +35,25 @@
 * Editor for feature properties (name, description, style)
   * Select icon for pointer, icon upload
 * Location: Pulsating icon with radius of accuracy
-* Skala
+  * Multi click: Loader -> Locate (follow mode) -> unfollow on map move -> unlocate
+  * show accuracy: https://openlayers.org/workshop/en/mobile/geolocation.html
+* Legend wth scale
 * geojson import / export
+  * drop geojson: https://openlayers.org/workshop/en/vector/drag-n-drop.html
 * Layers
+  * Text listing of map features
 * Login
    * validate client access to map id
 * Search: https://viglino.github.io/ol-ext/examples/search/map.control.searchnominatim.html
-* show line lengths in edit mode
 * New feature free draw (line with 'shift'), downsample points
 * Image upload as feature property, read geolocation
 * Multi-select (change all at once)
 * Filter view by feature group / category / layer
 * Map Tour (define steps with descriptions) (ol-ext: Storymap control)
-* document geojson spec extension
-* Text listing of map features
 * Show pointer or connected state of other users
 * Debug mode: show coords, sizes, boundaries on map (like editor.mapset.io)
-* Long touch:
+  * show line lengths in edit mode
+* Long touch?
 * Draw touch: https://viglino.github.io/ol-ext/examples/mobile/map.interaction.drawtouch.html
 
 

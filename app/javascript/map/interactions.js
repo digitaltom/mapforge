@@ -12,7 +12,6 @@ const ol = window.ol
 export let drawInteraction, pointInteraction, lineInteraction, modifyInteraction, selectInteraction
 let locationIntervall
 export let undoInteraction
-let isModifying = false
 
 export function initializeInteractions () {
   // Undo redo interaction (https://github.com/Viglino/ol-ext/blob/master/src/interaction/UndoRedo.js)
@@ -226,13 +225,11 @@ export function initializeInteractions () {
   })
 
   modifyInteraction.on('modifystart', function (event) {
-    isModifying = true
     console.log('Modification started')
   })
 
   modifyInteraction.on('modifyend', function (e) {
-    // console.log('changedFeatureQueue: ' + changedFeatureQueue);
-    isModifying = false
+    // console.log('changedFeatureQueue: ' + changedFeatureQueue)
     // don't use e.features.getArray() here, because it contains all map/selected features
     while (changedFeatureQueue.length > 0) {
       const feature = changedFeatureQueue.pop()
@@ -276,7 +273,8 @@ export function initializeInteractions () {
 
   map.on('pointermove', function (event) {
     // skip hover effects when in an active modification
-    if (isModifying) { return true }
+    if (modifyInteraction.getActive() || lineInteraction.getActive() ||
+        drawInteraction.getActive() || pointInteraction.getActive()) { return true }
     if (isMobileDevice()) { return true }
     // skip hover whe there is a modal shown
     if (document.querySelector('#map-modal').style.display === 'block') { return true }
