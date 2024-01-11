@@ -4,14 +4,22 @@
 
 * use: import {fromLonLat} from 'ol/proj';
 * SimpleCov.minimum_coverage 100
+* hide private maps
+* read map-keys from env
+* attributions
 * seperate definition of mobile + desktop style/behavior
 * Handle 'changeproperties' in undo/redo
 * handle remote update of map properties
 * CSS framework, https://www.simplethread.com/how-to-create-a-new-rails-7-app-with-tailwind/
 * use bbox to only load visible features when moving/zooming map
   * only update features received by action_cable that are visible
+
+First release:
+
 * About page: https://icons8.com/icons, https://icons8.com/line-awesome
 * domain options: mapforge.org, ourmaps.org, mapcrafting.org finemaps.org
+* plausible
+* release on mapforge.org
 
 
 ## Feature Ideas
@@ -20,7 +28,6 @@
   * document geojson spec extension
 * Map list
   * with screenshots
-  * hide private maps
 * Vector maps:
   * https://protomaps.com/, https://docs.protomaps.com/pmtiles/openlayers
   * vector map: https://openlayers.org/workshop/en/vectortile/bright.html
@@ -28,7 +35,11 @@
   * validate access on update
   * add view location to shareable public url
   * share button
+* Supported shapes
   * New feature type text (point without icon)
+  * New feature free draw (line with 'shift'), downsample points
+  * Image upload as feature property, read geolocation
+  * popup: https://docs.maptiler.com/openlayers/examples/choropleth-geojson/
 * Map properties: Name, description
   * Initial location center, zoom
   * Base map selector (+ min/max zoom), Stadia Maps
@@ -44,9 +55,9 @@
   * Text listing of map features
 * Login
    * validate client access to map id
-* Search: https://viglino.github.io/ol-ext/examples/search/map.control.searchnominatim.html
-* New feature free draw (line with 'shift'), downsample points
-* Image upload as feature property, read geolocation
+* Search locations:
+  * https://viglino.github.io/ol-ext/examples/search/map.control.searchnominatim.html
+  * https://docs.maptiler.com/openlayers/examples/geocoding-control/
 * Multi-select (change all at once)
 * Filter view by feature group / category / layer
 * Map Tour (define steps with descriptions) (ol-ext: Storymap control)

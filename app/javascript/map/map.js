@@ -1,7 +1,7 @@
 import { initializeSocket } from 'channels/map_channel'
 import { vectorStyle } from 'map/styles'
 import { initializeInteractions, undoInteraction, hideFeatureDetails } from 'map/interactions'
-import { initializeMapProperties, mapProperties, rasterLayer } from 'map/map_properties'
+import { initializeMapProperties, mapProperties, loadBackgroundLayers, backgroundTileLayer } from 'map/map_properties'
 
 // eslint expects variables to get imported, but we load the full lib in header
 const ol = window.ol
@@ -31,6 +31,7 @@ document.addEventListener('turbo:load', function () {
   if (document.getElementById('map')) {
     initializeMapProperties()
     initializeMap()
+    loadBackgroundLayers()
     initializeSocket()
     initializeInteractions()
   }
@@ -70,7 +71,7 @@ function initializeMap () {
   })
 
   map = new ol.Map({
-    layers: [rasterLayer, vectorLayer, fixedLayer],
+    layers: [vectorLayer, fixedLayer],
     target: 'map',
     view: new ol.View({
       projection: mapProperties.projection,
@@ -147,7 +148,7 @@ function changedProps (feature, newFeature) {
 function animateMarker (feature, start, end) {
   console.log('Animating ' + feature.getId() + ' from ' + JSON.stringify(start) + ' to ' + JSON.stringify(end))
   const startTime = Date.now()
-  const listenerKey = rasterLayer.on('postrender', animate)
+  const listenerKey = backgroundTileLayer.on('postrender', animate)
 
   const duration = 300
   function animate (event) {

@@ -273,14 +273,15 @@ export function initializeInteractions () {
 
   map.on('pointermove', function (event) {
     // skip hover effects when in an active modification
-    if (modifyInteraction.getActive() || lineInteraction.getActive() ||
-        drawInteraction.getActive() || pointInteraction.getActive()) { return true }
+    const interactions = [modifyInteraction, lineInteraction, drawInteraction, pointInteraction]
+    if (interactions.some(interaction => map.getInteractions().getArray().includes(interaction))) {
+      return true
+    }
     if (isMobileDevice()) { return true }
     // skip hover whe there is a modal shown
     if (document.querySelector('#map-modal').style.display === 'block') { return true }
     // skip hover effects when features are selected
     if (selectInteraction.getFeatures().getArray().length) { return true }
-
     currentlySelectedFeature = null
     map.forEachFeatureAtPixel(event.pixel, function (feature) {
       if (feature.getId() === undefined) { return false }
