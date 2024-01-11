@@ -11,10 +11,11 @@ class Map
   field :name, type: String
   field :description, type: String
   field :public_id, type: String
+  field :public, type: Boolean, default: true
 
   # [satellite, satelliteStreets, osm]
   DEFAULT_MAP = :osm
-  DEFAULT_CENTER = [1_232_651.8535029977, 6_353_568.446631506].freeze
+  DEFAULT_CENTER = [11.077, 49.447].freeze
   DEFAULT_ZOOM = 12
 
   after_destroy :broadcast_destroy

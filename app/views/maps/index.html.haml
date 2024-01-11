@@ -4,8 +4,5 @@
 #maps
   - @maps.each do |map|
     = render map
-    %p
-      = link_to "Show this map", map
-      = button_to "Destroy this map", map, method: :delete
 
 = link_to "New map", new_map_path

@@ -2,17 +2,12 @@
 
 ## TODO:
 
-* use: import {fromLonLat} from 'ol/proj';
 * SimpleCov.minimum_coverage 100
-* hide private maps
 * read map-keys from env
 * attributions
 * seperate definition of mobile + desktop style/behavior
 * Handle 'changeproperties' in undo/redo
 * handle remote update of map properties
-* CSS framework, https://www.simplethread.com/how-to-create-a-new-rails-7-app-with-tailwind/
-* use bbox to only load visible features when moving/zooming map
-  * only update features received by action_cable that are visible
 
 First release:
 
@@ -26,6 +21,7 @@ First release:
 
 * SimpleStyle Spec, mapbox: https://github.com/mapbox/simplestyle-spec/tree/master/1.1.0
   * document geojson spec extension
+* CSS framework, https://www.simplethread.com/how-to-create-a-new-rails-7-app-with-tailwind/
 * Map list
   * with screenshots
 * Vector maps:
@@ -35,6 +31,9 @@ First release:
   * validate access on update
   * add view location to shareable public url
   * share button
+* Use bbox to only load visible features when moving/zooming map
+  * only update features received by action_cable that are visible
+  * store geometry server side as EPSG:4326
 * Supported shapes
   * New feature type text (point without icon)
   * New feature free draw (line with 'shift'), downsample points

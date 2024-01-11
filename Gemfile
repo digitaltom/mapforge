@@ -45,6 +45,7 @@ gem 'bootsnap', require: false
 gem 'amazing_print'
 gem 'haml'
 gem 'mongoid'
+gem 'mongoid_rails_migrations'
 
 # map + coordinates libraries
 gem 'rgeo'

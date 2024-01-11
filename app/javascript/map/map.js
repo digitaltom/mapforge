@@ -6,7 +6,10 @@ import { initializeMapProperties, mapProperties, loadBackgroundLayers, backgroun
 // eslint expects variables to get imported, but we load the full lib in header
 const ol = window.ol
 
-const geoJsonFormat = new ol.format.GeoJSON()
+const geoJsonFormat = new ol.format.GeoJSON({
+  // dataProjection: 'EPSG:4326', // server stores [11.077, 49.447]
+  // featureProjection: 'EPSG:3857' // map uses [1232651.8535, 6353568.4466]
+})
 
 export let changedFeatureQueue = []
 export let vectorSource, fixedSource
@@ -75,7 +78,7 @@ function initializeMap () {
     target: 'map',
     view: new ol.View({
       projection: mapProperties.projection,
-      center: mapProperties.center,
+      center: ol.proj.fromLonLat(mapProperties.center),
       zoom: mapProperties.zoom,
       constrainResolution: true
     }),

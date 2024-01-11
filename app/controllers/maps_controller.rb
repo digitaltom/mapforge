@@ -1,9 +1,8 @@
 class MapsController < ApplicationController
   before_action :set_map, only: %i[show edit update destroy features]
 
-  # GET /maps or /maps.json
   def index
-    @maps = Map.includes(:features).all
+    @maps = Map.where(public: true).includes(:features).all
   end
 
   # GET /maps/1 or /maps/1.json
