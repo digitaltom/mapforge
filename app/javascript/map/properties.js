@@ -69,7 +69,7 @@ export function loadBackgroundLayers () {
     // olms.applyBackground(rasterLayer, "https://api.maptiler.com/maps/bright-v2/style.json?key" + keys.maptiler)
   } else {
     map.removeLayer(backgroundTileLayer)
-    backgroundTileLayer = new ol.layer.Tile({ source: backgroundTiles[mapProperties.base_map] })
+    backgroundTileLayer = new ol.layer.Tile({ source: backgroundTiles()[mapProperties.base_map] })
     map.getLayers().insertAt(0, backgroundTileLayer)
   }
 }
