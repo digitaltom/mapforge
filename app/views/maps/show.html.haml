@@ -1,0 +1,41 @@
+#map.map
+
+#flash
+  #flash-container
+
+#feature-details{'data-controller': "feature"}
+  .feature-details.feature-details-edit
+    %h4.feature-details-title
+    %p.feature-details-desc
+    %p.feature-details-atts
+    %p.feature-details-atts-edit
+      %textarea{name: "properties", rows: "4", cols: "30", "data-feature-target": "properties" }
+      %button.feature-update{ 'data-action': "click->feature#update"} Update
+    %button.feature-delete{ 'data-action': "click->feature#delete"} Delete
+  .feature-details.feature-details-view
+    %h4.feature-details-title
+    %p.feature-details-desc
+    %p.feature-details-atts
+
+#map-modal
+  %h2 Configure Map
+  %label{ for: "map-name"} Name:
+  %br
+  %input#map-name{type: "text", size: 27}
+  %br
+  %label{for: "map-baselayer"} Base Map:
+  %br
+  - ['osm', 'satellite', 'satelliteStreets', 'esriTiles', 'stamenToner', 'stamenWatercolor', 'openTopoTiles'].each do |base_map|
+    - active = (@map.properties[:base_map] == base_map)
+    = image_tag("base_maps/#{base_map}.jpg", data: { layer: base_map},
+                class: "layer-preview #{"active" if active}")
+  %br
+  Center:
+  %i#map-center= @map.properties[:center]
+  %br
+  Zoom:
+  %i#map-zoom= @map.properties[:zoom]
+  %br
+  %a#set-map-center{href: '#'} Set initial map view to current center/zoom
+
+#scaleline-metric.scaleline-external

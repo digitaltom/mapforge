@@ -1,0 +1,4 @@
+%div{id: dom_id(map)}
+  %p
+    = link_to (map.name || map.id), map
+    %i= "(#{map.features.size} features)"

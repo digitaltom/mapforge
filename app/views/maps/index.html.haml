@@ -1,0 +1,8 @@
+%h1
+  Maps
+
+#maps
+  - @maps.each do |map|
+    = render map
+
+= link_to "New map", new_map_path

@@ -1,0 +1,260 @@
+import { initializeSocket } from 'channels/map_channel'
+import { vectorStyle } from 'map/styles'
+import { initializeReadonlyInteractions, hideFeatureDetails } from 'map/interactions/readonly'
+import { initializeEditInteractions, undoInteraction } from 'map/interactions/edit'
+import { initializeMapProperties, mapProperties, loadBackgroundLayers, backgroundTileLayer } from 'map/properties'
+import { FPSControl } from 'map/controls/fps'
+
+// eslint expects variables to get imported, but we load the full lib in header
+const ol = window.ol
+
+const geoJsonFormat = new ol.format.GeoJSON({
+  // dataProjection: 'EPSG:4326', // server stores [11.077, 49.447]
+  // featureProjection: 'EPSG:3857' // map uses [1232651.8535, 6353568.4466]
+})
+
+export let changedFeatureQueue = []
+export let vectorSource, fixedSource
+export let map
+export let mainBar
+
+class ChangeListenerVectorSource extends ol.source.Vector {
+  constructor (optOptions) {
+    super(optOptions)
+    this.on('addfeature', function (e) {
+      // pre-compute the style and store it on the feature
+      e.feature.setStyle(vectorStyle(e.feature))
+      // collecting reference to changed features in changedFeatureQueue,
+      // so we only push those to the server on modifyend
+      e.feature.on('change', function (e) {
+        const exists = changedFeatureQueue.some(obj => obj.getId() === e.target.getId())
+        if (!exists) { changedFeatureQueue.push(e.target) }
+      })
+    })
+  }
+}
+
+document.addEventListener('turbo:load', function () {
+  if (document.getElementById('map')) {
+    initializeMapProperties()
+    initializeMap()
+    loadBackgroundLayers()
+    initializeSocket()
+    initializeReadonlyInteractions()
+    initializeEditInteractions()
+  }
+})
+
+function initializeMap () {
+  changedFeatureQueue = []
+  vectorSource = new ChangeListenerVectorSource({
+    format: geoJsonFormat,
+    loader: function (extent, resolution, projection) {
+      // TODO only load visible features via bbox
+      const url = '/maps/' + window.gon.map_id + '/features?bbox=' + extent.join(',') + ',EPSG:3857'
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+        // console.log(JSON.stringify(data))
+          const features = geoJsonFormat.readFeatures(data)
+          console.log('loaded ' + features.length + ' features')
+          vectorSource.addFeatures(features)
+          if (undoInteraction) { undoInteraction.clear() }
+        })
+        .catch(error => console.error('Error:', error))
+    }
+    // strategy: ol.loadingstrategy.bbox
+  })
+
+  const vectorLayer = new ol.layer.Vector({
+    source: vectorSource,
+    style: vectorStyle
+  })
+
+  // layer for immutable features, like location
+  fixedSource = new ol.source.Vector({ features: [] })
+  const fixedLayer = new ol.layer.Vector({
+    source: fixedSource,
+    style: vectorStyle
+  })
+
+  map = new ol.Map({
+    layers: [vectorLayer, fixedLayer],
+    target: 'map',
+    view: new ol.View({
+      projection: mapProperties.projection,
+      center: ol.proj.fromLonLat(mapProperties.center),
+      zoom: mapProperties.zoom,
+      constrainResolution: true
+    }),
+    controls: ol.control.defaults.defaults({
+      zoom: true,
+      attribution: true,
+      rotate: false
+    }),
+    keyboardEventTarget: document
+  })
+
+  map.addControl(new FPSControl())
+
+  // Main control bar
+  mainBar = new ol.control.Bar()
+  map.addControl(mainBar)
+  // add current map view to url
+  // map.addInteraction(new ol.interaction.Link())
+  // allow double tap/click then drag up/down to zoom
+  map.addInteraction(new ol.interaction.DblClickDragZoom())
+  // snap in on feature changes
+  map.addInteraction(new ol.interaction.Snap({ source: vectorSource, pixelTolerance: 10 }))
+
+  const scaleLineMetric = new ol.control.ScaleLine({
+    units: ['metric'],
+    target: document.getElementById('scaleline-metric')
+  })
+  map.addControl(scaleLineMetric)
+}
+
+export function featureAsGeoJSON (feature) {
+  const geoJSON = geoJsonFormat.writeFeatureObject(feature)
+  return geoJSON
+}
+
+// This method gets called from local updates + the hotwire channel
+export function updateFeature (data, source = vectorSource) {
+  // TODO: only create/update if visible in bbox
+  const newFeature = geoJsonFormat.readFeature(data)
+  const feature = source.getFeatureById(data.id)
+  if (feature && changed(feature, newFeature)) {
+    console.log("updating feature '" + data.id + "'")
+    if (data.geometry.type === 'Point' && changedCoords(feature, newFeature)) {
+      animateMarker(newFeature, feature.getGeometry().getCoordinates(),
+        newFeature.getGeometry().getCoordinates())
+    }
+    feature.setGeometry(newFeature.getGeometry())
+    feature.setProperties(newFeature.getProperties())
+    feature.changed()
+    feature.setStyle(vectorStyle(feature))
+    vectorSource.changed()
+  } else {
+    // addFeature will not add if id already exists
+    source.addFeature(newFeature)
+  }
+  // drop from changedFeatureQueue, it's coming from server
+  arrayRemove(changedFeatureQueue, newFeature)
+}
+
+export function deleteFeature (id) {
+  const feature = vectorSource.getFeatureById(id)
+  if (feature) {
+    console.log('deleting feature ' + id)
+    vectorSource.removeFeature(feature)
+    hideFeatureDetails()
+  }
+}
+
+function changed (feature, newFeature) {
+  return (changedCoords(feature, newFeature) || changedProps(feature, newFeature))
+}
+
+function changedCoords (feature, newFeature) {
+  const oldCoords = JSON.stringify(feature.getGeometry().getCoordinates())
+  const newCoords = JSON.stringify(newFeature.getGeometry().getCoordinates())
+  const changed = (oldCoords !== newCoords)
+  if (changed) { console.log('changed coords: ' + oldCoords + ' -> ' + newCoords) }
+  return changed
+}
+
+function changedProps (feature, newFeature) {
+  const oldProps = JSON.stringify(featureAsGeoJSON(feature).properties)
+  const newProps = JSON.stringify(featureAsGeoJSON(newFeature).properties)
+  const changed = (oldProps !== newProps)
+  if (changed) { console.log('changed props: ' + oldProps + ' -> ' + newProps) }
+  return changed
+}
+
+function animateMarker (feature, start, end) {
+  console.log('Animating ' + feature.getId() + ' from ' + JSON.stringify(start) + ' to ' + JSON.stringify(end))
+  const startTime = Date.now()
+  const listenerKey = backgroundTileLayer.on('postrender', animate)
+
+  const duration = 300
+  function animate (event) {
+    const frameState = event.frameState
+    const elapsed = frameState.time - startTime
+    if (elapsed >= duration) {
+      ol.Observable.unByKey(listenerKey)
+      return
+    }
+    const elapsedRatio = elapsed / duration
+    const currentCoordinate = [
+      start[0] + elapsedRatio * (end[0] - start[0]),
+      start[1] + elapsedRatio * (end[1] - start[1])
+    ]
+    feature.getGeometry().setCoordinates(currentCoordinate)
+    map.render()
+  }
+}
+
+export function locate () {
+  console.log('Getting geolocation')
+  if (!navigator.geolocation) {
+    flash('Your browser doesn\'t support geolocation', 'info')
+  } else {
+    const locationFeature = fixedSource.getFeatureById('location')
+    if (!locationFeature) { flash('Detecting your geolocation', 'info') }
+    navigator.geolocation.getCurrentPosition(function (position) {
+      const coordinates = [position.coords.longitude, position.coords.latitude]
+      // const accuracy = circular(coords, position.coords.accuracy)
+
+      // only flash + animate on first locate
+      if (!locationFeature) {
+        flash('Location set to: ' + ol.proj.fromLonLat(coordinates), 'success')
+        animateMapCenterTo(ol.proj.fromLonLat(coordinates))
+      }
+      const feature = new ol.Feature({
+        geometry: new ol.geom.Point(ol.proj.fromLonLat(coordinates)),
+        title: 'You',
+        description: 'You\'re currently detected position',
+        'marker-color': '#f00'
+      })
+      feature.setId('location')
+
+      const data = featureAsGeoJSON(feature)
+      updateFeature(data, fixedSource)
+    })
+  }
+}
+
+function arrayRemove (arr, value) {
+  return arr.filter(function (ele) {
+    return ele !== value
+  })
+}
+
+export function flash (message, type = 'info', timeout = 3000) {
+  if (!document.getElementById('flash-container')) { return false }
+  const flashContainer = document.getElementById('flash-container').cloneNode(true)
+  const flashMessage = document.createElement('div')
+  flashMessage.classList.add('flash-message', type)
+  flashMessage.innerHTML = message
+  flashContainer.appendChild(flashMessage)
+  document.getElementById('flash').appendChild(flashContainer)
+  flashContainer.style.opacity = '1'
+  flashContainer.style.bottom = '0.5em'
+  setTimeout(function () {
+    flashContainer.style.opacity = '0'
+    flashContainer.style.bottom = '-1em'
+  }, timeout)
+  setTimeout(function () {
+    flashContainer.remove()
+  }, timeout + 500) // Delete message after animation is done
+}
+
+function animateMapCenterTo (coords) {
+  const animationOptions = {
+    center: coords,
+    duration: 1000, // in ms
+    easing: ol.easing.easeIn
+  }
+  map.getView().animate(animationOptions)
+}
