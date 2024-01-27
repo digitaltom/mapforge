@@ -1,5 +1,5 @@
-[![Tests](https://github.com/digitaltom/ourmaps/actions/workflows/ci.yml/badge.svg)](https://github.com/digitaltom/ourmaps/actions/workflows/ci.yml)
-[![Docker](https://github.com/digitaltom/ourmaps/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/digitaltom/ourmaps/actions/workflows/docker-publish.yml)
+[![Tests](https://github.com/digitaltom/mapforge/actions/workflows/ci.yml/badge.svg)](https://github.com/digitaltom/mapforge/actions/workflows/ci.yml)
+[![Docker](https://github.com/digitaltom/mapforge/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/digitaltom/mapforge/actions/workflows/docker-publish.yml)
 
 # README
 
@@ -64,7 +64,7 @@ Specs: `bundle exec rspec`
 
 ### Container build
 
-* Build: `docker build -t ourmaps .`
-* Run: `docker run -e SECRET_KEY_BASE=e3c9f2... ourmaps`
+* Build: `docker build -t mapforge .`
+* Run: `docker run -e SECRET_KEY_BASE=e3c9f2... mapforge`
 
-Github builds a new container on each commit to `main`: ghcr.io/digitaltom/ourmaps
+Github builds a new container on each commit to `main`: ghcr.io/digitaltom/mapforge
