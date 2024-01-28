@@ -59,5 +59,10 @@ jobs:
           bundler-cache: true
       - name: Run tests
         run: COVERAGE=true bin/rspec
+      - name: Upload screenshots
+        uses: actions/upload-artifact@v2
+        with:
+          name: screenshots
+          path: ./tmp/capybara
       - name: Coveralls
         uses: coverallsapp/github-action@v2
