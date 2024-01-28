@@ -145,7 +145,7 @@ GEM
       i18n (>= 0.7)
       multi_json
       request_store (>= 1.0)
-    haml (6.2.3)
+    haml (6.3.0)
       temple (>= 0.8.2)
       thor
       tilt
