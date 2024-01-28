@@ -48,6 +48,7 @@ jobs:
         - 27017:27017
     env:
       RAILS_ENV: test
+      COVERAGE: true
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -58,4 +59,21 @@ jobs:
         with:
           bundler-cache: true
       - name: Run tests
-        run: bin/rspec
+        id: rspec
+        run: |
+          echo "::set-output name=exit_code::$(bin/rspec || echo $?)"
+        shell: bash
+      - name: Upload screenshots
+        if: steps.rspec.outputs.exit_code != '0'
+        uses: actions/upload-artifact@v2
+        with:
+          name: screenshots
+          path: ./tmp/capybara
+      - name: Upload logs
+        if: steps.rspec.outputs.exit_code != '0'
+        uses: actions/upload-artifact@v2
+        with:
+          name: rails-logs
+          path: ./log/test.log
+      - name: Coveralls
+        uses: coverallsapp/github-action@v2
