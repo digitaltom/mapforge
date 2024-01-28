@@ -58,4 +58,6 @@ jobs:
         with:
           bundler-cache: true
       - name: Run tests
-        run: bin/rspec
+        run: COVERAGE=true bin/rspec
+      - name: Coveralls
+        uses: coverallsapp/github-action@v2
