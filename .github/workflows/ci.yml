@@ -19,12 +19,12 @@ jobs:
       - name: Install dependencies
         run: sudo apt-get install -y ruby-dev build-essential git libvips pkg-config libproj-dev proj-bin
       - name: Install Ruby and gems
-        uses: ruby/setup-ruby@55283cc23133118229fd3f97f9336ee23a179fcf # v1.146.0
+        uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
       - uses: actions/setup-node@v4
         with:
-          node-version: 16
+          node-version: 18
           cache: 'npm'
       - name: Install eslint
         run: npm install
@@ -55,7 +55,7 @@ jobs:
       - name: Install dependencies
         run: sudo apt-get install -y ruby-dev build-essential git libvips pkg-config libproj-dev proj-bin
       - name: Install Ruby and gems
-        uses: ruby/setup-ruby@55283cc23133118229fd3f97f9336ee23a179fcf # v1.146.0
+        uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
       - name: Run tests
