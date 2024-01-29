@@ -6,6 +6,7 @@ import { modifyInteraction, lineInteraction, drawInteraction, pointInteraction }
 
 // eslint expects ol to get imported, but we load the full lib in header
 const ol = window.ol
+const Turbo = window.Turbo
 
 export let selectInteraction
 let locationIntervall
@@ -24,6 +25,14 @@ export function initializeReadonlyInteractions () {
     toggleOne: true, // one control active at the same time
     className: 'view-bar',
     controls: [
+      new ol.control.Button({
+        html: "<i class='las la-home'></i>",
+        title: 'Back to map list',
+        className: 'buttons button-home',
+        handleClick: function () {
+          Turbo.visit('/maps')
+        }
+      }),
       new ol.control.Button({
         html: "<i class='las la-mouse-pointer'></i>",
         title: 'Select',

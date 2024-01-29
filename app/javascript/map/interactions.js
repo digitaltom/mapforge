@@ -11,8 +11,11 @@ export function resetInteractions () {
   map.removeInteraction(selectInteraction)
   selectEditInteraction.getFeatures().clear()
   map.removeInteraction(selectEditInteraction)
-  Array.from(document.getElementsByClassName('buttons')).forEach(function (button) {
+  document.querySelectorAll('.buttons').forEach(button => {
     button.classList.remove('active')
+  })
+  document.querySelectorAll('.sub-bar').forEach(subBar => {
+    subBar.classList.add('hidden')
   })
   document.querySelector('#map-modal').style.display = 'none'
   hideFeatureDetails()

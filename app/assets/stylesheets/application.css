@@ -99,6 +99,10 @@ body,
   font-size: 1.6em;
 }
 
+.main-bar button {
+  min-width: 2.4em;
+}
+
 .ol-control button:hover,
 .ol-control.active button {
   color: #000;
@@ -112,6 +116,11 @@ body,
 
 .ol-control.ol-toggle button:disabled {
   background-color: #ccc;
+}
+
+.sub-bar {
+  top: 3em !important;
+  left: calc(50% + 2em) !important;
 }
 
 .ol-zoom {

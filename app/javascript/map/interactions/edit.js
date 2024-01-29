@@ -65,13 +65,12 @@ export function initializeEditInteractions () {
 
   // Control bar: https://viglino.github.io/ol-ext/doc/doc-pages/ol.control.Bar.html
   const editBar = new ol.control.Bar({
-    position: 'top-left',
     group: true, // group controls together
     toggleOne: true, // one control active at the same time
     className: 'edit-bar',
     controls: [
       new ol.control.Button({
-        html: "<i class='las la-map-marked-alt'></i>",
+        html: "<i class='las la-bars'></i>",
         title: 'Map properties',
         className: 'buttons button-map',
         handleClick: function () {
@@ -89,6 +88,7 @@ export function initializeEditInteractions () {
         handleClick: function () {
           resetInteractions()
           document.querySelector('.button-modify').classList.add('active')
+          document.querySelector('.edit-sub-bar').classList.remove('hidden')
           map.addInteraction(selectEditInteraction)
           map.addInteraction(modifyInteraction)
           flash('Click on a map element to modify it')
@@ -96,21 +96,44 @@ export function initializeEditInteractions () {
       }),
       new ol.control.Button({
         html: "<i class='las la-map-marker'></i>",
+        title: 'Add new elements to the map',
+        className: 'buttons button-add',
+        handleClick: function () {
+          resetInteractions()
+          document.querySelector('.button-add').classList.add('active')
+          document.querySelector('.add-sub-bar').classList.remove('hidden')
+        }
+      })
+
+    ]
+  })
+  mainBar.addControl(editBar)
+
+  const addSubBar = new ol.control.Bar({
+    group: true,
+    className: 'sub-bar add-sub-bar hidden',
+    controls: [
+      new ol.control.Button({
+        html: "<i class='las la-map-marker'></i>",
         title: 'Add map marker',
         className: 'buttons button-marker',
         handleClick: function () {
           resetInteractions()
+          document.querySelector('.button-add').classList.add('active')
+          document.querySelector('.add-sub-bar').classList.remove('hidden')
           document.querySelector('.button-marker').classList.add('active')
           map.addInteraction(pointInteraction)
           flash('Click on a location to place a marker')
         }
       }),
       new ol.control.Button({
-        html: "<i class='las la-pencil-alt'></i>",
+        html: "<i class='las la-chart-line'></i>",
         title: 'Add a line to the map',
         className: 'buttons button-line',
         handleClick: function () {
           resetInteractions()
+          document.querySelector('.button-add').classList.add('active')
+          document.querySelector('.add-sub-bar').classList.remove('hidden')
           document.querySelector('.button-line').classList.add('active')
           map.addInteraction(lineInteraction)
           flash('Click on a location to start drawing a line')
@@ -122,6 +145,8 @@ export function initializeEditInteractions () {
         className: 'buttons button-polygon',
         handleClick: function () {
           resetInteractions()
+          document.querySelector('.button-add').classList.add('active')
+          document.querySelector('.add-sub-bar').classList.remove('hidden')
           document.querySelector('.button-polygon').classList.add('active')
           map.addInteraction(drawInteraction)
           flash('Click on a location on your map to start marking an area')
@@ -129,12 +154,11 @@ export function initializeEditInteractions () {
       })
     ]
   })
+  map.addControl(addSubBar)
 
-  mainBar.addControl(editBar)
-
-  const undoBar = new ol.control.Bar({
+  const editSubBar = new ol.control.Bar({
     group: true,
-    className: 'undo-bar',
+    className: 'sub-bar edit-sub-bar hidden',
     controls: [
       new ol.control.Button({
         html: "<i class='las la-undo-alt'></i>",
@@ -156,7 +180,7 @@ export function initializeEditInteractions () {
       })
     ]
   })
-  mainBar.addControl(undoBar)
+  map.addControl(editSubBar)
 
   // feature was changed or redo was called
   undoInteraction.on('stack:add', function (e) {
