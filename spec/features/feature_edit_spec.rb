@@ -10,10 +10,9 @@ describe 'Map' do
 
   context 'with initial map rendering' do
     it 'shows feature edit buttons' do
+      expect(page).to have_css('.button-map')
       expect(page).to have_css('.button-modify')
-      expect(page).to have_css('.button-marker')
-      expect(page).to have_css('.button-line')
-      expect(page).to have_css('.button-polygon')
+      expect(page).to have_css('.button-add')
     end
   end
 
@@ -88,6 +87,7 @@ describe 'Map' do
 
   context 'when adding features' do
     it 'can place a new point on the map' do
+      find('.button-add').click
       find('.button-marker').click
       expect(page).to have_text('Click on a location to place a marker')
       expect { find_by_id('map').click }.to change { Feature.point.count }.by(1)
