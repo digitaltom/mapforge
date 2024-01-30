@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Install dependencies
         run: sudo apt-get install -y ruby-dev build-essential git libvips pkg-config libproj-dev proj-bin
       - name: Install Ruby and gems
@@ -51,7 +51,7 @@ jobs:
       COVERAGE: true
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Install dependencies
         run: sudo apt-get install -y ruby-dev build-essential git libvips pkg-config libproj-dev proj-bin
       - name: Install Ruby and gems
@@ -61,17 +61,17 @@ jobs:
       - name: Run tests
         id: rspec
         run: |
-          echo "::set-output name=exit_code::$(bin/rspec || echo $?)"
+          bin/rspec
         shell: bash
       - name: Upload screenshots
-        if: steps.rspec.outputs.exit_code != '0'
-        uses: actions/upload-artifact@v2
+        if: failure()
+        uses: actions/upload-artifact@v4
         with:
           name: screenshots
           path: ./tmp/capybara
       - name: Upload logs
-        if: steps.rspec.outputs.exit_code != '0'
-        uses: actions/upload-artifact@v2
+        if: failure()
+        uses: actions/upload-artifact@v4
         with:
           name: rails-logs
           path: ./log/test.log

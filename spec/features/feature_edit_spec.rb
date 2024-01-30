@@ -90,7 +90,7 @@ describe 'Map' do
       find('.button-add').click
       find('.button-marker').click
       expect(page).to have_text('Click on a location to place a marker')
-      expect { find_by_id('map').click }.to change { Feature.point.count }.by(1)
+      expect { click_coord('#map', 50, 50) }.to change { Feature.point.count }.by(1)
       expect(page).to have_text('Feature added')
     end
   end

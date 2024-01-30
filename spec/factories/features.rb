@@ -48,6 +48,19 @@ FactoryBot.define do
       end
     end
 
+    # this polygon is in the top left
+    trait :polygon_middle do
+      geometry do
+          { 'type' => 'Polygon',
+            'coordinates' =>
+          [ [ [ 1229034.8370179771, 6354390.814754769 ],
+          [ 1228996.6185038346, 6347889.885772753 ],
+          [ 1239009.8692091927, 6347851.6450140355 ],
+          [ 1239009.8692091927, 6354467.296272204 ],
+          [ 1229034.8370179771, 6354390.814754769 ] ] ] }
+      end
+    end
+
     trait :line_string do
       geometry do
         { 'type' => 'LineString',
