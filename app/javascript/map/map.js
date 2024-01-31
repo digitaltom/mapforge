@@ -98,7 +98,7 @@ function initializeMap () {
   map.addControl(new FPSControl())
 
   // Main control bar
-  mainBar = new ol.control.Bar()
+  mainBar = new ol.control.Bar({ className: 'main-bar' })
   map.addControl(mainBar)
   // add current map view to url
   // map.addInteraction(new ol.interaction.Link())

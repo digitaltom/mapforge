@@ -6,6 +6,7 @@ describe 'Map' do
   before do
     visit map_path(map)
     expect(page).to have_text('Connection to server established')
+    find('.button-select').click
   end
 
   context 'with initial map rendering' do
@@ -19,7 +20,7 @@ describe 'Map' do
   context 'with features' do
     let!(:point) { create(:feature, :point, map:) }
     # this polygon overlaps the whole default view
-    let!(:polygon) { create(:feature, :polygon_fullscreen, map:, title: 'Poly Title',
+    let!(:polygon) { create(:feature, :polygon_middle, map:, title: 'Poly Title',
       description: 'Poly Desc') }
     let!(:line) { create(:feature, :line_string, map:) }
 
@@ -29,21 +30,19 @@ describe 'Map' do
     end
 
     it 'shows feature details on hover' do
-      map = find('#map')
-      page.driver.browser.action.move_to(map.native, 50, 50).perform
+      hover_coord('#map', 0, 0)
       expect(page).to have_css('.feature-details-view')
       expect(page).to have_text('Poly Title')
       expect(page).to have_text('Poly Desc')
-      expect(page).to have_text('Area: 2270.13 km')
+      expect(page).to have_text('Area: 27.64 km')
     end
 
     it 'shows feature details on click' do
-      map = find('#map')
-      page.driver.browser.action.move_to(map.native, 50, 50).click.perform
+      click_coord('#map', 50, 50)
       expect(page).to have_css('.feature-details-view')
       expect(page).to have_text('Poly Title')
       expect(page).to have_text('Poly Desc')
-      expect(page).to have_text('Area: 2270.13 km')
+      expect(page).to have_text('Area: 27.64 km')
     end
   end
 end
