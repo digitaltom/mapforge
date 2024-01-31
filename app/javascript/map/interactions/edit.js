@@ -13,55 +13,10 @@ export let drawInteraction, pointInteraction, lineInteraction, modifyInteraction
   undoInteraction, selectEditInteraction
 
 export function initializeEditInteractions () {
-  // Undo redo interaction (https://github.com/Viglino/ol-ext/blob/master/src/interaction/UndoRedo.js)
-  undoInteraction = new ol.interaction.UndoRedo()
-  undoInteraction.define('changeproperties', function (args) {
-    // undo
-    const feature = featureAsGeoJSON(args.feature)
-    feature.properties = args.oldProps
-    updateFeature(feature)
-    mapChannel.send_message('update_feature', feature)
-  }, function (args) {
-    // redo
-    const feature = featureAsGeoJSON(args.feature)
-    feature.properties = args.newProps
-    updateFeature(feature)
-    mapChannel.send_message('update_feature', feature)
-  })
-  map.addInteraction(undoInteraction)
-
-  const selectedFeatures = new ol.Collection()
-  selectEditInteraction = new ol.interaction.Select({
-    features: selectedFeatures,
-    style: sketchStyle,
-    multi: false,
-    hitTolerance: 10
-  })
-
-  drawInteraction = new ol.interaction.Draw({
-    source: vectorSource,
-    style: sketchStyle,
-    type: 'Polygon'
-  })
-
-  pointInteraction = new ol.interaction.Draw({
-    source: vectorSource,
-    style: sketchStyle,
-    type: 'Point'
-  })
-
-  lineInteraction = new ol.interaction.Draw({
-    source: vectorSource,
-    style: sketchStyle,
-    type: 'LineString'
-  })
-
-  // https://openlayers.org/en/latest/apidoc/module-ol_interaction_Modify-Modify.html
-  modifyInteraction = new ol.interaction.Modify({
-    source: vectorSource,
-    style: hoverStyle,
-    pixelTolerance: 10
-  })
+  initializeUndoInteraction()
+  initializeSelectInteraction()
+  initializePaintInteractions()
+  initializeModifyInteraction()
 
   // Control bar: https://viglino.github.io/ol-ext/doc/doc-pages/ol.control.Bar.html
   const editBar = new ol.control.Bar({
@@ -101,6 +56,9 @@ export function initializeEditInteractions () {
         handleClick: function () {
           resetInteractions()
           document.querySelector('.button-add').classList.add('active')
+          document.querySelector('.button-marker').classList.add('active')
+          map.addInteraction(pointInteraction)
+          flash('Click on a location to place a marker')
           document.querySelector('.add-sub-bar').classList.remove('hidden')
         }
       })
@@ -181,6 +139,108 @@ export function initializeEditInteractions () {
     ]
   })
   map.addControl(editSubBar)
+}
+
+export function initializeModifyInteraction () {
+  // https://openlayers.org/en/latest/apidoc/module-ol_interaction_Modify-Modify.html
+  modifyInteraction = new ol.interaction.Modify({
+    source: vectorSource,
+    style: hoverStyle,
+    pixelTolerance: 10
+  })
+
+  modifyInteraction.on('modifystart', function (event) {
+    console.log('Modification started')
+  })
+
+  modifyInteraction.on('modifyend', function (e) {
+    // console.log('changedFeatureQueue: ' + changedFeatureQueue)
+    // don't use e.features.getArray() here, because it contains all map/selected features
+    while (changedFeatureQueue.length > 0) {
+      const feature = changedFeatureQueue.pop()
+      console.log('Feature ' + feature.getId() + ' has been modified')
+      mapChannel.send_message('update_feature', featureAsGeoJSON(feature))
+      flash('Feature updated', 'success')
+    }
+  })
+}
+
+export function initializePaintInteractions () {
+  drawInteraction = new ol.interaction.Draw({
+    source: vectorSource,
+    style: sketchStyle,
+    type: 'Polygon'
+  })
+
+  pointInteraction = new ol.interaction.Draw({
+    source: vectorSource,
+    style: sketchStyle,
+    type: 'Point'
+  })
+
+  lineInteraction = new ol.interaction.Draw({
+    source: vectorSource,
+    style: sketchStyle,
+    type: 'LineString'
+  });
+
+  [drawInteraction, pointInteraction, lineInteraction].forEach(function (element) {
+    element.on('drawend', function (e) {
+      e.feature.setId(createFeatureId())
+      console.log('Feature ' + e.feature.getId() + ' has been created')
+      flash('Feature added', 'success')
+      mapChannel.send_message('new_feature', featureAsGeoJSON(e.feature))
+    })
+  })
+}
+
+export function initializeSelectInteraction () {
+  const selectedFeatures = new ol.Collection()
+  selectEditInteraction = new ol.interaction.Select({
+    features: selectedFeatures,
+    style: sketchStyle,
+    multi: false,
+    hitTolerance: 10
+  })
+
+  selectEditInteraction.on('select', function (e) {
+    const selectedFeatures = e.selected
+    const deselectedFeatures = e.deselected
+    // in case a modify interaction is active, those feautures
+    // are temporary copies in a differenct format
+    // hide old details first, then show new one
+    Array.from(deselectedFeatures).forEach(function (feature) {
+      if (feature.values_.features) { feature = feature.values_.features[0] }
+      console.log('deselected ' + JSON.stringify(feature.getId()))
+      hideFeatureEdit()
+      feature.setStyle(vectorStyle(feature))
+    })
+    Array.from(selectedFeatures).forEach(function (feature) {
+      if (feature.values_.features) { feature = feature.values_.features[0] }
+      console.log('selected ' + JSON.stringify(feature.getId()))
+      showFeatureEdit(feature)
+      feature.setStyle(hoverStyle(feature))
+    })
+  })
+}
+
+export function initializeUndoInteraction () {
+  // Undo redo interaction (https://github.com/Viglino/ol-ext/blob/master/src/interaction/UndoRedo.js)
+  undoInteraction = new ol.interaction.UndoRedo()
+  undoInteraction.define('changeproperties', function (args) {
+    // undo
+    const feature = featureAsGeoJSON(args.feature)
+    feature.properties = args.oldProps
+    updateFeature(feature)
+    mapChannel.send_message('update_feature', feature)
+  }, function (args) {
+    // redo
+    const feature = featureAsGeoJSON(args.feature)
+    feature.properties = args.newProps
+    updateFeature(feature)
+    mapChannel.send_message('update_feature', feature)
+  })
+  map.addInteraction(undoInteraction)
 
   // feature was changed or redo was called
   undoInteraction.on('stack:add', function (e) {
@@ -223,50 +283,6 @@ export function initializeEditInteractions () {
     if (e.action.type === 'changegeometry') {
       mapChannel.send_message('update_feature', featureAsGeoJSON(feature))
     }
-  })
-
-  selectEditInteraction.on('select', function (e) {
-    const selectedFeatures = e.selected
-    const deselectedFeatures = e.deselected
-    // in case a modify interaction is active, those feautures
-    // are temporary copies in a differenct format
-    // hide old details first, then show new one
-    Array.from(deselectedFeatures).forEach(function (feature) {
-      if (feature.values_.features) { feature = feature.values_.features[0] }
-      console.log('deselected ' + JSON.stringify(feature.getId()))
-      hideFeatureEdit()
-      feature.setStyle(vectorStyle(feature))
-    })
-    Array.from(selectedFeatures).forEach(function (feature) {
-      if (feature.values_.features) { feature = feature.values_.features[0] }
-      console.log('selected ' + JSON.stringify(feature.getId()))
-      showFeatureEdit(feature)
-      feature.setStyle(hoverStyle(feature))
-    })
-  })
-
-  modifyInteraction.on('modifystart', function (event) {
-    console.log('Modification started')
-  })
-
-  modifyInteraction.on('modifyend', function (e) {
-    // console.log('changedFeatureQueue: ' + changedFeatureQueue)
-    // don't use e.features.getArray() here, because it contains all map/selected features
-    while (changedFeatureQueue.length > 0) {
-      const feature = changedFeatureQueue.pop()
-      console.log('Feature ' + feature.getId() + ' has been modified')
-      mapChannel.send_message('update_feature', featureAsGeoJSON(feature))
-      flash('Feature updated', 'success')
-    }
-  });
-
-  [drawInteraction, pointInteraction, lineInteraction].forEach(function (element) {
-    element.on('drawend', function (e) {
-      e.feature.setId(createFeatureId())
-      console.log('Feature ' + e.feature.getId() + ' has been created')
-      flash('Feature added', 'success')
-      mapChannel.send_message('new_feature', featureAsGeoJSON(e.feature))
-    })
   })
 }
 

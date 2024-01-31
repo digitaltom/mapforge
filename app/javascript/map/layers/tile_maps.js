@@ -20,6 +20,8 @@ export function backgroundTiles () {
     tileSize: 512
   })
 
+  const osmDefaultTiles = new ol.source.OSM()
+
   const osmTiles = new ol.source.XYZ({
     url: 'https://api.maptiler.com/maps/basic-v2/{z}/{x}/{y}@2x.png?key=' + window.gon?.map_keys?.maptiler,
     tileSize: 512,
@@ -68,9 +70,10 @@ export function backgroundTiles () {
   })
 
   return {
-    satellite: satelliteTiles,
-    satelliteStreets: satelliteStreetTiles,
-    osm: osmTiles,
+    satelliteTiles,
+    satelliteStreetTiles,
+    osmTiles,
+    osmDefaultTiles,
     streetTiles,
     esriTiles,
     stamenWatercolor,
