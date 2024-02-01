@@ -7,8 +7,9 @@ import { polygonStyle, polygonHoverStyle, polygonSketchStyle } from 'map/styles/
 const ol = window.ol
 
 export function title (feature) {
+  if (!feature.get('title')) { return null }
   return new ol.style.Text({
-    text: feature.get('title') || feature.getId(),
+    text: feature.get('title'),
     font: '15px Calibri,sans-serif',
     fill: new ol.style.Fill({ color: '#000' }),
     stroke: new ol.style.Stroke({ color: '#fff', width: 3 }),

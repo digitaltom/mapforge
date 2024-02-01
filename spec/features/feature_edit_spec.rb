@@ -34,7 +34,7 @@ describe 'Map' do
 
       it 'shows feature details' do
         expect(page).to have_css('.feature-details-edit')
-        expect(page).to have_text(polygon.id)
+        expect(page).to have_text('Poly Title')
         textarea = find('textarea')
         expect(textarea.value).to eq(polygon.properties.to_json)
       end
