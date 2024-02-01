@@ -46,6 +46,10 @@ Import map from .geojson (samples in db/seeds):
 
 More .geojson example files at: https://exploratory.io/map
 
+Take screenshots of existing maps for preview:
+
+ `MAPFORGE_HOST='https://mapforge.org' bin/rake maps:screenshots`
+
 
 ### Tests
 

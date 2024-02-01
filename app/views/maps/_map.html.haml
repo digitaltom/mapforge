@@ -1,4 +1,8 @@
 %div{id: dom_id(map)}
   %p
+    - if File.exist?(Rails.root.join("public/maps/#{map.id}.png"))
+      %img{src: "maps/#{map.id}.png", width: 300}
+    - else
+      %img{src: "map.png", width: 300}
     = link_to (map.name || map.id), map
     %i= "(#{map.features.size} features)"
