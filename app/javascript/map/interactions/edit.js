@@ -289,9 +289,9 @@ export function initializeUndoInteraction () {
 export function showFeatureEdit (feature) {
   const detailsContainer = document.querySelector('.feature-details-edit')
   detailsContainer.dataset.featureId = feature.getId()
-  detailsContainer.querySelector('.feature-details-title').innerHTML = feature.getId()
+  detailsContainer.querySelector('.feature-details-title').innerHTML = feature.get('title') || feature.getId()
   detailsContainer.querySelector('.feature-details-desc').innerHTML = ''
-  detailsContainer.querySelector('.feature-details-atts-edit textarea').value = JSON.stringify(featureAsGeoJSON(feature).properties) || '{}'
+  detailsContainer.querySelector('.feature-details-atts-edit textarea').value = JSON.stringify(featureAsGeoJSON(feature).properties || {})
   detailsContainer.style.display = 'block'
   detailsContainer.style.opacity = '0.9'
 }
