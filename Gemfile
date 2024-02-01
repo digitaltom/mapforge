@@ -70,6 +70,8 @@ group :development do
   gem "rubocop-rspec"
   gem "rubocop-thread_safety"
   gem "rubocop-rails-omakase", require: false
+  gem "rubocop-rubycw"
+  gem "rubycritic", require: false
   gem "brakeman"
   gem "bundler-audit"
 

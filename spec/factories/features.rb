@@ -25,17 +25,7 @@ FactoryBot.define do
       end
     end
 
-    trait :polygon do
-      geometry do
-        { 'type' => 'Polygon',
-          'coordinates' =>
-        [ [ [ 1_227_926.500107842, 6_357_488.316210906 ], [ 1_228_232.2482209827, 6_353_817.203374003 ],
-          [ 1_231_633.6959796732, 6_352_593.499095035 ], [ 1_231_671.9144938157, 6_356_685.260277833 ],
-          [ 1_227_926.500107842, 6_357_488.316210906 ] ] ] }
-      end
-    end
-
-    # this polygon overlaps the whole default view
+    # this polygon overlaps the whole default view (nbg)
     trait :polygon_fullscreen do
       geometry do
           { 'type' => 'Polygon',
@@ -48,7 +38,7 @@ FactoryBot.define do
       end
     end
 
-    # this polygon is in the top left
+    # this polygon is in the middle of nbg (default view)
     trait :polygon_middle do
       geometry do
           { 'type' => 'Polygon',

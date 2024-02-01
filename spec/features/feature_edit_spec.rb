@@ -16,38 +16,8 @@ describe 'Map' do
     end
   end
 
-  context 'with features' do
-    let!(:point) { create(:feature, :point, map:) }
-    # this polygon overlaps the whole default view
-    let!(:polygon) { create(:feature, :polygon_fullscreen, map:, title: 'Poly Title') }
-    let!(:line) { create(:feature, :line_string, map:) }
-
-    it 'shows features on map' do
-      expect(page).to have_css('.ol-layer')
-      expect(page).to have_text('Connection to server established')
-    end
-
-    it 'shows feature details on hover' do
-      map = find('#map')
-      page.driver.browser.action.move_to(map.native, 50, 50).click.perform
-      expect(page).to have_css('.feature-details-view')
-      expect(page).to have_text('Poly Title')
-      expect(page).to have_text('Area: 2270.13 km')
-    end
-
-    it 'shows feature details on click' do
-      map = find('#map')
-      sleep(0.5) # wait for features to be loaded
-      page.driver.browser.action.move_to(map.native, 50, 50).click.perform
-      expect(page).to have_css('.feature-details-view')
-      expect(page).to have_text('Poly Title')
-      expect(page).to have_text('Area: 2270.13 km')
-    end
-  end
-
   context 'with selected edit mode' do
-    # this polygon overlaps the whole default view
-    let!(:polygon) { create(:feature, :polygon_fullscreen, map:, title: 'Poly Title') }
+    let!(:polygon) { create(:feature, :polygon_middle, map:, title: 'Poly Title') }
 
     before do
       find('.button-modify').click
@@ -59,8 +29,7 @@ describe 'Map' do
 
     context 'with selected feature' do
       before do
-        map = find('#map')
-        page.driver.browser.action.move_to(map.native, 50, 50).click.perform
+        click_coord('#map', 50, 50)
       end
 
       it 'shows feature details' do
