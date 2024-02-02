@@ -2,7 +2,7 @@ import { initializeSocket } from 'channels/map_channel'
 import { vectorStyle } from 'map/styles'
 import { initializeReadonlyInteractions, hideFeatureDetails } from 'map/interactions/readonly'
 import { initializeEditInteractions, undoInteraction } from 'map/interactions/edit'
-import { initializeMapProperties, mapProperties, loadBackgroundLayers, backgroundTileLayer } from 'map/properties'
+import { initializeMapProperties, mapProperties, loadBackgroundMapLayer, backgroundMapLayer } from 'map/properties'
 import { FPSControl } from 'map/controls/fps'
 
 // eslint expects variables to get imported, but we load the full lib in header
@@ -14,7 +14,7 @@ const geoJsonFormat = new ol.format.GeoJSON({
 })
 
 export let changedFeatureQueue = []
-export let vectorSource, fixedSource
+export let vectorSource, vectorLayer, fixedSource
 export let map
 export let mainBar
 
@@ -38,7 +38,7 @@ document.addEventListener('turbo:load', function () {
   if (document.getElementById('map')) {
     initializeMapProperties()
     initializeMap()
-    loadBackgroundLayers()
+    loadBackgroundMapLayer()
     initializeSocket()
     initializeReadonlyInteractions()
     initializeEditInteractions()
@@ -66,7 +66,7 @@ function initializeMap () {
     // strategy: ol.loadingstrategy.bbox
   })
 
-  const vectorLayer = new ol.layer.Vector({
+  vectorLayer = new ol.layer.Vector({
     source: vectorSource,
     style: vectorStyle
   })
@@ -175,7 +175,7 @@ function changedProps (feature, newFeature) {
 function animateMarker (feature, start, end) {
   console.log('Animating ' + feature.getId() + ' from ' + JSON.stringify(start) + ' to ' + JSON.stringify(end))
   const startTime = Date.now()
-  const listenerKey = backgroundTileLayer.on('postrender', animate)
+  const listenerKey = backgroundMapLayer.on('postrender', animate)
 
   const duration = 300
   function animate (event) {

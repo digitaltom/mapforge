@@ -26,7 +26,8 @@
   %br
   %label{for: "map-baselayer"} Base Map:
   %br
-  - ['osmTiles', 'satelliteTiles', 'satelliteStreetTiles', 'esriTiles', 'stamenToner', 'stamenWatercolor', 'openTopoTiles'].each do |base_map|
+  - ['osmTiles', 'satelliteTiles', 'satelliteStreetTiles', 'stamenTonerTiles',
+     'openTopoTiles', 'mapboxBrightVector', 'mapboxBasicVector'].each do |base_map|
     - active = (@map.properties[:base_map] == base_map)
     = image_tag("base_maps/#{base_map}.jpg", data: { layer: base_map},
                 class: "layer-preview #{"active" if active}")

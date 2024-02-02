@@ -1,4 +1,4 @@
-import { map, mainBar, locate } from 'map/map'
+import { map, mainBar, locate, vectorLayer } from 'map/map'
 import * as functions from 'map/functions'
 import { hoverStyle, vectorStyle } from 'map/styles'
 import { resetInteractions, isMobileDevice } from 'map/interactions'
@@ -102,8 +102,10 @@ export function initializeReadonlyInteractions () {
     if (document.querySelector('#map-modal').style.display === 'block') { return true }
     // skip hover effects when features are selected
     if (selectInteraction.getFeatures().getArray().length) { return true }
+
     currentlySelectedFeature = null
-    map.forEachFeatureAtPixel(event.pixel, function (feature) {
+    map.forEachFeatureAtPixel(event.pixel, function (feature, layer) {
+      if (layer !== vectorLayer) { return false }
       if (feature.getId() === undefined) { return false }
       currentlySelectedFeature = feature
       if (previouslySelectedFeature == null ||
