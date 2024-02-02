@@ -1,0 +1,9 @@
+.flex-container {
+ display: flex; /* Establishes a flex container */
+ flex-wrap: wrap;
+}
+
+.flex-item {
+ flex: 1; /* Each item will grow to take up equal space within the container */
+ margin: 1em;
+}

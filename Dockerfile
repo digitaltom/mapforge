@@ -45,7 +45,7 @@ RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y vim less curl iputils-ping libsqlite3-0 libvips proj-bin wget gnupg ca-certificates && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
-# Install chrome for screenshots
+# Install chrome for screenshots (adds 400MB :-o)
 # Add Google's public key
 RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
 # Write a list of Google Chrome's dependencies to a file
