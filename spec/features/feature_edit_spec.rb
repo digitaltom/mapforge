@@ -55,12 +55,33 @@ describe 'Map' do
   end
 
   context 'when adding features' do
-    it 'can place a new point on the map' do
-      find('.button-add').click
+    before do
+       find('.button-add').click
+    end
+
+    it 'adding a marker to the map' do
       find('.button-marker').click
       expect(page).to have_text('Click on a location to place a marker')
       expect { click_coord('#map', 50, 50) }.to change { Feature.point.count }.by(1)
       expect(page).to have_text('Feature added')
+    end
+
+    it 'adding a polygon to the map' do
+      find('.button-polygon').click
+      expect(page).to have_text('Click on a location on your map to start marking an area')
+      click_coord('#map', 50, 50)
+      click_coord('#map', 50, 150)
+      click_coord('#map', 150, 150)
+      click_coord('#map', 150, 50)
+      click_coord('#map', 50, 50)
+
+      expect(page).to have_text('Feature added')
+      expect(Feature.polygon.count).to eq(1)
+
+      find('.button-select').click
+      click_coord('#map', 100, 100)
+      expect(page).to have_css('.feature-details-view')
+      expect(page).to have_text(Feature.first.id.to_s)
     end
   end
 end

@@ -2,7 +2,7 @@ class MapsController < ApplicationController
   before_action :set_map, only: %i[show features]
 
   def index
-    @maps = Map.where(public: true).includes(:features).all
+    @maps = Map.where(public: true).includes(:features).order(updated_at: :desc)
   end
 
   def show

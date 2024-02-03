@@ -91,9 +91,10 @@ export function backgroundTiles () {
     accessToken: window.gon.map_keys.mapbox
   })
 
-  const mapboxBasicVector = new olms.MapboxVectorLayer({
-    styleUrl: 'mapbox://styles/mapbox/basic-v9',
-    accessToken: window.gon.map_keys.mapbox
+  // https://cloud.maptiler.com/maps/
+  // https://github.com/openlayers/ol-mapbox-style?tab=readme-ov-file#interfacesinternal_options-1md
+  const maptilerDataviz = new olms.MapboxVectorLayer({
+    styleUrl: 'https://api.maptiler.com/maps/dataviz/style.json?key=' + window.gon.map_keys.maptiler
   })
 
   return {
@@ -107,6 +108,6 @@ export function backgroundTiles () {
     stamenTonerTiles,
     openTopoTiles,
     mapboxBrightVector,
-    mapboxBasicVector
+    maptilerDataviz
   }
 }
