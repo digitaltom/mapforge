@@ -7,3 +7,37 @@
  flex: 1; /* Each item will grow to take up equal space within the container */
  margin: 1em;
 }
+
+.map-preview {
+  border-radius: 4px;
+  border-width: 2px;
+  border-style: solid;
+  border-color: #000;
+  min-width: 15em;
+  text-align: center;
+}
+
+.map-preview a:hover img {
+  filter: brightness(1);
+}
+
+.map-preview .last-change {
+  text-align: center;
+}
+
+.preview-image {
+  width: 100%;
+  filter: brightness(0.9);
+  transition:
+    filter 0.2s linear
+}
+
+.map-preview-title {
+  position: relative;
+  top: -9em;
+  color: #fff;
+  color: black;
+  text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
+  font-weight: bold;
+  text-decoration: none;
+}

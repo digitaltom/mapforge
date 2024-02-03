@@ -21,43 +21,11 @@ body,
   width: 100%;
   margin: 0;
   padding: 0;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif, "Line Awesome Free";
 }
 
 .hidden {
   display: none !important;
-}
-
-#flash-container {
-  position: fixed;
-  z-index: 99;
-  bottom: -1em;
-  left: 50%;
-  transform: translateX(-50%);
-  opacity: 0;
-  transition:
-    opacity 0.7s linear,
-    bottom 0.7s ease-in-out;
-}
-
-.flash-message {
-  padding: 0.3em;
-  border-radius: 4px;
-  border-width: 1px;
-  border-style: solid;
-  border-color: #000;
-  background-color: #fff;
-}
-
-.flash-message.info {
-  background-color: #fff;
-}
-
-.flash-message.success {
-  background-color: #dff0d8;
-}
-
-.flash-message.error {
-  background-color: #ffb3b3;
 }
 
 .feature-details {

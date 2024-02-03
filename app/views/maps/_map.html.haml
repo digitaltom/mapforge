@@ -1,8 +1,8 @@
-%div.flex-item{id: dom_id(map)}
-  .preview-image
-    = link_to map do
-      - if File.exist?(Rails.root.join("public/maps/#{map.id}.png"))
-        %img{src: "maps/#{map.id}.png", width: 300}
-      - else
-        %img{src: "map.png", width: 300}
-  %i= "last change #{distance_of_time_in_words(Date.current, map.updated_at)} ago, #{map.features.size} features"
+%div.flex-item.map-preview{id: dom_id(map)}
+  = link_to map do
+    - if File.exist?(Rails.root.join("public/maps/#{map.id}.png"))
+      %img{src: "maps/#{map.id}.png", class: 'preview-image'}
+    - else
+      %img{src: "map.png", class: 'preview-image'}
+    .map-preview-title= map.properties[:name]
+  %i= "last change #{distance_of_time_in_words(Date.current, map.updated_at)} ago"
