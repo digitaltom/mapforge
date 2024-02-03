@@ -189,6 +189,7 @@ export function initializePaintInteractions () {
       e.feature.setId(createFeatureId())
       console.log('Feature ' + e.feature.getId() + ' has been created')
       flash('Feature added', 'success')
+      showFeatureEdit(e.feature)
       mapChannel.send_message('new_feature', featureAsGeoJSON(e.feature))
     })
   })

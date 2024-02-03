@@ -61,7 +61,8 @@ function iconStyle (feature, resolution) {
 
 export function pointStyle (feature, resolution) {
   const circle = new ol.style.Style({
-    image: circleStyle(feature, resolution)
+    image: circleStyle(feature, resolution),
+    text: title(feature)
   })
 
   if (feature.get('marker-icon')) {

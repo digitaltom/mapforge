@@ -10,7 +10,8 @@ export function lineStringStyle (feature, resolution) {
   })
 
   return new ol.style.Style({
-    stroke
+    stroke,
+    text: title(feature)
   })
 }
 

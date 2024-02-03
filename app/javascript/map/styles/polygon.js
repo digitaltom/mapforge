@@ -13,7 +13,9 @@ export function polygonStyle (feature, resolution) {
   })
 
   return new ol.style.Style({
-    stroke, fill
+    stroke,
+    fill,
+    text: title(feature)
   })
 }
 
