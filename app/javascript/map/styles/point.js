@@ -3,19 +3,22 @@ import { symbolMappings } from 'map/styles/font_mappings'
 
 // eslint expects ol to get imported, but we load the full lib in header
 const ol = window.ol
-const pointSizes = { small: 6, medium: 8, large: 10, symbol: 13 }
+const pointSizes = { small: 6, medium: 8, large: 11, symbol: 13 }
+const symbolSizes = { small: 10, medium: 15, large: 20 }
 
 function circleStyle (feature, resolution) {
+  const sizes = feature.get('marker-symbol') ? symbolSizes : pointSizes
   return new ol.style.Circle({
-    radius: pointSizes[feature.get('marker-size')] || 8,
+    radius: sizes[feature.get('marker-size')] || sizes.medium,
     stroke: new ol.style.Stroke({ color: feature.get('stroke') || 'white', width: feature.get('stroke-width') || 2 }),
     fill: new ol.style.Fill({ color: (feature.get('marker-color') || 'green') })
   })
 }
 
 function circleHoverStyle (feature, resolution) {
+  const sizes = feature.get('marker-symbol') ? symbolSizes : pointSizes
   return new ol.style.Circle({
-    radius: (pointSizes[feature.get('marker-size')] || 8) + 2,
+    radius: (sizes[feature.get('marker-size')] || sizes.medium) + 2,
     stroke: new ol.style.Stroke({ color: feature.get('stroke') || 'white', width: feature.get('stroke-width') || 2 }),
     fill: new ol.style.Fill({ color: (feature.get('marker-color') || 'green') })
   })
@@ -24,11 +27,13 @@ function circleHoverStyle (feature, resolution) {
 function symbolStyle (feature, resolution) {
   let symbol = symbolMappings[feature.get('marker-symbol')]
   if (feature.get('marker-symbol').length <= 2) { symbol = feature.get('marker-symbol') }
+  const size = symbolSizes[feature.get('marker-size')] || symbolSizes.medium
+
   return new ol.style.Style({
     // https://openlayers.org/en/latest/apidoc/module-ol_style_Text.html
     text: new ol.style.Text({
       text: symbol,
-      font: 'bold 21px "Line Awesome Free"',
+      font: 'bold ' + (size * 2 - 5) + 'px "Line Awesome Free"',
       textBaseline: 'middle',
       fill: new ol.style.Fill({
         color: 'white' // Set the color of the text
@@ -40,10 +45,12 @@ function symbolStyle (feature, resolution) {
 function symbolHoverStyle (feature, resolution) {
   let symbol = symbolMappings[feature.get('marker-symbol')]
   if (feature.get('marker-symbol').length <= 2) { symbol = feature.get('marker-symbol') }
+  const size = (symbolSizes[feature.get('marker-size')] || symbolSizes.medium) + 2
+
   return new ol.style.Style({
     text: new ol.style.Text({
       text: symbol,
-      font: 'bold 23px "Line Awesome Free"',
+      font: 'bold ' + (size * 2 - 5) + 'px "Line Awesome Free"',
       textBaseline: 'middle',
       fill: new ol.style.Fill({
         color: 'white' // Set the color of the text
@@ -71,7 +78,6 @@ export function pointStyle (feature, resolution) {
     })
     return [circle, icon]
   } else if (feature.get('marker-symbol')) {
-    feature.set('marker-size', 'symbol')
     return [circle, symbolStyle(feature, resolution)]
   } else {
     return circle
@@ -90,7 +96,6 @@ export function pointHoverStyle (feature, resolution) {
     })
     return [circle, icon]
   } else if (feature.get('marker-symbol')) {
-    feature.set('marker-size', 'symbol')
     return [circle, symbolHoverStyle(feature, resolution)]
   } else {
     return circle
