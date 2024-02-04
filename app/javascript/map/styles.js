@@ -6,17 +6,6 @@ import { polygonStyle, polygonHoverStyle, polygonSketchStyle } from 'map/styles/
 // eslint expects ol to get imported, but we load the full lib in header
 const ol = window.ol
 
-export function title (feature) {
-  if (!feature.get('title')) { return null }
-  return new ol.style.Text({
-    text: feature.get('title'),
-    font: '15px Calibri,sans-serif',
-    fill: new ol.style.Fill({ color: '#000' }),
-    stroke: new ol.style.Stroke({ color: '#fff', width: 3 }),
-    offsetY: -17
-  })
-}
-
 export function vectorStyle (feature, resolution) {
   switch (feature.getGeometry().getType()) {
     case 'Point':
@@ -35,6 +24,10 @@ export function vectorStyle (feature, resolution) {
 export function sketchStyle (feature, resolution) {
   switch (feature.getGeometry().getType()) {
     case 'Point':
+      // In case a modify interaction is active, those feautures
+      // are temporary copies in a differenct format
+      // Only needed for points
+      if (feature.values_.features) { feature = feature.values_.features[0] }
       return pointHoverStyle(feature, resolution)
     case 'LineString':
       return lineStringSketchStyle(feature, resolution)
@@ -50,9 +43,6 @@ export function sketchStyle (feature, resolution) {
 export function hoverStyle (feature, resolution) {
   switch (feature.getGeometry().getType()) {
     case 'Point':
-      // in case a modify interaction is active, those feautures
-      // are temporary copies in a differenct format
-      if (feature.values_.features) { feature = feature.values_.features[0] }
       return pointHoverStyle(feature, resolution)
     case 'LineString':
       return lineStringHoverStyle(feature, resolution)

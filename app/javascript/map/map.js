@@ -2,7 +2,7 @@ import { initializeSocket } from 'channels/map_channel'
 import { vectorStyle } from 'map/styles'
 import { initializeReadonlyInteractions, hideFeatureDetails } from 'map/interactions/readonly'
 import { initializeEditInteractions, undoInteraction } from 'map/interactions/edit'
-import { initializeMapProperties, mapProperties, loadBackgroundLayers, backgroundTileLayer } from 'map/properties'
+import { initializeMapProperties, mapProperties, loadBackgroundMapLayer, backgroundMapLayer } from 'map/properties'
 import { FPSControl } from 'map/controls/fps'
 
 // eslint expects variables to get imported, but we load the full lib in header
@@ -14,7 +14,7 @@ const geoJsonFormat = new ol.format.GeoJSON({
 })
 
 export let changedFeatureQueue = []
-export let vectorSource, fixedSource
+export let vectorSource, vectorLayer, fixedSource
 export let map
 export let mainBar
 
@@ -38,7 +38,7 @@ document.addEventListener('turbo:load', function () {
   if (document.getElementById('map')) {
     initializeMapProperties()
     initializeMap()
-    loadBackgroundLayers()
+    loadBackgroundMapLayer()
     initializeSocket()
     initializeReadonlyInteractions()
     initializeEditInteractions()
@@ -66,7 +66,7 @@ function initializeMap () {
     // strategy: ol.loadingstrategy.bbox
   })
 
-  const vectorLayer = new ol.layer.Vector({
+  vectorLayer = new ol.layer.Vector({
     source: vectorSource,
     style: vectorStyle
   })
@@ -81,6 +81,7 @@ function initializeMap () {
   map = new ol.Map({
     layers: [vectorLayer, fixedLayer],
     target: 'map',
+    renderer: 'webgl',
     view: new ol.View({
       projection: mapProperties.projection,
       center: ol.proj.fromLonLat(mapProperties.center),
@@ -112,6 +113,12 @@ function initializeMap () {
     target: document.getElementById('scaleline-metric')
   })
   map.addControl(scaleLineMetric)
+
+  map.getView().on('change:resolution', function () {
+    vectorSource.getFeatures().forEach((feature) => {
+      feature.setStyle(vectorStyle(feature))
+    })
+  })
 }
 
 export function featureAsGeoJSON (feature) {
@@ -132,8 +139,8 @@ export function updateFeature (data, source = vectorSource) {
     }
     feature.setGeometry(newFeature.getGeometry())
     feature.setProperties(newFeature.getProperties())
-    feature.changed()
     feature.setStyle(vectorStyle(feature))
+    feature.changed()
     vectorSource.changed()
   } else {
     // addFeature will not add if id already exists
@@ -175,7 +182,7 @@ function changedProps (feature, newFeature) {
 function animateMarker (feature, start, end) {
   console.log('Animating ' + feature.getId() + ' from ' + JSON.stringify(start) + ' to ' + JSON.stringify(end))
   const startTime = Date.now()
-  const listenerKey = backgroundTileLayer.on('postrender', animate)
+  const listenerKey = backgroundMapLayer.on('postrender', animate)
 
   const duration = 300
   function animate (event) {

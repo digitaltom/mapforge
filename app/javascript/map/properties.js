@@ -1,15 +1,14 @@
 import { map, flash } from 'map/map'
 import { resetInteractions } from 'map/interactions'
-import { backgroundTiles } from 'map/layers/tile_maps'
+import { backgroundTiles } from 'map/layers/background_maps'
 import { selectInteraction } from 'map/interactions/readonly'
 import { mapChannel } from 'channels/map_channel'
 
 // eslint expects ol to get imported, but we load the full lib in header
 const ol = window.ol
-const olms = window.olms
 
 export let mapProperties
-export let backgroundTileLayer, backgroundVectorLayer
+export let backgroundMapLayer
 
 const mapDefaults = {
   projection: 'EPSG:3857'
@@ -24,7 +23,7 @@ export function initializeMapProperties () {
   layerPreviews.forEach(layerPreview => {
     layerPreview.addEventListener('click', function () {
       mapProperties.base_map = event.target.dataset.layer
-      loadBackgroundLayers()
+      loadBackgroundMapLayer()
       mapChannel.send_message('update_map', { base_map: mapProperties.base_map })
       flash('Base map updated', 'success')
       layerPreviews.forEach(layerPreview => { layerPreview.classList.remove('active') })
@@ -57,19 +56,9 @@ export function initializeMapProperties () {
   }
 }
 
-export function loadBackgroundLayers () {
+export function loadBackgroundMapLayer () {
   console.log("Loading base map '" + mapProperties.base_map + "'")
-
-  if (mapProperties.base_map === 'vector') {
-    backgroundVectorLayer = new ol.layer.VectorTile({
-      declutter: true
-      // source: osmVector
-    })
-    olms.applyStyle(backgroundVectorLayer, 'https://api.maptiler.com/maps/basic-v2/style.json?key=' + window.gon.map_keys.maptiler)
-    // olms.applyBackground(rasterLayer, "https://api.maptiler.com/maps/bright-v2/style.json?key" + keys.maptiler)
-  } else {
-    map.removeLayer(backgroundTileLayer)
-    backgroundTileLayer = new ol.layer.Tile({ source: backgroundTiles()[mapProperties.base_map] })
-    map.getLayers().insertAt(0, backgroundTileLayer)
-  }
+  map.removeLayer(backgroundMapLayer)
+  backgroundMapLayer = backgroundTiles()[mapProperties.base_map]
+  map.getLayers().insertAt(0, backgroundMapLayer)
 }

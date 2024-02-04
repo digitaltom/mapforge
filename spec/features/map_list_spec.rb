@@ -8,7 +8,7 @@ describe 'Map List' do
   end
 
   it 'shows links to maps' do
-    expect(page).to have_link(maps[0].id.to_s)
+    expect(page).to have_selector(:xpath, "//a[@href='/maps/#{maps[0].id}']")
   end
 
   it 'shows link to create new map' do

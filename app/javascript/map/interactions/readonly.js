@@ -1,8 +1,8 @@
-import { map, mainBar, locate } from 'map/map'
+import { map, mainBar, locate, vectorLayer } from 'map/map'
 import * as functions from 'map/functions'
 import { hoverStyle, vectorStyle } from 'map/styles'
 import { resetInteractions, isMobileDevice } from 'map/interactions'
-import { modifyInteraction, lineInteraction, drawInteraction, pointInteraction } from 'map/interactions/edit'
+import { modifyInteraction, lineInteraction, drawInteraction, polygonInteraction, pointInteraction } from 'map/interactions/edit'
 
 // eslint expects ol to get imported, but we load the full lib in header
 const ol = window.ol
@@ -93,7 +93,8 @@ export function initializeReadonlyInteractions () {
 
   map.on('pointermove', function (event) {
     // skip hover effects when in an active modification
-    const interactions = [modifyInteraction, lineInteraction, drawInteraction, pointInteraction]
+    const interactions = [modifyInteraction, lineInteraction, drawInteraction,
+      polygonInteraction, pointInteraction]
     if (interactions.some(interaction => map.getInteractions().getArray().includes(interaction))) {
       return true
     }
@@ -102,8 +103,10 @@ export function initializeReadonlyInteractions () {
     if (document.querySelector('#map-modal').style.display === 'block') { return true }
     // skip hover effects when features are selected
     if (selectInteraction.getFeatures().getArray().length) { return true }
+
     currentlySelectedFeature = null
-    map.forEachFeatureAtPixel(event.pixel, function (feature) {
+    map.forEachFeatureAtPixel(event.pixel, function (feature, layer) {
+      if (layer !== vectorLayer) { return false }
       if (feature.getId() === undefined) { return false }
       currentlySelectedFeature = feature
       if (previouslySelectedFeature == null ||

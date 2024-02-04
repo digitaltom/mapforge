@@ -23,3 +23,16 @@ export function formatArea (polygon) {
   }
   return output
 }
+
+export function hexToRgb (hex) {
+  let r = parseInt(hex.slice(1, 3), 16)
+  let g = parseInt(hex.slice(3, 5), 16)
+  let b = parseInt(hex.slice(5, 7), 16)
+
+  if (hex.length === 4) {
+    r = parseInt(hex.slice(1, 2), 16)
+    g = parseInt(hex.slice(2, 3), 16)
+    b = parseInt(hex.slice(3, 4), 16)
+  }
+  return `${r}, ${g}, ${b}`
+}

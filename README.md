@@ -12,7 +12,7 @@ https://excalidraw.com/#json=m0CjM7w_E-dtFDKmvQvIf,K07A5jDq8rCCqgmJMkjElw
 
 This app supports and stores data in an extended version of the
 [mapbox simplestyle spec](https://github.com/mapbox/simplestyle-spec/tree/master/1.1.0).
-See [[docs/geojson.md]] for supported attributes.
+See [docs/geojson.md](docs/geojson.md) for supported attributes.
 
 ## Development Setup
 
@@ -45,6 +45,10 @@ Import map from .geojson (samples in db/seeds):
 `bin/rake seed:from_file['db/seeds/germany_areas.json']`
 
 More .geojson example files at: https://exploratory.io/map
+
+Take screenshots of existing maps for preview:
+
+ `MAPFORGE_HOST='https://mapforge.org' bin/rake maps:screenshots`
 
 
 ### Tests

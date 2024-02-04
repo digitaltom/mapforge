@@ -14,7 +14,7 @@ class Map
   field :public, type: Boolean, default: true
 
   # [satellite, satelliteStreets, osm]
-  DEFAULT_MAP = :osm
+  DEFAULT_MAP = :osmTiles
   DEFAULT_CENTER = [ 11.077, 49.447 ].freeze
   DEFAULT_ZOOM = 12
 
