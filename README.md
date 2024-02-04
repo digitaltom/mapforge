@@ -12,7 +12,7 @@ https://excalidraw.com/#json=m0CjM7w_E-dtFDKmvQvIf,K07A5jDq8rCCqgmJMkjElw
 
 This app supports and stores data in an extended version of the
 [mapbox simplestyle spec](https://github.com/mapbox/simplestyle-spec/tree/master/1.1.0).
-See (docs/geojson.md)[docs/geojson.md] for supported attributes.
+See [docs/geojson.md](docs/geojson.md) for supported attributes.
 
 ## Development Setup
 
