@@ -24,10 +24,16 @@ export function vectorStyle (feature, resolution) {
 export function sketchStyle (feature, resolution) {
   switch (feature.getGeometry().getType()) {
     case 'Point':
-      // In case a modify interaction is active, those feautures
-      // are temporary copies in a differenct format
-      // Only needed for points
-      if (feature.values_.features) { feature = feature.values_.features[0] }
+      // In case a modify interaction is active on a LineString/Polygon,
+      // it renders a Point on the border, we need to style that here
+      if (feature.values_.features) {
+        feature = feature.values_.features[0]
+        if (feature.getGeometry().getType() !== 'Point') {
+          // Pointstyle for modifying LineStrings + Polygons
+          const templateFeature = new ol.Feature(new ol.geom.Point([0, 0]))
+          return pointHoverStyle(templateFeature, resolution)
+        }
+      }
       return pointHoverStyle(feature, resolution)
     case 'LineString':
       return lineStringSketchStyle(feature, resolution)

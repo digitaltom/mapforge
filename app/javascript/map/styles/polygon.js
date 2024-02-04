@@ -25,7 +25,7 @@ export function polygonStyle (feature, resolution) {
   return new ol.style.Style({
     stroke,
     fill,
-    text: title(feature, resolution)
+    text: title(feature, resolution, false, 0)
   })
 }
 
@@ -66,6 +66,6 @@ export function polygonHoverStyle (feature, resolution) {
   return new ol.style.Style({
     stroke,
     fill,
-    text: title(feature, resolution)
+    text: title(feature, resolution, true, 0)
   })
 }

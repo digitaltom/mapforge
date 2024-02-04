@@ -16,7 +16,7 @@ export function lineStringStyle (feature, resolution) {
 
   return new ol.style.Style({
     stroke,
-    text: title(feature, resolution)
+    text: title(feature, resolution, false, 0)
   })
 }
 
@@ -46,6 +46,6 @@ export function lineStringHoverStyle (feature, resolution) {
 
   return new ol.style.Style({
     stroke,
-    text: title(feature, resolution, true)
+    text: title(feature, resolution, true, 0)
   })
 }
