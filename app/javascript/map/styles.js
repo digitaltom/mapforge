@@ -22,11 +22,12 @@ export function vectorStyle (feature, resolution) {
 }
 
 export function sketchStyle (feature, resolution) {
-  // in case a modify interaction is active, those feautures
-  // are temporary copies in a differenct format
-  if (feature.values_.features) { feature = feature.values_.features[0] }
   switch (feature.getGeometry().getType()) {
     case 'Point':
+      // In case a modify interaction is active, those feautures
+      // are temporary copies in a differenct format
+      // Only needed for points
+      if (feature.values_.features) { feature = feature.values_.features[0] }
       return pointHoverStyle(feature, resolution)
     case 'LineString':
       return lineStringSketchStyle(feature, resolution)
@@ -40,9 +41,6 @@ export function sketchStyle (feature, resolution) {
 }
 
 export function hoverStyle (feature, resolution) {
-  // in case a modify interaction is active, those feautures
-  // are temporary copies in a differenct format
-  if (feature.values_.features) { feature = feature.values_.features[0] }
   switch (feature.getGeometry().getType()) {
     case 'Point':
       return pointHoverStyle(feature, resolution)
