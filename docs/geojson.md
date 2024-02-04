@@ -12,6 +12,20 @@ Extending the [Mapbox Simplestyle Spec](https://github.com/mapbox/simplestyle-sp
 * `title-shadow`: font shadow in format "#fff" (default)
 * `desc`: Detailed description
 
-#### *Point* geometry: `marker-color` ('transparent' for none), `stroke`, `stroke-width`, `marker-icon`, `marker-symbol` (supports single digit/character, emoji, line-awesome icon name)
-* LineString geometry: `stroke-width`, `stroke`
-* Polygon geometry: `stroke-width`, `stroke`, `fill`
+#### *Point* geometry: 
+
+* `marker-color`: circle color (default "green", 'transparent' for none),
+* `stroke`: circle border color (default "white", 'transparent' for none),
+* `marker-size`: "small", "medium", "large"
+* `marker-symbol`: Taken as text/emoji if shorter than 3 characters, else
+                   an icon name from lineawesome ([mapping](https://github.com/digitaltom/mapforge/blob/main/app/javascript/map/styles/font_mappings.js))
+
+#### *LineString* geometry: 
+
+* `stroke-width`,
+* `stroke`
+
+#### *Polygon* geometry: 
+
+* `stroke-width`,
+* `stroke`, `fill`
