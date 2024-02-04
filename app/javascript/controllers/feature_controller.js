@@ -2,7 +2,7 @@ import { Controller } from '@hotwired/stimulus'
 import { flash, vectorSource, featureAsGeoJSON, deleteFeature, updateFeature } from 'map/map'
 import { mapChannel } from 'channels/map_channel'
 import { hoverStyle } from 'map/styles'
-import { selectEditInteraction, undoInteraction, showFeatureEdit } from 'map/interactions/edit'
+import { selectEditInteraction, undoInteraction, showFeatureEdit, hideFeatureEdit } from 'map/interactions/edit'
 
 export default class extends Controller {
   static targets = ['properties']
@@ -32,6 +32,7 @@ export default class extends Controller {
     const feature = vectorSource.getFeatureById(detailsContainer.dataset.featureId)
     selectEditInteraction.getFeatures().remove(feature)
     deleteFeature(feature)
+    hideFeatureEdit()
     mapChannel.send_message('delete_feature', featureAsGeoJSON(feature))
     flash('Feature deleted', 'success')
   }

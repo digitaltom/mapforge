@@ -1,9 +1,13 @@
 import { map } from 'map/map'
 import { selectInteraction, hideFeatureDetails } from 'map/interactions/readonly'
-import { drawInteraction, pointInteraction, lineInteraction, modifyInteraction, selectEditInteraction, hideFeatureEdit } from 'map/interactions/edit'
+import {
+  drawInteraction, pointInteraction, lineInteraction, modifyInteraction,
+  polygonInteraction, selectEditInteraction, hideFeatureEdit
+} from 'map/interactions/edit'
 
 export function resetInteractions () {
   map.removeInteraction(drawInteraction)
+  map.removeInteraction(polygonInteraction)
   map.removeInteraction(pointInteraction)
   map.removeInteraction(lineInteraction)
   map.removeInteraction(modifyInteraction)

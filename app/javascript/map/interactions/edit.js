@@ -8,15 +8,16 @@ import { createFeatureId, resetInteractions } from 'map/interactions'
 
 // eslint expects ol to get imported, but we load the full lib in header
 const ol = window.ol
+const turf = window.turf
 
-export let drawInteraction, pointInteraction, lineInteraction, modifyInteraction,
+export let drawInteraction, polygonInteraction, pointInteraction, lineInteraction, modifyInteraction,
   undoInteraction, selectEditInteraction
 
 export function initializeEditInteractions () {
-  initializeUndoInteraction()
   initializeSelectInteraction()
-  initializePaintInteractions()
   initializeModifyInteraction()
+  initializeUndoInteraction()
+  initializePaintInteractions()
 
   // Control bar: https://viglino.github.io/ol-ext/doc/doc-pages/ol.control.Bar.html
   const editBar = new ol.control.Bar({
@@ -94,7 +95,20 @@ export function initializeEditInteractions () {
           document.querySelector('.add-sub-bar').classList.remove('hidden')
           document.querySelector('.button-line').classList.add('active')
           map.addInteraction(lineInteraction)
-          flash('Click on a location to start drawing a line')
+          flash('Click on a location to start drawing a straight line')
+        }
+      }),
+      new ol.control.Button({
+        html: "<i class='las la-pen-nib'></i>",
+        title: 'Add a freehand line to the map',
+        className: 'buttons button-freehand',
+        handleClick: function () {
+          resetInteractions()
+          document.querySelector('.button-add').classList.add('active')
+          document.querySelector('.add-sub-bar').classList.remove('hidden')
+          document.querySelector('.button-freehand').classList.add('active')
+          map.addInteraction(drawInteraction)
+          flash('Click on the map to start freehand drawing')
         }
       }),
       new ol.control.Button({
@@ -106,7 +120,7 @@ export function initializeEditInteractions () {
           document.querySelector('.button-add').classList.add('active')
           document.querySelector('.add-sub-bar').classList.remove('hidden')
           document.querySelector('.button-polygon').classList.add('active')
-          map.addInteraction(drawInteraction)
+          map.addInteraction(polygonInteraction)
           flash('Click on a location on your map to start marking an area')
         }
       })
@@ -166,12 +180,6 @@ export function initializeModifyInteraction () {
 }
 
 export function initializePaintInteractions () {
-  drawInteraction = new ol.interaction.Draw({
-    source: vectorSource,
-    style: sketchStyle,
-    type: 'Polygon'
-  })
-
   pointInteraction = new ol.interaction.Draw({
     source: vectorSource,
     style: sketchStyle,
@@ -182,11 +190,30 @@ export function initializePaintInteractions () {
     source: vectorSource,
     style: sketchStyle,
     type: 'LineString'
+  })
+
+  drawInteraction = new ol.interaction.Draw({
+    source: vectorSource,
+    style: sketchStyle,
+    freehand: true,
+    type: 'LineString'
+  })
+
+  polygonInteraction = new ol.interaction.Draw({
+    source: vectorSource,
+    style: sketchStyle,
+    type: 'Polygon'
   });
 
-  [drawInteraction, pointInteraction, lineInteraction].forEach(function (element) {
-    element.on('drawend', function (e) {
+  [drawInteraction, pointInteraction, lineInteraction, polygonInteraction].forEach(function (interaction) {
+    interaction.on('drawend', function (e) {
       e.feature.setId(createFeatureId())
+      if (interaction === drawInteraction) {
+        // https://turfjs.org/docs/#simplify
+        const options = { tolerance: 0.01, highQuality: false, mutate: true }
+        const coords = turf.simplify(featureAsGeoJSON(e.feature), options).geometry.coordinates
+        e.feature.getGeometry().setCoordinates(coords)
+      }
       console.log('Feature ' + e.feature.getId() + ' has been created')
       flash('Feature added', 'success')
       showFeatureEdit(e.feature)

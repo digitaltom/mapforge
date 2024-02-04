@@ -81,6 +81,7 @@ function initializeMap () {
   map = new ol.Map({
     layers: [vectorLayer, fixedLayer],
     target: 'map',
+    renderer: 'webgl',
     view: new ol.View({
       projection: mapProperties.projection,
       center: ol.proj.fromLonLat(mapProperties.center),
