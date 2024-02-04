@@ -28,5 +28,8 @@ Extending the [Mapbox Simplestyle Spec](https://github.com/mapbox/simplestyle-sp
 
 #### *Polygon* geometry: 
 
-* `stroke-width`,
-* `stroke`, `fill`
+* `stroke-width`: width of the line (default: 3)
+* `stroke`: line color (default: 'darkgreen')
+* `stroke-opacity`: opacity of the line (default: 1.0)
+* `fill`: fill color (default: "#0A870A", green)
+* `fill-opacity`: opacity of the filling (efault: 0.3)
