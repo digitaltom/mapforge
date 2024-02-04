@@ -1,4 +1,4 @@
-import { title } from 'map/styles'
+import { title } from 'map/styles/title'
 
 // eslint expects ol to get imported, but we load the full lib in header
 const ol = window.ol
@@ -11,7 +11,7 @@ export function lineStringStyle (feature, resolution) {
 
   return new ol.style.Style({
     stroke,
-    text: title(feature)
+    text: title(feature, resolution)
   })
 }
 
@@ -35,6 +35,6 @@ export function lineStringHoverStyle (feature, resolution) {
 
   return new ol.style.Style({
     stroke,
-    text: title(feature)
+    text: title(feature, resolution, true)
   })
 }

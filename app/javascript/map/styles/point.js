@@ -1,4 +1,4 @@
-import { title } from 'map/styles'
+import { title } from 'map/styles/title'
 import { symbolMappings } from 'map/styles/font_mappings'
 
 // eslint expects ol to get imported, but we load the full lib in header
@@ -62,7 +62,7 @@ function iconStyle (feature, resolution) {
 export function pointStyle (feature, resolution) {
   const circle = new ol.style.Style({
     image: circleStyle(feature, resolution),
-    text: title(feature)
+    text: title(feature, resolution)
   })
 
   if (feature.get('marker-icon')) {
@@ -81,7 +81,7 @@ export function pointStyle (feature, resolution) {
 export function pointHoverStyle (feature, resolution) {
   const circle = new ol.style.Style({
     image: circleHoverStyle(feature, resolution),
-    text: title(feature)
+    text: title(feature, resolution, true)
   })
 
   if (feature.get('marker-icon')) {

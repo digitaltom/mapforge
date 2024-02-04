@@ -159,7 +159,7 @@ export function initializeModifyInteraction () {
   // https://openlayers.org/en/latest/apidoc/module-ol_interaction_Modify-Modify.html
   modifyInteraction = new ol.interaction.Modify({
     source: vectorSource,
-    style: hoverStyle,
+    style: sketchStyle,
     pixelTolerance: 10
   })
 

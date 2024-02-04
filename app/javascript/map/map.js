@@ -113,6 +113,12 @@ function initializeMap () {
     target: document.getElementById('scaleline-metric')
   })
   map.addControl(scaleLineMetric)
+
+  map.getView().on('change:resolution', function () {
+    vectorSource.getFeatures().forEach((feature) => {
+      feature.setStyle(vectorStyle(feature))
+    })
+  })
 }
 
 export function featureAsGeoJSON (feature) {
@@ -133,8 +139,8 @@ export function updateFeature (data, source = vectorSource) {
     }
     feature.setGeometry(newFeature.getGeometry())
     feature.setProperties(newFeature.getProperties())
-    feature.changed()
     feature.setStyle(vectorStyle(feature))
+    feature.changed()
     vectorSource.changed()
   } else {
     // addFeature will not add if id already exists

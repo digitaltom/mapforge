@@ -1,4 +1,4 @@
-import { title } from 'map/styles'
+import { title } from 'map/styles/title'
 
 // eslint expects ol to get imported, but we load the full lib in header
 const ol = window.ol
@@ -15,7 +15,7 @@ export function polygonStyle (feature, resolution) {
   return new ol.style.Style({
     stroke,
     fill,
-    text: title(feature)
+    text: title(feature, resolution)
   })
 }
 
@@ -46,6 +46,6 @@ export function polygonHoverStyle (feature, resolution) {
   return new ol.style.Style({
     stroke,
     fill: fillHover,
-    text: title(feature)
+    text: title(feature, resolution)
   })
 }

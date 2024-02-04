@@ -6,17 +6,6 @@ import { polygonStyle, polygonHoverStyle, polygonSketchStyle } from 'map/styles/
 // eslint expects ol to get imported, but we load the full lib in header
 const ol = window.ol
 
-export function title (feature) {
-  if (!feature.get('title')) { return null }
-  return new ol.style.Text({
-    text: feature.get('title'),
-    font: '15px Calibri,sans-serif',
-    fill: new ol.style.Fill({ color: '#000' }),
-    stroke: new ol.style.Stroke({ color: '#fff', width: 3 }),
-    offsetY: -17
-  })
-}
-
 export function vectorStyle (feature, resolution) {
   switch (feature.getGeometry().getType()) {
     case 'Point':
