@@ -6,7 +6,7 @@ const ol = window.ol
 const strokeWidth = 3
 
 export function lineStringStyle (feature, resolution) {
-  let strokeCol = '10, 125, 10'
+  let strokeCol = '10, 135, 10'
   const strokeOpacity = feature.get('stroke-opacity') || '1.0'
   if (feature.get('stroke') && feature.get('stroke').startsWith('#')) { strokeCol = hexToRgb(feature.get('stroke')) }
   const stroke = new ol.style.Stroke({
@@ -21,7 +21,7 @@ export function lineStringStyle (feature, resolution) {
 }
 
 export function lineStringSketchStyle (feature, resolution) {
-  let strokeCol = '10, 125, 10'
+  let strokeCol = '10, 100, 10'
   const strokeOpacity = feature.get('stroke-opacity') || '1.0'
   if (feature.get('stroke') && feature.get('stroke').startsWith('#')) { strokeCol = hexToRgb(feature.get('stroke')) }
   const stroke = new ol.style.Stroke({
@@ -36,7 +36,7 @@ export function lineStringSketchStyle (feature, resolution) {
 }
 
 export function lineStringHoverStyle (feature, resolution) {
-  let strokeCol = '10, 125, 10'
+  let strokeCol = '10, 100, 10'
   const strokeOpacity = feature.get('stroke-opacity') || '1.0'
   if (feature.get('stroke') && feature.get('stroke').startsWith('#')) { strokeCol = hexToRgb(feature.get('stroke')) }
   const stroke = new ol.style.Stroke({
