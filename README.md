@@ -30,7 +30,8 @@ bundle
 Run develoment server:
 
 ```
-rails s
+bundle
+bin/rails s
 ```
 
 * Put map keys (MAPTILER_KEY, MAPBOX_KEY) into `.env.development`
@@ -40,15 +41,17 @@ rails s
 
 ### Tasks
 
-Import map from .geojson (samples in db/seeds):
+* Import map from .geojson (samples in db/seeds):
 
-`bin/rake seed:from_file['db/seeds/germany_areas.json']`
+  `bin/rake seed:from_file['db/seeds/germany_areas.json']`
 
-More .geojson example files at: https://exploratory.io/map
+  More .geojson example files at: https://exploratory.io/map
 
-Take screenshots of existing maps for preview:
+* Take screenshots of existing maps for preview:
 
- `MAPFORGE_HOST='https://mapforge.org' bin/rake maps:screenshots`
+  `MAPFORGE_HOST='https://mapforge.org' bin/rake maps:screenshots`
+
+* Animate a marker along a line: `bin/rake animation:path[<mapid>, <lineid>, <pointid>]
 
 
 ### Tests

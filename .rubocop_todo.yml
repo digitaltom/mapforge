@@ -5,19 +5,3 @@
 # one by one as the offenses are removed from the code base.
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
-
-# Offense count: 32
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: AllowHeredoc, AllowURI, URISchemes, IgnoreCopDirectives, AllowedPatterns.
-# URISchemes: http, https
-Layout/LineLength:
-  Exclude:
-    - 'lib/tasks/animation.rake'
-
-# Offense count: 2
-# Configuration parameters: CountComments, CountAsOne, AllowedMethods, AllowedPatterns, inherit_mode.
-# AllowedMethods: refine
-Metrics/BlockLength:
-  Exclude:
-    - 'lib/tasks/animation.rake'
-
