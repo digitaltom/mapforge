@@ -52,6 +52,7 @@ function initializeMap () {
     loader: function (extent, resolution, projection) {
       // TODO only load visible features via bbox
       const url = '/maps/' + window.gon.map_id + '/features?bbox=' + extent.join(',') + ',EPSG:3857'
+
       fetch(url)
         .then(response => response.json())
         .then(data => {
@@ -114,9 +115,10 @@ function initializeMap () {
   })
   map.addControl(scaleLineMetric)
 
+  // re-render features that have a resolution dependent style
   map.getView().on('change:resolution', function () {
     vectorSource.getFeatures().forEach((feature) => {
-      feature.setStyle(vectorStyle(feature))
+      if (feature.get('title-min-zoom')) { feature.setStyle(vectorStyle(feature)) }
     })
   })
 }

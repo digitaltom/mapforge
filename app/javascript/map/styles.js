@@ -31,6 +31,8 @@ export function sketchStyle (feature, resolution) {
         if (feature.getGeometry().getType() !== 'Point') {
           // Pointstyle for modifying LineStrings + Polygons
           const templateFeature = new ol.Feature(new ol.geom.Point([0, 0]))
+          // make edit Point fit feature stroke
+          templateFeature.set('marker-color', feature.get('stroke'))
           return pointHoverStyle(templateFeature, resolution)
         }
       }

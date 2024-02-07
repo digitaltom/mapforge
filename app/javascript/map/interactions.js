@@ -11,9 +11,9 @@ export function resetInteractions () {
   map.removeInteraction(pointInteraction)
   map.removeInteraction(lineInteraction)
   map.removeInteraction(modifyInteraction)
-  selectInteraction.getFeatures().clear()
+  if (selectInteraction) { selectInteraction.getFeatures().clear() }
   map.removeInteraction(selectInteraction)
-  selectEditInteraction.getFeatures().clear()
+  if (selectEditInteraction) { selectEditInteraction.getFeatures().clear() }
   map.removeInteraction(selectEditInteraction)
   document.querySelectorAll('.buttons').forEach(button => {
     button.classList.remove('active')

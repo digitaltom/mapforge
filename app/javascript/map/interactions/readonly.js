@@ -92,24 +92,22 @@ export function initializeReadonlyInteractions () {
 
   map.on('pointermove', function (event) {
     // skip hover effects when not in an active selectInteraction
-    if (!map.getInteractions().getArray().includes(selectInteraction)) {
-      return true
-    }
-    if (isMobileDevice()) { return true }
+    if (!map.getInteractions().getArray().includes(selectInteraction)) { return }
+    if (event.dragging) { return }
+    if (isMobileDevice()) { return }
     // skip hover whe there is a modal shown
-    if (document.querySelector('#map-modal').style.display === 'block') { return true }
+    if (document.querySelector('#map-modal').style.display === 'block') { return }
 
     currentlySelectedFeature = null
     map.forEachFeatureAtPixel(event.pixel, function (feature, layer) {
-      if (layer !== vectorLayer) { return false }
-      if (feature.getId() === undefined) { return false }
+      if (layer !== vectorLayer) { return }
+      if (feature.getId() === undefined) { return }
       currentlySelectedFeature = feature
       if (previouslySelectedFeature == null ||
       feature.getId() !== previouslySelectedFeature.getId()) {
         feature.setStyle(hoverStyle(feature))
         showFeatureDetails(feature)
       }
-      return true
     }, {
       hitTolerance: 10 // Tolerance in pixels
     })
