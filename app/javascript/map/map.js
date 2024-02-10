@@ -1,5 +1,6 @@
 import { initializeSocket } from 'channels/map_channel'
 import { vectorStyle } from 'map/styles'
+import { initializeMainInteractions } from 'map/interactions'
 import { initializeReadonlyInteractions, hideFeatureDetails } from 'map/interactions/readonly'
 import { initializeEditInteractions, undoInteraction } from 'map/interactions/edit'
 import { initializeMapProperties, mapProperties, loadBackgroundMapLayer, backgroundMapLayer } from 'map/properties'
@@ -40,6 +41,7 @@ document.addEventListener('turbo:load', function () {
     initializeMap()
     loadBackgroundMapLayer()
     initializeSocket()
+    initializeMainInteractions()
     initializeReadonlyInteractions()
     initializeEditInteractions()
   }

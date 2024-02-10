@@ -6,13 +6,12 @@ describe 'Map' do
   before do
     visit map_path(map)
     expect(page).to have_text('Connection to server established')
-    find('.button-select').click
   end
 
   context 'with initial map rendering' do
     it 'shows map view buttons' do
       expect(page).to have_css('#map')
-      expect(page).to have_css('.button-select')
+      expect(page).to have_css('.button-home')
       expect(page).to have_css('.button-locate')
     end
   end

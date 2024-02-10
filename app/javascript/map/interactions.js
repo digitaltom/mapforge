@@ -1,9 +1,25 @@
-import { map } from 'map/map'
+import { map, mainBar } from 'map/map'
 import { selectInteraction, hideFeatureDetails } from 'map/interactions/readonly'
 import {
   drawInteraction, pointInteraction, lineInteraction, modifyInteraction,
   polygonInteraction, selectEditInteraction, hideFeatureEdit
 } from 'map/interactions/edit'
+
+// eslint expects ol to get imported, but we load the full lib in header
+const ol = window.ol
+const Turbo = window.Turbo
+
+export function initializeMainInteractions () {
+  const homeButton = new ol.control.Button({
+    html: "<i class='las la-home'></i>",
+    title: 'Back to map list',
+    className: 'buttons button-home',
+    handleClick: function () {
+      Turbo.visit('/maps')
+    }
+  })
+  mainBar.addControl(homeButton)
+}
 
 export function resetInteractions () {
   map.removeInteraction(drawInteraction)

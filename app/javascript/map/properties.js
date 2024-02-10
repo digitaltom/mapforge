@@ -50,7 +50,6 @@ export function initializeMapProperties () {
     const modal = document.querySelector('#map-modal')
     if (event.target !== modal && modal.style.display === 'block') {
       resetInteractions()
-      document.querySelector('.button-select').classList.add('active')
       map.addInteraction(selectInteraction)
     }
   }

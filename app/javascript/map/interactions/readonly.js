@@ -1,11 +1,10 @@
-import { map, mainBar, locate, vectorLayer } from 'map/map'
+import { map, locate, vectorLayer } from 'map/map'
 import * as functions from 'map/functions'
 import { hoverStyle, vectorStyle } from 'map/styles'
-import { resetInteractions, isMobileDevice } from 'map/interactions'
+import { isMobileDevice } from 'map/interactions'
 
 // eslint expects ol to get imported, but we load the full lib in header
 const ol = window.ol
-const Turbo = window.Turbo
 
 export let selectInteraction
 let locationIntervall
@@ -19,33 +18,6 @@ export function initializeReadonlyInteractions () {
     hitTolerance: 10
   })
 
-  const viewBar = new ol.control.Bar({
-    group: true, // group controls together
-    toggleOne: true, // one control active at the same time
-    className: 'view-bar',
-    controls: [
-      new ol.control.Button({
-        html: "<i class='las la-home'></i>",
-        title: 'Back to map list',
-        className: 'buttons button-home',
-        handleClick: function () {
-          Turbo.visit('/maps')
-        }
-      }),
-      new ol.control.Button({
-        html: "<i class='las la-mouse-pointer'></i>",
-        title: 'Select',
-        className: 'buttons button-select active',
-        handleClick: function () {
-          resetInteractions()
-          document.querySelector('.button-select').classList.add('active')
-          map.addInteraction(selectInteraction)
-        }
-      })
-    ]
-  })
-
-  mainBar.addControl(viewBar)
   map.addInteraction(selectInteraction)
 
   const mapNavBar = new ol.control.Bar({
@@ -93,6 +65,8 @@ export function initializeReadonlyInteractions () {
   map.on('pointermove', function (event) {
     // skip hover effects when not in an active selectInteraction
     if (!map.getInteractions().getArray().includes(selectInteraction)) { return }
+    // skip hover effects when a feature is selected
+    if (selectedFeatures.getArray().length > 0) { return }
     if (event.dragging) { return }
     if (isMobileDevice()) { return }
     // skip hover whe there is a modal shown
@@ -100,24 +74,27 @@ export function initializeReadonlyInteractions () {
 
     currentlySelectedFeature = null
     map.forEachFeatureAtPixel(event.pixel, function (feature, layer) {
-      if (layer !== vectorLayer) { return }
       if (feature.getId() === undefined) { return }
       currentlySelectedFeature = feature
-      if (previouslySelectedFeature == null ||
-      feature.getId() !== previouslySelectedFeature.getId()) {
+      if (feature !== previouslySelectedFeature) {
         feature.setStyle(hoverStyle(feature))
+        map.getTargetElement().style.cursor = 'pointer'
         showFeatureDetails(feature)
       }
+      return true
     }, {
+      layerFilter: function (layer) { return layer === vectorLayer },
       hitTolerance: 10 // Tolerance in pixels
     })
 
     // reset style of no more hovered feature
     if (previouslySelectedFeature &&
-        (currentlySelectedFeature == null ||
-          currentlySelectedFeature.getId() !== previouslySelectedFeature.getId())) {
+        (currentlySelectedFeature !== previouslySelectedFeature)) {
       previouslySelectedFeature.setStyle(vectorStyle(previouslySelectedFeature))
-      if (currentlySelectedFeature == null) { hideFeatureDetails() }
+      if (currentlySelectedFeature == null) {
+        hideFeatureDetails()
+        map.getTargetElement().style.cursor = ''
+      }
     }
     previouslySelectedFeature = currentlySelectedFeature
   })

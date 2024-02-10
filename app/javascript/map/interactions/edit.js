@@ -5,6 +5,7 @@ import { mapProperties } from 'map/properties'
 import { mapChannel } from 'channels/map_channel'
 import { hoverStyle, vectorStyle, sketchStyle } from 'map/styles'
 import { createFeatureId, resetInteractions } from 'map/interactions'
+import { selectInteraction } from 'map/interactions/readonly'
 
 // eslint expects ol to get imported, but we load the full lib in header
 const ol = window.ol
@@ -26,44 +27,44 @@ export function initializeEditInteractions () {
     className: 'edit-bar',
     controls: [
       new ol.control.Button({
-        html: "<i class='las la-bars'></i>",
+        html: "<i class='las la-edit'></i>",
+        title: 'Switch map to edit mode',
+        className: 'buttons button-edit',
+        handleClick: function () {
+          if (document.querySelector('.button-edit').classList.contains('active')) {
+            resetInteractions()
+            map.addInteraction(selectInteraction)
+            document.querySelector('.button-edit').classList.remove('active')
+            document.querySelector('.add-sub-bar').classList.add('hidden')
+          } else {
+            resetInteractions()
+            document.querySelector('.button-edit').classList.add('active')
+            document.querySelector('.add-sub-bar').classList.remove('hidden')
+            map.addInteraction(selectEditInteraction)
+            map.addInteraction(modifyInteraction)
+            flash('Click on a map element to modify it or add new elements', 'info', 10000)
+          }
+        }
+      }),
+      new ol.control.Button({
+        html: "<i class='las la-map'></i>",
         title: 'Map properties',
         className: 'buttons button-map',
         handleClick: function () {
-          resetInteractions()
-          document.querySelector('.button-map').classList.add('active')
-          document.querySelector('#map-modal').style.display = 'block'
-          console.log(mapProperties)
-          document.querySelector('#map-name').value = mapProperties.name
-        }
-      }),
-      new ol.control.Button({
-        html: "<i class='lar la-edit'></i>",
-        title: 'Modify map elements',
-        className: 'buttons button-modify',
-        handleClick: function () {
-          resetInteractions()
-          document.querySelector('.button-modify').classList.add('active')
-          document.querySelector('.edit-sub-bar').classList.remove('hidden')
-          map.addInteraction(selectEditInteraction)
-          map.addInteraction(modifyInteraction)
-          flash('Click on a map element to modify it')
-        }
-      }),
-      new ol.control.Button({
-        html: "<i class='las la-map-marker'></i>",
-        title: 'Add new elements to the map',
-        className: 'buttons button-add',
-        handleClick: function () {
-          resetInteractions()
-          document.querySelector('.button-add').classList.add('active')
-          document.querySelector('.button-marker').classList.add('active')
-          map.addInteraction(pointInteraction)
-          flash('Click on a location to place a marker')
-          document.querySelector('.add-sub-bar').classList.remove('hidden')
+          if (document.querySelector('#map-modal').style.display === 'block') {
+            resetInteractions()
+            map.addInteraction(selectInteraction)
+            document.querySelector('.button-map').classList.remove('active')
+            document.querySelector('#map-modal').style.display = 'none'
+          } else {
+            resetInteractions()
+            document.querySelector('.button-map').classList.add('active')
+            document.querySelector('#map-modal').style.display = 'block'
+            console.log(mapProperties)
+            document.querySelector('#map-name').value = mapProperties.name
+          }
         }
       })
-
     ]
   })
   mainBar.addControl(editBar)
@@ -78,7 +79,7 @@ export function initializeEditInteractions () {
         className: 'buttons button-marker',
         handleClick: function () {
           resetInteractions()
-          document.querySelector('.button-add').classList.add('active')
+          document.querySelector('.button-edit').classList.add('active')
           document.querySelector('.add-sub-bar').classList.remove('hidden')
           document.querySelector('.button-marker').classList.add('active')
           map.addInteraction(pointInteraction)
@@ -91,7 +92,7 @@ export function initializeEditInteractions () {
         className: 'buttons button-line',
         handleClick: function () {
           resetInteractions()
-          document.querySelector('.button-add').classList.add('active')
+          document.querySelector('.button-edit').classList.add('active')
           document.querySelector('.add-sub-bar').classList.remove('hidden')
           document.querySelector('.button-line').classList.add('active')
           map.addInteraction(lineInteraction)
@@ -104,7 +105,7 @@ export function initializeEditInteractions () {
         className: 'buttons button-freehand',
         handleClick: function () {
           resetInteractions()
-          document.querySelector('.button-add').classList.add('active')
+          document.querySelector('.button-edit').classList.add('active')
           document.querySelector('.add-sub-bar').classList.remove('hidden')
           document.querySelector('.button-freehand').classList.add('active')
           map.addInteraction(drawInteraction)
@@ -117,21 +118,13 @@ export function initializeEditInteractions () {
         className: 'buttons button-polygon',
         handleClick: function () {
           resetInteractions()
-          document.querySelector('.button-add').classList.add('active')
+          document.querySelector('.button-edit').classList.add('active')
           document.querySelector('.add-sub-bar').classList.remove('hidden')
           document.querySelector('.button-polygon').classList.add('active')
           map.addInteraction(polygonInteraction)
           flash('Click on a location on your map to start marking an area')
         }
-      })
-    ]
-  })
-  map.addControl(addSubBar)
-
-  const editSubBar = new ol.control.Bar({
-    group: true,
-    className: 'sub-bar edit-sub-bar hidden',
-    controls: [
+      }),
       new ol.control.Button({
         html: "<i class='las la-undo-alt'></i>",
         title: 'Undo last change',
@@ -152,7 +145,7 @@ export function initializeEditInteractions () {
       })
     ]
   })
-  map.addControl(editSubBar)
+  map.addControl(addSubBar)
 }
 
 export function initializeModifyInteraction () {
@@ -310,6 +303,18 @@ export function initializeUndoInteraction () {
     }
     if (e.action.type === 'changegeometry') {
       mapChannel.send_message('update_feature', featureAsGeoJSON(feature))
+    }
+  })
+
+  // import { PointerMoveEvent } from 'ol/MapBrowserEventType';
+  // Listen to pointer move event
+  map.on(ol.MapBrowserEvent.TypePointerMoveEvent, function (evt) {
+    // Check if there are multiple pointers
+    const pointersCount = evt.originalEvent.touches ? evt.originalEvent.touches.length : 0
+    // If multiple pointers, stop drawing
+    if (pointersCount > 1) {
+      drawInteraction.finishDrawing()
+      console.log('xx')
     }
   })
 }

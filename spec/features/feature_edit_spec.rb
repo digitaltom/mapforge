@@ -11,8 +11,7 @@ describe 'Map' do
   context 'with initial map rendering' do
     it 'shows feature edit buttons' do
       expect(page).to have_css('.button-map')
-      expect(page).to have_css('.button-modify')
-      expect(page).to have_css('.button-add')
+      expect(page).to have_css('.button-edit')
     end
   end
 
@@ -20,7 +19,7 @@ describe 'Map' do
     let!(:polygon) { create(:feature, :polygon_middle, map:, title: 'Poly Title') }
 
     before do
-      find('.button-modify').click
+      find('.button-edit').click
     end
 
     it 'shows flash hint' do
@@ -56,7 +55,7 @@ describe 'Map' do
 
   context 'when adding features' do
     before do
-       find('.button-add').click
+       find('.button-edit').click
     end
 
     it 'adding a marker to the map' do
@@ -78,7 +77,7 @@ describe 'Map' do
       expect(page).to have_text('Feature added')
       expect(Feature.polygon.count).to eq(1)
 
-      find('.button-select').click
+      find('.button-edit').click
       click_coord('#map', 100, 100)
       expect(page).to have_css('.feature-details-view')
       expect(page).to have_text(Feature.first.id.to_s)
