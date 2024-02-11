@@ -21,8 +21,10 @@ gem "redis", ">= 4.0.1"
 gem "mongoid"
 gem "mongoid_rails_migrations"
 
+# UI
 gem "amazing_print"
 gem "haml"
+gem 'tailwindcss-rails'
 
 # taking screenshots with "rake maps:screenshots"
 gem "capybara"

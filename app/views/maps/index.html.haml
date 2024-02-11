@@ -1,8 +1,8 @@
-%h1
+%h1.font-bold.text-4xl.text-blue-500
   Mapforge
-}
 
-#maps.flex-container
+
+#maps.flex.flex-wrap
   - @maps.each do |map|
     = render map
 
