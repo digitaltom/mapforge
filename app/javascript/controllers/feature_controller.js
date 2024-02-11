@@ -1,8 +1,8 @@
 import { Controller } from '@hotwired/stimulus'
-import { flash, vectorSource, featureAsGeoJSON, deleteFeature, updateFeature } from 'map/map'
+import { flash, vectorSource, featureAsGeoJSON, deleteFeature, updateProps } from 'map/map'
 import { mapChannel } from 'channels/map_channel'
 import { hoverStyle } from 'map/styles'
-import { selectEditInteraction, undoInteraction, showFeatureEdit, hideFeatureEdit } from 'map/interactions/edit'
+import { selectEditInteraction, undoInteraction, hideFeatureEdit, reloadFeatureEdit } from 'map/interactions/edit'
 
 export default class extends Controller {
   static targets = ['properties']
@@ -12,19 +12,17 @@ export default class extends Controller {
     const feature = vectorSource.getFeatureById(detailsContainer.dataset.featureId)
     const oldProps = featureAsGeoJSON(feature).properties
     const newProps = JSON.parse(this.propertiesTarget.value)
-    const newFeature = featureAsGeoJSON(feature)
-    newFeature.properties = newProps
-    updateFeature(newFeature)
+    updateProps(feature, newProps)
     feature.setStyle(hoverStyle(feature))
-    console.log('push undo: ' + JSON.stringify(oldProps) + '->' + JSON.stringify(newProps))
+    reloadFeatureEdit(feature)
+    // console.log('push undo: ' + JSON.stringify(oldProps) + '->' + JSON.stringify(newProps))
     undoInteraction.push('changeproperties', {
       feature,
       oldProps,
       newProps
     }, 'Change feature properties')
-    mapChannel.send_message('update_feature', newFeature)
+    mapChannel.send_message('update_feature', featureAsGeoJSON(feature))
     flash('Feature updated', 'success')
-    showFeatureEdit(feature)
   }
 
   delete () {

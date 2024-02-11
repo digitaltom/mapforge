@@ -136,13 +136,13 @@ export function updateFeature (data, source = vectorSource) {
   const newFeature = geoJsonFormat.readFeature(data)
   const feature = source.getFeatureById(data.id)
   if (feature && changed(feature, newFeature)) {
-    console.log("updating feature '" + data.id + "'")
+    console.log("updating changed feature '" + data.id + "'")
     if (data.geometry.type === 'Point' && changedCoords(feature, newFeature)) {
       animateMarker(newFeature, feature.getGeometry().getCoordinates(),
         newFeature.getGeometry().getCoordinates())
     }
     feature.setGeometry(newFeature.getGeometry())
-    feature.setProperties(newFeature.getProperties())
+    updateProps(feature, newFeature.getProperties())
     feature.setStyle(vectorStyle(feature))
     feature.changed()
     vectorSource.changed()
@@ -181,6 +181,18 @@ function changedProps (feature, newFeature) {
   const changed = (oldProps !== newProps)
   if (changed) { console.log('changed props: ' + oldProps + ' -> ' + newProps) }
   return changed
+}
+
+// https://openlayers.org/en/latest/apidoc/module-ol_Feature-Feature.html
+// setProperties only updates, and does not drop...
+export function updateProps (feature, newProps) {
+  const oldProps = featureAsGeoJSON(feature).properties
+  for (const key in oldProps) {
+    // drop existing key if not included in newProps
+    if (!newProps[key]) { feature.unset(key) }
+  }
+  feature.setProperties(newProps)
+  feature.setStyle(vectorStyle(feature))
 }
 
 function animateMarker (feature, start, end) {

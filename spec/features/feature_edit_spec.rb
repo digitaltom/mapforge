@@ -51,6 +51,43 @@ describe 'Map' do
         expect(Feature.count).to eq(0)
       end
     end
+
+    context 'when undo-ing / redo-ing' do
+      before do
+        click_coord('#map', 50, 50)
+      end
+
+      it 'can undo property changes' do
+        fill_in 'properties', with: '{"title":"change1"}'
+        find('.feature-update').click
+        expect(page).to have_text('Feature updated')
+        expect(polygon.reload.properties).to eq({ "title" => "change1" })
+        fill_in 'properties', with: '{"title": "change2"}'
+        find('.feature-update').click
+        expect(page).to have_text('Feature updated')
+        expect(polygon.reload.properties).to eq({ "title" => "change2" })
+        find('.button-undo').click
+        expect(page).to have_text('Feature updated')
+        expect(page).to have_field('properties', with: '{"title":"change1"}')
+      end
+
+      it 'can redo property changes' do
+        fill_in 'properties', with: '{"title":"change1"}'
+        find('.feature-update').click
+        expect(page).to have_text('Feature updated')
+        expect(polygon.reload.properties).to eq({ "title" => "change1" })
+        fill_in 'properties', with: '{"title": "change2"}'
+        find('.feature-update').click
+        expect(page).to have_text('Feature updated')
+        expect(polygon.reload.properties).to eq({ "title" => "change2" })
+        find('.button-undo').click
+        expect(page).to have_text('Feature updated')
+        expect(page).to have_field('properties', with: '{"title":"change1"}')
+        find('.button-redo').click
+        expect(page).to have_text('Feature updated')
+        expect(page).to have_field('properties', with: '{"title":"change2"}')
+      end
+    end
   end
 
   context 'when adding features' do

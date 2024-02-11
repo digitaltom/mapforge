@@ -1,5 +1,5 @@
 import {
-  map, flash, mainBar, vectorSource, featureAsGeoJSON, changedFeatureQueue, updateFeature
+  map, flash, mainBar, vectorSource, featureAsGeoJSON, changedFeatureQueue, updateProps
 } from 'map/map'
 import { mapProperties } from 'map/properties'
 import { mapChannel } from 'channels/map_channel'
@@ -250,16 +250,14 @@ export function initializeUndoInteraction () {
   undoInteraction = new ol.interaction.UndoRedo()
   undoInteraction.define('changeproperties', function (args) {
     // undo
-    const feature = featureAsGeoJSON(args.feature)
-    feature.properties = args.oldProps
-    updateFeature(feature)
-    mapChannel.send_message('update_feature', feature)
+    updateProps(args.feature, args.oldProps)
+    mapChannel.send_message('update_feature', featureAsGeoJSON(args.feature))
+    reloadFeatureEdit(args.feature)
   }, function (args) {
     // redo
-    const feature = featureAsGeoJSON(args.feature)
-    feature.properties = args.newProps
-    updateFeature(feature)
-    mapChannel.send_message('update_feature', feature)
+    updateProps(args.feature, args.newProps)
+    mapChannel.send_message('update_feature', featureAsGeoJSON(args.feature))
+    reloadFeatureEdit(args.feature)
   })
   map.addInteraction(undoInteraction)
 
@@ -277,10 +275,11 @@ export function initializeUndoInteraction () {
 
   undoInteraction.on('undo', function (e) {
     const feature = e.action.feature
-    console.log(e.action.feature)
+    console.log(e.action.type)
     // undo changed/added feature -> remove from server
     if (e.action.type === 'addfeature') {
       mapChannel.send_message('delete_feature', featureAsGeoJSON(feature))
+      hideFeatureEdit(feature)
     }
     // undo removed feature -> add to server
     if (e.action.type === 'removefeature') {
@@ -288,6 +287,7 @@ export function initializeUndoInteraction () {
     }
     if (e.action.type === 'changegeometry') {
       mapChannel.send_message('update_feature', featureAsGeoJSON(feature))
+      reloadFeatureEdit(feature)
     }
   })
 
@@ -300,9 +300,11 @@ export function initializeUndoInteraction () {
     // redo removed feature -> remove from server
     if (e.action.type === 'removefeature') {
       mapChannel.send_message('delete_feature', featureAsGeoJSON(feature))
+      hideFeatureEdit(feature)
     }
     if (e.action.type === 'changegeometry') {
       mapChannel.send_message('update_feature', featureAsGeoJSON(feature))
+      reloadFeatureEdit(feature)
     }
   })
 
@@ -320,6 +322,7 @@ export function initializeUndoInteraction () {
 }
 
 export function showFeatureEdit (feature) {
+  if (!feature) { return }
   const detailsContainer = document.querySelector('.feature-details-edit')
   detailsContainer.dataset.featureId = feature.getId()
   detailsContainer.querySelector('.feature-details-title').innerHTML = feature.get('title') || feature.getId()
@@ -327,6 +330,14 @@ export function showFeatureEdit (feature) {
   detailsContainer.querySelector('.feature-details-atts-edit textarea').value = JSON.stringify(featureAsGeoJSON(feature).properties || {})
   detailsContainer.style.display = 'block'
   detailsContainer.style.opacity = '0.9'
+}
+
+export function reloadFeatureEdit (feature) {
+  const detailsContainer = document.querySelector('.feature-details-edit')
+  if (detailsContainer.style.display === 'block') {
+    const feature = vectorSource.getFeatureById(detailsContainer.dataset.featureId)
+    showFeatureEdit(feature)
+  }
 }
 
 export function hideFeatureEdit () {
