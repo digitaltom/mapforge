@@ -1,9 +1,10 @@
-import { map, mainBar } from 'map/map'
+import { map, mainBar, vectorSource } from 'map/map'
 import { selectInteraction, hideFeatureDetails } from 'map/interactions/readonly'
 import {
   drawInteraction, pointInteraction, lineInteraction, modifyInteraction,
   polygonInteraction, selectEditInteraction, hideFeatureEdit
 } from 'map/interactions/edit'
+import { vectorStyle } from 'map/styles'
 
 // eslint expects ol to get imported, but we load the full lib in header
 const ol = window.ol
@@ -27,9 +28,23 @@ export function resetInteractions () {
   map.removeInteraction(pointInteraction)
   map.removeInteraction(lineInteraction)
   map.removeInteraction(modifyInteraction)
-  if (selectInteraction) { selectInteraction.getFeatures().clear() }
+  if (selectInteraction) {
+    selectInteraction.getFeatures().forEach(function (feature) {
+      feature.setStyle(vectorStyle(feature))
+      feature.changed()
+      vectorSource.changed()
+    })
+    selectInteraction.getFeatures().clear()
+  }
   map.removeInteraction(selectInteraction)
-  if (selectEditInteraction) { selectEditInteraction.getFeatures().clear() }
+  if (selectEditInteraction) {
+    selectEditInteraction.getFeatures().forEach(function (feature) {
+      feature.setStyle(vectorStyle(feature))
+      feature.changed()
+      vectorSource.changed()
+    })
+    selectEditInteraction.getFeatures().clear()
+  }
   map.removeInteraction(selectEditInteraction)
   document.querySelectorAll('.buttons').forEach(button => {
     button.classList.remove('active')
