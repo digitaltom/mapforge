@@ -15,8 +15,8 @@ namespace :maps do
         page = browser.new_page
         page.viewport = Puppeteer::Viewport.new(width: 800, height: 600)
         page.goto(base_url + map_id, wait_until: "networkidle0")
-        page.screenshot(path: Rails.root.join("public/maps/#{map_id}.png").to_s)
-        puts "Stored public/maps/#{map_id}.png"
+        page.screenshot(path: Rails.root.join("public/previews/#{map_id}.png").to_s)
+        puts "Stored public/previews/#{map_id}.png"
       end
     end
   end

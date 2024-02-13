@@ -18,18 +18,6 @@ export function initializeMapProperties () {
   mapProperties = { ...mapDefaults, ...window.gon.map_properties }
   console.log('map properties: ' + JSON.stringify(mapProperties))
 
-  const layerPreviews = document.querySelectorAll('.layer-preview')
-  layerPreviews.forEach(layerPreview => {
-    layerPreview.addEventListener('click', function () {
-      mapProperties.base_map = event.target.dataset.layer
-      loadBackgroundMapLayer()
-      mapChannel.send_message('update_map', { base_map: mapProperties.base_map })
-      flash('Base map updated', 'success')
-      layerPreviews.forEach(layerPreview => { layerPreview.classList.remove('active') })
-      event.target.classList.add('active')
-    })
-  })
-
   const mapCenter = document.querySelector('#set-map-center')
   mapCenter.addEventListener('click', function (event) {
     event.preventDefault()
@@ -58,6 +46,6 @@ export function initializeMapProperties () {
 export function loadBackgroundMapLayer () {
   console.log("Loading base map '" + mapProperties.base_map + "'")
   map.removeLayer(backgroundMapLayer)
-  backgroundMapLayer = backgroundTiles()[mapProperties.base_map]
+  backgroundMapLayer = backgroundTiles[mapProperties.base_map]()
   map.getLayers().insertAt(0, backgroundMapLayer)
 }
