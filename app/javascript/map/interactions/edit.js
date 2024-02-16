@@ -176,26 +176,32 @@ export function initializePaintInteractions () {
   pointInteraction = new ol.interaction.Draw({
     source: vectorSource,
     style: sketchStyle,
-    type: 'Point'
+    type: 'Point',
+    stopClick: true
   })
 
   lineInteraction = new ol.interaction.Draw({
     source: vectorSource,
     style: sketchStyle,
-    type: 'LineString'
+    type: 'LineString',
+    stopClick: true,
+    maxPoints: 500
   })
 
   drawInteraction = new ol.interaction.Draw({
     source: vectorSource,
     style: sketchStyle,
     freehand: true,
-    type: 'LineString'
+    type: 'LineString',
+    stopClick: true
   })
 
   polygonInteraction = new ol.interaction.Draw({
     source: vectorSource,
     style: sketchStyle,
-    type: 'Polygon'
+    type: 'Polygon',
+    stopClick: true,
+    maxPoints: 500
   });
 
   [drawInteraction, pointInteraction, lineInteraction, polygonInteraction].forEach(function (interaction) {
