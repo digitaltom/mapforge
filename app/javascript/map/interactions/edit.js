@@ -11,8 +11,8 @@ import { selectInteraction } from 'map/interactions/readonly'
 const ol = window.ol
 const turf = window.turf
 
-export let drawInteraction, polygonInteraction, pointInteraction, lineInteraction, modifyInteraction,
-  undoInteraction, selectEditInteraction
+export let drawInteraction, polygonInteraction, pointInteraction, lineInteraction,
+  modifyInteraction, undoInteraction, selectEditInteraction, bannerInteraction
 
 export function initializeEditInteractions () {
   initializeSelectInteraction()
@@ -126,6 +126,19 @@ export function initializeEditInteractions () {
         }
       }),
       new ol.control.Button({
+        html: "<i class='las la-plus-square'></i>",
+        title: 'Add a banner to the map',
+        className: 'buttons button-banner',
+        handleClick: function () {
+          resetInteractions()
+          document.querySelector('.button-edit').classList.add('active')
+          document.querySelector('.add-sub-bar').classList.remove('hidden')
+          document.querySelector('.button-banner').classList.add('active')
+          map.addInteraction(bannerInteraction)
+          flash('Click on a location on your map to create a banner')
+        }
+      }),
+      new ol.control.Button({
         html: "<i class='las la-undo-alt'></i>",
         title: 'Undo last change',
         className: 'button-undo hidden',
@@ -202,9 +215,17 @@ export function initializePaintInteractions () {
     type: 'Polygon',
     stopClick: true,
     maxPoints: 500
+  })
+
+  bannerInteraction = new ol.interaction.Draw({
+    source: vectorSource,
+    style: sketchStyle,
+    type: 'Circle',
+    geometryFunction: ol.interaction.Draw.createBox()
   });
 
-  [drawInteraction, pointInteraction, lineInteraction, polygonInteraction].forEach(function (interaction) {
+  [drawInteraction, pointInteraction, lineInteraction,
+    polygonInteraction, bannerInteraction].forEach(function (interaction) {
     interaction.on('drawend', function (e) {
       e.feature.setId(createFeatureId())
       if (interaction === drawInteraction) {
@@ -352,3 +373,10 @@ export function hideFeatureEdit () {
   // remove from DOM if faded out
   setTimeout(function () { if (el.style.opacity === '0') { el.style.display = 'none' } }, 1000)
 }
+
+// reset interaction on escape
+document.addEventListener('keydown', function (event) {
+  if (event.key === 'Escape' || event.keyCode === 27) {
+    resetInteractions()
+  }
+})

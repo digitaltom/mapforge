@@ -25,14 +25,38 @@ class ChangeListenerVectorSource extends ol.source.Vector {
     this.on('addfeature', function (e) {
       // pre-compute the style and store it on the feature
       e.feature.setStyle(vectorStyle(e.feature))
+      if (e.feature.get('banner')) { showBanner(e.feature) }
+
       // collecting reference to changed features in changedFeatureQueue,
       // so we only push those to the server on modifyend
       e.feature.on('change', function (e) {
         const exists = changedFeatureQueue.some(obj => obj.getId() === e.target.getId())
         if (!exists) { changedFeatureQueue.push(e.target) }
+        if (e.target.get('banner')) { showBanner(e.target) }
       })
     })
   }
+}
+
+// Create a banner overlay with the element
+// https://openlayers.org/en/latest/apidoc/module-ol_Overlay-Overlay.html
+function showBanner (feature) {
+  map.removeOverlay(feature.overlay)
+  const el = document.getElementById('banner-overlay').cloneNode(true)
+  el.innerHTML = feature.get('banner')
+  const zoom = map.getView().getZoom()
+  const scaleFactor = (zoom / 10) ** 8
+  el.style.transform = `scale(${scaleFactor})`
+  feature.overlay = new ol.Overlay({
+    element: el,
+    positioning: 'center-center',
+    stopEvent: false,
+    offset: [0, 0]
+  })
+
+  const featureCoordinates = ol.extent.getCenter(feature.getGeometry().getExtent())
+  feature.overlay.setPosition(featureCoordinates)
+  map.addOverlay(feature.overlay)
 }
 
 document.addEventListener('turbo:load', function () {
@@ -117,10 +141,11 @@ function initializeMap () {
   })
   map.addControl(scaleLineMetric)
 
-  // re-render features that have a resolution dependent style
+  // re-render features that have a resolution/zoomlevel dependent style
   map.getView().on('change:resolution', function () {
     vectorSource.getFeatures().forEach((feature) => {
       if (feature.get('title-min-zoom')) { feature.setStyle(vectorStyle(feature)) }
+      if (feature.get('banner')) { showBanner(feature) }
     })
   })
 }
@@ -145,11 +170,11 @@ export function updateFeature (data, source = vectorSource) {
     updateProps(feature, newFeature.getProperties())
     feature.setStyle(vectorStyle(feature))
     feature.changed()
-    vectorSource.changed()
   } else {
     // addFeature will not add if id already exists
     source.addFeature(newFeature)
   }
+  vectorSource.changed()
   // drop from changedFeatureQueue, it's coming from server
   arrayRemove(changedFeatureQueue, newFeature)
 }
@@ -184,7 +209,7 @@ function changedProps (feature, newFeature) {
 }
 
 // https://openlayers.org/en/latest/apidoc/module-ol_Feature-Feature.html
-// setProperties only updates, and does not drop...
+// needed because setProperties() only updates, and does not drop...
 export function updateProps (feature, newProps) {
   const oldProps = featureAsGeoJSON(feature).properties
   for (const key in oldProps) {

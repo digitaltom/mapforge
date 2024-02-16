@@ -2,7 +2,7 @@ import { map, mainBar, vectorSource } from 'map/map'
 import { selectInteraction, hideFeatureDetails } from 'map/interactions/readonly'
 import {
   drawInteraction, pointInteraction, lineInteraction, modifyInteraction,
-  polygonInteraction, selectEditInteraction, hideFeatureEdit
+  polygonInteraction, bannerInteraction, selectEditInteraction, hideFeatureEdit
 } from 'map/interactions/edit'
 import { vectorStyle } from 'map/styles'
 
@@ -23,11 +23,10 @@ export function initializeMainInteractions () {
 }
 
 export function resetInteractions () {
-  map.removeInteraction(drawInteraction)
-  map.removeInteraction(polygonInteraction)
-  map.removeInteraction(pointInteraction)
-  map.removeInteraction(lineInteraction)
-  map.removeInteraction(modifyInteraction)
+  [drawInteraction, pointInteraction, lineInteraction, polygonInteraction,
+    modifyInteraction, bannerInteraction].forEach(function (interaction) {
+    map.removeInteraction(interaction)
+  })
   if (selectInteraction) {
     selectInteraction.getFeatures().forEach(function (feature) {
       feature.setStyle(vectorStyle(feature))
