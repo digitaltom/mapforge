@@ -7,17 +7,19 @@ import { mapChannel } from 'channels/map_channel'
 // eslint expects ol to get imported, but we load the full lib in header
 const ol = window.ol
 
-export let mapProperties
-export let backgroundMapLayer
-
 const mapDefaults = {
   projection: 'EPSG:3857'
 }
 
+export let mapProperties
+export let backgroundMapLayer
+
 export function initializeMapProperties () {
   mapProperties = { ...mapDefaults, ...window.gon.map_properties }
   console.log('map properties: ' + JSON.stringify(mapProperties))
+}
 
+export function initializeMapModal () {
   const mapCenter = document.querySelector('#set-map-center')
   mapCenter.addEventListener('click', function (event) {
     event.preventDefault()

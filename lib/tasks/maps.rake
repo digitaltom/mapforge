@@ -8,7 +8,7 @@ namespace :maps do
   task screenshots: :environment do
     base_url = ENV.fetch("MAPFORGE_HOST", "http://localhost:3000") + "/maps/"
     session = Capybara::Session.new(:headless_chrome)
-    Map.pluck(:_id).map(&:to_s).each do |map_id|
+    Map.pluck(:public_id).map(&:to_s).each do |map_id|
       # https://github.com/YusukeIwaki/puppeteer-ruby
       Puppeteer.launch(headless: true, ignore_https_errors: true) do |browser|
         context = browser.create_incognito_browser_context

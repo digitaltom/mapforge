@@ -4,11 +4,11 @@ describe 'Map List' do
   let!(:maps) { create_list(:map, 3) }
 
   before do
-    visit maps_path
+    visit list_maps_path
   end
 
   it 'shows links to maps' do
-    expect(page).to have_selector(:xpath, "//a[@href='/maps/#{maps[0].id}']")
+    expect(page).to have_selector(:xpath, "//a[@href='/maps/#{maps[0].public_id}']")
   end
 
   it 'shows link to create new map' do

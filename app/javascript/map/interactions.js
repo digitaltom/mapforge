@@ -16,7 +16,7 @@ export function initializeMainInteractions () {
     title: 'Back to map list',
     className: 'buttons button-home',
     handleClick: function () {
-      Turbo.visit('/maps')
+      Turbo.visit('/')
     }
   })
   mainBar.addControl(homeButton)

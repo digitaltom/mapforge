@@ -3,7 +3,7 @@ import { vectorStyle } from 'map/styles'
 import { initializeMainInteractions } from 'map/interactions'
 import { initializeReadonlyInteractions, hideFeatureDetails } from 'map/interactions/readonly'
 import { initializeEditInteractions, undoInteraction } from 'map/interactions/edit'
-import { initializeMapProperties, mapProperties, loadBackgroundMapLayer, backgroundMapLayer } from 'map/properties'
+import { initializeMapModal, initializeMapProperties, mapProperties, loadBackgroundMapLayer, backgroundMapLayer } from 'map/properties'
 import { FPSControl } from 'map/controls/fps'
 
 // eslint expects variables to get imported, but we load the full lib in header
@@ -64,10 +64,15 @@ document.addEventListener('turbo:load', function () {
     initializeMapProperties()
     initializeMap()
     loadBackgroundMapLayer()
-    initializeSocket()
-    initializeMainInteractions()
-    initializeReadonlyInteractions()
-    initializeEditInteractions()
+    if (window.gon.map_mode !== 'static') {
+      initializeSocket()
+      initializeMainInteractions()
+      initializeReadonlyInteractions()
+      if (window.gon.map_mode === 'rw') {
+        initializeMapModal()
+        initializeEditInteractions()
+      }
+    }
   }
 })
 
@@ -123,7 +128,7 @@ function initializeMap () {
     keyboardEventTarget: document
   })
 
-  map.addControl(new FPSControl())
+  if (window.gon.map_mode === 'rw') { map.addControl(new FPSControl()) }
 
   // Main control bar
   mainBar = new ol.control.Bar({ className: 'main-bar' })
@@ -139,7 +144,7 @@ function initializeMap () {
     units: ['metric'],
     target: document.getElementById('scaleline-metric')
   })
-  map.addControl(scaleLineMetric)
+  if (window.gon.map_mode !== 'static') { map.addControl(scaleLineMetric) }
 
   // re-render features that have a resolution/zoomlevel dependent style
   map.getView().on('change:resolution', function () {

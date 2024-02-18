@@ -1,7 +1,7 @@
 %div.flex-item.map-preview{id: dom_id(map)}
-  = link_to map do
-    - if File.exist?(Rails.root.join("public/previews/#{map.id}.png"))
-      %img{src: "/previews/#{map.id}.png", class: 'preview-image'}
+  = link_to map_path(id: map.public_id) do
+    - if File.exist?(Rails.root.join("public/previews/#{map.public_id}.png"))
+      %img{src: "/previews/#{map.public_id}.png", class: 'preview-image'}
     - else
       %img{src: "previews/map.png", class: 'preview-image'}
     .map-preview-title= map.properties[:name]

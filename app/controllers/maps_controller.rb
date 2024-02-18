@@ -2,11 +2,21 @@ class MapsController < ApplicationController
   before_action :set_map, only: %i[show features]
 
   def index
-    @maps = Map.where(public: true).includes(:features).order(updated_at: :desc)
+    @map = Map.frontpage
+    raise 'Please define your frontpage map public_id in ENV["FRONTPAGE_MAP"]' unless @map
+    gon.map_id = @map.public_id
+    gon.map_mode = "static"
+    gon.map_properties = @map.properties
+    gon.map_keys = @map.keys
+  end
+
+  def list
+    @maps = Map.where.not(public_id: nil).includes(:features).order(updated_at: :desc)
   end
 
   def show
-    gon.map_id = @map.id.to_s
+    gon.map_id = params[:id]
+    gon.map_mode = (params[:id] == @map.id.to_s) ? "rw" : "ro"
     gon.map_properties = @map.properties
     gon.map_keys = @map.keys
   end
@@ -29,7 +39,8 @@ class MapsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_map
-    @map = Map.find(params[:id])
+    @map = Map.find_by(id: params[:id]) || Map.find_by(public_id: params[:id])
+    redirect_to "/404.html" unless @map
   end
 
   # Only allow a list of trusted parameters through.

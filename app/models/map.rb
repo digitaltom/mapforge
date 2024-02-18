@@ -11,7 +11,6 @@ class Map
   field :name, type: String
   field :description, type: String
   field :public_id, type: String
-  field :public, type: Boolean, default: true
 
   # [satellite, satelliteStreets, osm]
   DEFAULT_MAP = :osmTiles
@@ -37,6 +36,10 @@ class Map
   def feature_collection
     { type: "FeatureCollection",
       features: features.map(&:geojson) }
+  end
+
+  def self.frontpage
+    find_by(public_id: ENV["FRONTPAGE_MAP"])
   end
 
   private
