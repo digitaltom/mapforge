@@ -110,6 +110,12 @@ function initializeMap () {
     style: vectorStyle
   })
 
+  const controls = ol.control.defaults.defaults({
+    zoom: window.gon.map_mode !== 'static',
+    attribution: true,
+    rotate: false
+  })
+
   map = new ol.Map({
     layers: [vectorLayer, fixedLayer],
     target: 'map',
@@ -120,11 +126,7 @@ function initializeMap () {
       zoom: mapProperties.zoom,
       constrainResolution: true
     }),
-    controls: ol.control.defaults.defaults({
-      zoom: true,
-      attribution: true,
-      rotate: false
-    }),
+    controls,
     keyboardEventTarget: document
   })
 
