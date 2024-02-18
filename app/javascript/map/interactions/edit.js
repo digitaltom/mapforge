@@ -1,10 +1,10 @@
 import {
-  map, flash, mainBar, vectorSource, featureAsGeoJSON, changedFeatureQueue, updateProps
+  map, flash, mainBar, vectorSource, featureAsGeoJSON, changedFeatureQueue, updateProps, vectorLayer
 } from 'map/map'
 import { mapProperties } from 'map/properties'
 import { mapChannel } from 'channels/map_channel'
 import { hoverStyle, vectorStyle, sketchStyle } from 'map/styles'
-import { createFeatureId, resetInteractions } from 'map/interactions'
+import { createFeatureId, resetInteractions, isMobileDevice } from 'map/interactions'
 import { selectInteraction } from 'map/interactions/readonly'
 
 // eslint expects ol to get imported, but we load the full lib in header
@@ -37,10 +37,15 @@ export function initializeEditInteractions () {
             document.querySelector('.button-edit').classList.remove('active')
             document.querySelector('.add-sub-bar').classList.add('hidden')
           } else {
+            const selectedFeature = selectInteraction.getFeatures().getArray()[0]
             resetInteractions()
             document.querySelector('.button-edit').classList.add('active')
             document.querySelector('.add-sub-bar').classList.remove('hidden')
             map.addInteraction(selectEditInteraction)
+            if (selectedFeature) {
+              selectEditInteraction.getFeatures().push(selectedFeature)
+              selectEditInteraction.dispatchEvent({ type: 'select', selected: [selectedFeature], deselected: [] })
+            }
             map.addInteraction(modifyInteraction)
             flash('Click on a map element to modify it or add new elements', 'info', 10000)
           }
@@ -159,6 +164,25 @@ export function initializeEditInteractions () {
     ]
   })
   map.addControl(addSubBar)
+
+  map.on('pointermove', function (event) {
+    // skip hover effects when not in an active selectEditInteraction
+    if (!map.getInteractions().getArray().includes(selectEditInteraction)) { return }
+    if (event.dragging) { return }
+    if (isMobileDevice()) { return }
+
+    let currentlySelectedFeature = null
+    map.forEachFeatureAtPixel(event.pixel, function (feature, layer) {
+      if (feature.getId() === undefined) { return }
+      currentlySelectedFeature = feature
+      map.getTargetElement().style.cursor = 'pointer'
+      return true
+    }, {
+      layerFilter: function (layer) { return layer === vectorLayer },
+      hitTolerance: 10 // Tolerance in pixels
+    })
+    if (!currentlySelectedFeature) { map.getTargetElement().style.cursor = '' }
+  })
 }
 
 export function initializeModifyInteraction () {

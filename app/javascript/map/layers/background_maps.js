@@ -131,6 +131,13 @@ export const backgroundTiles = {
       styleUrl: '/layers/streets.json?key=' + window.gon.map_keys.maptiler,
       accessToken: window.gon.map_keys.maptiler
     })
+  },
+
+  maptilerNoStreets: function () {
+    return new olms.MapboxVectorLayer({
+      styleUrl: '/layers/nostreets.json?key=' + window.gon.map_keys.maptiler,
+      accessToken: window.gon.map_keys.maptiler
+    })
   }
 
 }

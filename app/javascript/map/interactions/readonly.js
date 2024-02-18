@@ -69,8 +69,6 @@ export function initializeReadonlyInteractions () {
     if (selectedFeatures.getArray().length > 0) { return }
     if (event.dragging) { return }
     if (isMobileDevice()) { return }
-    // skip hover whe there is a modal shown
-    if (document.querySelector('#map-modal').style.display === 'block') { return }
 
     currentlySelectedFeature = null
     map.forEachFeatureAtPixel(event.pixel, function (feature, layer) {
