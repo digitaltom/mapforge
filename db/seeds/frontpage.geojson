@@ -1,0 +1,163 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "id": "5316e2006ef318",
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              877430.3754817831,
+              6446610.786899649
+            ],
+            [
+              937509.8797139316,
+              6446763.660956219
+            ],
+            [
+              937662.7537705019,
+              6450891.260483619
+            ],
+            [
+              877124.6273686424,
+              6450891.260483619
+            ],
+            [
+              877430.3754817831,
+              6446610.786899649
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "banner": "Create, share* and remix* map vector overlays.",
+        "stroke-opacity": "0",
+        "fill-opacity": "0.1"
+      }
+    },
+    {
+      "id": "5a79abce1dbb58",
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              883174.347761292,
+              6424240.217594351
+            ],
+            [
+              927813.5722798349,
+              6425310.335990343
+            ],
+            [
+              928577.9425626866,
+              6434941.401554275
+            ],
+            [
+              879505.3704036035,
+              6436775.89023312
+            ],
+            [
+              883174.347761292,
+              6424240.217594351
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "banner": "Create different shapes and annotations"
+      }
+    },
+    {
+      "id": "f7b464e3cc9dd",
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              878546.6511300872,
+              6381315.807091787
+            ],
+            [
+              893528.3086739812,
+              6381315.807091787
+            ],
+            [
+              922880.1275354894,
+              6381315.807091787
+            ],
+            [
+              922880.1275354894,
+              6391405.494825431
+            ],
+            [
+              878546.6511300872,
+              6391405.494825431
+            ],
+            [
+              878546.6511300872,
+              6381315.807091787
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "banner": "Share with your users, embed in your website and collaborate in real time"
+      }
+    },
+    {
+      "id": "2f4d51479671d",
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              878240.9030169465,
+              6363276.668416486
+            ],
+            [
+              921657.1350829266,
+              6363276.668416486
+            ],
+            [
+              921657.1350829266,
+              6372754.859923848
+            ],
+            [
+              878240.9030169465,
+              6372754.859923848
+            ],
+            [
+              878240.9030169465,
+              6363276.668416486
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "banner": "Open Source, host your own"
+      }
+    },
+    {
+      "id": "7acf72146ef898",
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          906748.5100517579,
+          6458659.352858413
+        ]
+      },
+      "properties": {
+        "banner": "<div class='frontpage-title'>mapforge.org",
+        "marker-color": "transparent",
+        "stroke": "transparent"
+      }
+    }
+  ]
+}

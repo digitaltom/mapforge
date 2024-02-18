@@ -1,3 +1,5 @@
+include Rails.application.routes.url_helpers
+
 namespace :seed do
   desc "Seed example map data from a .geojson file"
   task :from_file, %i[path] => :environment do |_, args|
@@ -5,8 +7,8 @@ namespace :seed do
     gps_factory = RGeo::Cartesian.factory(srid: 4326)
 
     file = File.read(args.fetch(:path))
-    map_name = File.basename(args.fetch(:path)).tr(".", "_")
-    map = Map.find_or_create_by(id: map_name)
+    map_name = File.basename(args.fetch(:path), File.extname(args.fetch(:path))).tr(".", "_")
+    map = Map.find_or_create_by(public_id: map_name)
     map.features.delete_all
     feature_collection = RGeo::GeoJSON.decode(file, geo_factory: gps_factory)
 
@@ -18,6 +20,7 @@ namespace :seed do
       transformed_feature = RGeo::GeoJSON::Feature.new(transformed_geometry, nil, feature.properties)
       map.features.create!(RGeo::GeoJSON.encode(transformed_feature))
     end
-    puts "Created map '#{map.id}' with #{feature_collection.size} features from #{args.fetch :path}"
+    puts "Created map with #{feature_collection.size} features from #{args.fetch :path}"
+    puts "Public id: #{map_path(map.public_id)}, private id: #{map_path(map)}"
   end
 end

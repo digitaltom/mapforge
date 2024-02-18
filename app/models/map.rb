@@ -39,7 +39,7 @@ class Map
   end
 
   def self.frontpage
-    find_by(public_id: ENV["FRONTPAGE_MAP"])
+    find_by(public_id: ENV["FRONTPAGE_MAP"] || "frontpage")
   end
 
   private
