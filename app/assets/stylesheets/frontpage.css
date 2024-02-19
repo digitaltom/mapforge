@@ -5,3 +5,10 @@
   font-size: 400%;
 }
 
+.center {
+  text-align: center;
+}
+
+.small {
+  font-size: 60%;
+}

@@ -320,8 +320,10 @@ export function initializeUndoInteraction () {
   })
 
   undoInteraction.on('stack:clear', function (e) {
-    document.querySelector('.button-undo').classList.add('hidden')
-    document.querySelector('.button-redo').classList.add('hidden')
+    if (document.querySelector('.button-undo')) {
+      document.querySelector('.button-undo').classList.add('hidden')
+      document.querySelector('.button-redo').classList.add('hidden')
+    }
   })
 
   undoInteraction.on('undo', function (e) {

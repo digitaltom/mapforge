@@ -19,9 +19,11 @@ class Map
 
   after_save :broadcast_update
 
+  validates :public_id, uniqueness: true, presence: false
+
   def properties
-    { name: name || "Map #{id}",
-      descripion: description || "Description for map #{id}",
+    { name: name,
+      descripion: description,
       base_map: base_map || DEFAULT_MAP,
       center: center || DEFAULT_CENTER,
       zoom: zoom || DEFAULT_ZOOM
