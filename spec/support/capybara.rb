@@ -51,3 +51,5 @@ Capybara::Screenshot.register_driver(Capybara.javascript_driver) do |driver, pat
 end
 
 Capybara.default_driver = Capybara.javascript_driver
+# Start Puma silently
+Capybara.server = :puma, { Silent: true }

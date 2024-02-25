@@ -12,7 +12,6 @@ class Map
   field :description, type: String
   field :public_id, type: String
 
-  # [satellite, satelliteStreets, osm]
   DEFAULT_MAP = :osmTiles
   DEFAULT_CENTER = [ 11.077, 49.447 ].freeze
   DEFAULT_ZOOM = 12
@@ -42,6 +41,37 @@ class Map
 
   def self.frontpage
     find_by(public_id: ENV["FRONTPAGE_MAP"] || "frontpage")
+  end
+
+  # the public id of the imported map will be the filename without extension
+  # input file formats are typically gps format EPSG:4326 (4326)
+  # db backend is in web_mercator format EPSG:3857 (3857)
+  def self.create_from_file(path, overwrite: false, file_format: 4326, db_format: 3857, properties: Map.new.properties)
+    file = File.read(path)
+    map_name = File.basename(path, File.extname(path)).tr(".", "_")
+
+    map = Map.find_or_initialize_by(public_id: map_name)
+    if !overwrite && map.persisted?
+      raise "Error: Map with public id '#{map_name}' already exists, please delete it first."
+    end
+
+    # TODO check how to embed map properties in geojson
+    map.update!(base_map: properties[:base_map], center: properties[:center], zoom: properties[:zoom])
+
+    map.features.delete_all
+    db_format = RGeo::Cartesian.factory(srid: db_format)
+    import_format = RGeo::Cartesian.factory(srid: file_format)
+    feature_collection = RGeo::GeoJSON.decode(file, geo_factory: import_format)
+    feature_collection.each do |feature|
+      next unless feature.geometry
+      # transform coords from input to db format
+      transformed_geometry = RGeo::Feature.cast(feature.geometry, factory: db_format, project: true)
+      transformed_feature = RGeo::GeoJSON::Feature.new(transformed_geometry, nil, feature.properties)
+      map.features.create!(RGeo::GeoJSON.encode(transformed_feature))
+    end
+
+    Rails.logger.info "Created map with #{feature_collection.size} features from #{path}"
+    Rails.logger.info "Public id: #{map.public_id}, private id: #{map.id}"
   end
 
   private

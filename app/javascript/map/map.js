@@ -1,9 +1,7 @@
-import { initializeSocket } from 'channels/map_channel'
 import { vectorStyle } from 'map/styles'
-import { initializeMainInteractions } from 'map/interactions'
-import { initializeReadonlyInteractions, hideFeatureDetails } from 'map/interactions/readonly'
-import { initializeEditInteractions, undoInteraction } from 'map/interactions/edit'
-import { initializeMapModal, initializeMapProperties, mapProperties, loadBackgroundMapLayer, backgroundMapLayer } from 'map/properties'
+import { hideFeatureDetails } from 'map/interactions/readonly'
+import { undoInteraction } from 'map/interactions/edit'
+import { mapProperties, backgroundMapLayer } from 'map/properties'
 import { FPSControl } from 'map/controls/fps'
 
 // eslint expects variables to get imported, but we load the full lib in header
@@ -59,24 +57,7 @@ function showBanner (feature) {
   map.addOverlay(feature.overlay)
 }
 
-document.addEventListener('turbo:load', function () {
-  if (document.getElementById('map')) {
-    initializeMapProperties()
-    initializeMap()
-    loadBackgroundMapLayer()
-    if (window.gon.map_mode !== 'static') {
-      initializeSocket()
-      initializeMainInteractions()
-      initializeReadonlyInteractions()
-      if (window.gon.map_mode === 'rw') {
-        initializeMapModal()
-        initializeEditInteractions()
-      }
-    }
-  }
-})
-
-function initializeMap () {
+export function initializeMap (divId = 'map') {
   changedFeatureQueue = []
   vectorSource = new ChangeListenerVectorSource({
     format: geoJsonFormat,
@@ -118,7 +99,7 @@ function initializeMap () {
 
   map = new ol.Map({
     layers: [vectorLayer, fixedLayer],
-    target: 'map',
+    target: divId,
     renderer: 'webgl',
     view: new ol.View({
       projection: mapProperties.projection,

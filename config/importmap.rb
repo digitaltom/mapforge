@@ -11,3 +11,7 @@ pin_all_from "app/javascript/controllers", under: "controllers"
 pin_all_from "app/javascript/channels", under: "channels"
 
 pin_all_from "app/javascript/map", under: "map"
+
+# page initializers
+pin "frontpage"
+pin "map"

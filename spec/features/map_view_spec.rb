@@ -5,6 +5,7 @@ describe 'Map' do
 
   before do
     visit map_path(map)
+    sleep(1) # make sure features are loaded from server
     expect(page).to have_text('Connection to server established')
   end
 
