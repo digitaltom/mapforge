@@ -1,8 +1,9 @@
 import { vectorStyle } from 'map/styles'
 import { hideFeatureDetails } from 'map/interactions/readonly'
 import { undoInteraction } from 'map/interactions/edit'
-import { mapProperties, backgroundMapLayer } from 'map/properties'
+import { mapProperties } from 'map/properties'
 import { FPSControl } from 'map/controls/fps'
+import { animateMarker, animateView } from 'map/animations'
 
 // eslint expects variables to get imported, but we load the full lib in header
 const ol = window.ol
@@ -208,29 +209,6 @@ export function updateProps (feature, newProps) {
   feature.setStyle(vectorStyle(feature))
 }
 
-function animateMarker (feature, start, end) {
-  console.log('Animating ' + feature.getId() + ' from ' + JSON.stringify(start) + ' to ' + JSON.stringify(end))
-  const startTime = Date.now()
-  const listenerKey = backgroundMapLayer.on('postrender', animate)
-
-  const duration = 300
-  function animate (event) {
-    const frameState = event.frameState
-    const elapsed = frameState.time - startTime
-    if (elapsed >= duration) {
-      ol.Observable.unByKey(listenerKey)
-      return
-    }
-    const elapsedRatio = elapsed / duration
-    const currentCoordinate = [
-      start[0] + elapsedRatio * (end[0] - start[0]),
-      start[1] + elapsedRatio * (end[1] - start[1])
-    ]
-    feature.getGeometry().setCoordinates(currentCoordinate)
-    map.render()
-  }
-}
-
 export function locate () {
   console.log('Getting geolocation')
   if (!navigator.geolocation) {
@@ -245,7 +223,7 @@ export function locate () {
       // only flash + animate on first locate
       if (!locationFeature) {
         flash('Location set to: ' + ol.proj.fromLonLat(coordinates), 'success')
-        animateMapCenterTo(ol.proj.fromLonLat(coordinates))
+        animateView(ol.proj.fromLonLat(coordinates))
       }
       const feature = new ol.Feature({
         geometry: new ol.geom.Point(ol.proj.fromLonLat(coordinates)),
@@ -284,13 +262,4 @@ export function flash (message, type = 'info', timeout = 3000) {
   setTimeout(function () {
     flashContainer.remove()
   }, timeout + 500) // Delete message after animation is done
-}
-
-function animateMapCenterTo (coords) {
-  const animationOptions = {
-    center: coords,
-    duration: 1000, // in ms
-    easing: ol.easing.easeIn
-  }
-  map.getView().animate(animationOptions)
 }
