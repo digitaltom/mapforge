@@ -4,7 +4,7 @@ describe 'Map List' do
   let!(:maps) { create_list(:map, 3) }
 
   before do
-    visit list_maps_path
+    visit maps_path
   end
 
   it 'shows links to maps' do

@@ -1,7 +1,7 @@
 class MapsController < ApplicationController
   before_action :set_map, only: %i[show features]
 
-  def list
+  def index
     @maps = Map.where.not(public_id: nil).includes(:features).order(updated_at: :desc)
   end
 

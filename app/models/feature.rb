@@ -3,7 +3,7 @@ class Feature
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  belongs_to :map, optional: true, touch: true
+  belongs_to :map, optional: true, touch: true, counter_cache: true
 
   field :type, type: String, default: "Feature"
   field :geometry, type: Hash, default: {}

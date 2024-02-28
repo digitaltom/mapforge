@@ -3,7 +3,13 @@ import { map, initializeMap, vectorSource } from 'map/map'
 import { animateView } from 'map/animations'
 import { initializeMapProperties, loadBackgroundMapLayer } from 'map/properties'
 
-document.addEventListener('turbo:load', function () {
+init()
+
+document.addEventListener('turbo:render', function () {
+  init()
+})
+
+function init () {
   if (document.getElementById('frontpage-map')) {
     initializeMapProperties()
     initializeMap('frontpage-map')
@@ -13,7 +19,7 @@ document.addEventListener('turbo:load', function () {
       interaction.setActive(false)
     })
   }
-})
+}
 
 document.addEventListener('click', function (event) {
   if (event.target.tagName === 'A' && event.target.hasAttribute('data-animate-point')) {

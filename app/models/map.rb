@@ -4,6 +4,7 @@ class Map
   include Mongoid::Timestamps
 
   has_many :features, dependent: :destroy
+  default_scope -> { order_by(created_at: :asc) }
 
   field :base_map, type: String
   field :center, type: Array
@@ -11,14 +12,16 @@ class Map
   field :name, type: String
   field :description, type: String
   field :public_id, type: String
+  field :features_count, type: Integer, default: 0
 
   DEFAULT_MAP = :osmTiles
   DEFAULT_CENTER = [ 11.077, 49.447 ].freeze
   DEFAULT_ZOOM = 12
 
   after_save :broadcast_update
+  before_create :create_public_id
+  validate :public_id_must_be_unique_or_nil
 
-  validates :public_id, uniqueness: true, presence: false
 
   def properties
     { name: name,
@@ -37,6 +40,16 @@ class Map
   def feature_collection
     { type: "FeatureCollection",
       features: features.map(&:geojson) }
+  end
+
+  def create_public_id
+    self.public_id = SecureRandom.hex(4) unless public_id.present?
+  end
+
+  def public_id_must_be_unique_or_nil
+    if public_id.present? && Map.where(public_id: public_id).where.not(id: id).exists?
+      errors.add(:public_id, "has already been taken")
+    end
   end
 
   def self.frontpage
