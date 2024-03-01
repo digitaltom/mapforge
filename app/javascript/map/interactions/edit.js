@@ -31,7 +31,7 @@ export function initializeEditInteractions () {
         title: 'Switch map to edit mode',
         className: 'buttons button-edit',
         handleClick: function () {
-          if (document.querySelector('.button-edit').classList.contains('active')) {
+          if (map.getInteractions().getArray().includes(selectEditInteraction)) {
             resetInteractions()
             map.addInteraction(selectInteraction)
             document.querySelector('.button-edit').classList.remove('active')

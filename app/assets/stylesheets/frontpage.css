@@ -11,7 +11,11 @@
   font-family: "Rubik Maps", system-ui;
   font-weight: 400;
   font-style: normal;
-  font-size: 400%;
+  /* font-size: 400%; */
+  font-size: 12vw;
+  width: 100%;
+  max-width: 1200px;
+  text-align: center;
 }
 
 .center {
