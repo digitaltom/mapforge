@@ -12,8 +12,8 @@ const Turbo = window.Turbo
 
 export function initializeMainInteractions () {
   const homeButton = new ol.control.Button({
-    html: "<i class='las la-home'></i>",
-    title: 'Back to map list',
+    html: "<i class='bi-house'></i>",
+    title: 'Back to Start',
     className: 'buttons button-home',
     handleClick: function () {
       Turbo.visit('/')

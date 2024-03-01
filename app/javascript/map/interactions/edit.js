@@ -27,7 +27,7 @@ export function initializeEditInteractions () {
     className: 'edit-bar',
     controls: [
       new ol.control.Button({
-        html: "<i class='las la-edit'></i>",
+        html: "<i class='bi-pencil-square'></i>",
         title: 'Switch map to edit mode',
         className: 'buttons button-edit',
         handleClick: function () {
@@ -52,7 +52,7 @@ export function initializeEditInteractions () {
         }
       }),
       new ol.control.Button({
-        html: "<i class='las la-map'></i>",
+        html: "<i class='bi-globe-americas'></i>",
         title: 'Map properties',
         className: 'buttons button-map',
         handleClick: function () {
@@ -79,7 +79,7 @@ export function initializeEditInteractions () {
     className: 'sub-bar add-sub-bar hidden',
     controls: [
       new ol.control.Button({
-        html: "<i class='las la-map-marker'></i>",
+        html: "<i class='bi-geo-alt'></i>",
         title: 'Add map marker',
         className: 'buttons button-marker',
         handleClick: function () {
@@ -92,7 +92,7 @@ export function initializeEditInteractions () {
         }
       }),
       new ol.control.Button({
-        html: "<i class='las la-chart-line'></i>",
+        html: "<i class='bi bi-dash'></i>",
         title: 'Add a line to the map',
         className: 'buttons button-line',
         handleClick: function () {
@@ -105,7 +105,7 @@ export function initializeEditInteractions () {
         }
       }),
       new ol.control.Button({
-        html: "<i class='las la-pen-nib'></i>",
+        html: "<i class='bi-brush'></i>",
         title: 'Add a freehand line to the map',
         className: 'buttons button-freehand',
         handleClick: function () {
@@ -118,7 +118,7 @@ export function initializeEditInteractions () {
         }
       }),
       new ol.control.Button({
-        html: "<i class='las la-draw-polygon'></i>",
+        html: "<i class='bi bi-hexagon'></i>",
         title: 'Add a polygon to the map',
         className: 'buttons button-polygon',
         handleClick: function () {
@@ -131,7 +131,7 @@ export function initializeEditInteractions () {
         }
       }),
       new ol.control.Button({
-        html: "<i class='las la-plus-square'></i>",
+        html: "<i class='bi-card-text'></i>",
         title: 'Add a banner to the map',
         className: 'buttons button-banner',
         handleClick: function () {
@@ -144,7 +144,7 @@ export function initializeEditInteractions () {
         }
       }),
       new ol.control.Button({
-        html: "<i class='las la-undo-alt'></i>",
+        html: "<i class='bi bi-arrow-counterclockwise'></i>",
         title: 'Undo last change',
         className: 'button-undo hidden',
         handleClick: function () {
@@ -153,7 +153,7 @@ export function initializeEditInteractions () {
         }
       }),
       new ol.control.Button({
-        html: "<i class='las la-redo-alt'></i>",
+        html: "<i class='bi bi-arrow-clockwise'></i>",
         title: 'Redo last change',
         className: 'button-redo hidden',
         handleClick: function () {

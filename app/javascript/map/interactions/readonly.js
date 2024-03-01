@@ -24,7 +24,7 @@ export function initializeReadonlyInteractions () {
     group: false,
     controls: [
       new ol.control.Button({
-        html: "<i class='las la-crosshairs'></i>",
+        html: "<i class='bi-crosshair'></i>",
         title: 'Center at your current location',
         className: 'button button-locate',
         handleClick: function () {
