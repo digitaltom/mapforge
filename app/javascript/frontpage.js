@@ -26,6 +26,8 @@ document.addEventListener('click', function (event) {
     event.preventDefault()
     const feature = vectorSource.getFeatureById(event.target.getAttribute('data-animate-point'))
     const coords = feature.getGeometry().getCoordinates()
-    animateView(coords, 11)
+    const zoom = event.target.getAttribute('data-animate-zoom') || map.getView().getZoom()
+
+    animateView(coords, zoom)
   }
 })

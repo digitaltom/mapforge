@@ -3,14 +3,24 @@
   width: 100%;
   margin: 0;
   padding: 0;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif, "Line Awesome Free";
+  font-family: Montserrat, sans-serif, "Bootstrap Icons";
 }
 
 .frontpage-title {
   font-family: "Rubik Maps", system-ui;
   font-weight: 400;
   font-style: normal;
-  font-size: 12vw; /* font-size: 400%; */
+  font-size: 12vw; /* % of viewport width */
+  width: 100%;
+  max-width: 1200px;
+  text-align: center;
+}
+
+.frontpage-subtitle {
+  font-family: Montserrat, system-ui;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 3vw;
   width: 100%;
   max-width: 1200px;
   text-align: center;

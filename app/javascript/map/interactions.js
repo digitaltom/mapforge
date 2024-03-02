@@ -57,7 +57,7 @@ export function resetInteractions () {
 }
 
 export function createFeatureId () {
-  return Math.random().toString(16).slice(2)
+  return Math.random().toString(16).slice(6)
 }
 
 export function isMobileDevice () {

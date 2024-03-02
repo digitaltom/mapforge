@@ -22,7 +22,6 @@ class Map
   before_create :create_public_id
   validate :public_id_must_be_unique_or_nil
 
-
   def properties
     { name: name,
       descripion: description,
@@ -59,7 +58,8 @@ class Map
   # the public id of the imported map will be the filename without extension
   # input file formats are typically gps format EPSG:4326 (4326)
   # db backend is in web_mercator format EPSG:3857 (3857)
-  def self.create_from_file(path, overwrite: false, file_format: 4326, db_format: 3857, properties: Map.new.properties)
+  # TODO check how to embed map properties in geojson
+  def self.create_from_file(path, overwrite: false, file_format: 4326, db_format: 3857)
     file = File.read(path)
     map_name = File.basename(path, File.extname(path)).tr(".", "_")
 
@@ -67,9 +67,7 @@ class Map
     if !overwrite && map.persisted?
       raise "Error: Map with public id '#{map_name}' already exists, please delete it first."
     end
-
-    # TODO check how to embed map properties in geojson
-    map.update!(base_map: properties[:base_map], center: properties[:center], zoom: properties[:zoom])
+    map.save! unless map.persisted?
 
     map.features.delete_all
     db_format = RGeo::Cartesian.factory(srid: db_format)
@@ -85,6 +83,7 @@ class Map
 
     Rails.logger.info "Created map with #{feature_collection.size} features from #{path}"
     Rails.logger.info "Public id: #{map.public_id}, private id: #{map.id}"
+    map
   end
 
   private

@@ -5,9 +5,6 @@
 
 # README
 
-![plan](public/ourmaps-plan.png)
-https://excalidraw.com/#json=m0CjM7w_E-dtFDKmvQvIf,K07A5jDq8rCCqgmJMkjElw
-
 ## Geojson
 
 This app supports and stores data in an extended version of the
@@ -34,7 +31,7 @@ bundle
 bin/rails s
 ```
 
-* Import initial frontpage with `bin/rake seed:from_file['db/seeds/frontpage.geojson']` and put the public_id as FRONTPAGE_MAPMAPBOX_KEY in `.env.development`
+* Import initial frontpage with `bin/rake seed:from_file['db/seeds/frontpage.geojson']`
 * Put map provider keys (MAPTILER_KEY, MAPBOX_KEY) into `.env.development`
 * MongoDB backend is expected at: `ENV.fetch("MONGO_URL") { "localhost:27017" }`
 * Redis (for action cable) is expected at: `ENV.fetch("REDIS_URL") { "redis://localhost:6379/1" }`
@@ -52,7 +49,7 @@ bin/rails s
 
   `bin/rake maps:screenshots` (use MAPFORGE_HOST to set the host)
 
-* Animate a marker along a line: `bin/rake animation:path[<mapid>, <lineid>, <pointid>]
+* Animate a marker along a line: `bin/rake animation:path[<map_id>, <line_id>, <point_id>]`
 
 
 ### Tests

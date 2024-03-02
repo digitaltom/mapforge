@@ -406,3 +406,9 @@ document.addEventListener('keydown', function (event) {
     resetInteractions()
   }
 })
+
+document.addEventListener('click', function (event) {
+  if (event.target.tagName === 'A' && map.getInteractions().getArray().includes(selectEditInteraction)) {
+    event.preventDefault()
+  }
+})
