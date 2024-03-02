@@ -114,6 +114,8 @@ describe 'Map' do
       expect(page).to have_text('Feature added')
       expect(Feature.polygon.count).to eq(1)
 
+      # first click goes to edit mode, second to view mode
+      find('.button-edit').click
       find('.button-edit').click
       click_coord('#map', 100, 100)
       expect(page).to have_css('.feature-details-view')

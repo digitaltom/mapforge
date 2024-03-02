@@ -6,13 +6,11 @@
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif, "Line Awesome Free";
 }
 
-
 .frontpage-title {
   font-family: "Rubik Maps", system-ui;
   font-weight: 400;
   font-style: normal;
-  /* font-size: 400%; */
-  font-size: 12vw;
+  font-size: 12vw; /* font-size: 400%; */
   width: 100%;
   max-width: 1200px;
   text-align: center;
