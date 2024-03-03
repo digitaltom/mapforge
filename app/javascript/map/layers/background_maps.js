@@ -135,6 +135,7 @@ export const backgroundTiles = {
 
   maptilerNoStreets: function () {
     return new olms.MapboxVectorLayer({
+      preload: Infinity,
       styleUrl: '/layers/nostreets.json?key=' + window.gon.map_keys.maptiler,
       accessToken: window.gon.map_keys.maptiler
     })
