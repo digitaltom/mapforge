@@ -19,6 +19,7 @@ describe 'Map' do
       find('.button-map').click
       expect(page).to have_text('Configure Map')
       find_all('.layer-preview ')[2].click
+      sleep(1) # make sure actioncable request is processed
       expect(map.reload.base_map).to eq 'satelliteStreetTiles'
     end
   end
