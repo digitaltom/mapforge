@@ -13,5 +13,5 @@ pin_all_from "app/javascript/channels", under: "channels"
 pin_all_from "app/javascript/map", under: "map"
 
 # page initializers
-pin "frontpage"
-pin "map"
+pin "frontpage", preload: true
+pin "map", preload: true

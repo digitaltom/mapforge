@@ -6,26 +6,24 @@ import { initializeMainInteractions } from 'map/interactions'
 import { initializeReadonlyInteractions } from 'map/interactions/readonly'
 import { initializeEditInteractions } from 'map/interactions/edit'
 
-init()
-
-document.addEventListener('turbo:render', function () {
-  init()
+document.addEventListener('turbo:load', function () {
+  if (document.getElementById('map')) {
+    init()
+  }
 })
 
 function init () {
-  if (document.getElementById('map')) {
-    initializeMapProperties()
-    initializeMap('map')
-    loadBackgroundMapLayer()
-    // static mode is used for screenshots
-    if (window.gon.map_mode !== 'static') {
-      initializeSocket()
-      initializeMainInteractions()
-      initializeReadonlyInteractions()
-      if (window.gon.map_mode === 'rw') {
-        initializeMapModal()
-        initializeEditInteractions()
-      }
+  initializeMapProperties()
+  initializeMap('map')
+  loadBackgroundMapLayer()
+  // static mode is used for screenshots
+  if (window.gon.map_mode !== 'static') {
+    initializeSocket()
+    initializeMainInteractions()
+    initializeReadonlyInteractions()
+    if (window.gon.map_mode === 'rw') {
+      initializeMapModal()
+      initializeEditInteractions()
     }
   }
 }

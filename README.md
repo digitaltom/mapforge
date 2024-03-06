@@ -13,8 +13,7 @@ See [docs/geojson.md](docs/geojson.md) for supported attributes.
 
 ## Development Setup
 
-Dependencies:
-
+### Install dependencies:
 
 ```
 zypper in proj-devel # (libproj-dev) for building rgeo-proj4
@@ -23,13 +22,9 @@ zypper in npm # for running eslint
 bundle
 ```
 
+### Run develoment server:
 
-Run develoment server:
-
-```
-bundle
-bin/rails s
-```
+`bin/rails s`
 
 * Import initial frontpage with `bin/rake seed:from_file['db/seeds/frontpage.geojson']`
 * Put map provider keys (MAPTILER_KEY, MAPBOX_KEY) into `.env.development`
@@ -37,7 +32,14 @@ bin/rails s
 * Redis (for action cable) is expected at: `ENV.fetch("REDIS_URL") { "redis://localhost:6379/1" }`
 
 
-### Tasks
+### Base maps
+
+Available base maps are defined in app/javascript/map/layers/background_maps.js.
+There are also examples for using maptiler vector maps with custom styles, for example
+created with [maputnik](https://maplibre.org/maputnik/).
+
+
+## Rake tasks
 
 * Import map from .geojson (samples in db/seeds):
 
@@ -52,7 +54,7 @@ bin/rails s
 * Animate a marker along a line: `bin/rake animation:path[<map_id>, <line_id>, <point_id>]`
 
 
-### Tests
+## Tests
 
 Linters:
   * `bin/rubocop`
@@ -62,7 +64,8 @@ Fix style with eslint: `npm run fix:js`
 
 Specs: `bundle exec rspec`
 
-### Container build
+
+## Container build
 
 * Build: `docker build -t mapforge .`
 * Run: `docker run -e SECRET_KEY_BASE=e3c9f2... mapforge`

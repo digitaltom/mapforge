@@ -3,22 +3,20 @@ import { map, initializeMap, vectorSource } from 'map/map'
 import { animateView } from 'map/animations'
 import { initializeMapProperties, loadBackgroundMapLayer } from 'map/properties'
 
-init()
-
-document.addEventListener('turbo:render', function () {
-  init()
+document.addEventListener('turbo:load', function () {
+  if (document.getElementById('frontpage-map')) {
+    init()
+  }
 })
 
 function init () {
-  if (document.getElementById('frontpage-map')) {
-    initializeMapProperties()
-    initializeMap('frontpage-map')
-    loadBackgroundMapLayer()
+  initializeMapProperties()
+  initializeMap('frontpage-map')
+  loadBackgroundMapLayer()
 
-    map.getInteractions().forEach(function (interaction) {
-      interaction.setActive(false)
-    })
-  }
+  map.getInteractions().forEach(function (interaction) {
+    interaction.setActive(false)
+  })
 }
 
 document.addEventListener('click', function (event) {

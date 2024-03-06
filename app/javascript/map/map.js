@@ -98,6 +98,7 @@ export function initializeMap (divId = 'map') {
     rotate: false
   })
 
+  if (map) { map.dispose() }
   map = new ol.Map({
     layers: [vectorLayer, fixedLayer],
     target: divId,

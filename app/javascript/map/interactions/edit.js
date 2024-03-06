@@ -183,6 +183,19 @@ export function initializeEditInteractions () {
     })
     if (!currentlySelectedFeature) { map.getTargetElement().style.cursor = '' }
   })
+
+  // reset interaction on escape
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape' || event.keyCode === 27) {
+      resetInteractions()
+    }
+  })
+
+  document.addEventListener('click', function (event) {
+    if (map.getInteractions().getArray().includes(selectEditInteraction)) {
+      event.preventDefault()
+    }
+  })
 }
 
 export function initializeModifyInteraction () {
@@ -399,16 +412,3 @@ export function hideFeatureEdit () {
   // remove from DOM if faded out
   setTimeout(function () { if (el.style.opacity === '0') { el.style.display = 'none' } }, 1000)
 }
-
-// reset interaction on escape
-document.addEventListener('keydown', function (event) {
-  if (event.key === 'Escape' || event.keyCode === 27) {
-    resetInteractions()
-  }
-})
-
-document.addEventListener('click', function (event) {
-  if (map.getInteractions().getArray().includes(selectEditInteraction)) {
-    event.preventDefault()
-  }
-})
