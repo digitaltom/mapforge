@@ -23,4 +23,23 @@ describe 'Map' do
       expect(map.reload.base_map).to eq 'satelliteStreetTiles'
     end
   end
+
+  context 'when sharing map' do
+    before do
+      find('.button-sharing').click
+      expect(page).to have_text('Share Map')
+    end
+
+    it 'can share public link' do
+      expect(page).to have_link('Viewer link', href: '/maps/' + subject.public_id)
+    end
+
+    it 'can share private link' do
+      expect(page).to have_link('Edit link', href: '/maps/' + subject.id)
+    end
+
+    it 'can download geojson' do
+      expect(page).to have_link('Download .geojson', href: '/maps/' + subject.id + '/features')
+    end
+  end
 end

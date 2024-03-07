@@ -28,7 +28,7 @@ export function initializeEditInteractions () {
     controls: [
       new ol.control.Button({
         html: "<i class='bi-pencil-square'></i>",
-        title: 'Switch map to edit mode',
+        title: 'Toggle edit mode',
         className: 'buttons button-edit',
         handleClick: function () {
           if (map.getInteractions().getArray().includes(selectEditInteraction)) {
@@ -60,13 +60,27 @@ export function initializeEditInteractions () {
             resetInteractions()
             map.addInteraction(selectInteraction)
             document.querySelector('.button-map').classList.remove('active')
-            document.querySelector('#map-modal').style.display = 'none'
           } else {
             resetInteractions()
             document.querySelector('.button-map').classList.add('active')
             document.querySelector('#map-modal').style.display = 'block'
-            console.log(mapProperties)
             document.querySelector('#map-name').value = mapProperties.name
+          }
+        }
+      }),
+      new ol.control.Button({
+        html: "<i class='bi-share-fill'></i>",
+        title: 'Share',
+        className: 'buttons button-sharing',
+        handleClick: function () {
+          if (document.querySelector('#share-modal').style.display === 'block') {
+            resetInteractions()
+            map.addInteraction(selectInteraction)
+            document.querySelector('.button-sharing').classList.remove('active')
+          } else {
+            resetInteractions()
+            document.querySelector('.button-sharing').classList.add('active')
+            document.querySelector('#share-modal').style.display = 'block'
           }
         }
       })
@@ -191,6 +205,7 @@ export function initializeEditInteractions () {
     }
   })
 
+  // disable (banner-) links in edit mode
   document.addEventListener('click', function (event) {
     if (map.getInteractions().getArray().includes(selectEditInteraction)) {
       event.preventDefault()
@@ -382,7 +397,6 @@ export function initializeUndoInteraction () {
     // If multiple pointers, stop drawing
     if (pointersCount > 1) {
       drawInteraction.finishDrawing()
-      console.log('xx')
     }
   })
 }

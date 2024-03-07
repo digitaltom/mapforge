@@ -51,7 +51,9 @@ export function resetInteractions () {
   document.querySelectorAll('.sub-bar').forEach(subBar => {
     subBar.classList.add('hidden')
   })
-  document.querySelector('#map-modal').style.display = 'none'
+  document.querySelectorAll('.map-modal').forEach(modal => {
+    modal.style.display = 'none'
+  })
   hideFeatureDetails()
   hideFeatureEdit()
 }

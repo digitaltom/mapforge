@@ -1,7 +1,5 @@
 import { map, flash } from 'map/map'
-import { resetInteractions } from 'map/interactions'
 import { backgroundTiles } from 'map/layers/background_maps'
-import { selectInteraction } from 'map/interactions/readonly'
 import { mapChannel } from 'channels/map_channel'
 
 // eslint expects ol to get imported, but we load the full lib in header
@@ -34,15 +32,6 @@ export function initializeMapModal () {
     flash('Map center/zoom updated', 'success')
     return false
   })
-
-  // When the user clicks anywhere outside of the modal, close it
-  document.getElementById('map').onclick = function (event) {
-    const modal = document.querySelector('#map-modal')
-    if (event.target !== modal && modal.style.display === 'block') {
-      resetInteractions()
-      map.addInteraction(selectInteraction)
-    }
-  }
 }
 
 export function loadBackgroundMapLayer () {

@@ -3,43 +3,11 @@
 #flash
   #flash-container
 
-#feature-details{'data-controller': "feature"}
-  .feature-details.feature-details-edit
-    %h4.feature-details-title
-    %p.feature-details-desc
-    %p.feature-details-atts
-    %p.feature-details-atts-edit
-      %textarea{name: "properties", rows: "6", cols: "50", "data-feature-target": "properties" }
-    %a{href: 'https://github.com/digitaltom/mapforge/blob/main/docs/geojson.md'} Help
-    %button.feature-update{ 'data-action': "click->feature#update"} Update
-    %button.feature-delete{ 'data-action': "click->feature#delete"} Delete Feature
-  .feature-details.feature-details-view
-    %h4.feature-details-title
-    %p.feature-details-desc
-    %p.feature-details-atts
+= render 'feature_details'
 
 #banner-overlay{'data-controller': "feature"}
 
-#map-modal{'data-controller': "map"}
-  %h2 Configure Map
-  %label{ for: "map-name"} Name:
-  %br
-  %input#map-name{type: "text", size: 27}
-  %br
-  %label{for: "map-baselayer"} Base Map:
-  %br
-  - ['osmTiles', 'satelliteTiles', 'satelliteStreetTiles', 'stamenTonerTiles',
-       'openTopoTiles', 'mapboxBrightVector', 'maptilerDataviz', 'maptilerStreets', 'maptilerNoStreets'].each do |base_map|
-    - active = (@map.properties[:base_map] == base_map)
-    = image_tag("base_maps/#{base_map}.jpg", data: { layer: base_map, action: "click->map#update"},
-                class: "layer-preview #{"active" if active}")
-  %br
-  Center:
-  %i#map-center= @map.properties[:center]
-  %br
-  Zoom:
-  %i#map-zoom= @map.properties[:zoom]
-  %br
-  %a#set-map-center{href: '#'} Set initial map view to current center/zoom
+= render 'map_modal'
+= render 'share_modal'
 
 #scaleline-metric.scaleline-external
