@@ -4,6 +4,7 @@ import {
   drawInteraction, pointInteraction, lineInteraction, modifyInteraction,
   polygonInteraction, bannerInteraction, selectEditInteraction, hideFeatureEdit
 } from 'map/interactions/edit'
+import { animateView } from 'map/animations'
 import { vectorStyle } from 'map/styles'
 
 // eslint expects ol to get imported, but we load the full lib in header
@@ -20,6 +21,16 @@ export function initializeMainInteractions () {
     }
   })
   mainBar.addControl(homeButton)
+
+  // Clicks outside of an active modal close it and go into select mode
+  map.getTargetElement().onclick = function (event) {
+    document.querySelectorAll('.map-modal').forEach(modal => {
+      if (event.target !== modal && modal.style.display === 'block') {
+        resetInteractions()
+        map.addInteraction(selectInteraction)
+      }
+    })
+  }
 }
 
 export function resetInteractions () {
@@ -57,6 +68,18 @@ export function resetInteractions () {
   hideFeatureDetails()
   hideFeatureEdit()
 }
+
+document.addEventListener('click', function (event) {
+  if (!map.getInteractions().getArray().includes(selectEditInteraction) &&
+      event.target.tagName === 'A' && event.target.hasAttribute('data-animate-point')) {
+    event.preventDefault()
+    const feature = vectorSource.getFeatureById(event.target.getAttribute('data-animate-point'))
+    const coords = feature.getGeometry().getCoordinates()
+    const zoom = event.target.getAttribute('data-animate-zoom') || map.getView().getZoom()
+
+    animateView(coords, zoom)
+  }
+})
 
 export function createFeatureId () {
   return Math.random().toString(16).slice(6)

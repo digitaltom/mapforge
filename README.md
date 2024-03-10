@@ -67,7 +67,7 @@ Specs: `bundle exec rspec`
 
 ## Container build
 
-* Build: `docker build -t mapforge .`
-* Run: `docker run -e SECRET_KEY_BASE=e3c9f2... mapforge`
+* Build: `sudo podman build -t mapforge --network=host .`
+* Run: `podman run -e SECRET_KEY_BASE=e3c9f2... mapforge`
 
 Github builds a new container on each commit to `main`: ghcr.io/digitaltom/mapforge

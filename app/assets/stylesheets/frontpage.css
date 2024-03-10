@@ -4,26 +4,49 @@
   margin: 0;
   padding: 0;
   font-family: Montserrat, sans-serif, "Bootstrap Icons";
+  text-align: center;
 }
 
-.frontpage-title {
+.mapforge-font {
   font-family: "Rubik Maps", system-ui;
   font-weight: 400;
   font-style: normal;
+}
+
+.frontpage-title {
   font-size: 12vw; /* % of viewport width */
   width: 100%;
   max-width: 1200px;
-  text-align: center;
 }
 
 .frontpage-subtitle {
-  font-family: Montserrat, system-ui;
-  font-weight: 400;
-  font-style: normal;
+  font-size: 3vw; /* % of viewport width */
+  max-width: 800px;
+}
+
+.frontpage-subtitle-small {
+  font-size: 1.5vw; /* % of viewport width */
+  max-width: 800px;
+}
+
+.frontpage-description {
   font-size: 3vw;
   width: 100%;
   max-width: 1200px;
-  text-align: center;
+}
+
+.frontpage-description-small {
+  font-size: 0.8vw;
+  width: 100%;
+  max-width: 800px;
+}
+
+#frontpage-map a {
+    color: #404040;
+}
+
+#frontpage-map a:hover {
+    color: #606060;
 }
 
 .center {

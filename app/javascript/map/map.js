@@ -1,9 +1,8 @@
 import { vectorStyle } from 'map/styles'
-import { hideFeatureDetails, selectInteraction } from 'map/interactions/readonly'
+import { hideFeatureDetails } from 'map/interactions/readonly'
 import { undoInteraction } from 'map/interactions/edit'
 import { mapProperties } from 'map/properties'
 import { animateMarker, animateView } from 'map/animations'
-import { resetInteractions } from 'map/interactions'
 
 // eslint expects variables to get imported, but we load the full lib in header
 const ol = window.ol
@@ -136,16 +135,6 @@ export function initializeMap (divId = 'map') {
       if (feature.get('banner')) { showBanner(feature) }
     })
   })
-
-  // Clicks outside of an active modal close it and go into select mode
-  map.getTargetElement().onclick = function (event) {
-    document.querySelectorAll('.map-modal').forEach(modal => {
-      if (event.target !== modal && modal.style.display === 'block') {
-        resetInteractions()
-        map.addInteraction(selectInteraction)
-      }
-    })
-  }
 }
 
 export function featureAsGeoJSON (feature) {
