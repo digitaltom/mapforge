@@ -16,12 +16,21 @@
 
 html,
 body,
-#map {
+#map, #frontpage-map {
   height: 100%;
   width: 100%;
   margin: 0;
   padding: 0;
   font-family: Montserrat, Helvetica, sans-serif, "Bootstrap Icons";
+  text-align: center;
+}
+
+.banner-overlay a {
+    color: #404040;
+}
+
+.banner-overlay a:hover {
+    color: #606060;
 }
 
 .hidden {

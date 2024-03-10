@@ -40,7 +40,7 @@ class ChangeListenerVectorSource extends ol.source.Vector {
 // https://openlayers.org/en/latest/apidoc/module-ol_Overlay-Overlay.html
 function showBanner (feature) {
   map.removeOverlay(feature.overlay)
-  const el = document.getElementById('banner-overlay').cloneNode(true)
+  const el = document.querySelector('.banner-overlay').cloneNode(true)
   el.innerHTML = feature.get('banner')
   const zoom = map.getView().getZoom()
   const scaleFactor = (zoom / 10) ** 8
