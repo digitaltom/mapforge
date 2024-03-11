@@ -3,7 +3,8 @@ class Map
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  has_many :features, dependent: :destroy
+  # one default layer for now
+  has_one :layer
   default_scope -> { order_by(created_at: :asc) }
 
   field :base_map, type: String
@@ -12,14 +13,17 @@ class Map
   field :name, type: String
   field :description, type: String
   field :public_id, type: String
-  field :features_count, type: Integer, default: 0
+
+  delegate :features, to: :layer
+  delegate :feature_collection, to: :layer
+  delegate :features_count, to: :layer
 
   DEFAULT_MAP = :osmTiles
   DEFAULT_CENTER = [ 11.077, 49.447 ].freeze
   DEFAULT_ZOOM = 12
 
   after_save :broadcast_update
-  before_create :create_public_id
+  before_create :create_public_id, :create_layer
   validate :public_id_must_be_unique_or_nil
 
   def properties
@@ -36,13 +40,12 @@ class Map
       maptiler: ENV["MAPTILER_KEY"] }
   end
 
-  def feature_collection
-    { type: "FeatureCollection",
-      features: features.map(&:geojson) }
-  end
-
   def create_public_id
     self.public_id = SecureRandom.hex(4) unless public_id.present?
+  end
+
+  def create_layer
+    self.layer = Layer.create!(map: self) unless layer.present?
   end
 
   def public_id_must_be_unique_or_nil

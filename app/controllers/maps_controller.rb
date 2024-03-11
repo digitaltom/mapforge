@@ -2,7 +2,7 @@ class MapsController < ApplicationController
   before_action :set_map, only: %i[show features]
 
   def index
-    @maps = Map.where.not(public_id: nil).includes(:features).order(updated_at: :desc)
+    @maps = Map.where.not(public_id: nil).includes(layer: :features).order(updated_at: :desc)
   end
 
   def show
@@ -18,8 +18,8 @@ class MapsController < ApplicationController
   end
 
   def create
-    @map = Map.new(map_params)
-    @map.save!
+    @map = Map.create!(map_params)
+
     redirect_to map_url(@map), notice: "Map was successfully created."
   end
 

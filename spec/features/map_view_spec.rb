@@ -18,11 +18,11 @@ describe 'Map' do
   end
 
   context 'with features' do
-    let!(:point) { create(:feature, :point, map:) }
+    let!(:point) { create(:feature, :point, layer: map.layer) }
     # this polygon overlaps the whole default view
-    let!(:polygon) { create(:feature, :polygon_middle, map:, title: 'Poly Title',
+    let!(:polygon) { create(:feature, :polygon_middle, layer: map.layer, title: 'Poly Title',
       description: 'Poly Desc') }
-    let!(:line) { create(:feature, :line_string, map:) }
+    let!(:line) { create(:feature, :line_string, layer: map.layer) }
 
     it 'shows features on map' do
       expect(page).to have_css('.ol-layer')

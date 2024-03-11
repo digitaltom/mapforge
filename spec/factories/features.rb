@@ -3,7 +3,7 @@ FactoryBot.define do
     type { 'Feature' }
     geometry { {} }
     properties { {} }
-    map
+    association :layer
 
     transient do
       coordinates { nil }

@@ -16,7 +16,7 @@ describe 'Map' do
   end
 
   context 'with selected edit mode' do
-    let!(:polygon) { create(:feature, :polygon_middle, map:, title: 'Poly Title') }
+    let!(:polygon) { create(:feature, :polygon_middle, layer: map.layer, title: 'Poly Title') }
 
     before do
       find('.button-edit').click

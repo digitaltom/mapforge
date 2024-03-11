@@ -78,7 +78,7 @@ document.addEventListener('click', function (event) {
   if (event.target.tagName === 'A' && event.target.hasAttribute('data-animate-point')) {
     event.preventDefault()
     const feature = vectorSource.getFeatureById(event.target.getAttribute('data-animate-point'))
-    if (!feature) { console.log('data-animate-point not found'); return false}
+    if (!feature) { console.log('data-animate-point not found'); return false }
     const coords = feature.getGeometry().getCoordinates()
     const zoom = event.target.getAttribute('data-animate-zoom') || map.getView().getZoom()
 
