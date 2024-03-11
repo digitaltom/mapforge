@@ -70,10 +70,15 @@ export function resetInteractions () {
 }
 
 document.addEventListener('click', function (event) {
-  if (!map.getInteractions().getArray().includes(selectEditInteraction) &&
-      event.target.tagName === 'A' && event.target.hasAttribute('data-animate-point')) {
+  if (map.getInteractions().getArray().includes(selectEditInteraction)) {
+    event.preventDefault()
+    return false
+  }
+
+  if (event.target.tagName === 'A' && event.target.hasAttribute('data-animate-point')) {
     event.preventDefault()
     const feature = vectorSource.getFeatureById(event.target.getAttribute('data-animate-point'))
+    if (!feature) { console.log('data-animate-point not found'); return false}
     const coords = feature.getGeometry().getCoordinates()
     const zoom = event.target.getAttribute('data-animate-zoom') || map.getView().getZoom()
 

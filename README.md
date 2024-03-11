@@ -26,7 +26,7 @@ bundle
 
 `bin/rails s`
 
-* Import initial frontpage with `bin/rake seed:from_file['db/seeds/frontpage.geojson']`
+* To import the initial frontpage. on a Rails console, run: `Map.create_from_file("db/seeds/frontpage.geojson", overwrite: true, file_format: "3857")`
 * Put map provider keys (MAPTILER_KEY, MAPBOX_KEY) into `.env.development`
 * MongoDB backend is expected at: `ENV.fetch("MONGO_URL") { "localhost:27017" }`
 * Redis (for action cable) is expected at: `ENV.fetch("REDIS_URL") { "redis://localhost:6379/1" }`
