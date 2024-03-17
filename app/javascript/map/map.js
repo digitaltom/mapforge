@@ -3,11 +3,12 @@ import { hideFeatureDetails } from 'map/interactions/readonly'
 import { undoInteraction } from 'map/interactions/edit'
 import { mapProperties } from 'map/properties'
 import { animateMarker, animateView } from 'map/animations'
+import * as functions from 'helpers/functions'
 
 // eslint expects variables to get imported, but we load the full lib in header
 const ol = window.ol
 
-const geoJsonFormat = new ol.format.GeoJSON({
+export const geoJsonFormat = new ol.format.GeoJSON({
   // dataProjection: 'EPSG:4326', // server stores [11.077, 49.447]
   // featureProjection: 'EPSG:3857' // map uses [1232651.8535, 6353568.4466]
 })
@@ -17,7 +18,7 @@ export let vectorSource, vectorLayer, fixedSource
 export let map
 export let mainBar
 
-class ChangeListenerVectorSource extends ol.source.Vector {
+export class ChangeListenerVectorSource extends ol.source.Vector {
   constructor (optOptions) {
     super(optOptions)
     this.on('addfeature', function (e) {
@@ -59,30 +60,15 @@ function showBanner (feature) {
 
 export function initializeMap (divId = 'map') {
   changedFeatureQueue = []
-  vectorSource = new ChangeListenerVectorSource({
-    format: geoJsonFormat,
-    loader: function (extent, resolution, projection) {
-      // TODO only load visible features via bbox
-      const url = '/maps/' + window.gon.map_id + '/features?bbox=' + extent.join(',') + ',EPSG:3857'
 
-      fetch(url)
-        .then(response => response.json())
-        .then(data => {
-        // console.log(JSON.stringify(data))
-          const features = geoJsonFormat.readFeatures(data)
-          console.log('loaded ' + features.length + ' features')
-          vectorSource.addFeatures(features)
-          if (undoInteraction) { undoInteraction.clear() }
-        })
-        .catch(error => console.error('Error:', error))
-    }
-    // strategy: ol.loadingstrategy.bbox
-  })
-
+  // TODO only load visible features via bbox
+  const url = '/maps/' + window.gon.map_id + '/features'
+  vectorSource = vectorSourceFromUrl(url)
   vectorLayer = new ol.layer.Vector({
     source: vectorSource,
     style: vectorStyle
   })
+  window.vectorLayer = vectorLayer
 
   // layer for immutable features, like location
   fixedSource = new ol.source.Vector({ features: [] })
@@ -163,7 +149,7 @@ export function updateFeature (data, source = vectorSource) {
   }
   vectorSource.changed()
   // drop from changedFeatureQueue, it's coming from server
-  arrayRemove(changedFeatureQueue, newFeature)
+  functions.arrayRemove(changedFeatureQueue, newFeature)
 }
 
 export function deleteFeature (id) {
@@ -237,12 +223,6 @@ export function locate () {
   }
 }
 
-function arrayRemove (arr, value) {
-  return arr.filter(function (ele) {
-    return ele !== value
-  })
-}
-
 export function flash (message, type = 'info', timeout = 3000) {
   if (!document.getElementById('flash-container')) { return false }
   const flashContainer = document.getElementById('flash-container').cloneNode(true)
@@ -260,4 +240,25 @@ export function flash (message, type = 'info', timeout = 3000) {
   setTimeout(function () {
     flashContainer.remove()
   }, timeout + 500) // Delete message after animation is done
+}
+
+export function vectorSourceFromUrl (url) {
+  const vectorSource = new ChangeListenerVectorSource({
+    format: geoJsonFormat,
+    loader: function (extent, resolution, projection) {
+      url += '?bbox=' + extent.join(',') + ',EPSG:3857'
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          // console.log(JSON.stringify(data))
+          const features = geoJsonFormat.readFeatures(data)
+          console.log('loaded ' + features.length + ' geojson features from ' + url)
+          vectorSource.addFeatures(features)
+          if (undoInteraction) { undoInteraction.clear() }
+        })
+        .catch(error => console.error('Error:', error))
+    }
+    // strategy: ol.loadingstrategy.bbox
+  })
+  return vectorSource
 }

@@ -36,3 +36,13 @@ export function hexToRgb (hex) {
   }
   return `${r}, ${g}, ${b}`
 }
+
+export function sleep (ms) {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}
+
+export function arrayRemove (arr, value) {
+  return arr.filter(function (ele) {
+    return ele !== value
+  })
+}

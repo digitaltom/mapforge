@@ -11,6 +11,7 @@ pin_all_from "app/javascript/controllers", under: "controllers"
 pin_all_from "app/javascript/channels", under: "channels"
 
 pin_all_from "app/javascript/map", under: "map"
+pin_all_from "app/javascript/helpers", under: "helpers"
 
 # page initializers
 pin "frontpage", preload: true

@@ -38,5 +38,8 @@ export function loadBackgroundMapLayer () {
   console.log("Loading base map '" + mapProperties.base_map + "'")
   map.removeLayer(backgroundMapLayer)
   backgroundMapLayer = backgroundTiles[mapProperties.base_map]()
-  map.getLayers().insertAt(0, backgroundMapLayer)
+  window.backgroundMapLayer = backgroundMapLayer
+  backgroundMapLayer.setZIndex(-1)
+  // map.getLayers().insertAt(0, backgroundMapLayer)
+  map.addLayer(backgroundMapLayer)
 }

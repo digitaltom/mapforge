@@ -5,14 +5,14 @@
 }
 
 .frontpage-title {
-  font-size: 12vw; /* % of viewport width */
+  font-size: calc(min(max(12vw, 24px), 128px)); /* % of viewport width */
   width: 100%;
-  max-width: 1200px;
+  position: absolute; top: calc(30vh - min(max(12vw, 16px), 128px));
 }
 
 .frontpage-subtitle {
-  font-size: 3vw; /* % of viewport width */
-  max-width: 800px;
+  font-size: calc(min(max(3vw, 16px), 32px)); /* % of viewport width */
+  position: absolute; top: 45vh;
 }
 
 .frontpage-subtitle-small {
@@ -42,4 +42,17 @@
 
 .small {
   font-size: 60%;
+}
+
+.fade-in {
+  opacity: 0;
+  transition:
+    opacity 1s linear
+}
+
+/* https://dev.to/shubhamjain/how-to-create-marker-highlight-effect-in-css-be4 */
+.highlight {
+    background: url('//s2.svgbox.net/pen-brushes.svg?ic=brush-1&color=ffff43');
+    margin: -2px -6px;
+    padding:  2px  6px;
 }
