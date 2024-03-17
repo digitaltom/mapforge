@@ -27,7 +27,8 @@ function init () {
 
 // Your story/data/friends/events/places/ on a map
 async function featureShow () {
-  const show = [{ key: 'friends', map: 'frontpage-category-friends' }, // 65f22a746dbf9a466487d9b4
+  const show = [
+    { key: 'friends', map: 'frontpage-category-friends' }, // 65f22a746dbf9a466487d9b4
     { key: 'data', map: 'frontpage-category-data' }, // 65bcf7b46dbf9a36cfa3ca97
     { key: 'story', map: 'frontpage-category-data' },
     { key: 'events', map: 'frontpage-category-data' },

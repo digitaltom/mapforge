@@ -11,6 +11,7 @@
 }
 
 .frontpage-subtitle {
+  text-align: center;
   font-size: calc(min(max(3vw, 16px), 32px)); /* % of viewport width */
   position: absolute; top: 45vh;
 }
