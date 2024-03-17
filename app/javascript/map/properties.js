@@ -1,5 +1,4 @@
 import { map, flash } from 'map/map'
-import { backgroundTiles } from 'map/layers/background_maps'
 import { mapChannel } from 'channels/map_channel'
 
 // eslint expects ol to get imported, but we load the full lib in header
@@ -10,7 +9,6 @@ const mapDefaults = {
 }
 
 export let mapProperties
-export let backgroundMapLayer
 
 export function initializeMapProperties () {
   mapProperties = { ...mapDefaults, ...window.gon.map_properties }
@@ -32,14 +30,4 @@ export function initializeMapModal () {
     flash('Map center/zoom updated', 'success')
     return false
   })
-}
-
-export function loadBackgroundMapLayer () {
-  console.log("Loading base map '" + mapProperties.base_map + "'")
-  map.removeLayer(backgroundMapLayer)
-  backgroundMapLayer = backgroundTiles[mapProperties.base_map]()
-  window.backgroundMapLayer = backgroundMapLayer
-  backgroundMapLayer.setZIndex(-1)
-  // map.getLayers().insertAt(0, backgroundMapLayer)
-  map.addLayer(backgroundMapLayer)
 }

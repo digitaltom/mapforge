@@ -6,7 +6,7 @@ describe Map do
       before { create(:map, public_id: 'frontpage') }
 
       it 'raises error' do
-        expect { Map.create_from_file('db/seeds/frontpage.geojson') }
+        expect { Map.create_from_file('db/seeds/frontpage/frontpage.json') }
           .to raise_error(RuntimeError, /Map with public id 'frontpage' already exists/)
       end
     end

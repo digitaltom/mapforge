@@ -1,5 +1,4 @@
-import { map } from 'map/map'
-import { backgroundMapLayer } from 'map/properties'
+import { map, backgroundMapLayer } from 'map/map'
 
 // eslint expects variables to get imported, but we load the full lib in header
 const ol = window.ol

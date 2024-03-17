@@ -1,7 +1,7 @@
 // loaded in /maps/show.html.haml
-import { initializeMap } from 'map/map'
+import { initializeMap, setBackgroundMapLayer } from 'map/map'
 import { initializeSocket } from 'channels/map_channel'
-import { initializeMapModal, initializeMapProperties, loadBackgroundMapLayer } from 'map/properties'
+import { initializeMapModal, initializeMapProperties } from 'map/properties'
 import { initializeMainInteractions } from 'map/interactions'
 import { initializeReadonlyInteractions } from 'map/interactions/readonly'
 import { initializeEditInteractions } from 'map/interactions/edit'
@@ -15,7 +15,7 @@ document.addEventListener('turbo:load', function () {
 function init () {
   initializeMapProperties()
   initializeMap('map')
-  loadBackgroundMapLayer()
+  setBackgroundMapLayer()
   // static mode is used for screenshots
   if (window.gon.map_mode !== 'static') {
     initializeSocket()

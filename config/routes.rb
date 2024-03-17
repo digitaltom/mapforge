@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   resources :maps do
     member do
       get :features
+      get :properties
     end
   end
 

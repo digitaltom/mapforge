@@ -4,6 +4,8 @@ import { undoInteraction } from 'map/interactions/edit'
 import { mapProperties } from 'map/properties'
 import { animateMarker, animateView } from 'map/animations'
 import * as functions from 'helpers/functions'
+import * as dom from 'helpers/dom'
+import { backgroundTiles } from 'map/layers/background_maps'
 
 // eslint expects variables to get imported, but we load the full lib in header
 const ol = window.ol
@@ -15,6 +17,7 @@ export const geoJsonFormat = new ol.format.GeoJSON({
 
 export let changedFeatureQueue = []
 export let vectorSource, vectorLayer, fixedSource
+export let backgroundMapLayer
 export let map
 export let mainBar
 
@@ -261,4 +264,20 @@ export function vectorSourceFromUrl (url) {
     // strategy: ol.loadingstrategy.bbox
   })
   return vectorSource
+}
+
+// name must be a valid pre-defined map from layers/background_maps
+let backgroundMapLayerName
+export function setBackgroundMapLayer (name = mapProperties.base_map) {
+  if (backgroundMapLayerName !== name) {
+    backgroundMapLayerName = name
+    console.log("Loading base map '" + name + "'")
+    map.removeLayer(backgroundMapLayer)
+    backgroundMapLayer = backgroundTiles[name]()
+    backgroundMapLayer.setZIndex(-1)
+    map.addLayer(backgroundMapLayer)
+    dom.waitForElement('.map-layer', function changeOpacity (el) {
+      el.style.opacity = 1
+    })
+  }
 }

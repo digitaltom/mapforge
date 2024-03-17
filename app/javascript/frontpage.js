@@ -1,9 +1,10 @@
 // loaded in /frontpage/index.html.haml
-import { map, initializeMap, vectorSourceFromUrl } from 'map/map'
-import { initializeMapProperties, loadBackgroundMapLayer } from 'map/properties'
+import { map, initializeMap, vectorSourceFromUrl, setBackgroundMapLayer } from 'map/map'
+import { initializeMapProperties } from 'map/properties'
 import { vectorStyle } from 'map/styles'
 import * as functions from 'helpers/functions'
-import * as dom from 'helpers/dom'
+// import * as dom from 'helpers/dom'
+import { animateView } from 'map/animations'
 
 // eslint expects variables to get imported, but we load the full lib in header
 const ol = window.ol
@@ -18,14 +19,14 @@ document.addEventListener('turbo:load', function () {
 function init () {
   initializeMapProperties()
   initializeMap('frontpage-map')
-  loadBackgroundMapLayer()
+  setBackgroundMapLayer()
 
   map.getInteractions().forEach(function (interaction) {
     interaction.setActive(false)
   })
 }
 
-// Your story/data/friends/events/places/ on a map
+// Your story/data/friends/events/places/track on a map
 async function featureShow () {
   const show = [
     { key: 'friends', map: 'frontpage-category-friends' }, // 65f22a746dbf9a466487d9b4
@@ -44,11 +45,21 @@ async function featureShow () {
     document.querySelector('#frontpage-category-name').innerHTML = category.key
     document.querySelector('.frontpage-subtitle').style.opacity = 1
 
+    fetch('/maps/' + category.map + '/properties')
+      .then(response => response.json())
+      .then(properties => {
+        setBackgroundMapLayer(properties.base_map)
+        animateView(ol.proj.fromLonLat(properties.center), properties.zoom)
+      })
+      .catch(error => console.error('Error loading map properties:', error))
+
     // load a data layer onto the map
     const url = '/maps/' + category.map + '/features'
     const featureSource = vectorSourceFromUrl(url)
 
     if (window.featureLayer) {
+      await functions.sleep(500)
+      document.querySelector('.category-features').style.opacity = 0
       await functions.sleep(500)
       map.removeLayer(window.featureLayer)
       document.querySelector('.category-features').remove()
@@ -61,9 +72,9 @@ async function featureShow () {
     })
     map.addLayer(window.featureLayer)
 
-    dom.waitForElement('.category-features', function changeOpacity (el) {
-      el.style.opacity = 1
-    })
+    // dom.waitForElement('.category-features', function changeOpacity (el) {
+    //   el.style.opacity = 1
+    // })
 
     await functions.sleep(7000)
     document.querySelector('.category-features').style.opacity = 0

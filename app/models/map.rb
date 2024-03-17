@@ -55,7 +55,7 @@ class Map
   end
 
   def self.frontpage
-    find_by(public_id: ENV["FRONTPAGE_MAP"] || "frontpage")
+    find_by(public_id: "frontpage")
   end
 
   # the public id of the imported map will be the filename without extension
