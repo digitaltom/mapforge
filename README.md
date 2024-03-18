@@ -40,11 +40,11 @@ created with [maputnik](https://maplibre.org/maputnik/).
 
 ## Rake tasks
 
-* Import map from .geojson (samples in db/seeds):
+* Import map from geojson (samples in db/seeds):
 
   `bin/rake seed:from_file['db/seeds/germany_areas.json']`
 
-  More .geojson example files at: https://exploratory.io/map
+  More geojson example files at: https://exploratory.io/map
 
 * Take screenshots of existing maps for preview:
 

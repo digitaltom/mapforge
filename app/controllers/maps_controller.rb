@@ -11,6 +11,11 @@ class MapsController < ApplicationController
     gon.map_mode = "static" if params["static"]
     gon.map_properties = @map.properties
     gon.map_keys = @map.keys
+
+    respond_to do |format|
+       format.html
+       format.json { render json: @map.to_json }
+    end
   end
 
   def new

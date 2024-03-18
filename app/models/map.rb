@@ -28,7 +28,8 @@ class Map
 
   def properties
     { name: name,
-      descripion: description,
+      description: description,
+      public_id: public_id,
       base_map: base_map || DEFAULT_MAP,
       center: center || DEFAULT_CENTER,
       zoom: zoom || DEFAULT_ZOOM
@@ -48,6 +49,10 @@ class Map
     self.layer = Layer.create!(map: self) unless layer.present?
   end
 
+  def to_json
+    { properties: properties, layers: [ feature_collection ] }.to_json
+  end
+
   def public_id_must_be_unique_or_nil
     if public_id.present? && Map.where(public_id: public_id).where.not(id: id).exists?
       errors.add(:public_id, "has already been taken")
@@ -58,34 +63,17 @@ class Map
     find_by(public_id: "frontpage")
   end
 
-  # the public id of the imported map will be the filename without extension
-  # input file formats are typically gps format EPSG:4326 (4326)
-  # db backend is in web_mercator format EPSG:3857 (3857)
-  # TODO check how to embed map properties in geojson
-  def self.create_from_file(path, overwrite: false, file_format: 4326, db_format: 3857)
+  def self.create_from_file(path, collection_format: 3857)
     file = File.read(path)
-    map_name = File.basename(path, File.extname(path)).tr(".", "_")
+    map_hash = JSON.parse(file)
 
-    map = Map.find_or_initialize_by(public_id: map_name)
-    if !overwrite && map.persisted?
-      raise "Error: Map with public id '#{map_name}' already exists, please delete it first."
-    end
-    map.save! unless map.persisted?
-
+    map = Map.find_or_create_by(public_id: map_hash["properties"]["public_id"])
+    map.update(map_hash["properties"])
     map.features.delete_all
-    db_format = RGeo::Cartesian.factory(srid: db_format)
-    import_format = RGeo::Cartesian.factory(srid: file_format)
-    feature_collection = RGeo::GeoJSON.decode(file, geo_factory: import_format)
-    feature_collection.each do |feature|
-      next unless feature.geometry
-      # transform coords from input to db format
-      transformed_geometry = RGeo::Feature.cast(feature.geometry, factory: db_format, project: true)
-      transformed_feature = RGeo::GeoJSON::Feature.new(transformed_geometry, nil, feature.properties)
-      map.features.create!(RGeo::GeoJSON.encode(transformed_feature))
-    end
+    map.layer.update!(features: Feature.from_collection(map_hash["layers"][0], collection_format: collection_format))
 
-    Rails.logger.info "Created map with #{feature_collection.size} features from #{path}"
-    Rails.logger.info "Public id: #{map.public_id}, private id: #{map.id}"
+    Rails.logger.debug "Created map with #{map.features.size} features from #{path}"
+    Rails.logger.debug "Public id: #{map.public_id}, private id: #{map.id}"
     map
   end
 
