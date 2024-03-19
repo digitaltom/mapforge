@@ -2,10 +2,11 @@
 const ol = window.ol
 const olms = window.olms
 
+const mapClasses = 'fade-in map-layer'
 export const backgroundTiles = {
 
   osmDefaultTiles: function () {
-    return new ol.layer.Tile({ source: new ol.source.OSM() })
+    return new ol.layer.Tile({ source: new ol.source.OSM(), className: mapClasses })
   },
 
   osmTiles: function () {
@@ -17,7 +18,8 @@ export const backgroundTiles = {
           ' and © <a href="https://openstreetmap.org/" target="_blank">OpenStreetMap contributors</a>'
         ],
         attributionsCollapsible: false
-      })
+      }),
+      className: mapClasses
     })
   },
 
@@ -112,7 +114,8 @@ export const backgroundTiles = {
   mapboxBrightVector: function () {
     return new olms.MapboxVectorLayer({
       styleUrl: 'mapbox://styles/mapbox/bright-v9',
-      accessToken: window.gon.map_keys.mapbox
+      accessToken: window.gon.map_keys.mapbox,
+      className: mapClasses
     })
   },
 
@@ -120,7 +123,8 @@ export const backgroundTiles = {
   // // https://github.com/openlayers/ol-mapbox-style?tab=readme-ov-file#interfacesinternal_options-1md
   maptilerDataviz: function () {
     return new olms.MapboxVectorLayer({
-      styleUrl: 'https://api.maptiler.com/maps/dataviz/style.json?key=' + window.gon.map_keys.maptiler
+      styleUrl: 'https://api.maptiler.com/maps/dataviz/style.json?key=' + window.gon.map_keys.maptiler,
+      className: mapClasses
     })
   },
 
@@ -129,7 +133,8 @@ export const backgroundTiles = {
   maptilerStreets: function () {
     return new olms.MapboxVectorLayer({
       styleUrl: '/layers/streets.json?key=' + window.gon.map_keys.maptiler,
-      accessToken: window.gon.map_keys.maptiler
+      accessToken: window.gon.map_keys.maptiler,
+      className: mapClasses
     })
   },
 
@@ -137,7 +142,8 @@ export const backgroundTiles = {
     return new olms.MapboxVectorLayer({
       preload: Infinity,
       styleUrl: '/layers/nostreets.json?key=' + window.gon.map_keys.maptiler,
-      accessToken: window.gon.map_keys.maptiler
+      accessToken: window.gon.map_keys.maptiler,
+      className: mapClasses
     })
   }
 

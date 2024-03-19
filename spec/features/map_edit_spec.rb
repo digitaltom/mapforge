@@ -39,7 +39,11 @@ describe 'Map' do
     end
 
     it 'can download geojson' do
-      expect(page).to have_link('Download .geojson', href: '/maps/' + subject.id + '/features')
+      expect(page).to have_link('Download geojson', href: '/maps/' + subject.id + '/features')
+    end
+
+    it 'can download map export' do
+      expect(page).to have_link('Download map export', href: '/maps/' + subject.public_id + '.json')
     end
   end
 end

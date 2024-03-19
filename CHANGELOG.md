@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 * Upgrade to Openlayers 9
-* Created new frontpage with zoom animation navigation
+* Created new frontpage that iterates through demos of available features
 
 ### Removed
 

@@ -1,5 +1,5 @@
 import { map, locate, vectorLayer } from 'map/map'
-import * as functions from 'map/functions'
+import * as functions from 'helpers/functions'
 import { hoverStyle, vectorStyle } from 'map/styles'
 import { isMobileDevice } from 'map/interactions'
 

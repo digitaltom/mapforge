@@ -24,13 +24,12 @@ bundle
 
 ### Run develoment server:
 
-`bin/rails s`
+`bin/rails server`
 
-* To import the initial frontpage. on a Rails console, run: `Map.create_from_file("db/seeds/frontpage.geojson", overwrite: true, file_format: "3857")`
 * Put map provider keys (MAPTILER_KEY, MAPBOX_KEY) into `.env.development`
 * MongoDB backend is expected at: `ENV.fetch("MONGO_URL") { "localhost:27017" }`
 * Redis (for action cable) is expected at: `ENV.fetch("REDIS_URL") { "redis://localhost:6379/1" }`
-
+* To import the initial frontpage, run: `bin/rake seed:frontpage`
 
 ### Base maps
 
@@ -41,11 +40,11 @@ created with [maputnik](https://maplibre.org/maputnik/).
 
 ## Rake tasks
 
-* Import map from .geojson (samples in db/seeds):
+* Import map from geojson (samples in db/seeds):
 
   `bin/rake seed:from_file['db/seeds/germany_areas.json']`
 
-  More .geojson example files at: https://exploratory.io/map
+  More geojson example files at: https://exploratory.io/map
 
 * Take screenshots of existing maps for preview:
 

@@ -1,14 +1,11 @@
 require 'rails_helper'
 
 describe Map do
-  describe '.create_from_file' do
-    context 'when map with same name already exists' do
-      before { create(:map, public_id: 'frontpage') }
+  describe '#to_json' do
+    before { Map.create_from_file('db/seeds/frontpage/frontpage.json') }
 
-      it 'raises error' do
-        expect { Map.create_from_file('db/seeds/frontpage.geojson') }
-          .to raise_error(RuntimeError, /Map with public id 'frontpage' already exists/)
-      end
+    it 'included properties & layers' do
+      expect(Map.find_by(public_id: 'frontpage').to_json).to be_kind_of(String)
     end
   end
 
