@@ -1,5 +1,4 @@
 import { title } from 'map/styles/title'
-import { symbolMappings } from 'map/styles/font_mappings'
 
 // eslint expects ol to get imported, but we load the full lib in header
 const ol = window.ol
@@ -25,15 +24,14 @@ function circleHoverStyle (feature, resolution) {
 }
 
 function symbolStyle (feature, resolution) {
-  let symbol = symbolMappings[feature.get('marker-symbol')]
-  if (feature.get('marker-symbol').length <= 2) { symbol = feature.get('marker-symbol') }
+  const symbol = feature.get('marker-symbol')
   const size = symbolSizes[feature.get('marker-size')] || symbolSizes.medium
 
   return new ol.style.Style({
     // https://openlayers.org/en/latest/apidoc/module-ol_style_Text.html
     text: new ol.style.Text({
       text: symbol,
-      font: 'bold ' + (size * 2 - 5) + 'px "Line Awesome Free"',
+      font: 'bold ' + (size * 2 - 5) + 'px "Noto Color Emoji"',
       textBaseline: 'middle',
       fill: new ol.style.Fill({
         color: 'white' // Set the color of the text
@@ -43,14 +41,13 @@ function symbolStyle (feature, resolution) {
 }
 
 function symbolHoverStyle (feature, resolution) {
-  let symbol = symbolMappings[feature.get('marker-symbol')]
-  if (feature.get('marker-symbol').length <= 2) { symbol = feature.get('marker-symbol') }
+  const symbol = feature.get('marker-symbol')
   const size = (symbolSizes[feature.get('marker-size')] || symbolSizes.medium) + 2
 
   return new ol.style.Style({
     text: new ol.style.Text({
       text: symbol,
-      font: 'bold ' + (size * 2 - 5) + 'px "Line Awesome Free"',
+      font: 'bold ' + (size * 2 - 5) + 'px "Noto Color Emoji"',
       textBaseline: 'middle',
       fill: new ol.style.Fill({
         color: 'white' // Set the color of the text

@@ -14,9 +14,10 @@
  *= require_self
  */
 
+/* The Emoji font is also referred to in point.js */
 html,
 body {
-  font-family: Montserrat, Helvetica, sans-serif, "Bootstrap Icons";
+  font-family: Montserrat, Helvetica, sans-serif, "Noto Color Emoji", "Bootstrap Icons";
 }
 
 #map, #frontpage-map {
