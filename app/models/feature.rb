@@ -19,15 +19,15 @@ class Feature
   after_save :broadcast_update, if: -> { layer.present? && map.present? }
 
   def geojson
-    { id: id.to_s,
+    { id: _id.to_s,
       type:,
       geometry:,
       properties: }
   end
 
-  # input file formats are typically gps format EPSG:4326 (4326)
-  # db backend is in web_mercator format EPSG:3857 (3857)
-  def self.from_collection(collection, collection_format: 4326, db_format: 3857)
+  # input file formats are typically gps format EPSG:4326 (4326) or
+  # web_mercator format EPSG:3857 (3857)
+  def self.from_collection(collection, collection_format: 4326, db_format: 4326)
     db_format = RGeo::Cartesian.factory(srid: db_format)
     collection_format = RGeo::Cartesian.factory(srid: collection_format)
     feature_collection = RGeo::GeoJSON.decode(collection, geo_factory: collection_format)

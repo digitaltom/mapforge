@@ -63,7 +63,7 @@ class Map
     find_by(public_id: "frontpage")
   end
 
-  def self.create_from_file(path, collection_format: 3857)
+  def self.create_from_file(path, collection_format: 4326)
     file = File.read(path)
     map_hash = JSON.parse(file)
 
@@ -72,8 +72,8 @@ class Map
     map.features.delete_all
     map.layer.update!(features: Feature.from_collection(map_hash["layers"][0], collection_format: collection_format))
 
-    Rails.logger.debug "Created map with #{map.features.size} features from #{path}"
-    Rails.logger.debug "Public id: #{map.public_id}, private id: #{map.id}"
+    Rails.logger.info "Created map with #{map.features.size} features from #{path}"
+    Rails.logger.info "Public id: #{map.public_id}, private id: #{map.id}"
     map
   end
 

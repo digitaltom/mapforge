@@ -40,9 +40,13 @@ created with [maputnik](https://maplibre.org/maputnik/).
 
 ## Rake tasks
 
-* Import map from geojson (samples in db/seeds):
+* Create map from a mapforge export:
 
-  `bin/rake seed:from_file['db/seeds/germany_areas.json']`
+  `bin/rake seed:mapforge_file['db/seeds/examples/fosdem.json']`
+
+* Create map from geojson (samples in db/seeds):
+
+  `bin/rake seed:geojson_file['db/seeds/examples/germany_areas.json']`
 
   More geojson example files at: https://exploratory.io/map
 

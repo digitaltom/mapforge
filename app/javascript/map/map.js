@@ -11,8 +11,8 @@ import { backgroundTiles } from 'map/layers/background_maps'
 const ol = window.ol
 
 export const geoJsonFormat = new ol.format.GeoJSON({
-  // dataProjection: 'EPSG:4326', // server stores [11.077, 49.447]
-  // featureProjection: 'EPSG:3857' // map uses [1232651.8535, 6353568.4466]
+  dataProjection: 'EPSG:4326', // server stores [11.077, 49.447]
+  featureProjection: 'EPSG:3857' // map uses [1232651.8535, 6353568.4466]
 })
 
 export let changedFeatureQueue = []
