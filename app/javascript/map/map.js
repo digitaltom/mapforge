@@ -268,16 +268,27 @@ export function vectorSourceFromUrl (url) {
 
 // name must be a valid pre-defined map from layers/background_maps
 let backgroundMapLayerName
-export function setBackgroundMapLayer (name = mapProperties.base_map) {
+export async function setBackgroundMapLayer (name = mapProperties.base_map) {
   if (backgroundMapLayerName !== name) {
+    const oldBackgroundMapLayerName = backgroundMapLayerName
     backgroundMapLayerName = name
     console.log("Loading base map '" + name + "'")
-    map.removeLayer(backgroundMapLayer)
-    backgroundMapLayer = backgroundTiles[name]()
-    backgroundMapLayer.setZIndex(-1)
-    map.addLayer(backgroundMapLayer)
-    dom.waitForElement('.map-layer', function changeOpacity (el) {
+    const newBackgroundMapLayer = backgroundTiles[name]()
+    map.getLayers().insertAt(0, newBackgroundMapLayer)
+
+    // fade out previous map
+    if (oldBackgroundMapLayerName) {
+      if (document.querySelector('.map-layer-' + oldBackgroundMapLayerName)) {
+        document.querySelector('.map-layer-' + oldBackgroundMapLayerName).style.opacity = 0
+      }
+      await functions.sleep(2000)
+      map.removeLayer(backgroundMapLayer)
+    }
+
+    // fade in map
+    dom.waitForElement('.map-layer-' + name, function changeOpacity (el) {
       el.style.opacity = 1
     })
+    backgroundMapLayer = newBackgroundMapLayer
   }
 }

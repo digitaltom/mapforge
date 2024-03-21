@@ -2,7 +2,7 @@
 const ol = window.ol
 const olms = window.olms
 
-const mapClasses = 'fade-in map-layer'
+const mapClasses = 'map-layer fade-in'
 export const backgroundTiles = {
 
   osmDefaultTiles: function () {
@@ -134,7 +134,7 @@ export const backgroundTiles = {
     return new olms.MapboxVectorLayer({
       styleUrl: '/layers/streets.json?key=' + window.gon.map_keys.maptiler,
       accessToken: window.gon.map_keys.maptiler,
-      className: mapClasses
+      className: mapClasses + ' map-layer-maptilerStreets'
     })
   },
 
@@ -143,7 +143,7 @@ export const backgroundTiles = {
       preload: Infinity,
       styleUrl: '/layers/nostreets.json?key=' + window.gon.map_keys.maptiler,
       accessToken: window.gon.map_keys.maptiler,
-      className: mapClasses
+      className: mapClasses + ' map-layer-maptilerNoStreets'
     })
   }
 
