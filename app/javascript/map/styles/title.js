@@ -4,7 +4,7 @@ import { map } from 'map/map'
 const ol = window.ol
 
 export function title (feature, resolution, hover = false, offsetY = -17) {
-  if (!feature.get('title')) { return null }
+  if (!(feature.get('title') || feature.get('label'))) { return null }
   if (feature.get('title-min-zoom') &&
       map.getView().getZoom() < feature.get('title-min-zoom')) { return null }
 
@@ -21,7 +21,7 @@ export function title (feature, resolution, hover = false, offsetY = -17) {
   if (hover) { size += 0.2 }
 
   return new ol.style.Text({
-    text: feature.get('title'),
+    text: feature.get('title') || feature.get('label'),
     font: size + 'em ' + font,
     textBaseline: 'middle',
     fill: new ol.style.Fill({ color: feature.get('title-color') || '#000' }),

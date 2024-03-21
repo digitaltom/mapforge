@@ -41,7 +41,7 @@ class MapsController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_map
     @map = Map.find_by(public_id: params[:id]) || Map.find_by(id: params[:id])
-    redirect_to "/404.html" unless @map
+    head :not_found unless @map
   end
 
   # Only allow a list of trusted parameters through.

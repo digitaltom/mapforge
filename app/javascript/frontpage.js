@@ -30,6 +30,7 @@ function init () {
 async function featureShow () {
   const show = [
     { key: 'friends', map: 'frontpage-category-friends' },
+    { key: 'office', map: 'frontpage-category-office' },
     { key: 'data', map: 'frontpage-category-data' },
     { key: 'story', map: 'frontpage-category-data' },
     { key: 'events', map: 'frontpage-category-data' },
@@ -46,7 +47,10 @@ async function featureShow () {
     document.querySelector('.frontpage-subtitle').style.opacity = 1
 
     fetch('/maps/' + category.map + '/properties')
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) { throw new Error("Map '" + category.map + "' not found.") }
+        return response.json()
+      })
       .then(properties => {
         setBackgroundMapLayer(properties.base_map)
         // map.getView().setCenter(ol.proj.fromLonLat(properties.center))
