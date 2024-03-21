@@ -2,7 +2,7 @@
 const ol = window.ol
 const olms = window.olms
 
-const mapClasses = 'map-layer fade-in'
+const mapClasses = 'map-layer fade-in-slow'
 export const backgroundTiles = {
 
   osmDefaultTiles: function () {
@@ -19,7 +19,7 @@ export const backgroundTiles = {
         ],
         attributionsCollapsible: false
       }),
-      className: mapClasses
+      className: mapClasses + ' map-layer-osmTiles'
     })
   },
 
@@ -31,7 +31,8 @@ export const backgroundTiles = {
         url: 'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
         attributionsCollapsible: false,
         maxZoom: 19
-      })
+      }),
+      className: mapClasses + ' map-layer-satelliteTiles'
     })
   },
 
@@ -45,7 +46,8 @@ export const backgroundTiles = {
           '<a href="https://www.mapbox.com/feedback/" target="_blank">Improve this map</a>'],
         attributionsCollapsible: false,
         tileSize: 512
-      })
+      }),
+      className: mapClasses + ' map-layer-satelliteStreetTiles'
     })
   },
 
@@ -58,7 +60,8 @@ export const backgroundTiles = {
           '<a href="http://www.openstreetmap.org/copyright" target="_blank">© OpenStreetMap</a>',
           '<a href="https://www.mapbox.com/feedback/" target="_blank">Improve this map</a>'],
         attributionsCollapsible: false
-      })
+      }),
+      className: mapClasses + ' map-layer-streetTiles'
     })
   },
 
@@ -73,7 +76,8 @@ export const backgroundTiles = {
           '<a href="http://opentopomap.org/" target="_blank">OpenTopoMap</a> ',
           '<a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank">(CC-BY-SA)</a>'],
         attributionsCollapsible: false
-      })
+      }),
+      className: mapClasses + ' map-layer-openTopoTiles'
     })
   },
 
@@ -83,7 +87,8 @@ export const backgroundTiles = {
         url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
         attributions: ['Powered by <a href="https://developers.arcgis.com/" target="_blank">Esri</a>'],
         attributionsCollapsible: false
-      })
+      }),
+      className: mapClasses + ' map-layer-esriTiles'
     })
   },
 
@@ -93,7 +98,8 @@ export const backgroundTiles = {
         layer: 'stamen_toner',
         retina: true,
         attributionsCollapsible: false
-      })
+      }),
+      className: mapClasses + ' map-layer-stamenTonerTiles'
     })
   },
 
@@ -103,7 +109,8 @@ export const backgroundTiles = {
         layer: 'stamen_watercolor',
         retina: true,
         attributionsCollapsible: false
-      })
+      }),
+      className: mapClasses + ' map-layer-stamenWatercolorTiles'
     })
   },
 
@@ -115,7 +122,7 @@ export const backgroundTiles = {
     return new olms.MapboxVectorLayer({
       styleUrl: 'mapbox://styles/mapbox/bright-v9',
       accessToken: window.gon.map_keys.mapbox,
-      className: mapClasses
+      className: mapClasses + ' map-layer-mapboxBrightVector'
     })
   },
 
@@ -124,7 +131,7 @@ export const backgroundTiles = {
   maptilerDataviz: function () {
     return new olms.MapboxVectorLayer({
       styleUrl: 'https://api.maptiler.com/maps/dataviz/style.json?key=' + window.gon.map_keys.maptiler,
-      className: mapClasses
+      className: mapClasses + ' map-layer-maptilerDataviz'
     })
   },
 
