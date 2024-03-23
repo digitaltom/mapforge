@@ -1,41 +1,46 @@
+#frontpage-map {
+  opacity: 0.5;
+}
+
 .mapforge-font {
-  font-family: "Rubik Maps", system-ui;
+  font-family: "IM Fell Great Primer SC", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.handwriting {
+  font-family: "Architects Daughter", cursive;
   font-weight: 400;
   font-style: normal;
 }
 
 .frontpage-title {
-  font-size: calc(min(max(12vw, 24px), 128px)); /* % of viewport width */
-  width: 100%;
-  position: absolute; top: calc(30vh - min(max(12vw, 16px), 128px));
+  font-size: calc(min(12vw, 12em)); /* max font size is 12em; vw is % of viewport width */
+  position: absolute; top: calc(30vh - calc(min(12vw, 12em))); /* 30% of height - font size */
+}
+
+.shadow {
+  /* offset-x | offset-y | blur-radius | color */
+  text-shadow: 1px 1px 2px white;
 }
 
 .frontpage-subtitle {
   text-align: center;
-  font-size: calc(min(max(3vw, 16px), 32px)); /* % of viewport width */
+  font-size: calc(max(min(3vw, 6em), 1.5em));
   position: absolute; top: 45vh;
   opacity: 0;
 }
 
-.frontpage-subtitle-small {
-  font-size: 1.5vw; /* % of viewport width */
-  max-width: 800px;
+.frontpage-buttons {
+  position: absolute; bottom: calc(9vh - calc(max(min(2vw, 6em), 1em)));
 }
 
-.frontpage-description {
-  font-size: 3vw;
-  width: 100%;
-  max-width: 1200px;
-}
-
-.frontpage-description-small {
-  font-size: 0.8vw;
-  width: 100%;
-  max-width: 800px;
-}
-
-.frontpage-create-map {
-  font-size: 0.3vw;
+.frontpage-buttons .btn {
+  font-size: calc(max(min(2vw, 6em), 1em));
+  margin: 0.5em;
+  color: #000;
+  border-color: #000;
+  background-color: rgba(255 255 255 / 75%); /* 75% translucent white */
 }
 
 .center {

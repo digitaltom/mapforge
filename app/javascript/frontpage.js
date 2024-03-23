@@ -4,7 +4,7 @@ import { initializeMapProperties } from 'map/properties'
 import { vectorStyle } from 'map/styles'
 import * as functions from 'helpers/functions'
 import * as dom from 'helpers/dom'
-import { animateView } from 'map/animations'
+// import { animateView } from 'map/animations'
 
 // eslint expects variables to get imported, but we load the full lib in header
 const ol = window.ol
@@ -31,10 +31,10 @@ async function featureShow () {
   const show = [
     { key: 'friends', map: 'frontpage-category-friends' },
     { key: 'office', map: 'frontpage-category-office' },
-    { key: 'data', map: 'frontpage-category-data' },
-    { key: 'story', map: 'frontpage-category-data' },
-    { key: 'events', map: 'frontpage-category-data' },
-    { key: 'places', map: 'frontpage-category-data' }
+    { key: 'data', map: 'frontpage-category-data' }
+    // { key: 'story', map: 'frontpage-category-data' },
+    // { key: 'events', map: 'frontpage-category-data' },
+    // { key: 'places', map: 'frontpage-category-data' }
   ]
 
   let index = 0
@@ -53,9 +53,9 @@ async function featureShow () {
       })
       .then(properties => {
         setBackgroundMapLayer(properties.base_map)
-        // map.getView().setCenter(ol.proj.fromLonLat(properties.center))
-        // map.getView().setZoom(properties.zoom)
-        animateView(ol.proj.fromLonLat(properties.center), properties.zoom)
+        map.getView().setCenter(ol.proj.fromLonLat(properties.center))
+        map.getView().setZoom(properties.zoom)
+        // animateView(ol.proj.fromLonLat(properties.center), properties.zoom)
       })
       .catch(error => console.error('Error loading map properties:', error))
 

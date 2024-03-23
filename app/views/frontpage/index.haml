@@ -6,9 +6,14 @@
 .container-fluid
   .row
     .col.text-center.frontpage-title.mapforge-font
-      %p mapforge.org
+      %span mapforge.org
   .row
     .col.frontpage-subtitle.fade-in-slow
-      %p
+      %span
         map your
         %span.highlight#frontpage-category-name
+  .row
+    .col.frontpage-buttons.center
+      %p
+        %a.btn.btn-primary.btn-lg{href: maps_path} explore
+        = link_to "create", maps_path, data: { turbo_method: :post }, class: 'btn btn-primary btn-lg'
