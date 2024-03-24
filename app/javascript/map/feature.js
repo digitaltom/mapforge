@@ -85,6 +85,10 @@ function changedProps (feature, newFeature) {
 }
 
 function formatCoords (coords, precision = 7) {
+  // coords are not an array of coordinates for points
+  if (coords.length === 2 && !Array.isArray(coords[0])) {
+    return [coords[0].toFixed(precision), coords[1].toFixed(precision)]
+  }
   return coords.map(function (coordinate) {
     return [coordinate[0].toFixed(precision), coordinate[1].toFixed(precision)]
   })
