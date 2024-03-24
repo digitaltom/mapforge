@@ -48,12 +48,12 @@ export function initializeReadonlyInteractions () {
     const selectedFeatures = e.selected
     const deselectedFeatures = e.deselected
     Array.from(deselectedFeatures).forEach(function (feature) {
-      console.log('deselected ' + JSON.stringify(feature.getId()))
+      // console.log('deselected ' + JSON.stringify(feature.getId()))
       hideFeatureDetails()
       feature.setStyle(vectorStyle(feature))
     })
     Array.from(selectedFeatures).forEach(function (feature) {
-      console.log('selected ' + JSON.stringify(feature.getId()))
+      // console.log('selected ' + JSON.stringify(feature.getId()))
       showFeatureDetails(feature)
       feature.setStyle(hoverStyle(feature))
     })
@@ -77,7 +77,7 @@ export function initializeReadonlyInteractions () {
       if (feature !== previouslySelectedFeature) {
         feature.setStyle(hoverStyle(feature))
         map.getTargetElement().style.cursor = 'pointer'
-        showFeatureDetails(feature)
+        if (feature.get('title')) { showFeatureDetails(feature) }
       }
       return true
     }, {

@@ -106,7 +106,7 @@ export function initializeEditInteractions () {
         }
       }),
       new ol.control.Button({
-        html: "<i class='bi bi-dash'></i>",
+        html: "<i class='bi bi-activity'></i>",
         title: 'Add a line to the map',
         className: 'buttons button-line',
         handleClick: function () {
