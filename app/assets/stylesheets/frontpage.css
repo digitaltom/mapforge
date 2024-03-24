@@ -17,11 +17,8 @@
 .frontpage-title {
   font-size: calc(min(12vw, 12em)); /* max font size is 12em; vw is % of viewport width */
   position: absolute; top: calc(30vh - calc(min(12vw, 12em))); /* 30% of height - font size */
-}
-
-.shadow {
-  /* offset-x | offset-y | blur-radius | color */
-  text-shadow: 1px 1px 2px white;
+  padding-right: unset;
+  padding-left: unset;
 }
 
 .frontpage-subtitle {
@@ -31,16 +28,33 @@
   opacity: 0;
 }
 
-.frontpage-buttons {
-  position: absolute; bottom: calc(9vh - calc(max(min(2vw, 6em), 1em)));
-}
-
 .frontpage-buttons .btn {
   font-size: calc(max(min(2vw, 6em), 1em));
   margin: 0.5em;
   color: #000;
   border-color: #000;
   background-color: rgba(255 255 255 / 75%); /* 75% translucent white */
+}
+
+@media only screen and (orientation: portrait) {
+  .frontpage-title {
+    font-size: calc(min(19vw, 12em)); /* max font size is 12em; vw is % of viewport width */
+    position: absolute; top: calc(30vh - calc(min(19vw, 12em))); /* 30% of height - font size */
+  }
+
+  .frontpage-subtitle {
+    font-size: calc(max(min(5vw, 6em), 0.75em));
+    font-weight: 500;
+  }
+}
+
+.shadow {
+  /* offset-x | offset-y | blur-radius | color */
+  text-shadow: 1px 1px 2px white;
+}
+
+.frontpage-buttons {
+  position: absolute; bottom: calc(9vh - calc(max(min(2vw, 6em), 1em)));
 }
 
 .center {

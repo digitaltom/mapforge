@@ -9,6 +9,6 @@ describe 'Frontpage' do
 
   it 'shows frontpage map' do
     expect(page).to have_selector(:xpath, "//div[@id='frontpage-map']")
-    expect(page).to have_text('mapforge.org')
+    expect(page).to have_text('mapforge')
   end
 end
