@@ -1,0 +1,90 @@
+import { vectorSource, changedFeatureQueue } from 'map/map'
+import * as functions from 'helpers/functions'
+import { vectorStyle } from 'map/styles'
+import { animateMarker } from 'map/animations'
+import { hideFeatureDetails } from 'map/interactions/readonly'
+
+// eslint expects variables to get imported, but we load the full lib in header
+const ol = window.ol
+
+export const geoJsonFormat = new ol.format.GeoJSON({
+  dataProjection: 'EPSG:4326', // server stores [11.077, 49.447]
+  featureProjection: 'EPSG:3857' // map uses [1232651.8535, 6353568.4466]
+})
+
+export function featureAsGeoJSON (feature) {
+  const geoJSON = geoJsonFormat.writeFeatureObject(feature)
+  return geoJSON
+}
+
+// This method gets called from local updates + the hotwire channel
+export function updateFeature (data, source = vectorSource) {
+  // TODO: only create/update if visible in bbox
+  const newFeature = geoJsonFormat.readFeature(data)
+  const feature = source.getFeatureById(data.id)
+  if (feature && changed(feature, newFeature)) {
+    console.log("updating changed feature '" + data.id + "'")
+    if (data.geometry.type === 'Point' && changedCoords(feature, newFeature)) {
+      animateMarker(newFeature, feature.getGeometry().getCoordinates(),
+        newFeature.getGeometry().getCoordinates())
+    }
+    feature.setGeometry(newFeature.getGeometry())
+    updateProps(feature, newFeature.getProperties())
+    feature.setStyle(vectorStyle(feature))
+    feature.changed()
+  } else {
+    // addFeature will not add if id already exists
+    source.addFeature(newFeature)
+  }
+  vectorSource.changed()
+  // drop from changedFeatureQueue, it's coming from server
+  functions.arrayRemove(changedFeatureQueue, newFeature)
+}
+
+export function deleteFeature (id) {
+  const feature = vectorSource.getFeatureById(id)
+  if (feature) {
+    console.log('deleting feature ' + id)
+    vectorSource.removeFeature(feature)
+    hideFeatureDetails()
+  }
+}
+
+// https://openlayers.org/en/latest/apidoc/module-ol_Feature-Feature.html
+// needed because setProperties() only updates, and does not drop...
+export function updateProps (feature, newProps) {
+  const oldProps = featureAsGeoJSON(feature).properties
+  for (const key in oldProps) {
+    // drop existing key if not included in newProps
+    if (!newProps[key]) { feature.unset(key) }
+  }
+  feature.setProperties(newProps)
+  feature.setStyle(vectorStyle(feature))
+}
+
+function changed (feature, newFeature) {
+  return (changedCoords(feature, newFeature) || changedProps(feature, newFeature))
+}
+
+function changedCoords (feature, newFeature) {
+  // compare coords with limited precision, because of formt conversion errors
+  const oldCoords = JSON.stringify(formatCoords(feature.getGeometry().getCoordinates()))
+  const newCoords = JSON.stringify(formatCoords(newFeature.getGeometry().getCoordinates()))
+  const changed = (oldCoords !== newCoords)
+  if (changed) { console.log('changed coords: ' + oldCoords + ' -> ' + newCoords) }
+  return changed
+}
+
+function changedProps (feature, newFeature) {
+  const oldProps = JSON.stringify(featureAsGeoJSON(feature).properties)
+  const newProps = JSON.stringify(featureAsGeoJSON(newFeature).properties)
+  const changed = (oldProps !== newProps)
+  if (changed) { console.log('changed props: ' + oldProps + ' -> ' + newProps) }
+  return changed
+}
+
+function formatCoords (coords, precision = 8) {
+  return coords.map(function (coordinate) {
+    return [coordinate[0].toFixed(precision), coordinate[1].toFixed(precision)]
+  })
+}

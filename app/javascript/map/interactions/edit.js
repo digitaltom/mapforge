@@ -1,11 +1,12 @@
 import {
-  map, flash, mainBar, vectorSource, featureAsGeoJSON, changedFeatureQueue, updateProps, vectorLayer
+  map, flash, mainBar, vectorSource, changedFeatureQueue, vectorLayer
 } from 'map/map'
 import { mapProperties } from 'map/properties'
 import { mapChannel } from 'channels/map_channel'
 import { hoverStyle, vectorStyle, sketchStyle } from 'map/styles'
 import { createFeatureId, resetInteractions, isMobileDevice } from 'map/interactions'
 import { selectInteraction } from 'map/interactions/readonly'
+import { featureAsGeoJSON, updateProps } from 'map/feature'
 
 // eslint expects ol to get imported, but we load the full lib in header
 const ol = window.ol

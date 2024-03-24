@@ -1,8 +1,9 @@
 import { Controller } from '@hotwired/stimulus'
-import { flash, vectorSource, featureAsGeoJSON, deleteFeature, updateProps } from 'map/map'
+import { flash, vectorSource } from 'map/map'
 import { mapChannel } from 'channels/map_channel'
 import { hoverStyle } from 'map/styles'
 import { selectEditInteraction, undoInteraction, hideFeatureEdit, reloadFeatureEdit } from 'map/interactions/edit'
+import { featureAsGeoJSON, updateProps, deleteFeature } from 'map/feature'
 
 export default class extends Controller {
   static targets = ['properties']

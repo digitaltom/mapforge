@@ -1,6 +1,7 @@
 import consumer from 'channels/consumer'
-import { updateFeature, deleteFeature, flash } from 'map/map'
+import { flash } from 'map/map'
 import { initializeMapProperties } from 'map/properties'
+import { updateFeature, deleteFeature } from 'map/feature'
 
 let mapChannel
 export { mapChannel }
