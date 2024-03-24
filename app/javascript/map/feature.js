@@ -6,6 +6,7 @@ import { hideFeatureDetails } from 'map/interactions/readonly'
 
 // eslint expects variables to get imported, but we load the full lib in header
 const ol = window.ol
+const turf = window.turf
 
 export const geoJsonFormat = new ol.format.GeoJSON({
   dataProjection: 'EPSG:4326', // server stores [11.077, 49.447]
@@ -83,8 +84,19 @@ function changedProps (feature, newFeature) {
   return changed
 }
 
-function formatCoords (coords, precision = 8) {
+function formatCoords (coords, precision = 7) {
   return coords.map(function (coordinate) {
     return [coordinate[0].toFixed(precision), coordinate[1].toFixed(precision)]
   })
+}
+
+// simplify drawn strings with https://turfjs.org/docs/#simplify
+export function simplifyGeometry (feature, tolerance = 0.01) {
+  const options = { tolerance: 0.1, highQuality: false, mutate: true }
+  const coordsCount = feature.getGeometry().getCoordinates().length
+  const geojsonFeature = new ol.format.GeoJSON().writeFeatureObject(feature)
+  const coords = turf.simplify(geojsonFeature, options).geometry.coordinates
+  feature.getGeometry().setCoordinates(coords)
+  const newCoordsCount = feature.getGeometry().getCoordinates().length
+  console.log('Simplified coords from #' + coordsCount + ' to #' + newCoordsCount)
 }

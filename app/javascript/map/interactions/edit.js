@@ -6,11 +6,10 @@ import { mapChannel } from 'channels/map_channel'
 import { hoverStyle, vectorStyle, sketchStyle } from 'map/styles'
 import { createFeatureId, resetInteractions, isMobileDevice } from 'map/interactions'
 import { selectInteraction } from 'map/interactions/readonly'
-import { featureAsGeoJSON, updateProps } from 'map/feature'
+import { featureAsGeoJSON, updateProps, simplifyGeometry } from 'map/feature'
 
 // eslint expects ol to get imported, but we load the full lib in header
 const ol = window.ol
-const turf = window.turf
 
 export let drawInteraction, polygonInteraction, pointInteraction, lineInteraction,
   modifyInteraction, undoInteraction, selectEditInteraction, bannerInteraction
@@ -281,12 +280,7 @@ export function initializePaintInteractions () {
     polygonInteraction, bannerInteraction].forEach(function (interaction) {
     interaction.on('drawend', function (e) {
       e.feature.setId(createFeatureId())
-      if (interaction === drawInteraction) {
-        // https://turfjs.org/docs/#simplify
-        const options = { tolerance: 0.01, highQuality: false, mutate: true }
-        const coords = turf.simplify(featureAsGeoJSON(e.feature), options).geometry.coordinates
-        e.feature.getGeometry().setCoordinates(coords)
-      }
+      if (interaction === drawInteraction) { simplifyGeometry(e.feature) }
       console.log('Feature ' + e.feature.getId() + ' has been created')
       flash('Feature added', 'success')
       showFeatureEdit(e.feature)
