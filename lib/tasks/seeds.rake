@@ -33,5 +33,6 @@ namespace :seed do
     Map.create_from_file("db/seeds/frontpage/frontpage.json")
     Map.create_from_file("db/seeds/frontpage/frontpage-category-friends.json")
     Map.create_from_file("db/seeds/frontpage/frontpage-category-data.json")
+    Map.create_from_file("db/seeds/frontpage/frontpage-category-office.json")
   end
 end
