@@ -58,6 +58,7 @@ function showBanner (feature) {
 
 export function initializeMap (divId = 'map') {
   changedFeatureQueue = []
+  if (map) { disposeMap() }
 
   // TODO only load visible features via bbox
   const url = '/maps/' + window.gon.map_id + '/features'
@@ -81,7 +82,6 @@ export function initializeMap (divId = 'map') {
     rotate: false
   })
 
-  if (map) { map.dispose() }
   map = new ol.Map({
     layers: [vectorLayer, fixedLayer],
     target: divId,
@@ -119,6 +119,15 @@ export function initializeMap (divId = 'map') {
       if (feature.get('banner')) { showBanner(feature) }
     })
   })
+}
+
+function disposeMap () {
+  map.getLayers().getArray().slice().forEach(layer => map.removeLayer(layer))
+  map.getOverlays().getArray().slice().forEach(overlay => map.removeOverlay(overlay))
+  map.getControls().getArray().slice().forEach(control => map.removeControl(control))
+  map.setTarget(null)
+  backgroundMapLayerName = null
+  document.querySelector('.map').innerHTML = ''
 }
 
 export function locate () {
@@ -213,5 +222,7 @@ export async function setBackgroundMapLayer (name = mapProperties.base_map) {
       el.style.opacity = 1
     })
     backgroundMapLayer = newBackgroundMapLayer
+  } else if (document.querySelector('.map-layer-' + backgroundMapLayerName)) {
+    document.querySelector('.map-layer-' + backgroundMapLayerName).style.opacity = 1
   }
 }
