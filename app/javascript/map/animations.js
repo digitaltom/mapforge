@@ -1,4 +1,4 @@
-import { map, backgroundMapLayer } from 'map/map'
+import { map, olMapLayer } from 'map/map'
 
 // eslint expects variables to get imported, but we load the full lib in header
 const ol = window.ol
@@ -6,7 +6,7 @@ const ol = window.ol
 export function animateMarker (feature, start, end) {
   console.log('Animating ' + feature.getId() + ' from ' + JSON.stringify(start) + ' to ' + JSON.stringify(end))
   const startTime = Date.now()
-  const listenerKey = backgroundMapLayer.on('postrender', animate)
+  const listenerKey = olMapLayer.on('postrender', animate)
 
   const duration = 300
   function animate (event) {

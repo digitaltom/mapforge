@@ -2,7 +2,7 @@ import { vectorStyle } from 'map/styles'
 import { undoInteraction } from 'map/interactions/edit'
 import { mapProperties } from 'map/properties'
 import { animateView } from 'map/animations'
-import * as functions from 'helpers/functions'
+// import * as functions from 'helpers/functions'
 import * as dom from 'helpers/dom'
 import { backgroundTiles } from 'map/layers/background_maps'
 import { geoJsonFormat, featureAsGeoJSON, updateFeature } from 'map/feature'
@@ -12,7 +12,7 @@ const ol = window.ol
 
 export let changedFeatureQueue = []
 export let vectorSource, vectorLayer, fixedSource
-export let backgroundMapLayer
+export let olMapLayer
 export let map
 export let mainBar
 
@@ -126,6 +126,7 @@ function disposeMap () {
   map.getOverlays().getArray().slice().forEach(overlay => map.removeOverlay(overlay))
   map.getControls().getArray().slice().forEach(control => map.removeControl(control))
   map.setTarget(null)
+  map = null
   backgroundMapLayerName = null
   document.querySelector('.map').innerHTML = ''
 }
@@ -204,25 +205,21 @@ export function vectorSourceFromUrl (url) {
 let backgroundMapLayerName
 export async function setBackgroundMapLayer (name = mapProperties.base_map) {
   if (backgroundMapLayerName !== name) {
-    const prevMapLayer = document.querySelector('.map-layer-' + backgroundMapLayerName)
+    const prevMapLayerElement = document.querySelector('.map-layer-' + backgroundMapLayerName)
+    const prevMapLayer = olMapLayer
     backgroundMapLayerName = name
     console.log("Loading base map '" + name + "'")
-    const newBackgroundMapLayer = backgroundTiles[name]()
-    map.getLayers().insertAt(0, newBackgroundMapLayer)
+    olMapLayer = backgroundTiles[name]()
+    map.getLayers().insertAt(1, olMapLayer)
 
     // fade out previous map
-    if (prevMapLayer) {
-      prevMapLayer.style.opacity = 0
-      await functions.sleep(1400)
-      map.removeLayer(backgroundMapLayer)
+    if (prevMapLayerElement) {
+      prevMapLayerElement.style.opacity = 0
+      setTimeout(function () { map.removeLayer(prevMapLayer) }, 1400)
     }
-
-    // fade in map
-    dom.waitForElement('.map-layer-' + name, function changeOpacity (el) {
-      el.style.opacity = 1
-    })
-    backgroundMapLayer = newBackgroundMapLayer
-  } else if (document.querySelector('.map-layer-' + backgroundMapLayerName)) {
-    document.querySelector('.map-layer-' + backgroundMapLayerName).style.opacity = 1
   }
+  // fade in map
+  dom.waitForElement('.map-layer-' + name, function changeOpacity (el) {
+    el.style.opacity = 1
+  })
 }
