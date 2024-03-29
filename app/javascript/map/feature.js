@@ -19,23 +19,27 @@ export function featureAsGeoJSON (feature) {
 }
 
 // This method gets called from local updates + the hotwire channel
+// The method does not store the changes to the feature
 export function updateFeature (data, source = vectorSource) {
   // TODO: only create/update if visible in bbox
   const newFeature = geoJsonFormat.readFeature(data)
   const feature = source.getFeatureById(data.id)
-  if (feature && changed(feature, newFeature)) {
-    console.log("updating changed feature '" + data.id + "'")
-    if (data.geometry.type === 'Point' && changedCoords(feature, newFeature)) {
-      animateMarker(newFeature, feature.getGeometry().getCoordinates(),
-        newFeature.getGeometry().getCoordinates())
-    }
-    feature.setGeometry(newFeature.getGeometry())
-    updateProps(feature, newFeature.getProperties())
-    feature.setStyle(vectorStyle(feature))
-    feature.changed()
-  } else {
+  if (!feature) {
     // addFeature will not add if id already exists
     source.addFeature(newFeature)
+  } else {
+    if (changedCoords(feature, newFeature)) {
+      console.log("updating changed coords for feature '" + data.id + "'")
+      if (data.geometry.type === 'Point') {
+        animateMarker(newFeature, feature.getGeometry().getCoordinates(),
+          newFeature.getGeometry().getCoordinates())
+      }
+      feature.setGeometry(newFeature.getGeometry())
+    }
+    if (changedProps(feature, newFeature)) {
+      updateProps(feature, newFeature.getProperties())
+    }
+    feature.changed()
   }
   vectorSource.changed()
   // drop from changedFeatureQueue, it's coming from server
@@ -53,6 +57,7 @@ export function deleteFeature (id) {
 
 // https://openlayers.org/en/latest/apidoc/module-ol_Feature-Feature.html
 // needed because setProperties() only updates, and does not drop...
+// properties also include the geometry of the feature
 export function updateProps (feature, newProps) {
   const oldProps = featureAsGeoJSON(feature).properties
   for (const key in oldProps) {
@@ -63,9 +68,9 @@ export function updateProps (feature, newProps) {
   feature.setStyle(vectorStyle(feature))
 }
 
-function changed (feature, newFeature) {
-  return (changedCoords(feature, newFeature) || changedProps(feature, newFeature))
-}
+// function changed (feature, newFeature) {
+//   return (changedCoords(feature, newFeature) || changedProps(feature, newFeature))
+// }
 
 function changedCoords (feature, newFeature) {
   // compare coords with limited precision, because of formt conversion errors

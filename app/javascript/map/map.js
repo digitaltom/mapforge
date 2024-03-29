@@ -210,7 +210,7 @@ export async function setBackgroundMapLayer (name = mapProperties.base_map) {
     backgroundMapLayerName = name
     console.log("Loading base map '" + name + "'")
     olMapLayer = backgroundTiles[name]()
-    map.getLayers().insertAt(1, olMapLayer)
+    map.getLayers().insertAt(0, olMapLayer)
 
     // fade out previous map
     if (prevMapLayerElement) {
