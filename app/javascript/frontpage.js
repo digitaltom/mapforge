@@ -4,7 +4,7 @@ import { initializeMapProperties } from 'map/properties'
 import { vectorStyle } from 'map/styles'
 import * as functions from 'helpers/functions'
 import * as dom from 'helpers/dom'
-// import { animateView } from 'map/animations'
+import { animateMarkerPath } from 'map/animations'
 
 // eslint expects variables to get imported, but we load the full lib in header
 const ol = window.ol
@@ -96,8 +96,18 @@ async function featureShow () {
         className: 'category-features fade-in'
       })
       map.addLayer(featureLayer)
-      dom.waitForElement('.category-features', function changeOpacity (el) {
+      dom.waitForElement('.category-features', async function changeOpacity (el) {
+        await functions.sleep(500)
         el.style.opacity = 1
+
+        if (category.key === 'data') {
+          // car
+          animateMarkerPath(featureSource.getFeatureById('d9b8c95728'),
+            featureSource.getFeatureById('3174f4452'))
+          // train
+          animateMarkerPath(featureSource.getFeatureById('38488b9d78'),
+            featureSource.getFeatureById('7afc4ef808'))
+        }
       })
     })
     .catch(error => console.error('Error loading map properties:', error))
