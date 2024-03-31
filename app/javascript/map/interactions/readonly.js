@@ -1,7 +1,6 @@
 import { map, locate, vectorLayer } from 'map/map'
 import * as functions from 'helpers/functions'
 import { hoverStyle, vectorStyle } from 'map/styles'
-import { isMobileDevice } from 'map/interactions'
 
 // eslint expects ol to get imported, but we load the full lib in header
 const ol = window.ol
@@ -70,7 +69,7 @@ export function initializeReadonlyInteractions () {
     // skip hover effects when a feature is selected
     if (selectedFeatures.getArray().length > 0) { return }
     if (event.dragging) { return }
-    if (isMobileDevice()) { return }
+    if (functions.isMobileDevice()) { return }
 
     currentlySelectedFeature = null
     map.forEachFeatureAtPixel(event.pixel, function (feature, layer) {

@@ -4,7 +4,8 @@ import {
 import { mapProperties } from 'map/properties'
 import { mapChannel } from 'channels/map_channel'
 import { hoverStyle, vectorStyle, sketchStyle } from 'map/styles'
-import { createFeatureId, resetInteractions, isMobileDevice } from 'map/interactions'
+import { createFeatureId, resetInteractions } from 'map/interactions'
+import * as functions from 'helpers/functions'
 import { selectInteraction } from 'map/interactions/readonly'
 import { featureAsGeoJSON, updateProps, simplifyGeometry } from 'map/feature'
 
@@ -183,7 +184,7 @@ export function initializeEditInteractions () {
     // skip hover effects when not in an active selectEditInteraction
     if (!map.getInteractions().getArray().includes(selectEditInteraction)) { return }
     if (event.dragging) { return }
-    if (isMobileDevice()) { return }
+    if (functions.isMobileDevice()) { return }
 
     let currentlySelectedFeature = null
     map.forEachFeatureAtPixel(event.pixel, function (feature, layer) {

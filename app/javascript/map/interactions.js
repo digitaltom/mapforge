@@ -89,7 +89,3 @@ document.addEventListener('click', function (event) {
 export function createFeatureId () {
   return Math.random().toString(16).slice(6)
 }
-
-export function isMobileDevice () {
-  return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
-}

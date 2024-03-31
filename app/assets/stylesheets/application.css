@@ -163,7 +163,7 @@ body {
   opacity: 1;
 }
 
-.scaleline-external{
+.scaleline-external {
   position: absolute;
   width: fit-content;
   bottom: 0;
@@ -171,6 +171,10 @@ body {
 }
 
 /* Override default OpenLayers absolute position behaviour */
-.ol-scale-line{
+.ol-scale-line {
   position: relative;
+}
+
+.ol-attribution {
+  font-size: 0.7em;
 }

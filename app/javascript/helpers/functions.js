@@ -50,3 +50,7 @@ export function arrayRemove (arr, value) {
 export function roundedCoords (coords, precision = 3) {
   return coords.map(coord => parseFloat(coord.toFixed(precision)))
 }
+
+export function isMobileDevice () {
+  return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+}
