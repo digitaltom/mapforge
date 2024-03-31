@@ -31,18 +31,18 @@ describe 'Map' do
 
     it 'shows feature details on hover' do
       hover_coord('#map', 0, 0)
-      expect(page).to have_css('.feature-details-view')
+      expect(page).to have_css('#feature-popup')
       expect(page).to have_text('Poly Title')
       expect(page).to have_text('Poly Desc')
-      expect(page).to have_text('Area: 27.64 km')
+      expect(page).to have_text('27.64 km')
     end
 
     it 'shows feature details on click' do
       click_coord('#map', 50, 50)
-      expect(page).to have_css('.feature-details-view')
+      expect(page).to have_css('#feature-popup')
       expect(page).to have_text('Poly Title')
       expect(page).to have_text('Poly Desc')
-      expect(page).to have_text('Area: 27.64 km')
+      expect(page).to have_text('27.64 km')
     end
   end
 end

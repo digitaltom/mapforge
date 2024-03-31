@@ -90,6 +90,22 @@ describe 'Map' do
     end
   end
 
+  context 'with selected view mode' do
+    let!(:polygon) { create(:feature, :polygon_middle, layer: map.layer, title: 'Poly Title') }
+
+    before do
+      # first click goes to edit mode, second to view mode
+      find('.button-edit').click
+      find('.button-edit').click
+    end
+
+    it 'shows feature popup' do
+      click_coord('#map', 50, 50)
+      expect(page).to have_css('#feature-popup')
+      expect(page).to have_text('Poly Title')
+    end
+  end
+
   context 'when adding features' do
     before do
        find('.button-edit').click
@@ -113,13 +129,6 @@ describe 'Map' do
 
       expect(page).to have_text('Feature added')
       expect(Feature.polygon.count).to eq(1)
-
-      # first click goes to edit mode, second to view mode
-      find('.button-edit').click
-      find('.button-edit').click
-      click_coord('#map', 100, 100)
-      expect(page).to have_css('.feature-details-view')
-      expect(page).to have_text(Feature.first.id.to_s)
     end
   end
 end

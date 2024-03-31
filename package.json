@@ -2,6 +2,7 @@
   "scripts": {
     "fix:js": "eslint --ext .js app/javascript --fix",
     "lint:js": "eslint --ext .js app/javascript",
+    "fix:css": "stylelint 'app/assets/stylesheets/**/*.css' --fix",
     "lint:css": "stylelint 'app/assets/stylesheets/**/*.css'"
   },
   "devDependencies": {

@@ -48,13 +48,11 @@ export function initializeReadonlyInteractions () {
     const deselectedFeatures = e.deselected
     Array.from(deselectedFeatures).forEach(function (feature) {
       // console.log('deselected ' + JSON.stringify(feature.getId()))
-      hideFeatureDetails()
       hideFeaturePopup()
       feature.setStyle(vectorStyle(feature))
     })
     Array.from(selectedFeatures).forEach(function (feature) {
       // console.log('selected ' + JSON.stringify(feature.getId()))
-      showFeatureDetails(feature)
       showFeaturePopup(feature)
       feature.setStyle(hoverStyle(feature))
     })
@@ -79,7 +77,6 @@ export function initializeReadonlyInteractions () {
         if (feature.get('title')) {
           feature.setStyle(hoverStyle(feature))
           map.getTargetElement().style.cursor = 'pointer'
-          showFeatureDetails(feature)
           showFeaturePopup(feature)
         }
       }
@@ -94,30 +91,18 @@ export function initializeReadonlyInteractions () {
         (currentlySelectedFeature !== previouslySelectedFeature)) {
       previouslySelectedFeature.setStyle(vectorStyle(previouslySelectedFeature))
       if (currentlySelectedFeature == null) {
-        hideFeatureDetails()
         hideFeaturePopup()
         map.getTargetElement().style.cursor = ''
       }
     }
     previouslySelectedFeature = currentlySelectedFeature
   })
-}
 
-export function showFeatureDetails (feature) {
-  const detailsContainer = document.querySelector('.feature-details-view')
-  detailsContainer.dataset.featureId = feature.getId()
-  detailsContainer.querySelector('.feature-details-title').innerHTML = feature.get('title') || feature.getId()
-  detailsContainer.querySelector('.feature-details-desc').innerHTML = feature.get('description') || 'no description'
-  detailsContainer.querySelector('.feature-details-atts').innerHTML = ''
-  if (feature.getGeometry().getType() === 'LineString') {
-    detailsContainer.querySelector('.feature-details-atts').innerHTML = '<p>Length: ' +
-      functions.formatLength(feature.getGeometry()) + '</p>'
-  } else if (feature.getGeometry().getType() === 'Polygon') {
-    detailsContainer.querySelector('.feature-details-atts').innerHTML = '<p>Area: ' +
-      functions.formatArea(feature.getGeometry()) + '</p>'
-  }
-  detailsContainer.style.display = 'block'
-  detailsContainer.style.opacity = '0.9'
+  const featurePopupCloser = document.querySelector('#feature-popup-closer')
+  featurePopupCloser.addEventListener('click', function (event) {
+    event.preventDefault()
+    hideFeaturePopup()
+  })
 }
 
 export function showFeaturePopup (feature) {
@@ -132,18 +117,19 @@ export function showFeaturePopup (feature) {
   const extent = feature.getGeometry().getExtent()
   popup.setPosition(ol.extent.getCenter(extent))
   popupElement.style.display = 'block'
-  document.getElementById('feature-popup-title').innerHTML = feature.get('title')
+  if (feature.get('title')) {
+    document.getElementById('feature-popup-title').innerHTML = feature.get('title')
+  }
   if (feature.get('description')) {
     document.getElementById('feature-popup-desc').innerHTML = feature.get('description')
   }
+  const sizeSpan = document.querySelector('#feature-popup-size')
+  if (feature.getGeometry().getType() === 'LineString') {
+    sizeSpan.innerHTML = functions.formatLength(feature.getGeometry())
+  } else if (feature.getGeometry().getType() === 'Polygon') {
+    sizeSpan.innerHTML = functions.formatArea(feature.getGeometry())
+  } else { sizeSpan.innerHTML = '' }
   popupElement.style.opacity = '0.9'
-}
-
-export function hideFeatureDetails () {
-  const el = document.querySelector('.feature-details-view')
-  el.style.opacity = '0'
-  // remove from DOM if faded out
-  setTimeout(function () { if (el.style.opacity === '0') { el.style.display = 'none' } }, 1000)
 }
 
 export function hideFeaturePopup () {

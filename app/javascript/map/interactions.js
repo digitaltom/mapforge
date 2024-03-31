@@ -1,5 +1,5 @@
 import { map, mainBar, vectorSource } from 'map/map'
-import { selectInteraction, hideFeatureDetails } from 'map/interactions/readonly'
+import { selectInteraction, hideFeaturePopup } from 'map/interactions/readonly'
 import {
   drawInteraction, pointInteraction, lineInteraction, modifyInteraction,
   polygonInteraction, bannerInteraction, selectEditInteraction, hideFeatureEdit
@@ -65,7 +65,7 @@ export function resetInteractions () {
   document.querySelectorAll('.map-modal').forEach(modal => {
     modal.style.display = 'none'
   })
-  hideFeatureDetails()
+  hideFeaturePopup()
   hideFeatureEdit()
 }
 
