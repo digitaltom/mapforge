@@ -2,7 +2,6 @@ import { vectorStyle } from 'map/styles'
 import { undoInteraction } from 'map/interactions/edit'
 import { mapProperties } from 'map/properties'
 import { animateView } from 'map/animations'
-import * as functions from 'helpers/functions'
 import * as dom from 'helpers/dom'
 import { backgroundTiles } from 'map/layers/background_maps'
 import { geoJsonFormat, featureAsGeoJSON, updateFeature } from 'map/feature'
@@ -96,8 +95,6 @@ export function initializeMap (divId = 'map') {
     keyboardEventTarget: document
   })
 
-  // zoom + center values in map modal
-  updateCenterAndZoom()
   // Main control bar
   mainBar = new ol.control.Bar({ className: 'main-bar' })
   map.addControl(mainBar)
@@ -115,16 +112,11 @@ export function initializeMap (divId = 'map') {
   if (window.gon.map_mode !== 'static') { map.addControl(scaleLineMetric) }
 
   map.getView().on('change:resolution', function () {
-    updateCenterAndZoom()
     // re-render features that have a resolution/zoomlevel dependent style
     vectorSource.getFeatures().forEach((feature) => {
       if (feature.get('title-min-zoom')) { feature.setStyle(vectorStyle(feature)) }
       if (feature.get('banner')) { showBanner(feature) }
     })
-  })
-
-  map.getView().on('change:center', function () {
-    updateCenterAndZoom()
   })
 }
 
@@ -229,19 +221,4 @@ export async function setBackgroundMapLayer (name = mapProperties.base_map) {
   dom.waitForElement('.map-layer-' + name, function changeOpacity (el) {
     el.style.opacity = 1
   })
-}
-
-// update zoom + center values in map modal
-function updateCenterAndZoom () {
-  const zoomSpan = document.querySelector('#map-zoom-current')
-  zoomSpan.innerHTML = ''
-  if (Math.round(map.getView().getZoom()) !== mapProperties.zoom) {
-    zoomSpan.innerHTML = '(current: ' + Math.round(map.getView().getZoom()) + ')'
-  }
-  const centerSpan = document.querySelector('#map-center-current')
-  centerSpan.innerHTML = ''
-  const currentCoords = functions.roundedCoords(ol.proj.toLonLat(map.getView().getCenter()))
-  if (JSON.stringify(currentCoords) !== JSON.stringify(mapProperties.center)) {
-    centerSpan.innerHTML = '(current: ' + currentCoords + ')'
-  }
 }

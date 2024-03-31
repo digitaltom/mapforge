@@ -1,5 +1,6 @@
 import { map, flash } from 'map/map'
 import { mapChannel } from 'channels/map_channel'
+import * as functions from 'helpers/functions'
 
 // eslint expects ol to get imported, but we load the full lib in header
 const ol = window.ol
@@ -30,4 +31,27 @@ export function initializeMapModal () {
     flash('Map center/zoom updated', 'success')
     return false
   })
+
+  map.getView().on('change:resolution', function () {
+    updateCenterAndZoom()
+  })
+
+  map.getView().on('change:center', function () {
+    updateCenterAndZoom()
+  })
+}
+
+// update zoom + center values in map modal
+function updateCenterAndZoom () {
+  const zoomSpan = document.querySelector('#map-zoom-current')
+  zoomSpan.innerHTML = ''
+  if (Math.round(map.getView().getZoom()) !== mapProperties.zoom) {
+    zoomSpan.innerHTML = '(current: ' + Math.round(map.getView().getZoom()) + ')'
+  }
+  const centerSpan = document.querySelector('#map-center-current')
+  centerSpan.innerHTML = ''
+  const currentCoords = functions.roundedCoords(ol.proj.toLonLat(map.getView().getCenter()))
+  if (JSON.stringify(currentCoords) !== JSON.stringify(mapProperties.center)) {
+    centerSpan.innerHTML = '(current: ' + currentCoords + ')'
+  }
 }
