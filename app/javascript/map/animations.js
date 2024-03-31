@@ -6,16 +6,24 @@ const ol = window.ol
 
 export async function animateMarkerPath (pointFeature, lineString) {
   const coordinates = lineString.getGeometry().getCoordinates()
+  const length = ol.sphere.getLength(lineString.getGeometry())
+  console.log('Animating ' + pointFeature.getId() + ' along ' + lineString.getId() +
+    ' (' + Math.round(length) + 'm)')
   // Loop over the coordinates
   for (let i = 0; i < coordinates.length - 1; i++) {
-    animateMarker(pointFeature, coordinates[i], coordinates[i + 1], 500)
+    const line = new ol.geom.LineString([coordinates[i], coordinates[i + 1]])
+    const distance = ol.sphere.getLength(line)
+    const speed = 1 // ~ 500m/s
+    const time = Math.round(distance) * speed
+    animateMarker(pointFeature, coordinates[i], coordinates[i + 1], time)
     map.render() // trigger postrender
-    await functions.sleep(500)
+    await functions.sleep(time)
   }
 }
 
 export function animateMarker (feature, start, end, duration = 300) {
-  console.log('Animating ' + feature.getId() + ' from ' + JSON.stringify(start) + ' to ' + JSON.stringify(end))
+  // console.log('Animating ' + feature.getId() + ' from ' + JSON.stringify(start) + ' to ' + JSON.stringify(end))
+
   const startTime = Date.now()
   const listenerKey = olMapLayer.on('postrender', animate)
 
@@ -32,7 +40,6 @@ export function animateMarker (feature, start, end, duration = 300) {
       start[1] + elapsedRatio * (end[1] - start[1])
     ]
     feature.getGeometry().setCoordinates(currentCoordinate)
-    // map.render()
   }
 }
 
