@@ -46,3 +46,7 @@ export function arrayRemove (arr, value) {
     return ele !== value
   })
 }
+
+export function roundedCoords (coords, precision = 3) {
+  return coords.map(coord => parseFloat(coord.toFixed(precision)))
+}

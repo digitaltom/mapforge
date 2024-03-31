@@ -7,7 +7,7 @@
 
 ## Geojson
 
-This app supports and stores data in an extended version of the
+This app supports and stores data in an extended version of the [geojson](https://macwright.com/2015/03/23/geojson-second-bite.html)
 [mapbox simplestyle spec](https://github.com/mapbox/simplestyle-spec/tree/master/1.1.0).
 See [docs/geojson.md](docs/geojson.md) for supported attributes.
 

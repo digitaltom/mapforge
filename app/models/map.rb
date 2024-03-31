@@ -18,7 +18,10 @@ class Map
   delegate :feature_collection, to: :layer
   delegate :features_count, to: :layer
 
-  DEFAULT_MAP = :osmTiles
+  BASE_MAPS = [ "osmTiles", "satelliteTiles", "satelliteStreetTiles",
+               "stamenTonerTiles", "openTopoTiles", "mapboxBrightVector",
+               "maptilerDataviz", "maptilerStreets", "maptilerNoStreets" ]
+  DEFAULT_MAP = "osmTiles"
   DEFAULT_CENTER = [ 11.077, 49.447 ].freeze
   DEFAULT_ZOOM = 12
 
