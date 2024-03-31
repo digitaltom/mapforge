@@ -81,6 +81,11 @@ export function initializeMap (divId = 'map') {
     rotate: false
   })
 
+  const interactions = ol.interaction.defaults.defaults({
+    altShiftDragRotate: false,
+    pinchRotate: false
+  })
+
   map = new ol.Map({
     layers: [vectorLayer, fixedLayer],
     target: divId,
@@ -92,6 +97,7 @@ export function initializeMap (divId = 'map') {
       constrainResolution: true
     }),
     controls,
+    interactions,
     keyboardEventTarget: document
   })
 
