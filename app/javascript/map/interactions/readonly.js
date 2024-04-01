@@ -117,12 +117,14 @@ export function showFeaturePopup (feature) {
   const extent = feature.getGeometry().getExtent()
   popup.setPosition(ol.extent.getCenter(extent))
   popupElement.style.display = 'block'
+  const titleSpan = document.getElementById('feature-popup-title')
   if (feature.get('title')) {
-    document.getElementById('feature-popup-title').innerHTML = feature.get('title')
-  }
+    titleSpan.innerHTML = feature.get('title')
+  } else { titleSpan.innerHTML = 'No title' }
+  const descSpan = document.getElementById('feature-popup-desc')
   if (feature.get('description')) {
-    document.getElementById('feature-popup-desc').innerHTML = feature.get('description')
-  }
+    descSpan.innerHTML = feature.get('description')
+  } else { descSpan.innerHTML = 'No description' }
   const sizeSpan = document.querySelector('#feature-popup-size')
   if (feature.getGeometry().getType() === 'LineString') {
     sizeSpan.innerHTML = functions.formatLength(feature.getGeometry())
