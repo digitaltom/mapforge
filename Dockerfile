@@ -42,7 +42,7 @@ FROM base
 
 # Install packages needed for deployment
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y vim less curl iputils-ping libsqlite3-0 libvips proj-bin wget gnupg ca-certificates && \
+    apt-get install --no-install-recommends -y vim less curl iputils-ping libsqlite3-0 libvips proj-bin wget gnupg ca-certificates imagemagick && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Install chrome for screenshots (adds 400MB :-o)

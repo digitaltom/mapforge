@@ -57,9 +57,10 @@ function symbolHoverStyle (feature, resolution) {
 }
 
 function iconStyle (feature, resolution) {
+  const size = symbolSizes[feature.get('marker-size')] || symbolSizes.medium
   return new ol.style.Icon({
     src: feature.get('marker-icon'),
-    imgSize: [12, 12]
+    width: size + 10
   })
 }
 
@@ -73,7 +74,7 @@ export function pointStyle (feature, resolution) {
     const icon = new ol.style.Style({
       image: iconStyle(feature, resolution)
     })
-    return [circle, icon]
+    return [icon, circle]
   } else if (feature.get('marker-symbol')) {
     return [circle, symbolStyle(feature, resolution)]
   } else {
@@ -91,7 +92,7 @@ export function pointHoverStyle (feature, resolution) {
     const icon = new ol.style.Style({
       image: iconStyle(feature, resolution)
     })
-    return [circle, icon]
+    return [icon, circle]
   } else if (feature.get('marker-symbol')) {
     return [circle, symbolHoverStyle(feature, resolution)]
   } else {
