@@ -92,7 +92,7 @@ export function pointHoverStyle (feature, resolution) {
     const icon = new ol.style.Style({
       image: iconStyle(feature, resolution)
     })
-    return [circle, icon]
+    return [icon, circle]
   } else if (feature.get('marker-symbol')) {
     return [circle, symbolHoverStyle(feature, resolution)]
   } else {

@@ -1,7 +1,6 @@
-require 'dragonfly'
-require 'dragonfly/mongoid_data_store'
+require "dragonfly"
+require "dragonfly/mongoid_data_store"
 
-# Configure
 Dragonfly.app.configure do
   plugin :imagemagick
 
@@ -14,32 +13,27 @@ Dragonfly.app.configure do
   #   root_path: Rails.root.join('public/system/dragonfly', Rails.env),
   #   server_root: Rails.root.join('public')
 
-
   # custom processors: http://markevans.github.io/dragonfly/processors
   processor :rounded do |content|
-    #byebug
-    content.shell_update(ext: 'png') do |old_path, new_path|
-      #{}"/usr/bin/convert #{old_path} -alpha set -background none -thumbnail #{size}^ -vignette 0x0 #{new_path}"
-      "/usr/bin/convert #{old_path} -alpha set -background none -vignette 0x0 #{new_path}"
+    content.shell_update(ext: "png") do |old_path, new_path|
+      "/usr/bin/convert #{old_path} -alpha set -background none -vignette +0+0 #{new_path}"
     end
   end
 
   processor :crop_quadrant do |content|
     height = content.analyse(:height)
     width = content.analyse(:width)
-    # Calculate the center of the image
-    center_x, center_y = width / 2, height / 2
-
     # Calculate the quadrant size
-    quadrant_size = [width, height].min / 2
-
-    # Calculate the crop area
-    crop_x = center_x - quadrant_size
-    crop_y = center_y - quadrant_size
-
+    quadrant_size = [ width, height ].min
     # Crop the image
     content.shell_update do |old_path, new_path|
-      "/usr/bin/convert #{old_path} -crop #{quadrant_size}x#{quadrant_size}+#{crop_x}+#{crop_y} #{new_path}"
+      "/usr/bin/convert #{old_path} -gravity center -crop #{quadrant_size}x#{quadrant_size}+0+0 +repage #{new_path}"
+    end
+  end
+
+  processor :sharpen do |content, amount|
+    content.shell_update do |old_path, new_path|
+      "/usr/bin/convert #{old_path} -sharpen #{amount} #{new_path}"
     end
   end
 end

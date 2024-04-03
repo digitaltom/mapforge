@@ -14,7 +14,7 @@ let featureLayer
 let featureShowIndex = 0
 const featureShowList = [
   { key: 'friends', map: 'frontpage-category-friends' },
-  { key: 'office', map: 'frontpage-category-office' },
+  { key: 'indoors', map: 'frontpage-category-office' },
   { key: 'data', map: 'frontpage-category-data' }
   // { key: 'story', map: 'frontpage-category-data' },
   // { key: 'events', map: 'frontpage-category-data' },

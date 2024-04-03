@@ -32,6 +32,16 @@ namespace :seed do
     # iterates over some example layers
     Map.create_from_file("db/seeds/frontpage/frontpage.json")
     Map.create_from_file("db/seeds/frontpage/frontpage-category-friends.json")
+
+    # import user icons
+    Dir.foreach("db/seeds/frontpage/icons") do |filename|
+     next if filename == "." or filename == ".."
+     # Do work on the remaining files & directories
+     puts "Processing: #{filename}"
+     Image.create(img: File.new(Rails.root.join("db/seeds/frontpage/icons/" + filename)),
+      public_id: filename)
+    end
+
     Map.create_from_file("db/seeds/frontpage/frontpage-category-data.json")
     Map.create_from_file("db/seeds/frontpage/frontpage-category-office.json")
   end
