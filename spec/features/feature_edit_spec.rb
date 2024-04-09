@@ -5,7 +5,7 @@ describe 'Map' do
 
   before do
     visit map_path(map)
-    expect(page).to have_text('Connection to server established')
+    expect(page).to have_css('.ol-layers')
   end
 
   context 'with initial map rendering' do
@@ -19,6 +19,8 @@ describe 'Map' do
     let!(:polygon) { create(:feature, :polygon_middle, layer: map.layer, title: 'Poly Title') }
 
     before do
+      # make sure features are loaded
+      expect(page).to have_css('.ol-layer')
       find('.button-edit').click
     end
 
@@ -29,10 +31,10 @@ describe 'Map' do
     context 'with selected feature' do
       before do
         click_coord('#map', 50, 50)
+        expect(page).to have_css('.feature-details-edit')
       end
 
-      it 'shows feature details' do
-        expect(page).to have_css('.feature-details-edit')
+      it 'shows feature title + details' do
         expect(page).to have_text('Poly Title')
         textarea = find('textarea')
         expect(textarea.value).to eq(polygon.properties.to_json)
@@ -94,6 +96,8 @@ describe 'Map' do
     let!(:polygon) { create(:feature, :polygon_middle, layer: map.layer, title: 'Poly Title') }
 
     before do
+      # make sure features are loaded
+      expect(page).to have_css('.ol-layer')
       # first click goes to edit mode, second to view mode
       find('.button-edit').click
       find('.button-edit').click
