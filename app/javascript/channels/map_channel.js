@@ -3,18 +3,25 @@ import { flash } from 'map/map'
 import { initializeMapProperties } from 'map/properties'
 import { updateFeature, deleteFeature } from 'map/feature'
 
-let mapChannel
-export { mapChannel }
+export let mapChannel
+
+window.addEventListener('turbolinks:before-cache', function () {
+  unload()
+})
+
+function unload () {
+  if (mapChannel) { mapChannel.unsubscribe() }
+}
 
 export function initializeSocket () {
-  if (mapChannel) { mapChannel.unsubscribe() }
+  unload()
   console.log('Request socket for ' + window.gon.map_id)
   consumer.subscriptions.create({ channel: 'MapChannel', map_id: window.gon.map_id }, {
     connected () {
       // Called when the subscription is ready for use on the server
       console.log('connected to map_channel ' + window.gon.map_id)
       mapChannel = this
-      flash('Connection to server established', 'success')
+      // flash('Connection to server established', 'success')
     },
 
     disconnected () {
