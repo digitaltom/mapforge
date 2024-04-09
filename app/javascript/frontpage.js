@@ -46,6 +46,10 @@ const featureShowList = [
 function unload () {
   if (featureShowInterval) { clearInterval(featureShowInterval) }
   featureShowInterval = null
+  if (featureLayer) {
+    featureLayer.getSource().clear()
+    map.removeLayer(featureLayer)
+  }
 }
 
 function init () {
