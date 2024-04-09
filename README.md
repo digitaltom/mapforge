@@ -24,7 +24,7 @@ bundle
 
 ### Run develoment server:
 
-`bin/rails server`
+`bin/thrust rails server`
 
 * Put map provider keys (MAPTILER_KEY, MAPBOX_KEY) into `.env.development`
 * MongoDB backend is expected at: `ENV.fetch("MONGO_URL") { "localhost:27017" }`

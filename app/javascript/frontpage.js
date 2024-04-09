@@ -39,11 +39,17 @@ const featureShowList = [
 ['turbo:before-visit', 'beforeunload'].forEach(function (e) {
   window.addEventListener(e, function () {
     // console.log(e)
-    if (featureShowInterval) { clearInterval(featureShowInterval); featureShowInterval = null }
+    unload()
   })
 })
 
+function unload () {
+  if (featureShowInterval) { clearInterval(featureShowInterval) }
+  featureShowInterval = null
+}
+
 function init () {
+  unload()
   initializeMapProperties()
   initializeMap('frontpage-map')
   setBackgroundMapLayer()
@@ -73,6 +79,7 @@ async function featureShow () {
         document.querySelector('.map-layer').style.opacity = 0
 
         await functions.sleep(2000)
+        featureLayer.getSource().clear()
         map.removeLayer(featureLayer)
         document.querySelector('.category-features').remove()
       }
