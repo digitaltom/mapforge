@@ -77,7 +77,7 @@ async function featureShow () {
     })
     .then(async function (properties) {
       // fade out feature layer
-      if (document.querySelector('.category-features')) {
+      if (featureLayer) {
         document.querySelector('.category-features').style.opacity = 0
         document.querySelector('.frontpage-subtitle').style.opacity = 0
         document.querySelector('.map-layer').style.opacity = 0
