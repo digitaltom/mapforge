@@ -3,21 +3,53 @@ require 'rails_helper'
 describe 'Map' do
   let(:map) { create(:map) }
 
-  before do
-    visit map_path(map)
-    expect(page).to have_css('.ol-layers')
-  end
+  context 'with empty map' do
+    before do
+      visit map_path(map)
+      expect(page).to have_css('.ol-layers')
+    end
 
-  context 'with initial map rendering' do
     it 'shows feature edit buttons' do
       expect(page).to have_css('.button-map')
       expect(page).to have_css('.button-edit')
     end
+
+    context 'when adding features' do
+      before do
+        find('.button-edit').click
+      end
+
+      it 'adding a marker to the map' do
+        find('.button-marker').click
+        expect(page).to have_text('Click on a location to place a marker')
+        expect { click_coord('#map', 50, 50) }.to change { Feature.point.count }.by(1)
+        expect(page).to have_text('Feature added')
+      end
+
+      it 'adding a polygon to the map' do
+        find('.button-polygon').click
+        expect(page).to have_text('Click on a location on your map to start marking an area')
+        click_coord('#map', 50, 50)
+        click_coord('#map', 50, 150)
+        click_coord('#map', 150, 150)
+        click_coord('#map', 150, 50)
+        click_coord('#map', 50, 50)
+
+        expect(page).to have_text('Feature added')
+        expect(Feature.polygon.count).to eq(1)
+      end
+    end
   end
 
-  context 'with selected edit mode' do
+  context 'with polygon on map' do
     let!(:polygon) { create(:feature, :polygon_middle, layer: map.layer, title: 'Poly Title') }
 
+    before do
+      visit map_path(map)
+      expect(page).to have_css('.ol-layers')
+    end
+
+    context 'with selected edit mode' do
     before do
       # make sure features are loaded
       expect(page).to have_css('.ol-layer')
@@ -90,49 +122,22 @@ describe 'Map' do
         expect(page).to have_field('properties', with: '{"title":"change2"}')
       end
     end
-  end
-
-  context 'with selected view mode' do
-    let!(:polygon) { create(:feature, :polygon_middle, layer: map.layer, title: 'Poly Title') }
-
-    before do
-      # make sure features are loaded
-      expect(page).to have_css('.ol-layer')
-      # first click goes to edit mode, second to view mode
-      find('.button-edit').click
-      find('.button-edit').click
     end
 
-    it 'shows feature popup' do
-      click_coord('#map', 50, 50)
-      expect(page).to have_css('#feature-popup')
-      expect(page).to have_text('Poly Title')
-    end
-  end
+    context 'with selected view mode' do
+      before do
+        # make sure features are loaded
+        expect(page).to have_css('.ol-layer')
+        # first click goes to edit mode, second to view mode
+        find('.button-edit').click
+        find('.button-edit').click
+      end
 
-  context 'when adding features' do
-    before do
-       find('.button-edit').click
-    end
-
-    it 'adding a marker to the map' do
-      find('.button-marker').click
-      expect(page).to have_text('Click on a location to place a marker')
-      expect { click_coord('#map', 50, 50) }.to change { Feature.point.count }.by(1)
-      expect(page).to have_text('Feature added')
-    end
-
-    it 'adding a polygon to the map' do
-      find('.button-polygon').click
-      expect(page).to have_text('Click on a location on your map to start marking an area')
-      click_coord('#map', 50, 50)
-      click_coord('#map', 50, 150)
-      click_coord('#map', 150, 150)
-      click_coord('#map', 150, 50)
-      click_coord('#map', 50, 50)
-
-      expect(page).to have_text('Feature added')
-      expect(Feature.polygon.count).to eq(1)
+      it 'shows feature popup' do
+        click_coord('#map', 50, 50)
+        expect(page).to have_css('#feature-popup')
+        expect(page).to have_text('Poly Title')
+      end
     end
   end
 end
