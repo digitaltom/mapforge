@@ -5,8 +5,10 @@ import { updateFeature, deleteFeature } from 'map/feature'
 
 export let mapChannel
 
-window.addEventListener('turbolinks:before-cache', function () {
-  unload()
+['turbo:load'].forEach(function (e) {
+  window.addEventListener(e, function () {
+    unload()
+  })
 })
 
 function unload () {
@@ -15,18 +17,19 @@ function unload () {
 
 export function initializeSocket () {
   unload()
-  console.log('Request socket for ' + window.gon.map_id)
+  // console.log('Request socket for ' + window.gon.map_id)
   consumer.subscriptions.create({ channel: 'MapChannel', map_id: window.gon.map_id }, {
     connected () {
       // Called when the subscription is ready for use on the server
-      console.log('connected to map_channel ' + window.gon.map_id)
+      console.log('Connected to map_channel ' + window.gon.map_id)
       mapChannel = this
       // flash('Connection to server established', 'success')
     },
 
     disconnected () {
       // Called when the subscription has been terminated by the server
-      console.log('disconnected from map_channel')
+      console.log('Disconnected from map_channel ' + window.gon.map_id)
+      mapChannel = null
       // show error with delay to avoid showing it on unload/refresh
       setTimeout(function () { flash('Connection to server lost', 'error') }, 500)
     },

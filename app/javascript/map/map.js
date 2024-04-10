@@ -213,7 +213,7 @@ export async function setBackgroundMapLayer (name = mapProperties.base_map) {
     const prevMapLayerElement = document.querySelector('.map-layer-' + backgroundMapLayerName)
     const prevMapLayer = olMapLayer
     backgroundMapLayerName = name
-    console.log("Loading base map '" + name + "'")
+    // console.log("Loading base map '" + name + "'")
     olMapLayer = backgroundTiles[name]()
     map.getLayers().insertAt(0, olMapLayer)
 
