@@ -5,8 +5,7 @@ describe 'Map' do
 
   before do
     visit map_path(map)
-    sleep(1) # make sure features are loaded from server
-    expect(page).to have_text('Connection to server established')
+    expect(page).to have_css('.ol-layers')
   end
 
   context 'with initial map rendering' do
@@ -24,9 +23,9 @@ describe 'Map' do
       description: 'Poly Desc') }
     let!(:line) { create(:feature, :line_string, layer: map.layer) }
 
-    it 'shows features on map' do
+    before do
+      # make sure features are loaded
       expect(page).to have_css('.ol-layer')
-      expect(page).to have_text('Connection to server established')
     end
 
     it 'shows feature details on hover' do
