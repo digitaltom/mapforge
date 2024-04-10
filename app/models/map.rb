@@ -45,7 +45,7 @@ class Map
   end
 
   def create_public_id
-    self.public_id = SecureRandom.hex(4) unless public_id.present?
+    self.public_id = SecureRandom.hex(4).tap { |i| i[0..1] = "11" } unless public_id.present?
   end
 
   def create_layer

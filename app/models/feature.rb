@@ -43,12 +43,17 @@ class Feature
   private
 
   def broadcast_update
-    ActionCable.server.broadcast("map_channel_#{map.id}",
-                                 { event: "update_feature", feature: geojson.as_json })
+    # broadcast to private + public channel
+    [ map.id, map.public_id ].each do |id|
+      ActionCable.server.broadcast("map_channel_#{id}",
+                                   { event: "update_feature", feature: geojson.as_json })
+    end
   end
 
   def broadcast_destroy
-    ActionCable.server.broadcast("map_channel_#{map.id}",
-                                 { event: "delete_feature", feature: geojson.as_json })
+    [ map.id, map.public_id ].each do |id|
+      ActionCable.server.broadcast("map_channel_#{id}",
+                                   { event: "delete_feature", feature: geojson.as_json })
+    end
   end
 end
