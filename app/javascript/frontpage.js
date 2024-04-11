@@ -78,14 +78,16 @@ async function featureShow () {
     .then(async function (properties) {
       // fade out feature layer
       if (featureLayer) {
-        document.querySelector('.category-features').style.opacity = 0
-        document.querySelector('.frontpage-subtitle').style.opacity = 0
-        document.querySelector('.map-layer').style.opacity = 0
+        if (document.querySelector('.category-features')) {
+          document.querySelector('.category-features').style.opacity = 0
+          document.querySelector('.frontpage-subtitle').style.opacity = 0
+          document.querySelector('.map-layer').style.opacity = 0
+        }
 
         await functions.sleep(2000)
         featureLayer.getSource().clear()
         map.removeLayer(featureLayer)
-        document.querySelector('.category-features').remove()
+        if (document.querySelector('.category-features')) { document.querySelector('.category-features').remove() }
       }
 
       setBackgroundMapLayer(properties.base_map)

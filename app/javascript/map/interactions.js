@@ -70,7 +70,7 @@ export function resetInteractions () {
 }
 
 document.addEventListener('click', function (event) {
-  if (map.getInteractions().getArray().includes(selectEditInteraction)) {
+  if (map && map.getInteractions().getArray().includes(selectEditInteraction)) {
     event.preventDefault()
     return false
   }
