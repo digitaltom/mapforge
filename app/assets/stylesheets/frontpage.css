@@ -8,12 +8,6 @@
   font-style: normal;
 }
 
-.handwriting {
-  font-family: "Architects Daughter", cursive;
-  font-weight: 400;
-  font-style: normal;
-}
-
 .frontpage-title {
   font-size: calc(min(12vw, 12em)); /* max font size is 12em; vw is % of viewport width */
   position: absolute; top: calc(30vh - calc(min(12vw, 12em))); /* 30% of height - font size */
@@ -30,6 +24,7 @@
 
 .frontpage-buttons .btn {
   font-size: calc(max(min(2vw, 6em), 1em));
+  font-weight: 300;
   margin: 0.5em;
   color: #000;
   border-color: #000;
