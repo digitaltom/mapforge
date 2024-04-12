@@ -78,16 +78,14 @@ async function featureShow () {
     .then(async function (properties) {
       // fade out feature layer
       if (featureLayer) {
-        if (document.querySelector('.category-features')) {
-          document.querySelector('.category-features').style.opacity = 0
-          document.querySelector('.frontpage-subtitle').style.opacity = 0
-          document.querySelector('.map-layer').style.opacity = 0
-        }
+        functions.e('.category-features', e => { e.style.opacity = 0 })
+        functions.e('.frontpage-subtitle', e => { e.style.opacity = 0 })
+        functions.e('.map-layer', e => { e.style.opacity = 0 })
 
         await functions.sleep(2000)
         featureLayer.getSource().clear()
         map.removeLayer(featureLayer)
-        if (document.querySelector('.category-features')) { document.querySelector('.category-features').remove() }
+        functions.e('.category-features', e => e.remove())
       }
 
       setBackgroundMapLayer(properties.base_map)
@@ -96,8 +94,8 @@ async function featureShow () {
       // animateView(ol.proj.fromLonLat(properties.center), properties.zoom)
 
       // set title
-      document.querySelector('#frontpage-category-name').innerHTML = category.key
-      document.querySelector('.frontpage-subtitle').style.opacity = 1
+      functions.e('#frontpage-category-name', e => { e.innerHTML = category.key })
+      functions.e('.frontpage-subtitle', e => { e.style.opacity = 1 })
 
       // load a data layer onto the map
       const url = '/maps/' + category.map + '/features'

@@ -54,3 +54,9 @@ export function roundedCoords (coords, precision = 3) {
 export function isMobileDevice () {
   return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
 }
+
+// takes a css selector and callback method
+export function e (selector, callback) {
+  const element = document.querySelector(selector)
+  if (element) { callback(element) }
+}
