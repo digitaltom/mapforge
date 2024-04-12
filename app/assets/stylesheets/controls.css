@@ -1,0 +1,101 @@
+.ol-left {
+  left: 0.6em !important;
+}
+
+.ol-bar {
+  min-height: unset !important;
+  min-width: unset !important;
+}
+
+.ol-bar.view-bar {
+  margin-right: 1em !important;
+}
+
+.ol-control {
+  background-color: unset;
+}
+
+.ol-control button {
+  width: unset;
+  min-width: 1.375em;
+  font-size: 1.6em;
+  border: 1px solid #c0c0c0;
+  transition: background-color 300ms linear;
+}
+
+.ol-control a {
+  color: var(--ol-subtle-foreground-color);
+}
+
+.button-home a {
+  display: block;
+  width: 100%;
+  line-height: 1.6em;
+}
+
+.ol-control a:hover {
+  color: #000;
+}
+
+/* allow link cursor on icons in controls */
+.ol-control i {
+  cursor: unset;
+}
+
+.main-bar button {
+  width: 2.6em;
+  height: 1.6em;
+}
+
+.add-sub-bar button {
+  width: 2.2em;
+  height: 1.2em;
+}
+
+.sub-bar {
+  top: 3.5em !important;
+  left: calc(50%) !important;
+}
+
+.ol-control button:hover,
+.ol-control.active button {
+  color: #000;
+  font-weight: bold;
+  background-color: #E0E0E0;
+  border: 1px solid #909090;
+}
+
+.ol-control.button-locate.active button {
+  background-color: #ffc0c0;
+}
+
+.ol-control.ol-toggle button:disabled {
+  background-color: #ccc;
+}
+
+.button-undo {
+  margin-left: 1em !important;
+}
+
+.ol-zoom {
+  top: 50%;
+  right: 0.5em;
+  transform: translateY(-50%);
+  left: auto;
+}
+
+.scaleline-external {
+  position: absolute;
+  width: fit-content;
+  bottom: 0;
+  padding-top:2px;
+}
+
+/* Override default OpenLayers absolute position behaviour */
+.ol-scale-line {
+  position: relative;
+}
+
+.ol-attribution {
+  font-size: 0.7em;
+}

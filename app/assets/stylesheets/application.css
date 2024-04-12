@@ -32,11 +32,11 @@ body {
 }
 
 .banner-overlay a {
-    color: #404040;
+  color: #404040;
 }
 
 .banner-overlay a:hover {
-    color: #606060;
+  color: #606060;
 }
 
 .hidden {
@@ -62,67 +62,6 @@ body {
   border-style: solid;
   border-color: #000;
   overflow: hidden;
-}
-
-.ol-left {
-  left: 0.6em !important;
-}
-
-.ol-bar {
-  min-height: unset !important;
-  min-width: unset !important;
-}
-
-
-.ol-bar.view-bar {
-  margin-right: 1em !important;
-}
-
-.ol-control button {
-  width: unset;
-  min-width: 1.375em;
-  font-size: 1.6em;
-}
-
-.main-bar button {
-  min-width: 2.6em;
-  min-height: 1.6em;
-}
-
-.add-sub-bar button {
-  min-width: 2.2em;
-  min-height: 1.2em;
-}
-
-.sub-bar {
-  top: 3.5em !important;
-  left: calc(50%) !important;
-}
-
-.ol-control button:hover,
-.ol-control.active button {
-  color: #000;
-  font-weight: bold;
-  background-color: #c0c0c0;
-}
-
-.ol-control.button-locate.active button {
-  background-color: #ffc0c0;
-}
-
-.ol-control.ol-toggle button:disabled {
-  background-color: #ccc;
-}
-
-.button-undo {
-  margin-left: 1em !important;
-}
-
-.ol-zoom {
-  top: 50%;
-  right: 0.5em;
-  transform: translateY(-50%);
-  left: auto;
 }
 
 .map-modal {
@@ -162,20 +101,4 @@ body {
 .layer-preview.active, .layer-preview:hover {
   border-color: #000;
   opacity: 1;
-}
-
-.scaleline-external {
-  position: absolute;
-  width: fit-content;
-  bottom: 0;
-  padding-top:2px;
-}
-
-/* Override default OpenLayers absolute position behaviour */
-.ol-scale-line {
-  position: relative;
-}
-
-.ol-attribution {
-  font-size: 0.7em;
 }

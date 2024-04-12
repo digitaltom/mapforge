@@ -9,16 +9,12 @@ import { vectorStyle } from 'map/styles'
 
 // eslint expects ol to get imported, but we load the full lib in header
 const ol = window.ol
-const Turbo = window.Turbo
 
 export function initializeMainInteractions () {
   const homeButton = new ol.control.Button({
-    html: "<i class='bi-house'></i>",
+    html: "<a href='/'><i class='bi-house'></i></a>",
     title: 'Back to Start',
-    className: 'buttons button-home',
-    handleClick: function () {
-      Turbo.visit('/')
-    }
+    className: 'buttons button-home'
   })
   mainBar.addControl(homeButton)
 
