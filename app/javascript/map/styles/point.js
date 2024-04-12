@@ -64,7 +64,7 @@ function iconStyle (feature, resolution) {
   const size = symbolSizes[feature.get('marker-size')] || symbolSizes.medium
   return new ol.style.Icon({
     src: feature.get('marker-icon'),
-    width: size
+    width: size - 2 // don't overlap the circle
   })
 }
 

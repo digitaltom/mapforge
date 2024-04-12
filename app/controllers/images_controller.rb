@@ -2,7 +2,8 @@ class ImagesController < ApplicationController
   before_action :set_image, only: %i[icon]
 
   def icon
-    image_url = @image.img.thumb("50x").crop_quadrant.sharpen(0.5).rounded.url
+    # resize, crop if necessary to maintain aspect ratio (centre gravity)
+    image_url = @image.img.thumb("100x100#", quality: 95).rounded.url
     redirect_to image_url
   end
 

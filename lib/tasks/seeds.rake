@@ -33,7 +33,7 @@ namespace :seed do
     Map.create_from_file("db/seeds/frontpage/frontpage.json")
     Map.create_from_file("db/seeds/frontpage/frontpage-category-friends.json")
 
-    # import user icons
+    # import user icons (from https://unsplash.com/s/photos/person?license=free)
     Dir.foreach("db/seeds/frontpage/icons") do |filename|
      next if filename == "." or filename == ".."
      # Do work on the remaining files & directories
