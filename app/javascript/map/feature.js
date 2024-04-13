@@ -73,9 +73,9 @@ export function updateProps (feature, newProps) {
 // }
 
 function changedCoords (feature, newFeature) {
-  // compare coords with limited precision, because of formt conversion errors
-  const oldCoords = JSON.stringify(formatCoords(feature.getGeometry().getCoordinates()))
-  const newCoords = JSON.stringify(formatCoords(newFeature.getGeometry().getCoordinates()))
+  // compare coords with limited precision, because of format conversion errors
+  const oldCoords = JSON.stringify(simplifyCoords(feature.getGeometry().getCoordinates()))
+  const newCoords = JSON.stringify(simplifyCoords(newFeature.getGeometry().getCoordinates()))
   const changed = (oldCoords !== newCoords)
   if (changed) { console.log('changed coords: ' + oldCoords + ' -> ' + newCoords) }
   return changed
@@ -89,13 +89,16 @@ function changedProps (feature, newFeature) {
   return changed
 }
 
-function formatCoords (coords, precision = 7) {
-  // coords are not an array of coordinates for points
-  if (coords.length === 2 && !Array.isArray(coords[0])) {
-    return [coords[0].toFixed(precision), coords[1].toFixed(precision)]
-  }
-  return coords.map(function (coordinate) {
-    return [coordinate[0].toFixed(precision), coordinate[1].toFixed(precision)]
+// round coordinates, independent of their nesting,
+// points are [1,2], lines are [[1,2],[3,4]], polygons are [[[]]]
+function simplifyCoords (coords, precision = 7) {
+  return coords.map(item => {
+    if (Array.isArray(item)) {
+      // If the item is an array, recursively call the function
+      return simplifyCoords(item, precision)
+    } else {
+      return item.toFixed(7)
+    }
   })
 }
 

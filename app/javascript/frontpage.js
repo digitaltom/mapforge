@@ -118,6 +118,9 @@ async function featureShow () {
           // train
           animateMarkerPath(featureSource.getFeatureById('38488b9d78'),
             featureSource.getFeatureById('7afc4ef808'))
+          // truck
+          animateMarkerPath(featureSource.getFeatureById('14a86bd238'),
+            featureSource.getFeatureById('19e435d8b8'))
         }
       })
     })
