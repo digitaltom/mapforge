@@ -56,7 +56,6 @@ function init () {
   unload()
   initializeMapProperties()
   initializeMap('frontpage-map')
-  setBackgroundMapLayer()
 
   map.getInteractions().forEach(function (interaction) {
     interaction.setActive(false)

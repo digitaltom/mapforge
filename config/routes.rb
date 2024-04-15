@@ -8,6 +8,9 @@ Rails.application.routes.draw do
     end
   end
 
+  get "/frontpage" => "frontpage#index"
+  get "/deck" => "frontpage#deck"
+
   get "/icon/:public_id", to: "images#icon", as: "icon", constraints: { public_id: /[^\/]+/ }
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

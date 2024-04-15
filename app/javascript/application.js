@@ -4,3 +4,4 @@ import 'controllers'
 
 import 'map'
 import 'frontpage'
+import 'deck'

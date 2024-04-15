@@ -7,4 +7,12 @@ class FrontpageController < ApplicationController
     gon.map_properties = @map.properties
     gon.map_keys = @map.keys
   end
+
+  def deck
+    @map = Map.frontpage
+    gon.map_id = @map.public_id
+    gon.map_mode = "static"
+    gon.map_properties = @map.properties
+    gon.map_keys = @map.keys
+  end
 end

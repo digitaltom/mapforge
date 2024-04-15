@@ -18,6 +18,8 @@
     / openlayers
     %link{rel: "stylesheet", href: "https://cdn.jsdelivr.net/npm/ol@v9.0.0/ol.css", type: "text/css"}
     %link{rel: "stylesheet", href: "https://ga.jspm.io/npm:ol-ext@4.0.13/dist/ol-ext.css", type: "text/css"}
+    / maplibre-gl
+    %link{rel: "stylesheet", href: "https://unpkg.com/maplibre-gl/dist/maplibre-gl.css", type: "text/css"}
 
     = stylesheet_link_tag "application", "data-turbo-track": "reload"
     = javascript_importmap_tags
@@ -26,6 +28,8 @@
     = javascript_include_tag "https://ga.jspm.io/npm:ol-ext@4.0.13/dist/ol-ext.js"
     = javascript_include_tag "https://unpkg.com/ol-mapbox-style@12.1.1/dist/olms.js"
     = javascript_include_tag "https://unpkg.com/@turf/turf@6/turf.min.js"
+    = javascript_include_tag "https://unpkg.com/maplibre-gl/dist/maplibre-gl.js"
+    = javascript_include_tag "https://unpkg.com/deck.gl/dist.min.js"
 
 
     = yield(:head)
