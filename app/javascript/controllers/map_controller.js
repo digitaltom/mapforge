@@ -1,7 +1,7 @@
 import { Controller } from '@hotwired/stimulus'
-import { flash, setBackgroundMapLayer } from 'map/map'
+import { flash, setBackgroundMapLayer } from 'ol/map'
 import { mapChannel } from 'channels/map_channel'
-import { mapProperties } from 'map/properties'
+import { mapProperties } from 'ol/properties'
 
 export default class extends Controller {
   update (event) {

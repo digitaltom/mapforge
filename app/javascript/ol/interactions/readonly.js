@@ -1,6 +1,6 @@
-import { map, locate, vectorLayer } from 'map/map'
+import { map, locate, vectorLayer } from 'ol/map'
 import * as functions from 'helpers/functions'
-import { hoverStyle, vectorStyle } from 'map/styles'
+import { hoverStyle, vectorStyle } from 'ol/styles'
 
 // eslint expects ol to get imported, but we load the full lib in header
 const ol = window.ol

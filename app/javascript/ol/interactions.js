@@ -1,11 +1,11 @@
-import { map, mainBar, vectorSource } from 'map/map'
-import { selectInteraction, hideFeaturePopup } from 'map/interactions/readonly'
+import { map, mainBar, vectorSource } from 'ol/map'
+import { selectInteraction, hideFeaturePopup } from 'ol/interactions/readonly'
 import {
   drawInteraction, pointInteraction, lineInteraction, modifyInteraction,
   polygonInteraction, bannerInteraction, selectEditInteraction, hideFeatureEdit
-} from 'map/interactions/edit'
-import { animateView } from 'map/animations'
-import { vectorStyle } from 'map/styles'
+} from 'ol/interactions/edit'
+import { animateView } from 'ol/animations'
+import { vectorStyle } from 'ol/styles'
 
 // eslint expects ol to get imported, but we load the full lib in header
 const ol = window.ol

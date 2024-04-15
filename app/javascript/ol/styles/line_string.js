@@ -1,4 +1,4 @@
-import { title } from 'map/styles/title'
+import { title } from 'ol/styles/title'
 import { hexToRgb } from 'helpers/functions'
 
 // eslint expects ol to get imported, but we load the full lib in header

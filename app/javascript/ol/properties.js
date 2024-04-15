@@ -1,4 +1,4 @@
-import { map, flash } from 'map/map'
+import { map, flash } from 'ol/map'
 import { mapChannel } from 'channels/map_channel'
 import * as functions from 'helpers/functions'
 

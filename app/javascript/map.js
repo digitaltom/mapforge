@@ -1,10 +1,10 @@
 // loaded in /maps/show.html.haml
-import { initializeMap, setBackgroundMapLayer } from 'map/map'
+import { initializeMap, setBackgroundMapLayer } from 'ol/map'
 import { initializeSocket } from 'channels/map_channel'
-import { initializeMapModal, initializeMapProperties } from 'map/properties'
-import { initializeMainInteractions } from 'map/interactions'
-import { initializeReadonlyInteractions } from 'map/interactions/readonly'
-import { initializeEditInteractions } from 'map/interactions/edit'
+import { initializeMapModal, initializeMapProperties } from 'ol/properties'
+import { initializeMainInteractions } from 'ol/interactions'
+import { initializeReadonlyInteractions } from 'ol/interactions/readonly'
+import { initializeEditInteractions } from 'ol/interactions/edit'
 
 document.addEventListener('turbo:load', function () {
   if (document.getElementById('map')) {

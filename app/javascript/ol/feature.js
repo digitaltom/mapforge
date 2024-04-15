@@ -1,8 +1,8 @@
-import { vectorSource, changedFeatureQueue } from 'map/map'
+import { vectorSource, changedFeatureQueue } from 'ol/map'
 import * as functions from 'helpers/functions'
-import { vectorStyle } from 'map/styles'
-import { animateMarker } from 'map/animations'
-import { hideFeatureEdit } from 'map/interactions/edit'
+import { vectorStyle } from 'ol/styles'
+import { animateMarker } from 'ol/animations'
+import { hideFeatureEdit } from 'ol/interactions/edit'
 
 // eslint expects variables to get imported, but we load the full lib in header
 const ol = window.ol

@@ -1,4 +1,4 @@
-import { map, olMapLayer } from 'map/map'
+import { map, olMapLayer } from 'ol/map'
 import * as functions from 'helpers/functions'
 
 // eslint expects variables to get imported, but we load the full lib in header

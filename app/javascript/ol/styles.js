@@ -1,7 +1,7 @@
 // https://openlayers.org/workshop/en/vector/style.html
-import { pointStyle, pointHoverStyle } from 'map/styles/point'
-import { lineStringStyle, lineStringHoverStyle, lineStringSketchStyle } from 'map/styles/line_string'
-import { polygonStyle, polygonHoverStyle, polygonSketchStyle } from 'map/styles/polygon'
+import { pointStyle, pointHoverStyle } from 'ol/styles/point'
+import { lineStringStyle, lineStringHoverStyle, lineStringSketchStyle } from 'ol/styles/line_string'
+import { polygonStyle, polygonHoverStyle, polygonSketchStyle } from 'ol/styles/polygon'
 
 // eslint expects ol to get imported, but we load the full lib in header
 const ol = window.ol

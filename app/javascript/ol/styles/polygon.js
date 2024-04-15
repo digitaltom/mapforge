@@ -1,4 +1,4 @@
-import { title } from 'map/styles/title'
+import { title } from 'ol/styles/title'
 import { hexToRgb } from 'helpers/functions'
 
 // eslint expects ol to get imported, but we load the full lib in header
@@ -47,6 +47,7 @@ export function polygonSketchStyle (feature, resolution) {
   const fill = new ol.style.Fill({
     color: 'rgba(' + fillCol + ', ' + fillOpacity + ')'
   })
+  console.log(fillCol)
 
   return new ol.style.Style({
     stroke, fill

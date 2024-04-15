@@ -1,13 +1,13 @@
 import {
   map, flash, mainBar, vectorSource, changedFeatureQueue, vectorLayer
-} from 'map/map'
-import { mapProperties } from 'map/properties'
+} from 'ol/map'
+import { mapProperties } from 'ol/properties'
 import { mapChannel } from 'channels/map_channel'
-import { hoverStyle, vectorStyle, sketchStyle } from 'map/styles'
-import { createFeatureId, resetInteractions } from 'map/interactions'
+import { hoverStyle, vectorStyle, sketchStyle } from 'ol/styles'
+import { createFeatureId, resetInteractions } from 'ol/interactions'
 import * as functions from 'helpers/functions'
-import { selectInteraction } from 'map/interactions/readonly'
-import { featureAsGeoJSON, updateProps, simplifyGeometry } from 'map/feature'
+import { selectInteraction } from 'ol/interactions/readonly'
+import { featureAsGeoJSON, updateProps, simplifyGeometry } from 'ol/feature'
 
 // eslint expects ol to get imported, but we load the full lib in header
 const ol = window.ol
@@ -228,7 +228,7 @@ export function initializeModifyInteraction () {
 
   modifyInteraction.on('modifyend', function (e) {
     // console.log('changedFeatureQueue: ' + changedFeatureQueue)
-    // don't use e.features.getArray() here, because it contains all map/selected features
+    // don't use e.features.getArray() here, because it contains all ol/selected features
     while (changedFeatureQueue.length > 0) {
       const feature = changedFeatureQueue.pop()
       console.log('Feature ' + feature.getId() + ' has been modified')

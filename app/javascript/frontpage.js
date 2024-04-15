@@ -1,10 +1,10 @@
 // loaded in /frontpage/index.html.haml
-import { map, initializeMap, vectorSourceFromUrl, setBackgroundMapLayer } from 'map/map'
-import { initializeMapProperties } from 'map/properties'
-import { vectorStyle } from 'map/styles'
+import { map, initializeMap, vectorSourceFromUrl, setBackgroundMapLayer } from 'ol/map'
+import { initializeMapProperties } from 'ol/properties'
+import { vectorStyle } from 'ol/styles'
 import * as functions from 'helpers/functions'
 import * as dom from 'helpers/dom'
-import { animateMarkerPath } from 'map/animations'
+import { animateMarkerPath } from 'ol/animations'
 
 // eslint expects variables to get imported, but we load the full lib in header
 const ol = window.ol

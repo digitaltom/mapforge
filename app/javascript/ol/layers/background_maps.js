@@ -86,7 +86,7 @@ export const backgroundTiles = {
   esriTiles: function () {
     return new ol.layer.Tile({
       source: new ol.source.XYZ({
-        url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
+        url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_ol/MapServer/tile/{z}/{y}/{x}',
         attributions: ['Powered by <a href="https://developers.arcgis.com/" target="_blank">Esri</a>'],
         attributionsCollapsible: functions.isMobileDevice()
       }),

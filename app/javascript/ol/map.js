@@ -1,10 +1,10 @@
-import { vectorStyle } from 'map/styles'
-import { undoInteraction } from 'map/interactions/edit'
-import { mapProperties } from 'map/properties'
-import { animateView } from 'map/animations'
+import { vectorStyle } from 'ol/styles'
+import { undoInteraction } from 'ol/interactions/edit'
+import { mapProperties } from 'ol/properties'
+import { animateView } from 'ol/animations'
 import * as dom from 'helpers/dom'
-import { backgroundTiles } from 'map/layers/background_maps'
-import { geoJsonFormat, featureAsGeoJSON, updateFeature } from 'map/feature'
+import { backgroundTiles } from 'ol/layers/background_maps'
+import { geoJsonFormat, featureAsGeoJSON, updateFeature } from 'ol/feature'
 
 // eslint expects variables to get imported, but we load the full lib in header
 const ol = window.ol
