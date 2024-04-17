@@ -34,7 +34,7 @@ export function hexToRgb (hex) {
     g = parseInt(hex.slice(2, 3), 16)
     b = parseInt(hex.slice(3, 4), 16)
   }
-  return `${r}, ${g}, ${b}`
+  return [r, g, b]
 }
 
 export function sleep (ms) {

@@ -1,3 +1,5 @@
+import { hexToRgb } from 'helpers/functions'
+
 // eslint expects variables to get imported, but we load the full lib in header
 const maplibregl = window.maplibregl
 const deck = window.deck;
@@ -15,67 +17,54 @@ async function init () {
   const map = new maplibregl.Map({
     container: 'deck-map', // container ID
     // style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
-    style: '/layers/nostreets.json?key=' + window.gon.map_keys.maptiler,
-    center: [8.271366455078127, 50.013330503465454],
-    zoom: 9,
+    // style: '/layers/nostreets.json?key=' + window.gon.map_keys.maptiler,
+    style: 'https://api.maptiler.com/maps/dataviz/style.json?key=' + window.gon.map_keys.maptiler,
+    // center: [8.271366455078127, 50.013330503465454],
+    center: [11.087296431880343, 49.4286744309569],
+    zoom: 16,
     pitch: 45 // tilt the map
   })
   map.addControl(new maplibregl.NavigationControl())
 
   // await map.once('load')
 
-  const data = [
-    { position: [8.271366455078127, 50.013330503465454], iconUrl: '/icons/mapforge-logo.png', size: 100 },
-    { position: [8.371366, 50.11333], iconUrl: '/icons/mapforge-logo.png', size: 150 }
-    // Add more points as needed
-  ]
-
-  const iconLayer = new deck.IconLayer({
-    id: 'icon-layer',
-    data,
-    pickable: true,
-    // Auto-pack icons by providing icon URLs directly
-    getIcon: d => ({
-      url: d.iconUrl,
-      height: 100,
-      width: 100,
-      anchorY: 128
-    }),
-    onIconError: e => console.log(e),
-    getSize: 40
-    // getPosition: d => d.position,
-  })
-
   // https://deck.gl/docs/api-reference/layers/geojson-layer
   const geojsonLayer = new deck.GeoJsonLayer({
     id: 'airports',
-    data: '/maps/frontpage-category-friends/features',
+    data: '/maps/frontpage-category-office/features',
     // Styles
+    stroked: true, // Ensure strokes are visible
     filled: true,
-    // stroked: false,
-    pointType: 'icon', // 'icon+circle+text',
+    pickable: true,
+    pointType: 'icon+circle+text', // 'icon+circle+text',
 
     getIcon: d => ({
       url: d.properties['marker-icon'],
       height: 100,
       width: 100,
-      anchorY: 128
+      anchorY: 50
     }),
     onIconError: e => console.log(e),
-    getIconSize: 40,
+    getIconSize: 50,
     // sizeScale: 10,
     // sizeMinPixels: 20,
-    // pickable: true,
     // getPosition: d => d.position,
 
-    pointRadiusMinPixels: 2,
-    pointRadiusScale: 10,
-    getPointRadius: f => 128,
-    getFillColor: [200, 0, 80, 180],
+    // pointRadiusMinPixels: 2,
+    // pointRadiusScale: 5,
+    // getPointRadius: f => 1,
+    getFillColor: f => hexToRgb(f.properties.fill || '#c0c0c0').concat((f.properties['fill-opacity'] || 1) * 255),
+    getLineWidth: f => (f.properties['stroke-width'] || 1) * 0.1, // Stroke width in meters
+    getLineColor: f => hexToRgb(f.properties.stroke || '#000').concat((f.properties['stroke-opacity'] || 1) * 255),
+    getPointRadius: 4,
+
+    // extruded: true,
+    // getElevation: 10,
+
     // // Interactive props
     // pickable: true,
-    // autoHighlight: true,
-    getText: f => f.properties['marker-icon'],
+    autoHighlight: true,
+    getText: f => 'test', // f.properties.label,
     getTextSize: 12
     // onClick: info =>
     //   // eslint-disable-next-line
@@ -84,12 +73,22 @@ async function init () {
   })
 
   const deckOverlay = new deck.MapboxOverlay({
-    // interleaved: true,
+    interleaved: true,
     layers: [
-      geojsonLayer,
-      iconLayer
+      geojsonLayer
     ]
   })
 
-  map.addControl(deckOverlay)
+  map.on('load', () => {
+    map.addSource('terrain', {
+      type: 'raster-dem',
+      url: 'https://api.maptiler.com/tiles/terrain-rgb/tiles.json?key=' + window.gon.map_keys.maptiler
+    })
+    map.setTerrain({
+      source: 'terrain',
+      exaggeration: 1 // Adjust the exaggeration as needed
+    })
+
+    map.addControl(deckOverlay)
+  })
 }
