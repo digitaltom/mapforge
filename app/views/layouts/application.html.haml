@@ -20,6 +20,7 @@
     %link{rel: "stylesheet", href: "https://ga.jspm.io/npm:ol-ext@4.0.13/dist/ol-ext.css", type: "text/css"}
     / maplibre-gl
     %link{rel: "stylesheet", href: "https://unpkg.com/maplibre-gl/dist/maplibre-gl.css", type: "text/css"}
+    %link{rel: "stylesheet", href: "https://cdn.maptiler.com/maptiler-sdk-js/v1.2.0/maptiler-sdk.css", type: "text/css"}
 
     = stylesheet_link_tag "application", "data-turbo-track": "reload"
     = javascript_importmap_tags
@@ -30,6 +31,7 @@
     = javascript_include_tag "https://unpkg.com/@turf/turf@6/turf.min.js"
     = javascript_include_tag "https://unpkg.com/maplibre-gl/dist/maplibre-gl.js"
     = javascript_include_tag "https://unpkg.com/deck.gl/dist.min.js"
+    = javascript_include_tag "https://cdn.maptiler.com/maptiler-sdk-js/v1.2.0/maptiler-sdk.umd.min.js"
 
 
     = yield(:head)

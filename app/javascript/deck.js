@@ -80,14 +80,14 @@ async function init () {
   })
 
   map.on('load', () => {
-    map.addSource('terrain', {
-      type: 'raster-dem',
-      url: 'https://api.maptiler.com/tiles/terrain-rgb/tiles.json?key=' + window.gon.map_keys.maptiler
-    })
-    map.setTerrain({
-      source: 'terrain',
-      exaggeration: 1 // Adjust the exaggeration as needed
-    })
+    // map.addSource('terrain', {
+    //   type: 'raster-dem',
+    //   url: 'https://api.maptiler.com/tiles/terrain-rgb/tiles.json?key=' + window.gon.map_keys.maptiler
+    // })
+    // map.setTerrain({
+    //   source: 'terrain',
+    //   exaggeration: 1 // Adjust the exaggeration as needed
+    // })
 
     map.addControl(deckOverlay)
   })

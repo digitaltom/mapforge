@@ -10,6 +10,7 @@ Rails.application.routes.draw do
 
   get "/frontpage" => "frontpage#index"
   get "/deck" => "frontpage#deck"
+  get "/m" => "frontpage#maplibre"
 
   get "/icon/:public_id", to: "images#icon", as: "icon", constraints: { public_id: /[^\/]+/ }
 
