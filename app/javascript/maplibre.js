@@ -34,6 +34,7 @@ async function init () {
   })
 
   map.on('load', function () {
+    // After images are loaded, add the GeoJSON source and layer
     map.addSource('geojson-source', {
       type: 'geojson',
       data: '/maps/' + window.gon.map_id + '/features'
@@ -55,7 +56,9 @@ async function init () {
       source: 'geojson-source',
       layout: {
         'icon-image': ['get', 'marker-icon'], // Use the 'icon' property from the GeoJSON properties
-        'icon-size': 1.5
+        'icon-size': 0.75,
+        'icon-keep-upright': true,
+        'icon-allow-overlap': true
       }
     })
 
@@ -64,10 +67,11 @@ async function init () {
       type: 'symbol',
       source: 'geojson-source',
       layout: {
-        'text-field': ['get', 'label'], // Use the 'title' property of the GeoJSON feature
+        'text-field': ['coalesce', ['get', 'title'], ['get', 'label']], // fallback to label
         'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
         'text-radial-offset': 0.5,
-        'text-justify': 'auto'
+        'text-justify': 'auto',
+        'text-font': ['system-ui']
       },
       paint: {
         'text-color': '#000000',
@@ -75,5 +79,15 @@ async function init () {
         'text-halo-width': 2
       }
     })
+  })
+
+  map.on('styleimagemissing', async function (e) {
+    const imageUrl = e.id
+    const response = await map.loadImage(imageUrl)
+    // Add the loaded image to the style's sprite with the ID 'kitten'.
+    if (!map.hasImage(imageUrl)) {
+      console.log('adding ' + imageUrl + ' to map')
+      map.addImage(imageUrl, response.data)
+    }
   })
 }

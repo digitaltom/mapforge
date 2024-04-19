@@ -62,4 +62,14 @@ describe 'Map' do
       expect(page).to have_text('New Title')
     end
   end
+
+  context 'with other engines' do
+    it 'deck.gl' do
+      visit deck_path(map.public_id)
+    end
+
+    it 'maplibre' do
+      visit maplibre_path(map.public_id)
+    end
+  end
 end
