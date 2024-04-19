@@ -1,4 +1,5 @@
 // import { hexToRgb } from 'helpers/functions'
+import { mapProperties, initializeMapProperties } from 'ol/properties'
 
 // eslint expects variables to get imported, but we load the full lib in header
 const maplibregl = window.maplibregl;
@@ -14,6 +15,8 @@ const maplibregl = window.maplibregl;
 })
 
 async function init () {
+  initializeMapProperties()
+
   // maptilersdk.config.apiKey = window.gon.map_keys.maptiler
   // const map = new maptilersdk.Map({
   //   container: 'maplibre-map',
@@ -25,14 +28,15 @@ async function init () {
   const map = new maplibregl.Map({
     container: 'maplibre-map',
     style: 'https://api.maptiler.com/maps/dataviz/style.json?key=' + window.gon.map_keys.maptiler,
-    center: [11.087296431880343, 49.4286744309569],
-    zoom: 14
+    center: mapProperties.center,
+    zoom: mapProperties.zoom,
+    pitch: 45
   })
 
   map.on('load', function () {
     map.addSource('geojson-source', {
       type: 'geojson',
-      data: '/maps/frontpage-category-office/features'
+      data: '/maps/' + window.gon.map_id + '/features'
     })
 
     map.addLayer({
@@ -42,6 +46,16 @@ async function init () {
       paint: {
         'fill-color': '#888888',
         'fill-opacity': 0.4
+      }
+    })
+
+    map.addLayer({
+      id: 'points-layer',
+      type: 'symbol',
+      source: 'geojson-source',
+      layout: {
+        'icon-image': ['get', 'marker-icon'], // Use the 'icon' property from the GeoJSON properties
+        'icon-size': 1.5
       }
     })
 

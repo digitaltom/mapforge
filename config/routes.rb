@@ -7,11 +7,10 @@ Rails.application.routes.draw do
       get :properties
     end
   end
+  get "/d/:id" => "maps#show", defaults: { engine: 'deck' }
+  get "/m/:id" => "maps#show", defaults: { engine: 'maplibre' }
 
   get "/frontpage" => "frontpage#index"
-  get "/deck" => "frontpage#deck"
-  get "/m" => "frontpage#maplibre"
-
   get "/icon/:public_id", to: "images#icon", as: "icon", constraints: { public_id: /[^\/]+/ }
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

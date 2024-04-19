@@ -1,4 +1,5 @@
 import { hexToRgb } from 'helpers/functions'
+import { mapProperties, initializeMapProperties } from 'ol/properties'
 
 // eslint expects variables to get imported, but we load the full lib in header
 const maplibregl = window.maplibregl
@@ -14,14 +15,16 @@ const deck = window.deck;
 })
 
 async function init () {
+  initializeMapProperties()
+
   const map = new maplibregl.Map({
     container: 'deck-map', // container ID
     // style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
     // style: '/layers/nostreets.json?key=' + window.gon.map_keys.maptiler,
     style: 'https://api.maptiler.com/maps/dataviz/style.json?key=' + window.gon.map_keys.maptiler,
     // center: [8.271366455078127, 50.013330503465454],
-    center: [11.087296431880343, 49.4286744309569],
-    zoom: 16,
+    center: mapProperties.center,
+    zoom: mapProperties.zoom,
     pitch: 45 // tilt the map
   })
   map.addControl(new maplibregl.NavigationControl())
@@ -30,8 +33,8 @@ async function init () {
 
   // https://deck.gl/docs/api-reference/layers/geojson-layer
   const geojsonLayer = new deck.GeoJsonLayer({
-    id: 'airports',
-    data: '/maps/frontpage-category-office/features',
+    id: 'geojson',
+    data: '/maps/' + window.gon.map_id + '/features',
     // Styles
     stroked: true, // Ensure strokes are visible
     filled: true,
@@ -64,7 +67,7 @@ async function init () {
     // // Interactive props
     // pickable: true,
     autoHighlight: true,
-    getText: f => 'test', // f.properties.label,
+    getText: f => f.properties.label || f.properties.title,
     getTextSize: 12
     // onClick: info =>
     //   // eslint-disable-next-line

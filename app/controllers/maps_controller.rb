@@ -13,8 +13,17 @@ class MapsController < ApplicationController
     gon.map_keys = @map.keys
 
     respond_to do |format|
-       format.html
-       format.json { render json: @map.to_json }
+      format.html do
+        case params['engine']
+        when 'deck'
+          render 'deck'
+        when 'maplibre'
+          render 'maplibre'
+        else
+          render 'show'
+        end
+      end
+      format.json { render json: @map.to_json }
     end
   end
 
