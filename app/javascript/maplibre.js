@@ -2,8 +2,15 @@
 import { mapProperties, initializeMapProperties } from 'ol/properties'
 
 // eslint expects variables to get imported, but we load the full lib in header
-const maplibregl = window.maplibregl;
+const maplibregl = window.maplibregl
+const MapboxDraw = window.MapboxDraw
 // const maptilersdk = window.maptilersdk;
+
+MapboxDraw.constants.classes.CONTROL_BASE = 'maplibregl-ctrl'
+MapboxDraw.constants.classes.CONTROL_PREFIX = 'maplibregl-ctrl-'
+MapboxDraw.constants.classes.CONTROL_GROUP = 'maplibregl-ctrl-group'
+
+let geojsonSource
 
 ['turbo:load'].forEach(function (e) {
   window.addEventListener(e, function () {
@@ -35,12 +42,59 @@ async function init () {
   })
   map.addControl(new maplibregl.NavigationControl())
 
+  const draw = new MapboxDraw({})
+  map.addControl(draw, 'top-left')
+
+  map.on('draw.create', handleCreate)
+  // map.on('draw.update', handleUpdate)
+  // map.on('draw.delete', handleDelete)
+
+  function handleCreate (e) {
+    const source = map.getSource('geojson-source')
+    const feature = e.features[0] // Assuming one feature is created at a time
+    console.log(feature)
+    geojsonSource.features.push(feature)
+    source.setData(geojsonSource)
+  }
+
   map.on('load', function () {
-    // After images are loaded, add the GeoJSON source and layer
+    // https://maplibre.org/maplibre-style-spec/sources/#geojson
     map.addSource('geojson-source', {
       type: 'geojson',
-      data: '/maps/' + window.gon.map_id + '/features'
+      // data: '/maps/' + window.gon.map_id + '/features',
+      data: { type: 'FeatureCollection', features: [] },
+      cluster: false
     })
+
+    fetch('/maps/' + window.gon.map_id + '/features')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok')
+        }
+        return response.json()
+      })
+      .then(data => {
+        console.log('GeoJSON data:', data)
+        geojsonSource = data
+        console.log('loaded ' + geojsonSource.features.length + ' features from ' + '/maps/' + window.gon.map_id + '/features')
+        map.getSource('geojson-source').setData(geojsonSource)
+        draw.set(geojsonSource)
+      })
+      .catch(error => {
+        console.error('Failed to fetch GeoJSON:', error)
+      })
+
+    // map.on('sourcedata', function(e) {
+    //     if (e.sourceId === 'geojson-source' && map.isSourceLoaded('geojson-source')) {
+    //       //console.log(e.sourceId + 'loaded')
+    //       var features = map.querySourceFeatures('geojson-source')
+    //       console.log(features)
+    //       draw.set({
+    //           type: 'FeatureCollection',
+    //           features: features
+    //       })
+    //     }
+    // });
 
     // https://maplibre.org/maplibre-style-spec/layers/
     // layout is fixed, paint flexible
@@ -61,8 +115,8 @@ async function init () {
       source: 'geojson-source',
       filter: ['in', '$type', 'LineString', 'Polygon'],
       layout: {
-          'line-join': 'round',
-          'line-cap': 'round'
+        'line-join': 'round',
+        'line-cap': 'round'
       },
       paint: {
         'line-color': ['coalesce', ['get', 'stroke'], 'rgb(10, 135, 10)'],
@@ -107,11 +161,11 @@ async function init () {
         'text-size': 24,
         // must be available via glyphs: https://docs.maptiler.com/gl-style-specification/glyphs/
         // Emojis seem not to be in the character range: https://github.com/maplibre/maplibre-gl-js/issues/2307
-        'text-font': ['Noto Color Emoji'], //['Arial Unicode MS Bold', 'Open Sans Bold'], // Ensure the font supports emojis
+        'text-font': ['Noto Color Emoji'], // ['Arial Unicode MS Bold', 'Open Sans Bold'], // Ensure the font supports emojis
         'text-anchor': 'top'
       },
       paint: {
-        "text-color": '#123',
+        'text-color': '#123'
       }
     })
   })
