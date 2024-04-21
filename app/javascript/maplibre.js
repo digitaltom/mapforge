@@ -27,11 +27,13 @@ async function init () {
 
   const map = new maplibregl.Map({
     container: 'maplibre-map',
-    style: 'https://api.maptiler.com/maps/dataviz/style.json?key=' + window.gon.map_keys.maptiler,
+    style: 'https://api.maptiler.com/maps/streets/style.json?key=' + window.gon.map_keys.maptiler,
     center: mapProperties.center,
     zoom: mapProperties.zoom,
-    pitch: 45
+    pitch: 45,
+    interactive: (window.gon.map_mode !== 'static')
   })
+  map.addControl(new maplibregl.NavigationControl())
 
   map.on('load', function () {
     // After images are loaded, add the GeoJSON source and layer
@@ -40,20 +42,50 @@ async function init () {
       data: '/maps/' + window.gon.map_id + '/features'
     })
 
+    // https://maplibre.org/maplibre-style-spec/layers/
+    // layout is fixed, paint flexible
     map.addLayer({
-      id: 'geojson-layer',
-      type: 'fill', // This can be 'line', 'circle', etc., depending on your GeoJSON geometry
+      id: 'polygon-layer',
+      type: 'fill',
       source: 'geojson-source',
+      filter: ['==', '$type', 'Polygon'],
       paint: {
-        'fill-color': '#888888',
-        'fill-opacity': 0.4
+        'fill-color': ['coalesce', ['get', 'fill'], 'rgb(10, 135, 10)'],
+        'fill-opacity': ['to-number', ['coalesce', ['get', 'fill-opacity'], 0.5]]
+      }
+    })
+
+    map.addLayer({
+      id: 'line-layer',
+      type: 'line',
+      source: 'geojson-source',
+      filter: ['in', '$type', 'LineString', 'Polygon'],
+      layout: {
+          'line-join': 'round',
+          'line-cap': 'round'
+      },
+      paint: {
+        'line-color': ['coalesce', ['get', 'stroke'], 'rgb(10, 135, 10)'],
+        'line-width': ['to-number', ['coalesce', ['get', 'stroke-width'], 5]]
       }
     })
 
     map.addLayer({
       id: 'points-layer',
+      type: 'circle',
+      source: 'geojson-source',
+      filter: ['==', '$type', 'Point'],
+      paint: {
+        'circle-radius': 6,
+        'circle-color': ['coalesce', ['get', 'marker-color'], 'rgb(10, 135, 10)']
+      }
+    })
+
+    map.addLayer({
+      id: 'symbols-layer',
       type: 'symbol',
       source: 'geojson-source',
+      filter: ['==', '$type', 'Point'],
       layout: {
         'icon-image': ['get', 'marker-icon'], // Use the 'icon' property from the GeoJSON properties
         'icon-size': 0.75,
@@ -67,26 +99,29 @@ async function init () {
       type: 'symbol',
       source: 'geojson-source',
       layout: {
+        // "text-field": ["format",
+        //     "", { "font-scale": 1.2 },
+        //     "", { "font-scale": 0.8 }
+        // ],
         'text-field': ['coalesce', ['get', 'title'], ['get', 'label']], // fallback to label
-        'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
-        'text-radial-offset': 0.5,
-        'text-justify': 'auto',
-        'text-font': ['system-ui']
+        'text-size': 24,
+        // must be available via glyphs: https://docs.maptiler.com/gl-style-specification/glyphs/
+        // Emojis seem not to be in the character range: https://github.com/maplibre/maplibre-gl-js/issues/2307
+        'text-font': ['Noto Color Emoji'], //['Arial Unicode MS Bold', 'Open Sans Bold'], // Ensure the font supports emojis
+        'text-anchor': 'top'
       },
       paint: {
-        'text-color': '#000000',
-        'text-halo-color': '#ffffff',
-        'text-halo-width': 2
+        "text-color": '#123',
       }
     })
   })
 
+  // loading images from 'marker-icon' attributes
   map.on('styleimagemissing', async function (e) {
     const imageUrl = e.id
     const response = await map.loadImage(imageUrl)
-    // Add the loaded image to the style's sprite with the ID 'kitten'.
     if (!map.hasImage(imageUrl)) {
-      console.log('adding ' + imageUrl + ' to map')
+      // console.log('adding ' + imageUrl + ' to map')
       map.addImage(imageUrl, response.data)
     }
   })
