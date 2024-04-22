@@ -97,6 +97,7 @@ async function init () {
     // });
 
     // https://maplibre.org/maplibre-style-spec/layers/
+    // Expressions: https://maplibre.org/maplibre-style-spec/expressions/
     // layout is fixed, paint flexible
     map.addLayer({
       id: 'polygon-layer',
@@ -141,7 +142,14 @@ async function init () {
       source: 'geojson-source',
       filter: ['==', '$type', 'Point'],
       layout: {
-        'icon-image': ['get', 'marker-icon'], // Use the 'icon' property from the GeoJSON properties
+        'icon-image': ['coalesce',
+                        ['get', 'marker-icon'],
+                        // replace marker-symbol value with path to emoji png
+                        ["case",
+                        ["has", 'marker-symbol'],
+                        ['concat', '/emojis/noto/', ['get', 'marker-symbol'], '.png'],
+                        ""]
+                      ],
         'icon-size': 0.75,
         'icon-keep-upright': true,
         'icon-allow-overlap': true
