@@ -1,0 +1,5 @@
+# ignore the original filenames
+
+emoji_*.png
+[0-9]*.png
+[A-F]*.png
