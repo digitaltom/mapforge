@@ -136,23 +136,23 @@ async function init () {
       }
     })
 
+    // support symbols on all feature types
     map.addLayer({
       id: 'symbols-layer',
       type: 'symbol',
       source: 'geojson-source',
-      filter: ['==', '$type', 'Point'],
       layout: {
         'icon-image': ['coalesce',
-                        ['get', 'marker-icon'],
-                        // replace marker-symbol value with path to emoji png
-                        ["case",
-                        ["has", 'marker-symbol'],
-                        ['concat', '/emojis/noto/', ['get', 'marker-symbol'], '.png'],
-                        ""]
-                      ],
-        'icon-size': 0.75,
+          ['get', 'marker-icon'],
+          // replace marker-symbol value with path to emoji png
+          ['case',
+            ['has', 'marker-symbol'],
+            ['concat', '/emojis/noto/', ['get', 'marker-symbol'], '.png'],
+            '']
+        ],
+        'icon-size': 0.5,
         'icon-keep-upright': true,
-        'icon-allow-overlap': true
+        'icon-allow-overlap': false
       }
     })
 
@@ -165,11 +165,11 @@ async function init () {
         //     "", { "font-scale": 1.2 },
         //     "", { "font-scale": 0.8 }
         // ],
-        'text-field': ['coalesce', ['get', 'title'], ['get', 'label']], // fallback to label
+        'text-field': ['get', 'title'],
         'text-size': 24,
         // must be available via glyphs: https://docs.maptiler.com/gl-style-specification/glyphs/
         // Emojis seem not to be in the character range: https://github.com/maplibre/maplibre-gl-js/issues/2307
-        'text-font': ['Noto Color Emoji'], // ['Arial Unicode MS Bold', 'Open Sans Bold'], // Ensure the font supports emojis
+        // 'text-font': ['Noto Color Emoji'], // ['Arial Unicode MS Bold', 'Open Sans Bold'], // Ensure the font supports emojis
         'text-anchor': 'top'
       },
       paint: {
