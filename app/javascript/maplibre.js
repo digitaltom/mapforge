@@ -1,5 +1,6 @@
 // import { hexToRgb } from 'helpers/functions'
 import { mapProperties, initializeMapProperties } from 'ol/properties'
+import { basemaps } from 'maplibre/basemaps'
 
 // eslint expects variables to get imported, but we load the full lib in header
 const maplibregl = window.maplibregl
@@ -34,7 +35,7 @@ async function init () {
 
   const map = new maplibregl.Map({
     container: 'maplibre-map',
-    style: 'https://api.maptiler.com/maps/streets/style.json?key=' + window.gon.map_keys.maptiler,
+    style: basemaps.satelliteStreets,
     center: mapProperties.center,
     zoom: mapProperties.zoom,
     pitch: 45,

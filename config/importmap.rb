@@ -13,6 +13,7 @@ pin_all_from "app/javascript/controllers", under: "controllers"
 pin_all_from "app/javascript/channels", under: "channels"
 
 pin_all_from "app/javascript/ol", under: "ol"
+pin_all_from "app/javascript/maplibre", under: "maplibre"
 pin_all_from "app/javascript/helpers", under: "helpers"
 
 # page initializers
