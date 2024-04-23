@@ -33,15 +33,43 @@ async function init () {
   //   zoom: 14,
   // })
 
+  // const map = new maptilersdk.Map({
+  //      container: 'maplibre-map', // container id
+  //      style: basemaps.maptilerWinter, //maptilersdk.MapStyle.OUTDOOR,
+  //      center: mapProperties.center,
+  //      zoom: mapProperties.zoom,
+  //      //terrain: true,
+  //      //terrainControl: true,
+  //      pitch: 45,
+  //      //bearing: -100.86,
+  //      maxPitch: 85,
+  //      maxZoom: 14
+  // });
+
   const map = new maplibregl.Map({
     container: 'maplibre-map',
-    style: basemaps.satelliteStreets,
+    style: basemaps.maptilerBasic,
     center: mapProperties.center,
     zoom: mapProperties.zoom,
     pitch: 45,
+    antialias: true,
     interactive: (window.gon.map_mode !== 'static')
   })
-  map.addControl(new maplibregl.NavigationControl())
+
+  map.addControl(
+    new maplibregl.NavigationControl({
+      visualizePitch: true,
+      showZoom: true,
+      showCompass: true
+    })
+  )
+
+  // map.addControl(
+  //     new maplibregl.TerrainControl({
+  //         source: 'terrainSource',
+  //         exaggeration: 1
+  //     })
+  // );
 
   const draw = new MapboxDraw({})
   map.addControl(draw, 'top-left')
@@ -59,6 +87,16 @@ async function init () {
   }
 
   map.on('load', function () {
+    // map.addSource('terrain', {
+    //   type: 'raster-dem',
+    //   url: 'https://api.maptiler.com/tiles/terrain-rgb/tiles.json?key=' + window.gon.map_keys.maptiler
+    // })
+
+    // map.setTerrain({
+    //   source: 'terrain',
+    //   exaggeration: 1
+    // })
+
     // https://maplibre.org/maplibre-style-spec/sources/#geojson
     map.addSource('geojson-source', {
       type: 'geojson',
@@ -183,9 +221,13 @@ async function init () {
   map.on('styleimagemissing', async function (e) {
     const imageUrl = e.id
     const response = await map.loadImage(imageUrl)
-    if (!map.hasImage(imageUrl)) {
-      // console.log('adding ' + imageUrl + ' to map')
-      map.addImage(imageUrl, response.data)
+    if (response) {
+      if (!map.hasImage(imageUrl)) {
+        // console.log('adding ' + imageUrl + ' to map')
+        map.addImage(imageUrl, response.data)
+      }
+    } else {
+      console.warn(imageUrl + ' not found')
     }
   })
 }

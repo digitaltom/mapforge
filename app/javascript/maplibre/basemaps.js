@@ -7,6 +7,8 @@
 //              "stamenTonerTiles", "openTopoTiles", "mapboxBrightVector",
 //              "maptilerDataviz", "maptilerStreets", "maptilerNoStreets" ]
 
+// Maptiler SDK shortcuts: https://docs.maptiler.com/sdk-js/api/map-styles/#mapstylelist
+
 export const basemaps = {
   stamenWatercolorTiles: {
     version: 8,
@@ -83,10 +85,16 @@ export const basemaps = {
       }
     ]
   },
+  // 3D Houses
+  maptilerBasic: 'https://api.maptiler.com/maps/basic-v2/style.json?key=' + window.gon.map_keys.maptiler,
+  maptilerOpenStreetmap: 'https://api.maptiler.com/maps/openstreetmap/style.json?key=' + window.gon.map_keys.maptiler,
+  maptiler3dBuildings: 'https://api.maptiler.com/maps/3d-buildings/style.json?key=' + window.gon.map_keys.maptiler,
   maptilerDataviz: 'https://api.maptiler.com/maps/dataviz/style.json?key=' + window.gon.map_keys.maptiler,
   maptilerStreets: '/layers/streets.json?key=' + window.gon.map_keys.maptiler,
   maptilerNoStreets: '/layers/nostreets.json?key=' + window.gon.map_keys.maptiler,
-  satelliteStreets: 'https://api.maptiler.com/maps/hybrid/style.json?key=' + window.gon.map_keys.maptiler
+  satelliteStreets: 'https://api.maptiler.com/maps/hybrid/style.json?key=' + window.gon.map_keys.maptiler,
+  satellite: 'https://api.maptiler.com/maps/satellite/style.json?key=' + window.gon.map_keys.maptiler,
+  maptilerWinter: 'https://api.maptiler.com/maps/winter-v2/style.json?key=' + window.gon.map_keys.maptiler
 }
 
 // export const backgroundTiles = {
