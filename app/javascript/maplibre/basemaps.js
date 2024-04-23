@@ -93,6 +93,7 @@ export const basemaps = {
   maptilerStreets: '/layers/streets.json?key=' + window.gon.map_keys.maptiler,
   maptilerNoStreets: '/layers/nostreets.json?key=' + window.gon.map_keys.maptiler,
   satelliteStreets: 'https://api.maptiler.com/maps/hybrid/style.json?key=' + window.gon.map_keys.maptiler,
+  satelliteFixed: 'https://api.maptiler.com/tiles/terrain-quantized-mesh-v2/tiles.json?key=' + window.gon.map_keys.maptiler,
   satellite: 'https://api.maptiler.com/maps/satellite/style.json?key=' + window.gon.map_keys.maptiler,
   maptilerWinter: 'https://api.maptiler.com/maps/winter-v2/style.json?key=' + window.gon.map_keys.maptiler
 }
