@@ -38,7 +38,8 @@ export function initializeSocket () {
       console.log('received from map_channel: ' + JSON.stringify(data))
       switch (data.event) {
         case 'update_feature':
-          updateFeature(data.feature)
+          // ol feature update
+          if (document.getElementById('map')) { updateFeature(data.feature) }
           break
         case 'delete_feature':
           deleteFeature(data.feature.id)

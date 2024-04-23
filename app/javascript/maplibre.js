@@ -2,6 +2,7 @@
 import { initializeMapProperties } from 'ol/properties'
 import { initializeMap, initializeReadonlyInteractions } from 'maplibre/map'
 import { initializeEditInteractions } from 'maplibre/edit'
+import { initializeSocket } from 'channels/map_channel'
 
 ['turbo:load'].forEach(function (e) {
   window.addEventListener(e, function () {
@@ -18,8 +19,8 @@ async function init () {
   initializeMap('maplibre-map')
   // static mode is used for screenshots
   if (window.gon.map_mode !== 'static') {
-  //   initializeSocket()
-  //   initializeMainInteractions()
+    initializeSocket()
+    //   initializeMainInteractions()
     initializeReadonlyInteractions()
     if (window.gon.map_mode === 'rw') {
       //     initializeMapModal()
