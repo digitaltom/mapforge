@@ -8,8 +8,9 @@ const maplibregl = window.maplibregl
 const maptilersdk = window.maptilersdk
 
 export let map
-export let geojsonSource
+export let geojsonData
 
+const terrain = false
 export function initializeMap (divId = 'maplibre-map') {
   maptilersdk.config.apiKey = window.gon.map_keys.maptiler
   map = new maplibregl.Map({
@@ -22,15 +23,7 @@ export function initializeMap (divId = 'maplibre-map') {
   })
 
   map.on('load', function () {
-    map.addSource('terrain', {
-      type: 'raster-dem',
-      url: 'https://api.maptiler.com/tiles/terrain-rgb/tiles.json?key=' + window.gon.map_keys.maptiler
-    })
-
-    map.setTerrain({
-      source: 'terrain',
-      exaggeration: 1
-    })
+    if (terrain) { addTerrain() }
 
     // https://maplibre.org/maplibre-style-spec/sources/#geojson
     map.addSource('geojson-source', {
@@ -48,16 +41,28 @@ export function initializeMap (divId = 'maplibre-map') {
       })
       .then(data => {
         console.log('GeoJSON data:', data)
-        geojsonSource = data
-        console.log('loaded ' + geojsonSource.features.length + ' features from ' + '/maps/' + window.gon.map_id + '/features')
-        map.getSource('geojson-source').setData(geojsonSource)
-        if (window.gon.map_mode === 'rw') { draw.set(geojsonSource) }
+        geojsonData = data
+        console.log('loaded ' + geojsonData.features.length + ' features from ' + '/maps/' + window.gon.map_id + '/features')
+        map.getSource('geojson-source').setData(geojsonData)
+        if (window.gon.map_mode === 'rw') { draw.set(geojsonData) }
       })
       .catch(error => {
         console.error('Failed to fetch GeoJSON:', error)
       })
 
     initializeStyles()
+  })
+}
+
+function addTerrain () {
+  map.addSource('terrain', {
+    type: 'raster-dem',
+    url: 'https://api.maptiler.com/tiles/terrain-rgb/tiles.json?key=' + window.gon.map_keys.maptiler
+  })
+
+  map.setTerrain({
+    source: 'terrain',
+    exaggeration: 1.2
   })
 }
 

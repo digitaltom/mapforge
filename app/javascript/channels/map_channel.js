@@ -42,7 +42,8 @@ export function initializeSocket () {
           if (document.getElementById('map')) { updateFeature(data.feature) }
           break
         case 'delete_feature':
-          deleteFeature(data.feature.id)
+          // ol feature delete
+          if (document.getElementById('map')) { deleteFeature(data.feature.id) }
           break
         case 'update_map':
           window.gon.map_properties = data.map
