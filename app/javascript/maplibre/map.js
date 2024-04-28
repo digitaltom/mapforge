@@ -44,13 +44,17 @@ export function initializeMap (divId = 'maplibre-map') {
         geojsonData = data
         console.log('loaded ' + geojsonData.features.length + ' features from ' + '/maps/' + window.gon.map_id + '/features')
         map.getSource('geojson-source').setData(geojsonData)
-        if (window.gon.map_mode === 'rw') { draw.set(geojsonData) }
+
+        // in rw mode, the feature layer is managed by 'draw', not maplibre layers
+        if (window.gon.map_mode === 'rw') {
+          draw.set(geojsonData)
+        } else {
+          initializeStyles()
+        }
       })
       .catch(error => {
         console.error('Failed to fetch GeoJSON:', error)
       })
-
-    initializeStyles()
   })
 }
 

@@ -48,9 +48,23 @@ export const styles = {
     },
     paint: {
       'line-color': ['coalesce', ['get', 'stroke'], 'rgb(10, 135, 10)'],
-      'line-width': ['to-number', ['coalesce', ['get', 'stroke-width'], 5]]
+      'line-width': ['to-number', ['coalesce', ['get', 'stroke-width'], 4]]
     }
   },
+
+  'active-points-layer': {
+    id: 'edit-points-layer',
+    type: 'circle',
+    filter: ['all',
+      ['==', '$type', 'Point'],
+      ['==', 'meta', 'feature'],
+      ['==', 'active', 'true']],
+    paint: {
+      'circle-radius': 6,
+      'circle-color': ['coalesce', ['get', 'marker-color'], 'rgb(10, 135, 10)']
+    }
+  },
+
   'points-layer': {
     id: 'points-layer',
     type: 'circle',
