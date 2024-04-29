@@ -15,7 +15,7 @@ export function initializeMap (divId = 'maplibre-map') {
   maptilersdk.config.apiKey = window.gon.map_keys.maptiler
   map = new maplibregl.Map({
     container: divId,
-    style: basemaps.maptilerWinter,
+    style: basemaps.satelliteStreets,
     center: mapProperties.center,
     zoom: mapProperties.zoom,
     pitch: 45,
