@@ -51,20 +51,6 @@ export const styles = {
       'line-width': ['to-number', ['coalesce', ['get', 'stroke-width'], 4]]
     }
   },
-
-  'active-points-layer': {
-    id: 'edit-points-layer',
-    type: 'circle',
-    filter: ['all',
-      ['==', '$type', 'Point'],
-      ['==', 'meta', 'feature'],
-      ['==', 'active', 'true']],
-    paint: {
-      'circle-radius': 6,
-      'circle-color': ['coalesce', ['get', 'marker-color'], 'rgb(10, 135, 10)']
-    }
-  },
-
   'points-layer': {
     id: 'points-layer',
     type: 'circle',
@@ -73,6 +59,21 @@ export const styles = {
     paint: {
       'circle-radius': 6,
       'circle-color': ['coalesce', ['get', 'marker-color'], 'rgb(10, 135, 10)']
+    }
+  },
+  'points-border-layer': {
+    id: 'points-border-layer',
+    type: 'line',
+    source: 'geojson-source',
+    filter: ['==', '$type', 'Point'],
+    'z-index': 5,
+    layout: {
+      'line-join': 'round',
+      'line-cap': 'round'
+    },
+    paint: {
+      'line-color': ['coalesce', ['get', 'stroke'], '#ffffff'],
+      'line-width': 7
     }
   },
   // support symbols on all feature types

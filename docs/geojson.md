@@ -15,7 +15,7 @@ Extending the [Mapbox Simplestyle Spec](https://github.com/mapbox/simplestyle-sp
 #### *Point* geometry: 
 
 * `marker-color`: circle color (default "green", 'transparent' for none)
-* `stroke-width`: idth of the circle line (default: 2)
+* `stroke-width`: width of the circle line (default: 2)
 * `stroke`: circle border color (default "white", 'transparent' for none)
 * `marker-size`: "small", "medium", "large"
 * `marker-symbol`: Taken as text/emoji, emoji list: https://emojipedia.org/google/15.1

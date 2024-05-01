@@ -8,6 +8,7 @@ begin
 
   # mongoid config
   Mongoid.raise_not_found_error = false
+  Mongoid::Config.immutable_ids = true
 rescue Mongo::Error::NoServerAvailable => e
   puts "Could not connect to MongoDB. #{e.message}"
   exit 1

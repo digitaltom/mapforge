@@ -1,5 +1,5 @@
 import { map } from 'maplibre/map'
-// import { styles } from 'maplibre/styles'
+import { editStyles } from 'maplibre/edit_styles'
 import { mapChannel } from 'channels/map_channel'
 
 // eslint expects variables to get imported, but we load the full lib in header
@@ -23,11 +23,8 @@ export function initializeEditInteractions () {
       trash: true
       // combine_features,
       // uncombine_features
-    }
-    // styles: [
-    //   styles['points-layer'],
-    //   styles['edit-points-layer']
-    // ]
+    },
+    styles: editStyles
   })
   map.addControl(draw, 'top-left')
 
