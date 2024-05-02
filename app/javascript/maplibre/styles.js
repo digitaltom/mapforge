@@ -3,6 +3,7 @@ import { map } from 'maplibre/map'
 export function initializeStyles () {
   map.addLayer(styles['polygon-layer'])
   map.addLayer(styles['line-layer'])
+  map.addLayer(styles['points-border-layer'])
   map.addLayer(styles['points-layer'])
   map.addLayer(styles['symbols-layer'])
   map.addLayer(styles['text-layer'])
@@ -51,29 +52,28 @@ export const styles = {
       'line-width': ['to-number', ['coalesce', ['get', 'stroke-width'], 4]]
     }
   },
+  'points-border-layer': {
+    id: 'points-border-layer',
+    type: 'circle',
+    source: 'geojson-source',
+    filter: ['all',
+      ['==', '$type', 'Point'],
+      ['!=', 'active', 'true']],
+    paint: {
+      'circle-radius': 8,
+      'circle-color': ['coalesce', ['get', 'stroke'], '#ffffff']
+    }
+  },
   'points-layer': {
     id: 'points-layer',
     type: 'circle',
     source: 'geojson-source',
-    filter: ['==', '$type', 'Point'],
+    filter: ['all',
+      ['==', '$type', 'Point'],
+      ['!=', 'active', 'true']],
     paint: {
       'circle-radius': 6,
       'circle-color': ['coalesce', ['get', 'marker-color'], 'rgb(10, 135, 10)']
-    }
-  },
-  'points-border-layer': {
-    id: 'points-border-layer',
-    type: 'line',
-    source: 'geojson-source',
-    filter: ['==', '$type', 'Point'],
-    'z-index': 5,
-    layout: {
-      'line-join': 'round',
-      'line-cap': 'round'
-    },
-    paint: {
-      'line-color': ['coalesce', ['get', 'stroke'], '#ffffff'],
-      'line-width': 7
     }
   },
   // support symbols on all feature types

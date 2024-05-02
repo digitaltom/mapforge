@@ -127,6 +127,7 @@ export const editStyles = [
       'circle-color': '#fff'
     }
   },
+  removeSource(styles['points-border-layer']),
   removeSource(styles['points-layer']), // 'gl-draw-point-inactive'
   removeSource(styles['symbols-layer']),
   {
