@@ -7,20 +7,28 @@ export function initializeStyles () {
   map.addLayer(styles['points-layer'])
   map.addLayer(styles['symbols-layer'])
   map.addLayer(styles['text-layer'])
+  map.on('styleimagemissing', loadImage)
+}
 
-  // loading images from 'marker-icon' attributes
-  map.on('styleimagemissing', async function (e) {
-    const imageUrl = e.id
-    const response = await map.loadImage(imageUrl)
-    if (response) {
-      if (!map.hasImage(imageUrl)) {
-        // console.log('adding ' + imageUrl + ' to map')
-        map.addImage(imageUrl, response.data)
-      }
-    } else {
-      console.warn(imageUrl + ' not found')
+// MapboxDraw cannot render symbol+text styles. Adding those as extra layers to the map.
+export function initializeEditStyles () {
+  map.addLayer(styles['symbols-layer'])
+  map.addLayer(styles['text-layer'])
+  map.on('styleimagemissing', loadImage)
+}
+
+// loading images from 'marker-icon' attributes
+async function loadImage (e) {
+  const imageUrl = e.id
+  const response = await map.loadImage(imageUrl)
+  if (response) {
+    if (!map.hasImage(imageUrl)) {
+      // console.log('adding ' + imageUrl + ' to map')
+      map.addImage(imageUrl, response.data)
     }
-  })
+  } else {
+    console.warn(imageUrl + ' not found')
+  }
 }
 
 // https://maplibre.org/maplibre-style-spec/layers/
@@ -81,6 +89,7 @@ export const styles = {
     id: 'symbols-layer',
     type: 'symbol',
     source: 'geojson-source',
+    filter: ['!=', 'active', 'true'],
     layout: {
       'icon-image': ['coalesce',
         ['get', 'marker-icon'],
