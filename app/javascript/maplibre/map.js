@@ -44,6 +44,8 @@ export function initializeMap (divId = 'maplibre-map') {
         console.log('GeoJSON data:', data)
         geojsonData = data
         console.log('loaded ' + geojsonData.features.length + ' features from ' + '/maps/' + window.gon.map_id + '/features')
+        // the features in the rendered layer do't have ids right now, because
+        // mapforge feature ids are not numeric.
         map.getSource('geojson-source').setData(geojsonData)
 
         // in rw mode, the feature layer is managed by 'draw', not maplibre layers
@@ -57,6 +59,14 @@ export function initializeMap (divId = 'maplibre-map') {
       .catch(error => {
         console.error('Failed to fetch GeoJSON:', error)
       })
+  })
+
+  map.on('click', 'points-layer', function (e) {
+    if (e.features.length === 1) {
+      const clickedFeature = e.features[0]
+      console.log(clickedFeature.id)
+      console.log('Clicked feature:', clickedFeature)
+    }
   })
 }
 
@@ -88,7 +98,13 @@ export function update (updatedFeature) {
   if (!feature) {
     geojsonData.features.push(updatedFeature)
   } else {
-    feature.geometry = updatedFeature.geometry
+    if (feature.geometry.type === 'Point') {
+      const newCoords = updatedFeature.geometry.coordinates
+      animatePoint(feature, newCoords)
+      // feature.geometry = updatedFeature.geometry
+    } else {
+      feature.geometry = updatedFeature.geometry
+    }
     feature.properties = updatedFeature.properties
   }
   if (draw) { draw.set(geojsonData) }
@@ -100,4 +116,25 @@ export function destroy (featureId) {
   geojsonData.features = geojsonData.features.filter(feature => feature.id !== featureId)
   if (draw) { draw.set(geojsonData) }
   map.getSource('geojson-source').setData(geojsonData)
+}
+
+function animatePoint (feature, end, duration = 500) {
+  const starttime = performance.now()
+  const start = feature.geometry.coordinates
+  console.log('Animating point from: ' + start + ' to ' + end)
+
+  function animate (timestamp) {
+    const progress = (timestamp - starttime) / duration
+    const newCoordinates = [
+      start[0] + (end[0] - start[0]) * progress,
+      start[1] + (end[1] - start[1]) * progress
+    ]
+
+    feature.geometry.coordinates = newCoordinates
+    map.getSource('geojson-source').setData(geojsonData)
+    if (draw) { draw.set(geojsonData) }
+
+    if (progress < 1) { requestAnimationFrame(animate) }
+  }
+  requestAnimationFrame(animate)
 }

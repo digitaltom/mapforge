@@ -1,4 +1,4 @@
-import { map } from 'maplibre/map'
+import { map, geojsonData } from 'maplibre/map'
 import { editStyles } from 'maplibre/edit_styles'
 import { mapChannel } from 'channels/map_channel'
 
@@ -31,13 +31,6 @@ export function initializeEditInteractions () {
   map.on('draw.create', handleCreate)
   map.on('draw.update', handleUpdate)
   map.on('draw.delete', handleDelete)
-
-  map.on('click', 'points-layer', function (e) {
-    if (e.features.length > 0) {
-      const clickedFeature = e.features[0]
-      console.log('Clicked feature:', clickedFeature)
-    }
-  })
 }
 
 function handleCreate (e) {
@@ -51,6 +44,11 @@ function handleUpdate (e) {
   const feature = e.features[0] // Assuming one feature is created at a time
 
   console.log('Feature ' + feature.id + ' changed')
+  const geojsonFeature = geojsonData.features.find(f => f.id === feature.id)
+  geojsonFeature.geometry = feature.geometry
+
+  // also update the geojson-source (feature rendered via initializeEditStyles)
+  map.getSource('geojson-source').setData(geojsonData)
   mapChannel.send_message('update_feature', feature)
 }
 
