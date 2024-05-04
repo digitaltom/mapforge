@@ -1,7 +1,8 @@
 import { mapProperties } from 'ol/properties'
 import { basemaps } from 'maplibre/basemaps'
 import { draw } from 'maplibre/edit'
-import { initializeStyles, initializeEditStyles } from 'maplibre/styles'
+import { initializeStyles } from 'maplibre/styles'
+import { initializeEditStyles } from 'maplibre/edit_styles'
 
 // eslint expects variables to get imported, but we load the full lib in header
 const maplibregl = window.maplibregl
@@ -48,7 +49,6 @@ export function initializeMap (divId = 'maplibre-map') {
         // in rw mode, the feature layer is managed by 'draw', not maplibre layers
         if (window.gon.map_mode === 'rw') {
           draw.set(geojsonData)
-          // map.addLayer(styles['symbols-layer'])
           initializeEditStyles()
         } else {
           initializeStyles()
@@ -84,8 +84,6 @@ export function initializeReadonlyInteractions () {
 
 export function update (updatedFeature) {
   console.log('Updating feature ' + updatedFeature.id)
-  // console.log(feature)
-  console.log(updatedFeature)
   const feature = geojsonData.features.find(feature => feature.id === updatedFeature.id)
   if (!feature) {
     geojsonData.features.push(updatedFeature)
@@ -93,6 +91,13 @@ export function update (updatedFeature) {
     feature.geometry = updatedFeature.geometry
     feature.properties = updatedFeature.properties
   }
-  if (window.gon.map_mode === 'rw') { draw.set(geojsonData) }
+  if (draw) { draw.set(geojsonData) }
+  map.getSource('geojson-source').setData(geojsonData)
+}
+
+export function destroy (featureId) {
+  console.log('Deleting feature ' + featureId)
+  geojsonData.features = geojsonData.features.filter(feature => feature.id !== featureId)
+  if (draw) { draw.set(geojsonData) }
   map.getSource('geojson-source').setData(geojsonData)
 }

@@ -43,20 +43,20 @@ export function initializeEditInteractions () {
 function handleCreate (e) {
   const feature = e.features[0] // Assuming one feature is created at a time
 
-  console.log('Feature ' + feature.id + ' has been created')
+  console.log('Feature ' + feature.id + ' created')
   mapChannel.send_message('new_feature', feature)
 }
 
 function handleUpdate (e) {
   const feature = e.features[0] // Assuming one feature is created at a time
 
-  console.log('Feature ' + feature.id + ' has been changed')
+  console.log('Feature ' + feature.id + ' changed')
   mapChannel.send_message('update_feature', feature)
 }
 
 function handleDelete (e) {
   const deletedFeature = e.features[0] // Assuming one feature is deleted at a time
 
-  console.log('Feature ' + deletedFeature.id + ' has been deleted')
+  console.log('Feature ' + deletedFeature.id + ' deleted')
   mapChannel.send_message('delete_feature', deletedFeature)
 }

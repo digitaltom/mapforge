@@ -10,15 +10,8 @@ export function initializeStyles () {
   map.on('styleimagemissing', loadImage)
 }
 
-// MapboxDraw cannot render symbol+text styles. Adding those as extra layers to the map.
-export function initializeEditStyles () {
-  map.addLayer(styles['symbols-layer'])
-  map.addLayer(styles['text-layer'])
-  map.on('styleimagemissing', loadImage)
-}
-
 // loading images from 'marker-icon' attributes
-async function loadImage (e) {
+export async function loadImage (e) {
   const imageUrl = e.id
   const response = await map.loadImage(imageUrl)
   if (response) {
