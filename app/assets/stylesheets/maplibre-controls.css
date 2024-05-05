@@ -5,3 +5,13 @@
 .maplibregl-ctrl-map {
   color: #404040;
 }
+
+.mapbox-gl-draw_ctrl-draw-btn { /* stylelint-disable-line */
+  opacity: 0.75;
+}
+
+.maplibregl-ctrl button:hover, .maplibregl-ctrl button.active {
+  background-color: rgb(0 0 0/15%) !important;
+  transition:
+    background-color 0.2s ease-in-out
+}

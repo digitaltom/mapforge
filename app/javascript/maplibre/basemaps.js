@@ -93,87 +93,20 @@ export const basemaps = {
   maptilerStreets: '/layers/streets.json?key=' + window.gon.map_keys.maptiler,
   maptilerNoStreets: '/layers/nostreets.json?key=' + window.gon.map_keys.maptiler,
   satelliteStreets: 'https://api.maptiler.com/maps/hybrid/style.json?key=' + window.gon.map_keys.maptiler,
-  // satelliteFixed: 'https://api.maptiler.com/tiles/terrain-quantized-mesh-v2/tiles.json?key=' + window.gon.map_keys.maptiler,
   satellite: 'https://api.maptiler.com/maps/satellite/style.json?key=' + window.gon.map_keys.maptiler,
-  maptilerWinter: 'https://api.maptiler.com/maps/winter-v2/style.json?key=' + window.gon.map_keys.maptiler
-}
+  maptilerWinter: 'https://api.maptiler.com/maps/winter-v2/style.json?key=' + window.gon.map_keys.maptiler,
 
-// export const backgroundTiles = {
+  // ol compat:
+  osmTiles: 'https://api.maptiler.com/maps/basic-v2/style.json?key=' + window.gon.map_keys.maptiler,
+  aptilerBasic: 'https://api.maptiler.com/maps/basic-v2/style.json?key=' + window.gon.map_keys.maptiler,
+  satelliteTiles: 'https://api.maptiler.com/maps/satellite/style.json?key=' + window.gon.map_keys.maptiler,
+  satelliteStreetTiles: 'https://api.maptiler.com/maps/hybrid/style.json?key=' + window.gon.map_keys.maptiler,
+  mapboxBrightVector: 'https://api.maptiler.com/maps/streets/style.json?key=' + window.gon.map_keys.maptiler
+}
 
 //   osmDefaultTiles: function () {
 //     return new ol.layer.Tile({ source: new ol.source.OSM(), className: mapClasses })
 //   },
-
-//   osmTiles: function () {
-//     return new ol.layer.Tile({
-//       source: new ol.source.XYZ({
-//         url: 'https://api.maptiler.com/maps/basic-v2/{z}/{x}/{y}@2x.png?key=' + window.gon?.map_keys?.maptiler,
-//         tileSize: 512,
-//         attributions: ['<a href="https://maptiler.com/" target="_blank">© MapTiler</a>',
-//           ' and © <a href="https://openstreetmap.org/" target="_blank">OpenStreetMap contributors</a>'
-//         ],
-//         attributionsCollapsible: functions.isMobileDevice()
-//       }),
-//       className: mapClasses + ' map-layer-osmTiles'
-//     })
-//   },
-
-//   satelliteTiles: function () {
-//     return new ol.layer.Tile({
-//       source: new ol.source.XYZ({
-//         attributions: ['Powered by Esri',
-//           'Sources: Esri, DigitalGlobe, GeoEye, i-cubed, USDA FSA, USGS, AEX, Getmapping, Aerogrid, IGN, IGP, swisstopo, and the GIS User Community'],
-//         url: 'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-//         attributionsCollapsible: functions.isMobileDevice(),
-//         maxZoom: 19
-//       }),
-//       className: mapClasses + ' map-layer-satelliteTiles'
-//     })
-//   },
-
-//   satelliteStreetTiles: function () {
-//     return new ol.layer.Tile({
-//       source: new ol.source.XYZ({
-//         url: 'https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v10/tiles/{z}/{x}/{y}?' +
-//              'access_token=' + window.gon?.map_keys?.mapbox,
-//         attributions: ['<a href="https://www.mapbox.com/about/maps/" target="_blank">© Mapbox</a>',
-//           '<a href="http://www.openstreetmap.org/copyright" target="_blank">© OpenStreetMap</a>',
-//           '<a href="https://www.mapbox.com/feedback/" target="_blank">Improve this map</a>'],
-//         attributionsCollapsible: functions.isMobileDevice(),
-//         tileSize: 512
-//       }),
-//       className: mapClasses + ' map-layer-satelliteStreetTiles'
-//     })
-//   },
-
-//   streetTiles: function () {
-//     return new ol.layer.Tile({
-//       source: new ol.source.XYZ({
-//         url: 'https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?' +
-//              'access_token=' + window.gon?.map_keys?.mapbox,
-//         attributions: ['<a href="https://www.mapbox.com/about/maps/" target="_blank">© Mapbox</a>',
-//           '<a href="http://www.openstreetmap.org/copyright" target="_blank">© OpenStreetMap</a>',
-//           '<a href="https://www.mapbox.com/feedback/" target="_blank">Improve this map</a>'],
-//         attributionsCollapsible: functions.isMobileDevice()
-//       }),
-//       className: mapClasses + ' map-layer-streetTiles'
-//     })
-//   },
-
-//   esriTiles: function () {
-//     return new ol.layer.Tile({
-//       source: new ol.source.XYZ({
-//         url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_ol/MapServer/tile/{z}/{y}/{x}',
-//         attributions: ['Powered by <a href="https://developers.arcgis.com/" target="_blank">Esri</a>'],
-//         attributionsCollapsible: functions.isMobileDevice()
-//       }),
-//       className: mapClasses + ' map-layer-esriTiles'
-//     })
-//   },
-
-//   // // Vector maps:
-//   // // create custom styles at https://maplibre.org/maputnik
-//   // // https://openlayers.org/en/latest/apidoc/module-ol_layer_MapboxVector-MapboxVectorLayer.html
 
 //   mapboxBrightVector: function () {
 //     return new olms.MapboxVectorLayer({
@@ -182,5 +115,3 @@ export const basemaps = {
 //       className: mapClasses + ' map-layer-mapboxBrightVector'
 //     })
 //   },
-
-// }

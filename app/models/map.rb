@@ -10,6 +10,7 @@ class Map
   field :base_map, type: String
   field :center, type: Array
   field :zoom, type: String
+  field :pitch, type: String
   field :name, type: String
   field :description, type: String
   field :public_id, type: String
@@ -24,6 +25,7 @@ class Map
   DEFAULT_MAP = "osmTiles"
   DEFAULT_CENTER = [ 11.077, 49.447 ].freeze
   DEFAULT_ZOOM = 12
+  DEFAULT_PITCH = 30
 
   after_save :broadcast_update
   before_create :create_public_id, :create_layer
@@ -35,7 +37,8 @@ class Map
       public_id: public_id,
       base_map: base_map || DEFAULT_MAP,
       center: center || DEFAULT_CENTER,
-      zoom: zoom || DEFAULT_ZOOM
+      zoom: zoom || DEFAULT_ZOOM,
+      pitch: pitch || DEFAULT_PITCH
     }
   end
 

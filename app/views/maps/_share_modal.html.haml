@@ -4,6 +4,6 @@
   %ul
     %li= link_to 'Viewer link', map_path(id: @map.public_id)
     %li= link_to 'Edit link', map_path(@map)
-    %li= link_to 'Download geojson', features_map_path(@map)
+    %li= link_to 'Download geojson', features_map_path(@map.public_id)
     %li= link_to 'Download map export', map_path(id: @map.public_id, format: :json)
 
