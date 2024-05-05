@@ -90,6 +90,21 @@ export function initializeReadonlyInteractions () {
       showCompass: true
     })
   )
+
+  map.addControl(new maptilersdk.MaptilerGeolocateControl({
+    positionOptions: {
+      enableHighAccuracy: true
+    },
+    trackUserLocation: true
+  }), 'top-right')
+
+  const scale = new maptilersdk.ScaleControl({
+    maxWidth: 80,
+    unit: 'metric'
+  })
+  map.addControl(scale)
+
+  scale.setUnit('metric')
 }
 
 export function update (updatedFeature) {
@@ -118,7 +133,7 @@ export function destroy (featureId) {
   map.getSource('geojson-source').setData(geojsonData)
 }
 
-function animatePoint (feature, end, duration = 500) {
+function animatePoint (feature, end, duration = 300) {
   const starttime = performance.now()
   const start = feature.geometry.coordinates
   console.log('Animating point from: ' + start + ' to ' + end)

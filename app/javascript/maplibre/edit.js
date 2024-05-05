@@ -1,6 +1,7 @@
 import { map, geojsonData } from 'maplibre/map'
 import { editStyles } from 'maplibre/edit_styles'
 import { mapChannel } from 'channels/map_channel'
+import { MapSettingsControl, MapShareControl } from 'maplibre/controls'
 
 // eslint expects variables to get imported, but we load the full lib in header
 const MapboxDraw = window.MapboxDraw
@@ -27,6 +28,8 @@ export function initializeEditInteractions () {
     styles: editStyles
   })
   map.addControl(draw, 'top-left')
+  map.addControl(new MapSettingsControl(), 'top-left')
+  map.addControl(new MapShareControl(), 'top-left')
 
   map.on('draw.create', handleCreate)
   map.on('draw.update', handleUpdate)
@@ -48,6 +51,7 @@ function handleUpdate (e) {
   geojsonFeature.geometry = feature.geometry
 
   // also update the geojson-source (feature rendered via initializeEditStyles)
+  // to avoid animation
   map.getSource('geojson-source').setData(geojsonData)
   mapChannel.send_message('update_feature', feature)
 }
