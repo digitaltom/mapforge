@@ -28,19 +28,15 @@ export function initializeMap (divId = 'maplibre-map') {
     interactive: (window.gon.map_mode !== 'static')
   })
 
+  // after basemap style is ready, load geojson layer
   map.on('style.load', () => {
-    console.log('map style.load')
     // https://maplibre.org/maplibre-style-spec/sources/#geojson
     map.addSource('geojson-source', {
       type: 'geojson',
       data: geojsonData,
       cluster: false
     })
-  })
 
-  map.on('load', function () {
-    console.log('map load')
-    if (terrain) { addTerrain() }
     fetch('/maps/' + window.gon.map_id + '/features')
       .then(response => {
         if (!response.ok) {
@@ -52,7 +48,7 @@ export function initializeMap (divId = 'maplibre-map') {
         console.log('GeoJSON data:', data)
         geojsonData = data
         console.log('loaded ' + geojsonData.features.length + ' features from ' + '/maps/' + window.gon.map_id + '/features')
-        // the features in the rendered layer do't have ids right now, because
+        // the features in the rendered layer don't have ids right now, because
         // mapforge feature ids are not numeric.
         map.getSource('geojson-source').setData(geojsonData)
 
@@ -67,6 +63,11 @@ export function initializeMap (divId = 'maplibre-map') {
       .catch(error => {
         console.error('Failed to fetch GeoJSON:', error)
       })
+  })
+
+  map.on('load', function () {
+    console.log('map load')
+    if (terrain) { addTerrain() }
   })
 
   map.on('click', 'points-layer', function (e) {
@@ -131,7 +132,6 @@ export function update (updatedFeature) {
     if (feature.geometry.type === 'Point') {
       const newCoords = updatedFeature.geometry.coordinates
       animatePoint(feature, newCoords)
-      // feature.geometry = updatedFeature.geometry
     } else {
       feature.geometry = updatedFeature.geometry
     }
@@ -149,8 +149,9 @@ export function destroy (featureId) {
 }
 
 export function setBackgroundMapLayer (mapName) {
-  // TODO: Figure out how to re-load source layers
-  map.setStyle(basemaps[mapName])
+  map.setStyle(basemaps[mapName],
+  // adding this so that 'style.load' gets triggered (https://github.com/maplibre/maplibre-gl-js/issues/2587)
+    { diff: false })
 }
 
 function animatePoint (feature, end, duration = 300) {
