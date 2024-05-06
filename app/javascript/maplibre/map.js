@@ -66,7 +66,6 @@ export function initializeMap (divId = 'maplibre-map') {
   })
 
   map.on('load', function () {
-    console.log('map load')
     if (terrain) { addTerrain() }
   })
 

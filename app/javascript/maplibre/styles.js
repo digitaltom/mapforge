@@ -59,7 +59,9 @@ export const styles = {
     source: 'geojson-source',
     filter: ['all',
       ['==', '$type', 'Point'],
-      ['!=', 'active', 'true']],
+      ['!=', 'active', 'true'],
+      ['!has', 'marker-symbol'],
+      ['!has', 'marker-icon']],
     paint: {
       'circle-radius': 8,
       'circle-color': ['coalesce', ['get', 'stroke'], '#ffffff']
@@ -71,7 +73,9 @@ export const styles = {
     source: 'geojson-source',
     filter: ['all',
       ['==', '$type', 'Point'],
-      ['!=', 'active', 'true']],
+      ['!=', 'active', 'true'],
+      ['!has', 'marker-symbol'],
+      ['!has', 'marker-icon']],
     paint: {
       'circle-radius': 6,
       'circle-color': ['coalesce', ['get', 'marker-color'], 'rgb(10, 135, 10)']
@@ -94,7 +98,7 @@ export const styles = {
       ],
       'icon-size': 0.5,
       'icon-keep-upright': true,
-      'icon-allow-overlap': false
+      'icon-allow-overlap': true
     }
   },
   'text-layer': {
