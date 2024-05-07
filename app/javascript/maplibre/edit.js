@@ -31,8 +31,9 @@ export function initializeEditMode () {
   map.addControl(new MapSettingsControl(), 'top-left')
   map.addControl(new MapShareControl(), 'top-left')
 
-  map.on('sourcedata', sourcedataHandler)
   map.on('geojson.load', function (e) {
+    // callback to load edit styles on top of draw styles
+    map.on('sourcedata', sourcedataHandler)
     // draw has its own layers based on editStyles
     draw.set(geojsonData)
   })
