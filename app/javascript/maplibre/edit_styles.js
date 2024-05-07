@@ -137,7 +137,6 @@ export const editStyles = [
   },
   removeSource(styles['points-border-layer']),
   removeSource(styles['points-layer']), // 'gl-draw-point-inactive'
-  removeSource(styles['symbols-layer']),
   {
     id: 'gl-draw-point-stroke-active',
     type: 'circle',

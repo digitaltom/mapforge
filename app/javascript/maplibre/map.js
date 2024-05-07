@@ -1,7 +1,6 @@
 import { basemaps } from 'maplibre/basemaps'
 import { draw } from 'maplibre/edit'
-import { initializeStyles } from 'maplibre/styles'
-import { initializeEditStyles } from 'maplibre/edit_styles'
+import { initializeViewStyles } from 'maplibre/styles'
 
 // eslint expects variables to get imported, but we load the full lib in header
 const maplibregl = window.maplibregl
@@ -27,6 +26,8 @@ export function initializeMap (divId = 'maplibre-map') {
     pitch: mapProperties.pitch,
     interactive: (window.gon.map_mode !== 'static')
   })
+  // for console debugging
+  window.map = map
 
   // after basemap style is ready, load geojson layer
   map.on('style.load', () => {
@@ -51,14 +52,7 @@ export function initializeMap (divId = 'maplibre-map') {
         // the features in the rendered layer don't have ids right now, because
         // mapforge feature ids are not numeric.
         map.getSource('geojson-source').setData(geojsonData)
-
-        // in rw mode, the feature layer is managed by 'draw', not maplibre layers
-        if (window.gon.map_mode === 'rw') {
-          draw.set(geojsonData)
-          initializeEditStyles()
-        } else {
-          initializeStyles()
-        }
+        map.fire('geojson.load', { detail: { message: 'geojson-source loaded' } })
       })
       .catch(error => {
         console.error('Failed to fetch GeoJSON:', error)
@@ -97,7 +91,7 @@ function addTerrain () {
   })
 }
 
-export function initializeReadonlyInteractions () {
+export function initializeControls () {
   map.addControl(
     new maplibregl.NavigationControl({
       visualizePitch: true,
@@ -120,6 +114,12 @@ export function initializeReadonlyInteractions () {
   map.addControl(scale)
 
   scale.setUnit('metric')
+}
+
+export function initializeViewMode () {
+  map.on('geojson.load', function (e) {
+    initializeViewStyles()
+  })
 }
 
 export function update (updatedFeature) {

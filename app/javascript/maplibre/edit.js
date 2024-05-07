@@ -1,5 +1,5 @@
 import { map, geojsonData } from 'maplibre/map'
-import { editStyles } from 'maplibre/edit_styles'
+import { editStyles, initializeEditStyles } from 'maplibre/edit_styles'
 import { mapChannel } from 'channels/map_channel'
 import { MapSettingsControl, MapShareControl } from 'maplibre/controls'
 
@@ -13,7 +13,7 @@ MapboxDraw.constants.classes.CONTROL_PREFIX = 'maplibregl-ctrl-'
 MapboxDraw.constants.classes.CONTROL_GROUP = 'maplibregl-ctrl-group'
 
 // https://github.com/mapbox/mapbox-gl-draw
-export function initializeEditInteractions () {
+export function initializeEditMode () {
   console.log('Initializing MapboxDraw')
   draw = new MapboxDraw({
     displayControlsDefault: false,
@@ -31,9 +31,24 @@ export function initializeEditInteractions () {
   map.addControl(new MapSettingsControl(), 'top-left')
   map.addControl(new MapShareControl(), 'top-left')
 
+  map.on('sourcedata', sourcedataHandler)
+  map.on('geojson.load', function (e) {
+    // draw has its own layers based on editStyles
+    draw.set(geojsonData)
+  })
+
   map.on('draw.create', handleCreate)
   map.on('draw.update', handleUpdate)
   map.on('draw.delete', handleDelete)
+}
+
+function sourcedataHandler (e) {
+  if (e.sourceId === 'mapbox-gl-draw-cold' && e.isSourceLoaded) {
+    // Unsubscribe to avoid multiple triggers
+    map.off('sourcedata', sourcedataHandler)
+    // initialize additional styles (icons) after draw is loaded
+    initializeEditStyles()
+  }
 }
 
 function handleCreate (e) {

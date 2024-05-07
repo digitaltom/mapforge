@@ -1,6 +1,6 @@
 import { map } from 'maplibre/map'
 
-export function initializeStyles () {
+export function initializeViewStyles () {
   map.addLayer(styles['polygon-layer'])
   map.addLayer(styles['line-layer'])
   map.addLayer(styles['points-border-layer'])
