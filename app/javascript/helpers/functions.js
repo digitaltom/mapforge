@@ -47,6 +47,10 @@ export function arrayRemove (arr, value) {
   })
 }
 
+export function arraysEqual (array1, array2) {
+  return array1.length === array2.length && array1.every(element => array2.includes(element))
+}
+
 export function roundedCoords (coords, precision = 3) {
   return coords.map(coord => parseFloat(coord.toFixed(precision)))
 }

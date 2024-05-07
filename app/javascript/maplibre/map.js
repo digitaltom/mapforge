@@ -1,6 +1,7 @@
 import { basemaps } from 'maplibre/basemaps'
 import { draw } from 'maplibre/edit'
 import { initializeViewStyles } from 'maplibre/styles'
+import * as functions from 'helpers/functions'
 
 // eslint expects variables to get imported, but we load the full lib in header
 const maplibregl = window.maplibregl
@@ -130,7 +131,9 @@ export function update (updatedFeature) {
   } else {
     if (feature.geometry.type === 'Point') {
       const newCoords = updatedFeature.geometry.coordinates
-      animatePoint(feature, newCoords)
+      if (!functions.arraysEqual(feature.geometry.coordinates, newCoords)) {
+        animatePoint(feature, newCoords)
+      }
     } else {
       feature.geometry = updatedFeature.geometry
     }
@@ -159,12 +162,12 @@ function animatePoint (feature, end, duration = 300) {
   console.log('Animating point from: ' + start + ' to ' + end)
 
   function animate (timestamp) {
-    const progress = (timestamp - starttime) / duration
+    let progress = (timestamp - starttime) / duration
+    if (progress > 1) { progress = 1 }
     const newCoordinates = [
       start[0] + (end[0] - start[0]) * progress,
       start[1] + (end[1] - start[1]) * progress
     ]
-
     feature.geometry.coordinates = newCoordinates
     map.getSource('geojson-source').setData(geojsonData)
     if (draw) { draw.set(geojsonData) }
