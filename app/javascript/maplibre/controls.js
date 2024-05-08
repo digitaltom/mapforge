@@ -1,4 +1,5 @@
 import { mapProperties } from 'maplibre/map'
+import * as functions from 'helpers/functions'
 
 export class MapSettingsControl {
   constructor (options) {
@@ -7,9 +8,9 @@ export class MapSettingsControl {
     this._container.className = 'maplibregl-ctrl maplibregl-ctrl-group'
     this._container.onclick = function (event) {
       if (document.querySelector('#map-modal').style.display === 'block') {
-        document.querySelector('.maplibregl-ctrl-map').classList.remove('active')
-        document.querySelector('#map-modal').style.display = 'none'
+        resetControls()
       } else {
+        resetControls()
         document.querySelector('.maplibregl-ctrl-map').classList.add('active')
         document.querySelector('#map-modal').style.display = 'block'
         document.querySelector('#map-name').value = mapProperties.name
@@ -36,9 +37,9 @@ export class MapShareControl {
     this._container.className = 'maplibregl-ctrl maplibregl-ctrl-group'
     this._container.onclick = function (event) {
       if (document.querySelector('#share-modal').style.display === 'block') {
-        document.querySelector('.maplibregl-ctrl-share').classList.remove('active')
-        document.querySelector('#share-modal').style.display = 'none'
+        resetControls()
       } else {
+        resetControls()
         document.querySelector('.maplibregl-ctrl-share').classList.add('active')
         document.querySelector('#share-modal').style.display = 'block'
       }
@@ -55,4 +56,11 @@ export class MapShareControl {
       this._container.parentNode.removeChild(this._container)
     }
   }
+}
+
+export function resetControls () {
+  functions.e('.maplibregl-ctrl-map', e => { e.classList.remove('active') })
+  functions.e('#map-modal', e => { e.style.display = 'none' })
+  functions.e('.maplibregl-ctrl-share', e => { e.classList.remove('active') })
+  functions.e('#share-modal', e => { e.style.display = 'none' })
 }

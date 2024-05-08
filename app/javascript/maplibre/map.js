@@ -8,20 +8,27 @@ const maplibregl = window.maplibregl
 const maptilersdk = window.maptilersdk
 
 export let map
-export let geojsonData = { type: 'FeatureCollection', features: [] }
+export let geojsonData //= { type: 'FeatureCollection', features: [] }
 export let mapProperties
 const terrain = false
 
+// workflow of event based map loading:
+//
+// * initializeMap() - set map object
+// * setup map callbacks (initializeViewMode(), initializeEditMode())
+// * setBackgroundMapLayer() -> 'style.load' event
+//   -> loadGeoJsonData() -> 'geojson.load' event
+//      -> triggers callbacks for setting geojson/draw style layers
 export function initializeMapProperties () {
   mapProperties = window.gon.map_properties
   console.log('map properties: ' + JSON.stringify(mapProperties))
 }
 
 export function initializeMap (divId = 'maplibre-map') {
+  initializeMapProperties()
   maptilersdk.config.apiKey = window.gon.map_keys.maptiler
   map = new maplibregl.Map({
     container: divId,
-    style: basemaps[mapProperties.base_map],
     center: mapProperties.center,
     zoom: mapProperties.zoom,
     pitch: mapProperties.pitch,
@@ -30,54 +37,51 @@ export function initializeMap (divId = 'maplibre-map') {
   // for console debugging
   window.map = map
 
-  // after basemap style is ready, load geojson layer
+  // after basemap style is ready/changed, load geojson layer
   map.on('style.load', () => {
-    // https://maplibre.org/maplibre-style-spec/sources/#geojson
-    map.addSource('geojson-source', {
-      type: 'geojson',
-      data: geojsonData,
-      cluster: false
-    })
-
-    fetch('/maps/' + window.gon.map_id + '/features')
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok')
-        }
-        return response.json()
-      })
-      .then(data => {
-        console.log('GeoJSON data:', data)
-        geojsonData = data
-        console.log('loaded ' + geojsonData.features.length + ' features from ' + '/maps/' + window.gon.map_id + '/features')
-        // the features in the rendered layer don't have ids right now, because
-        // mapforge feature ids are not numeric.
-        map.getSource('geojson-source').setData(geojsonData)
-        map.fire('geojson.load', { detail: { message: 'geojson-source loaded' } })
-      })
-      .catch(error => {
-        console.error('Failed to fetch GeoJSON:', error)
-      })
+    loadGeoJsonData()
   })
 
   map.on('load', function () {
     if (terrain) { addTerrain() }
   })
+}
 
-  map.on('click', 'points-layer', function (e) {
-    if (e.features.length === 1) {
-      const clickedFeature = e.features[0]
-      console.log(clickedFeature.id)
-      console.log('Clicked feature:', clickedFeature)
-    }
+function loadGeoJsonData () {
+  // https://maplibre.org/maplibre-style-spec/sources/#geojson
+  map.addSource('geojson-source', {
+    type: 'geojson',
+    data: { type: 'FeatureCollection', features: [] }, // geojsonData,
+    cluster: false
   })
 
-  map.on('click', (e) => {
-    document.querySelector('.maplibregl-ctrl-map').classList.remove('active')
-    document.querySelector('#map-modal').style.display = 'none'
-    document.querySelector('.maplibregl-ctrl-share').classList.remove('active')
-    document.querySelector('#share-modal').style.display = 'none'
-  })
+  if (geojsonData) {
+    // data is already loaded
+    map.getSource('geojson-source').setData(geojsonData)
+    map.fire('geojson.load', { detail: { message: 'geojson-source loaded' } })
+    return
+  }
+
+  fetch('/maps/' + window.gon.map_id + '/features')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+      return response.json()
+    })
+    .then(data => {
+      console.log('loaded GeoJSON data: ', data)
+      geojsonData = data
+      console.log('loaded ' + geojsonData.features.length +
+        ' features from ' + '/maps/' + window.gon.map_id + '/features')
+      // the features in the rendered layer don't have ids right now, because
+      // mapforge feature ids are not numeric.
+      map.getSource('geojson-source').setData(geojsonData)
+      map.fire('geojson.load', { detail: { message: 'geojson-source loaded' } })
+    })
+    .catch(error => {
+      console.error('Failed to fetch GeoJSON:', error)
+    })
 }
 
 function addTerrain () {
@@ -118,8 +122,18 @@ export function initializeControls () {
 }
 
 export function initializeViewMode () {
+  initializeControls()
+
   map.on('geojson.load', function (e) {
     initializeViewStyles()
+  })
+
+  map.on('click', 'points-layer', function (e) {
+    if (e.features.length === 1) {
+      const clickedFeature = e.features[0]
+      console.log(clickedFeature.id)
+      console.log('Clicked feature:', clickedFeature)
+    }
   })
 }
 
@@ -150,7 +164,7 @@ export function destroy (featureId) {
   map.getSource('geojson-source').setData(geojsonData)
 }
 
-export function setBackgroundMapLayer (mapName) {
+export function setBackgroundMapLayer (mapName = mapProperties.base_map) {
   map.setStyle(basemaps[mapName],
   // adding this so that 'style.load' gets triggered (https://github.com/maplibre/maplibre-gl-js/issues/2587)
     { diff: false })

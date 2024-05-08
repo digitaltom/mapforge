@@ -1,4 +1,4 @@
-import { initializeMap, initializeControls, initializeMapProperties, initializeViewMode } from 'maplibre/map'
+import { initializeMap, setBackgroundMapLayer, initializeViewMode } from 'maplibre/map'
 import { initializeEditMode } from 'maplibre/edit'
 import { initializeSocket } from 'channels/map_channel'
 
@@ -12,17 +12,11 @@ import { initializeSocket } from 'channels/map_channel'
 })
 
 async function init () {
-  initializeMapProperties()
-
   initializeMap('maplibre-map')
   // static mode is used for screenshots
   if (window.gon.map_mode !== 'static') {
     initializeSocket()
-    initializeControls()
-    if (window.gon.map_mode !== 'rw') {
-      initializeViewMode()
-    } else {
-      initializeEditMode()
-    }
+    window.gon.map_mode !== 'rw' ? initializeViewMode() : initializeEditMode()
   }
+  setBackgroundMapLayer()
 }

@@ -1,7 +1,7 @@
-import { map, geojsonData } from 'maplibre/map'
+import { map, geojsonData, initializeControls } from 'maplibre/map'
 import { editStyles, initializeEditStyles } from 'maplibre/edit_styles'
 import { mapChannel } from 'channels/map_channel'
-import { MapSettingsControl, MapShareControl } from 'maplibre/controls'
+import { MapSettingsControl, MapShareControl, resetControls } from 'maplibre/controls'
 
 // eslint expects variables to get imported, but we load the full lib in header
 const MapboxDraw = window.MapboxDraw
@@ -27,13 +27,17 @@ export function initializeEditMode () {
     },
     styles: editStyles
   })
+
+  initializeControls()
   map.addControl(draw, 'top-left')
   map.addControl(new MapSettingsControl(), 'top-left')
   map.addControl(new MapShareControl(), 'top-left')
 
   map.on('geojson.load', function (e) {
-    // callback to load edit styles on top of draw styles
+    // callback to load edit styles on top of draw styles.
+    // triggered once when 'draw' is initialized
     map.on('sourcedata', sourcedataHandler)
+
     // draw has its own layers based on editStyles
     draw.set(geojsonData)
   })
@@ -41,6 +45,8 @@ export function initializeEditMode () {
   map.on('draw.create', handleCreate)
   map.on('draw.update', handleUpdate)
   map.on('draw.delete', handleDelete)
+
+  map.on('click', resetControls)
 }
 
 function sourcedataHandler (e) {
