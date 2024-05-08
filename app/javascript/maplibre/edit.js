@@ -5,8 +5,10 @@ import { MapSettingsControl, MapShareControl, resetControls } from 'maplibre/con
 
 // eslint expects variables to get imported, but we load the full lib in header
 const MapboxDraw = window.MapboxDraw
+const maplibregl = window.maplibregl
 
 export let draw
+let selectedFeature
 
 MapboxDraw.constants.classes.CONTROL_BASE = 'maplibregl-ctrl'
 MapboxDraw.constants.classes.CONTROL_PREFIX = 'maplibregl-ctrl-'
@@ -42,6 +44,11 @@ export function initializeEditMode () {
     draw.set(geojsonData)
   })
 
+  map.on('draw.selectionchange', function (e) {
+    selectedFeature = e.features[0]
+    if (selectedFeature) { displayEditButtons(selectedFeature) }
+  })
+
   map.on('draw.create', handleCreate)
   map.on('draw.update', handleUpdate)
   map.on('draw.delete', handleDelete)
@@ -55,6 +62,29 @@ function sourcedataHandler (e) {
     map.off('sourcedata', sourcedataHandler)
     // initialize additional styles (icons) after draw is loaded
     initializeEditStyles()
+  }
+}
+
+function displayEditButtons (feature) {
+  if (feature.geometry.type === 'Point') {
+    const coordinates = feature.geometry.coordinates
+    const popup = new maplibregl.Popup({
+      closeButton: false,
+      className: 'edit-popup',
+      offset: [0, -15]
+    })
+      .setLngLat(coordinates)
+      .setHTML(document.getElementById('edit-buttons').innerHTML)
+      .addTo(map)
+
+    // Add event listeners for buttons
+    document.getElementById('edit-button-trash').addEventListener('click', function () {
+      draw.trash()
+      popup.remove()
+    })
+    document.getElementById('edit-button-edit').addEventListener('click', function () {
+      console.log('Button 2 clicked')
+    })
   }
 }
 

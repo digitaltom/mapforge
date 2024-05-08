@@ -9,6 +9,7 @@ export function initializeEditStyles () {
 }
 
 // started from https://github.com/mapbox/mapbox-gl-draw/blob/main/src/lib/theme.js
+// Styling Draw: https://github.com/mapbox/mapbox-gl-draw/blob/main/docs/API.md#styling-draw
 export const editStyles = [
   {
     id: 'gl-draw-polygon-fill-inactive',
