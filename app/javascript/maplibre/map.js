@@ -11,6 +11,7 @@ export let map
 export let geojsonData //= { type: 'FeatureCollection', features: [] }
 export let mapProperties
 const terrain = false
+let currentMap
 
 // workflow of event based map loading:
 //
@@ -19,13 +20,13 @@ const terrain = false
 // * setBackgroundMapLayer() -> 'style.load' event
 //   -> loadGeoJsonData() -> 'geojson.load' event
 //      -> triggers callbacks for setting geojson/draw style layers
-export function initializeMapProperties () {
+export function initializeMaplibreProperties () {
   mapProperties = window.gon.map_properties
   console.log('map properties: ' + JSON.stringify(mapProperties))
 }
 
 export function initializeMap (divId = 'maplibre-map') {
-  initializeMapProperties()
+  initializeMaplibreProperties()
   maptilersdk.config.apiKey = window.gon.map_keys.maptiler
   map = new maplibregl.Map({
     container: divId,
@@ -165,9 +166,11 @@ export function destroy (featureId) {
 }
 
 export function setBackgroundMapLayer (mapName = mapProperties.base_map) {
+  if (currentMap === mapName) { return }
   map.setStyle(basemaps[mapName],
   // adding this so that 'style.load' gets triggered (https://github.com/maplibre/maplibre-gl-js/issues/2587)
     { diff: false })
+  currentMap = mapName
 }
 
 function animatePoint (feature, end, duration = 300) {

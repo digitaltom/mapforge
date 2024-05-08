@@ -2,7 +2,7 @@ import consumer from 'channels/consumer'
 import { flash } from 'ol/map'
 import { initializeMapProperties } from 'ol/properties'
 import { updateFeature, deleteFeature } from 'ol/feature'
-import { update, destroy } from 'maplibre/map'
+import { update, destroy, setBackgroundMapLayer, initializeMaplibreProperties } from 'maplibre/map'
 
 export let mapChannel
 
@@ -52,7 +52,9 @@ export function initializeSocket () {
           break
         case 'update_map':
           window.gon.map_properties = data.map
-          initializeMapProperties()
+          if (document.getElementById('map')) { initializeMapProperties() }
+          if (document.getElementById('maplibre-map')) { initializeMaplibreProperties() }
+          if (document.getElementById('maplibre-map')) { setBackgroundMapLayer() }
           break
       }
     },

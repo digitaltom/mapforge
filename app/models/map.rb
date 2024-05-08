@@ -86,7 +86,10 @@ class Map
   private
 
   def broadcast_update
-    ActionCable.server.broadcast("map_channel_#{id}",
-                                 { event: "update_map", map: properties.as_json })
+    # broadcast to private + public channel
+    [ id, public_id ].each do |id|
+      ActionCable.server.broadcast("map_channel_#{id}",
+                                   { event: "update_map", map: properties.as_json })
+    end
   end
 end
