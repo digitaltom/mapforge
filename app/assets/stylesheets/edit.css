@@ -1,0 +1,10 @@
+/* hide default maplibre popup bubble style */
+.edit-popup .maplibregl-popup-content {
+  background: unset;
+  box-shadow: unset;
+  padding: unset;
+}
+
+.edit-popup .maplibregl-popup-tip {
+  display: none !important;
+}

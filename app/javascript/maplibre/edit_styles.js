@@ -1,7 +1,8 @@
 import { styles, loadImage } from 'maplibre/styles'
 import { map } from 'maplibre/map'
 
-// MapboxDraw cannot render symbol+text styles. Adding those as extra layers to the map.
+// MapboxDraw cannot render symbol+text styles.
+// Adding those as extra layers to the map.
 export function initializeEditStyles () {
   map.addLayer(styles['symbols-layer'])
   map.addLayer(styles['text-layer'])
