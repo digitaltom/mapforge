@@ -60,6 +60,7 @@ export function initializeEditMode () {
   map.on('draw.delete', handleDelete)
 
   map.on('click', resetControls)
+  map.on('touchstart', resetControls)
 }
 
 function sourcedataHandler (e) {
@@ -85,6 +86,9 @@ function displayEditButtons (feature) {
 
     // Add event listeners for buttons
     document.getElementById('edit-button-trash').addEventListener('click', function () {
+      draw.trash()
+    })
+    document.getElementById('edit-button-trash').addEventListener('touchstart', function () {
       draw.trash()
     })
     document.getElementById('edit-button-edit').addEventListener('click', function () {
