@@ -64,3 +64,9 @@ export function e (selector, callback) {
   const element = document.querySelector(selector)
   if (element) { callback(element) }
 }
+
+export function addEventListeners (element, events, callback) {
+  events.forEach(event => {
+    element.addEventListener(event, callback)
+  })
+}

@@ -63,4 +63,5 @@ export function resetControls () {
   functions.e('#map-modal', e => { e.style.display = 'none' })
   functions.e('.maplibregl-ctrl-share', e => { e.classList.remove('active') })
   functions.e('#share-modal', e => { e.style.display = 'none' })
+  functions.e('#edit-feature', e => { e.classList.add('hidden') })
 }

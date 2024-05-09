@@ -2,6 +2,7 @@ import { map, geojsonData, initializeControls } from 'maplibre/map'
 import { editStyles, initializeEditStyles } from 'maplibre/edit_styles'
 import { mapChannel } from 'channels/map_channel'
 import { MapSettingsControl, MapShareControl, resetControls } from 'maplibre/controls'
+import * as f from 'helpers/functions'
 
 // eslint expects variables to get imported, but we load the full lib in header
 const MapboxDraw = window.MapboxDraw
@@ -85,15 +86,13 @@ function displayEditButtons (feature) {
       .addTo(map)
 
     // Add event listeners for buttons
-    document.getElementById('edit-button-trash').addEventListener('click', function () {
-      draw.trash()
-    })
-    document.getElementById('edit-button-trash').addEventListener('touchstart', function () {
-      draw.trash()
-    })
-    document.getElementById('edit-button-edit').addEventListener('click', function () {
-      console.log('Button 2 clicked')
-    })
+    f.addEventListeners(document.querySelector('#edit-button-trash'), ['click', 'touchstart'],
+      function () { draw.trash() })
+    f.addEventListeners(document.querySelector('#edit-button-edit'), ['click', 'touchstart'],
+      function () {
+        console.log('Button 2 clicked')
+        document.querySelector('#edit-feature').classList.remove('hidden')
+      })
   }
 }
 

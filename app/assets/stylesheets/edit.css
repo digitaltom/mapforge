@@ -10,11 +10,31 @@
 }
 
 .edit-button-group {
-  box-shadow: 0 0 6px 2px rgba(0, 0, 0, 0.38) !important;
+  box-shadow: 0 0 6px 2px rgba(0 0 0 / 38%) !important;
 }
 
 .edit-button {
   cursor: pointer;
   font-size: 1.4em;
   opacity: 0.75;
+}
+
+#edit-feature {
+  padding: 0.3em;
+  position: fixed;
+  z-index: 99;
+  top: 3em;
+  background-color: #fff;
+  left: 0.5em;
+  width: 35em;
+  max-width: calc(100% - 4.5em);
+  opacity: 1;
+  transition:
+    opacity 0.7s linear,
+    right 0.7s ease-in-out;
+  border-radius: 4px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #000;
+  overflow: hidden;
 }

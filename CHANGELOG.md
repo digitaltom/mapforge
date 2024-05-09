@@ -7,15 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
+* Switch to maplibre backend
+
+## 0.1
 
 * Added Bootstrap5
-
-### Changed
-
 * Upgrade to Openlayers 9
 * Created new frontpage that iterates through demos of available features
-
-### Removed
 
 
