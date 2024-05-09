@@ -19,9 +19,12 @@ export function initializeEditStyles () {
 // source layers 'mapbox-gl-draw-cold' + 'mapbox-gl-draw-hot'
 
 export const editStyles = [
+
   removeSource(styles['polygon-layer']), // gl-draw-polygon-fill-inactive
   removeSource(styles['polygon-layer-active']),
+  removeSource(styles['line-layer']), // 'gl-draw-line-inactive', 'gl-draw-polygon-stroke-inactive',
 
+  // midpoints to extend lines/polygons
   {
     id: 'gl-draw-polygon-midpoint',
     type: 'circle',
@@ -29,14 +32,16 @@ export const editStyles = [
       ['==', '$type', 'Point'],
       ['==', 'meta', 'midpoint']],
     paint: {
-      'circle-radius': 3,
+      'circle-radius': 6,
       'circle-color': '#fbb03b'
     }
   },
   {
     id: 'gl-draw-polygon-stroke-active',
     type: 'line',
-    filter: ['all', ['==', 'active', 'true'], ['==', '$type', 'Polygon']],
+    filter: ['all',
+      ['==', 'active', 'true'],
+      ['==', '$type', 'Polygon']],
     layout: {
       'line-cap': 'round',
       'line-join': 'round'
@@ -44,10 +49,9 @@ export const editStyles = [
     paint: {
       'line-color': '#fbb03b',
       'line-dasharray': [0.2, 2],
-      'line-width': 2
+      'line-width': 5
     }
   },
-  removeSource(styles['line-layer']), // 'gl-draw-line-inactive', 'gl-draw-polygon-stroke-inactive',
   {
     id: 'gl-draw-line-active',
     type: 'line',
@@ -62,7 +66,7 @@ export const editStyles = [
     paint: {
       'line-color': '#fbb03b',
       'line-dasharray': [0.2, 2],
-      'line-width': 2
+      'line-width': 5
     }
   },
   {
@@ -74,7 +78,7 @@ export const editStyles = [
       ['!=', 'mode', 'static']
     ],
     paint: {
-      'circle-radius': 5,
+      'circle-radius': 7,
       'circle-color': '#fff'
     }
   },
@@ -87,7 +91,7 @@ export const editStyles = [
       ['!=', 'mode', 'static']
     ],
     paint: {
-      'circle-radius': 3,
+      'circle-radius': 5,
       'circle-color': '#fbb03b'
     }
   },
@@ -101,7 +105,7 @@ export const editStyles = [
       ['!=', 'mode', 'static']
     ],
     paint: {
-      'circle-radius': 5,
+      'circle-radius': 7,
       'circle-opacity': 1,
       'circle-color': '#fff'
     }
@@ -117,7 +121,7 @@ export const editStyles = [
       ['!=', 'meta', 'midpoint']
     ],
     paint: {
-      'circle-radius': 7,
+      'circle-radius': 9,
       'circle-color': '#fff'
     }
   },
@@ -129,7 +133,7 @@ export const editStyles = [
       ['!=', 'meta', 'midpoint'],
       ['==', 'active', 'true']],
     paint: {
-      'circle-radius': 5,
+      'circle-radius': 7,
       'circle-color': '#fbb03b'
     }
   },

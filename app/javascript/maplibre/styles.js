@@ -27,6 +27,7 @@ export async function loadImage (e) {
 // https://maplibre.org/maplibre-style-spec/layers/
 // Expressions: https://maplibre.org/maplibre-style-spec/expressions/
 // layout is fixed, paint flexible
+
 export const styles = {
   'polygon-layer': {
     id: 'polygon-layer',
@@ -35,14 +36,15 @@ export const styles = {
       ['in', '$type', 'Polygon'],
       ['!=', 'active', 'true']],
     paint: {
-      'fill-color': ['coalesce', ['get', 'fill'],
+      'fill-color': ['coalesce',
+        ['get', 'fill'],
         ['get', 'user_fill'],
         'rgb(10, 135, 10)'],
       'fill-opacity':
-          ['to-number', ['coalesce', ['get', 'fill-opacity'],
+          ['to-number', ['coalesce',
+            ['get', 'fill-opacity'],
             ['get', 'user_fill-opacity'],
-            0.5]
-          ]
+            0.5]]
     }
   },
   'polygon-layer-active': {
@@ -52,14 +54,15 @@ export const styles = {
       ['in', '$type', 'Polygon'],
       ['==', 'active', 'true']],
     paint: {
-      'fill-color': ['coalesce', ['get', 'fill'],
+      'fill-color': ['coalesce',
+        ['get', 'fill'],
         ['get', 'user_fill'],
         'rgb(10, 135, 10)'],
       'fill-opacity':
-            ['to-number', ['coalesce', ['get', 'fill-opacity'],
+            ['to-number', ['coalesce',
+              ['get', 'fill-opacity'],
               ['get', 'user_fill-opacity'],
-              0.8]
-            ]
+              0.8]]
     }
   },
   'line-layer': {
@@ -85,8 +88,11 @@ export const styles = {
     filter: ['all',
       ['==', '$type', 'Point'],
       ['!=', 'active', 'true'],
+      ['==', 'meta', 'feature'],
       ['!has', 'marker-symbol'],
-      ['!has', 'marker-icon']],
+      ['!has', 'marker-icon'],
+      ['!has', 'user_marker-symbol'],
+      ['!has', 'user_marker-icon']],
     paint: {
       'circle-radius': 8,
       'circle-color': ['coalesce', ['get', 'stroke'], '#ffffff']
@@ -99,8 +105,11 @@ export const styles = {
     filter: ['all',
       ['==', '$type', 'Point'],
       ['!=', 'active', 'true'],
+      ['==', 'meta', 'feature'],
       ['!has', 'marker-symbol'],
-      ['!has', 'marker-icon']],
+      ['!has', 'marker-icon'],
+      ['!has', 'user_marker-symbol'],
+      ['!has', 'user_marker-icon']],
     paint: {
       'circle-radius': 6,
       'circle-color': ['coalesce', ['get', 'marker-color'], 'rgb(10, 135, 10)']
