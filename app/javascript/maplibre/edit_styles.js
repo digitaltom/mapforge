@@ -11,31 +11,17 @@ export function initializeEditStyles () {
 
 // started from https://github.com/mapbox/mapbox-gl-draw/blob/main/src/lib/theme.js
 // Styling Draw: https://github.com/mapbox/mapbox-gl-draw/blob/main/docs/API.md#styling-draw
+// mode == 'active': selected for editing
+// mode != 'active': normal display
+// mode == 'static': not available for editing
+//
+// mapbox gl draw doesn't use 'feature-state', but switches between different
+// source layers 'mapbox-gl-draw-cold' + 'mapbox-gl-draw-hot'
+
 export const editStyles = [
-  {
-    id: 'gl-draw-polygon-fill-inactive',
-    type: 'fill',
-    filter: ['all',
-      ['==', 'active', 'false'],
-      ['==', '$type', 'Polygon'],
-      ['!=', 'mode', 'static']
-    ],
-    paint: {
-      'fill-color': '#3bb2d0',
-      'fill-outline-color': '#3bb2d0',
-      'fill-opacity': 0.1
-    }
-  },
-  {
-    id: 'gl-draw-polygon-fill-active',
-    type: 'fill',
-    filter: ['all', ['==', 'active', 'true'], ['==', '$type', 'Polygon']],
-    paint: {
-      'fill-color': '#fbb03b',
-      'fill-outline-color': '#fbb03b',
-      'fill-opacity': 0.1
-    }
-  },
+  removeSource(styles['polygon-layer']), // gl-draw-polygon-fill-inactive
+  removeSource(styles['polygon-layer-active']),
+
   {
     id: 'gl-draw-polygon-midpoint',
     type: 'circle',
@@ -45,23 +31,6 @@ export const editStyles = [
     paint: {
       'circle-radius': 3,
       'circle-color': '#fbb03b'
-    }
-  },
-  {
-    id: 'gl-draw-polygon-stroke-inactive',
-    type: 'line',
-    filter: ['all',
-      ['==', 'active', 'false'],
-      ['==', '$type', 'Polygon'],
-      ['!=', 'mode', 'static']
-    ],
-    layout: {
-      'line-cap': 'round',
-      'line-join': 'round'
-    },
-    paint: {
-      'line-color': '#3bb2d0',
-      'line-width': 2
     }
   },
   {
@@ -78,7 +47,7 @@ export const editStyles = [
       'line-width': 2
     }
   },
-  removeSource(styles['line-layer']), // 'gl-draw-line-inactive'
+  removeSource(styles['line-layer']), // 'gl-draw-line-inactive', 'gl-draw-polygon-stroke-inactive',
   {
     id: 'gl-draw-line-active',
     type: 'line',

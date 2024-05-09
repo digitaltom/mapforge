@@ -31,26 +31,51 @@ export const styles = {
   'polygon-layer': {
     id: 'polygon-layer',
     type: 'fill',
-    source: 'geojson-source',
-    filter: ['==', '$type', 'Polygon'],
+    filter: ['all',
+      ['in', '$type', 'Polygon'],
+      ['!=', 'active', 'true']],
     paint: {
-      'fill-color': ['coalesce', ['get', 'fill'], 'rgb(10, 135, 10)'],
-      'fill-opacity': ['to-number', ['coalesce', ['get', 'fill-opacity'], 0.5]]
+      'fill-color': ['coalesce', ['get', 'fill'],
+        ['get', 'user_fill'],
+        'rgb(10, 135, 10)'],
+      'fill-opacity':
+          ['to-number', ['coalesce', ['get', 'fill-opacity'],
+            ['get', 'user_fill-opacity'],
+            0.5]
+          ]
     }
   },
-
+  'polygon-layer-active': {
+    id: 'polygon-layer-active',
+    type: 'fill',
+    filter: ['all',
+      ['in', '$type', 'Polygon'],
+      ['==', 'active', 'true']],
+    paint: {
+      'fill-color': ['coalesce', ['get', 'fill'],
+        ['get', 'user_fill'],
+        'rgb(10, 135, 10)'],
+      'fill-opacity':
+            ['to-number', ['coalesce', ['get', 'fill-opacity'],
+              ['get', 'user_fill-opacity'],
+              0.8]
+            ]
+    }
+  },
   'line-layer': {
     id: 'line-layer',
     type: 'line',
     source: 'geojson-source',
-    filter: ['in', '$type', 'LineString', 'Polygon'],
+    filter: ['all',
+      ['in', '$type', 'LineString', 'Polygon']],
     layout: {
       'line-join': 'round',
       'line-cap': 'round'
     },
+    // Draw prefixes properties with '_user'
     paint: {
-      'line-color': ['coalesce', ['get', 'stroke'], 'rgb(10, 135, 10)'],
-      'line-width': ['to-number', ['coalesce', ['get', 'stroke-width'], 4]]
+      'line-color': ['coalesce', ['get', 'stroke'], ['get', 'user_stroke'], 'rgb(10, 135, 10)'],
+      'line-width': ['to-number', ['coalesce', ['get', 'stroke-width'], ['get', 'user_stroke-width'], 2]]
     }
   },
   'points-border-layer': {
@@ -111,7 +136,7 @@ export const styles = {
       //     "", { "font-scale": 0.8 }
       // ],
       'text-field': ['get', 'title'],
-      'text-size': 24,
+      'text-size': 16,
       // must be available via glyphs: https://docs.maptiler.com/gl-style-specification/glyphs/
       // Emojis seem not to be in the character range: https://github.com/maplibre/maplibre-gl-js/issues/2307
       // 'text-font': ['Noto Color Emoji'], // ['Arial Unicode MS Bold', 'Open Sans Bold'], // Ensure the font supports emojis
