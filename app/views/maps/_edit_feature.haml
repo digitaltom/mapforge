@@ -1,4 +1,4 @@
-#edit-feature.hidden{'data-controller': "feature"}
+#edit-feature.hidden{'data-controller': "maplibre"}
   .edit-feature
     %h4.feature-details-title
     %p.feature-details-desc
@@ -6,5 +6,5 @@
     %p.feature-details-atts-edit
       %textarea{name: "properties", rows: "6", cols: "50", "data-feature-target": "properties" }
     %a{href: 'https://github.com/digitaltom/mapforge/blob/main/docs/geojson.md'} Help
-    %button.feature-update{ 'data-action': "click->feature#update"} Update
+    %button.feature-update{ 'data-action': "click->maplibre#update_feature"} Update
 

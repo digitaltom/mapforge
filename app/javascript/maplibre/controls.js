@@ -4,7 +4,7 @@ import * as functions from 'helpers/functions'
 export class MapSettingsControl {
   constructor (options) {
     this._container = document.createElement('div')
-    this._container.innerHTML = '<button class="maplibregl-ctrl-btn maplibregl-ctrl-map" type="button" title="Map settings" aria-label="Map settings" aria-pressed="false"><b><i class="bi bi-map-fill"></i></b></button>'
+    this._container.innerHTML = '<button class="maplibregl-ctrl-btn maplibregl-ctrl-map" type="button" title="Map settings" aria-label="Map settings" aria-pressed="false"><b><i class="bi bi-globe-americas"></i></b></button>'
     this._container.className = 'maplibregl-ctrl maplibregl-ctrl-group'
     this._container.onclick = function (event) {
       if (document.querySelector('#map-modal').style.display === 'block') {

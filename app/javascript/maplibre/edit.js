@@ -25,8 +25,8 @@ export function initializeEditMode () {
       polygon: true,
       line_string: true,
       point: true,
-      trash: true
-      // combine_features,
+      trash: false,
+      combine_features: false
       // uncombine_features
     },
     styles: editStyles,
@@ -90,8 +90,9 @@ function displayEditButtons (feature) {
       function () { draw.trash() })
     f.addEventListeners(document.querySelector('#edit-button-edit'), ['click', 'touchstart'],
       function () {
-        console.log('Button 2 clicked')
         document.querySelector('#edit-feature').classList.remove('hidden')
+        document.querySelector('.feature-details-atts-edit textarea').value = JSON.stringify(feature.properties)
+        document.querySelector('#edit-feature').setAttribute('data-feature-id', feature.id)
       })
   }
 }

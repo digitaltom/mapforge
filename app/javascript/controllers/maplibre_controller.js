@@ -1,8 +1,17 @@
 import { Controller } from '@hotwired/stimulus'
 import { mapChannel } from 'channels/map_channel'
-import { map, mapProperties, setBackgroundMapLayer } from 'maplibre/map'
+import { map, mapProperties, setBackgroundMapLayer, geojsonData } from 'maplibre/map'
 
 export default class extends Controller {
+  update_feature () {
+    const id = document.querySelector('#edit-feature').getAttribute('data-feature-id')
+    const geojsonFeature = geojsonData.features.find(f => f.id === id)
+    geojsonFeature.properties = JSON.parse(document.querySelector('.feature-details-atts-edit textarea').value)
+
+    map.getSource('geojson-source').setData(geojsonData)
+    mapChannel.send_message('update_feature', geojsonFeature)
+  }
+
   update_basemap (event) {
     const layerPreviews = document.querySelectorAll('.layer-preview')
     mapProperties.base_map = event.target.dataset.layer
