@@ -1,4 +1,4 @@
-import { map, geojsonData, initializeControls } from 'maplibre/map'
+import { map, geojsonData, initializeControls, lastMousePosition } from 'maplibre/map'
 import { editStyles, initializeEditStyles } from 'maplibre/edit_styles'
 import { mapChannel } from 'channels/map_channel'
 import { MapSettingsControl, MapShareControl, resetControls } from 'maplibre/controls'
@@ -10,7 +10,7 @@ const maplibregl = window.maplibregl
 
 export let draw
 let selectedFeature
-let editPopup
+export let editPopup
 
 MapboxDraw.constants.classes.CONTROL_BASE = 'maplibregl-ctrl'
 MapboxDraw.constants.classes.CONTROL_PREFIX = 'maplibregl-ctrl-'
@@ -74,27 +74,28 @@ function sourcedataHandler (e) {
 }
 
 function displayEditButtons (feature) {
+  let coordinates = lastMousePosition
   if (feature.geometry.type === 'Point') {
-    const coordinates = feature.geometry.coordinates
-    editPopup = new maplibregl.Popup({
-      closeButton: false,
-      className: 'edit-popup',
-      offset: [0, -15]
-    })
-      .setLngLat(coordinates)
-      .setHTML(document.getElementById('edit-buttons').innerHTML)
-      .addTo(map)
-
-    // Add event listeners for buttons
-    f.addEventListeners(document.querySelector('#edit-button-trash'), ['click', 'touchstart'],
-      function () { draw.trash() })
-    f.addEventListeners(document.querySelector('#edit-button-edit'), ['click', 'touchstart'],
-      function () {
-        document.querySelector('#edit-feature').classList.remove('hidden')
-        document.querySelector('.feature-details-atts-edit textarea').value = JSON.stringify(feature.properties)
-        document.querySelector('#edit-feature').setAttribute('data-feature-id', feature.id)
-      })
+    coordinates = feature.geometry.coordinates
   }
+  editPopup = new maplibregl.Popup({
+    closeButton: false,
+    className: 'edit-popup',
+    offset: [0, -20]
+  })
+    .setLngLat(coordinates)
+    .setHTML(document.getElementById('edit-buttons').innerHTML)
+    .addTo(map)
+
+  // Add event listeners for buttons
+  f.addEventListeners(document.querySelector('#edit-button-trash'), ['click', 'touchstart'],
+    function () { draw.trash() })
+  f.addEventListeners(document.querySelector('#edit-button-edit'), ['click', 'touchstart'],
+    function () {
+      document.querySelector('#edit-feature').classList.remove('hidden')
+      document.querySelector('.feature-details-atts-edit textarea').value = JSON.stringify(feature.properties)
+      document.querySelector('#edit-feature').setAttribute('data-feature-id', feature.id)
+    })
 }
 
 function handleCreate (e) {

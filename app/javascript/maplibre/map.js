@@ -10,6 +10,7 @@ const maptilersdk = window.maptilersdk
 export let map
 export let geojsonData //= { type: 'FeatureCollection', features: [] }
 export let mapProperties
+export let lastMousePosition
 const terrain = false
 let currentMap
 
@@ -45,6 +46,10 @@ export function initializeMap (divId = 'maplibre-map') {
 
   map.on('load', function () {
     if (terrain) { addTerrain() }
+  })
+
+  map.on('mousemove', (e) => {
+    lastMousePosition = e.lngLat
   })
 }
 

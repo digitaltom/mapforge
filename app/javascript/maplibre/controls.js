@@ -1,5 +1,6 @@
 import { mapProperties } from 'maplibre/map'
 import * as functions from 'helpers/functions'
+import { editPopup } from 'maplibre/edit'
 
 export class MapSettingsControl {
   constructor (options) {
@@ -59,9 +60,14 @@ export class MapShareControl {
 }
 
 export function resetControls () {
+  // reset map modal
   functions.e('.maplibregl-ctrl-map', e => { e.classList.remove('active') })
   functions.e('#map-modal', e => { e.style.display = 'none' })
+  // reset share modal
   functions.e('.maplibregl-ctrl-share', e => { e.classList.remove('active') })
   functions.e('#share-modal', e => { e.style.display = 'none' })
+  // edit modal
   functions.e('#edit-feature', e => { e.classList.add('hidden') })
+  // reset edit buttons
+  if (editPopup) { editPopup.remove() }
 }
