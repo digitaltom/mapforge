@@ -11,7 +11,6 @@ export let map
 export let geojsonData //= { type: 'FeatureCollection', features: [] }
 export let mapProperties
 export let lastMousePosition
-const terrain = false
 let currentMap
 
 // workflow of event based map loading:
@@ -42,10 +41,7 @@ export function initializeMap (divId = 'maplibre-map') {
   // after basemap style is ready/changed, load geojson layer
   map.on('style.load', () => {
     loadGeoJsonData()
-  })
-
-  map.on('load', function () {
-    if (terrain) { addTerrain() }
+    if (mapProperties.terrain) { addTerrain() }
   })
 
   map.on('mousemove', (e) => {
@@ -98,7 +94,7 @@ function addTerrain () {
 
   map.setTerrain({
     source: 'terrain',
-    exaggeration: 1.2
+    exaggeration: 1.1
   })
 }
 

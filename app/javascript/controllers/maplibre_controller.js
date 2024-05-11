@@ -15,8 +15,10 @@ export default class extends Controller {
   update_basemap (event) {
     const layerPreviews = document.querySelectorAll('.layer-preview')
     mapProperties.base_map = event.target.dataset.layer
+    // alternative to https://maplibre.org/maplibre-gl-js/docs/API/classes/TerrainControl/
+    mapProperties.terrain = document.querySelector('#map-terrain').checked
     setBackgroundMapLayer(mapProperties.base_map)
-    mapChannel.send_message('update_map', { base_map: mapProperties.base_map })
+    mapChannel.send_message('update_map', { base_map: mapProperties.base_map, terrain: mapProperties.terrain })
     layerPreviews.forEach(layerPreview => { layerPreview.classList.remove('active') })
     event.target.classList.add('active')
   }
@@ -27,13 +29,15 @@ export default class extends Controller {
     const zoom = map.getZoom()
     const pitch = map.getPitch()
     const name = document.querySelector('#map-name').value
+    const terrain = document.querySelector('#map-terrain').checked
     document.querySelector('#map-center').innerHTML = center
     document.querySelector('#map-zoom').innerHTML = zoom
     document.querySelector('#map-pitch').innerHTML = pitch
     mapProperties.center = center
     mapProperties.zoom = zoom
     mapProperties.pitch = pitch
-    mapChannel.send_message('update_map', { center, zoom, pitch, name })
+    mapProperties.terrain = terrain
+    mapChannel.send_message('update_map', { center, zoom, pitch, name, terrain })
     return false
   }
 }

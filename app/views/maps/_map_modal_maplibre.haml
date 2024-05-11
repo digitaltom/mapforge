@@ -26,4 +26,8 @@
     = "#{@map.properties[:pitch]}°"
     %i#map-pitch-current
   %br
+  %span
+    %label{ for: "map-terrain"} Terrain:
+    %input#map-terrain{type: "checkbox", checked: @map.properties[:terrain],      data: { action: "click->maplibre#update_basemap"} }
+  %br
   %a#set-map-center{href: '#', data: { action: "click->maplibre#update_mapdata" } } Set initial map view to current center/zoom/pitch

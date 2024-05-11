@@ -10,6 +10,7 @@ class Map
   field :base_map, type: String
   field :center, type: Array
   field :zoom, type: String
+  field :terrain, type: Boolean
   field :pitch, type: String
   field :name, type: String
   field :description, type: String
@@ -21,11 +22,12 @@ class Map
 
   BASE_MAPS = [ "osmTiles", "satelliteTiles", "satelliteStreetTiles",
                "stamenTonerTiles", "openTopoTiles", "mapboxBrightVector",
-               "maptilerDataviz", "maptilerStreets", "maptilerNoStreets" ]
+               "maptilerDataviz", "maptilerStreets", "maptilerNoStreets", "maptilerWinter" ]
   DEFAULT_MAP = "osmTiles"
   DEFAULT_CENTER = [ 11.077, 49.447 ].freeze
   DEFAULT_ZOOM = 12
   DEFAULT_PITCH = 30
+  DEFAULT_TERRAIN = false
 
   after_save :broadcast_update
   before_create :create_public_id, :create_layer
@@ -38,7 +40,8 @@ class Map
       base_map: base_map || DEFAULT_MAP,
       center: center || DEFAULT_CENTER,
       zoom: zoom || DEFAULT_ZOOM,
-      pitch: pitch || DEFAULT_PITCH
+      pitch: pitch || DEFAULT_PITCH,
+      terrain: terrain || DEFAULT_TERRAIN
     }
   end
 

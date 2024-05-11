@@ -32,7 +32,8 @@ export const basemaps = {
         minzoom: 0,
         maxzoom: 22
       }
-    ]
+    ],
+    glyphs: 'https://fonts.openmaptiles.org/{fontstack}/{range}.pbf'
   },
   stamenTonerTiles: {
     version: 8,
@@ -56,7 +57,8 @@ export const basemaps = {
         minzoom: 0,
         maxzoom: 22
       }
-    ]
+    ],
+    glyphs: 'https://fonts.openmaptiles.org/{fontstack}/{range}.pbf'
   },
   openTopoTiles: {
     version: 8,
@@ -83,8 +85,34 @@ export const basemaps = {
         minzoom: 0,
         maxzoom: 22
       }
-    ]
+    ],
+    glyphs: 'https://fonts.openmaptiles.org/{fontstack}/{range}.pbf'
   },
+  satelliteTiles: {
+    version: 8,
+    sources: {
+      'raster-tiles': {
+        type: 'raster',
+        tiles: [
+          'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
+        ],
+        tileSize: 256,
+        attribution: 'Powered by Esri, ' +
+          'Sources: Esri, DigitalGlobe, GeoEye, i-cubed, USDA FSA, USGS, AEX, Getmapping, Aerogrid, IGN, IGP, swisstopo, and the GIS User Community'
+      }
+    },
+    layers: [
+      {
+        id: 'simple-tiles',
+        type: 'raster',
+        source: 'raster-tiles',
+        minzoom: 0,
+        maxzoom: 18.5
+      }
+    ],
+    glyphs: 'https://fonts.openmaptiles.org/{fontstack}/{range}.pbf'
+  },
+
   // 3D Houses
   maptilerBasic: 'https://api.maptiler.com/maps/basic-v2/style.json?key=' + window.gon.map_keys.maptiler,
   maptilerOpenStreetmap: 'https://api.maptiler.com/maps/openstreetmap/style.json?key=' + window.gon.map_keys.maptiler,
@@ -98,8 +126,6 @@ export const basemaps = {
 
   // ol compat:
   osmTiles: 'https://api.maptiler.com/maps/basic-v2/style.json?key=' + window.gon.map_keys.maptiler,
-  aptilerBasic: 'https://api.maptiler.com/maps/basic-v2/style.json?key=' + window.gon.map_keys.maptiler,
-  satelliteTiles: 'https://api.maptiler.com/maps/satellite/style.json?key=' + window.gon.map_keys.maptiler,
   satelliteStreetTiles: 'https://api.maptiler.com/maps/hybrid/style.json?key=' + window.gon.map_keys.maptiler,
   mapboxBrightVector: 'https://api.maptiler.com/maps/streets/style.json?key=' + window.gon.map_keys.maptiler
 }
