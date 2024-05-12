@@ -33,6 +33,7 @@ export function initializeMap (divId = 'maplibre-map') {
     center: mapProperties.center,
     zoom: mapProperties.zoom,
     pitch: mapProperties.pitch,
+    maxPitch: 72,
     interactive: (window.gon.map_mode !== 'static')
   })
   // for console debugging
@@ -45,6 +46,9 @@ export function initializeMap (divId = 'maplibre-map') {
   })
 
   map.on('mousemove', (e) => {
+    lastMousePosition = e.lngLat
+  })
+  map.on('touchend', (e) => {
     lastMousePosition = e.lngLat
   })
 }
