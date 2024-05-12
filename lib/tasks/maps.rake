@@ -6,7 +6,7 @@ require_relative "../../spec/support/capybara.rb"
 namespace :maps do
   desc "Take screenshot of all maps"
   task screenshots: :environment do
-    base_url = ENV.fetch("MAPFORGE_HOST", "http://localhost:3000") + "/maps/"
+    base_url = ENV.fetch("MAPFORGE_HOST", "http://localhost:3000") + "/m/"
     session = Capybara::Session.new(:headless_chrome)
     Map.where.not(public_id: nil).pluck(:public_id).map(&:to_s).each do |map_id|
       # https://github.com/YusukeIwaki/puppeteer-ruby
