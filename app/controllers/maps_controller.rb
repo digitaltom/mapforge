@@ -2,7 +2,8 @@ class MapsController < ApplicationController
   before_action :set_map, only: %i[show features properties]
 
   def index
-    @maps = Map.where.not(public_id: nil).includes(layer: :features).order(updated_at: :desc)
+    gon.map_keys = Map.provider_keys
+    @maps = Map.where.not(private: true).includes(layer: :features).order(updated_at: :desc)
   end
 
   def show
@@ -10,7 +11,7 @@ class MapsController < ApplicationController
     gon.map_mode = (params[:id] == @map.id.to_s) ? "rw" : "ro"
     gon.map_mode = "static" if params["static"]
     gon.map_properties = @map.properties
-    gon.map_keys = @map.keys
+    gon.map_keys = Map.provider_keys
 
     respond_to do |format|
       format.html do
@@ -35,6 +36,12 @@ class MapsController < ApplicationController
     @map = Map.create!(map_params)
 
     redirect_to map_url(@map), notice: "Map was successfully created."
+  end
+
+  def destroy
+    Map.find_by(id: params[:id]).destroy!
+
+    redirect_to maps_path, notice: "Map was deleted."
   end
 
   def features

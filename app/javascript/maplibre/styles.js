@@ -32,6 +32,7 @@ export const styles = {
   'polygon-layer': {
     id: 'polygon-layer',
     type: 'fill',
+    source: 'geojson-source',
     filter: ['all',
       ['in', '$type', 'Polygon'],
       ['!=', 'active', 'true']],

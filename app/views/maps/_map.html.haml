@@ -1,5 +1,5 @@
 %div.flex-item.map-preview{id: dom_id(map)}
-  = link_to map_path(id: map.public_id) do
+  = link_to maplibre_path(id: map.public_id) do
     - if File.exist?(Rails.root.join("public/previews/#{map.public_id}.png"))
       %img{src: "/previews/#{map.public_id}.png", class: 'preview-image'}
     - else
