@@ -10,6 +10,8 @@ Rails.application.routes.draw do
   get "/d/:id" => "maps#show", defaults: { engine: "deck" }, as: :deck
   get "/m/:id" => "maps#show", defaults: { engine: "maplibre" }, as: :maplibre
 
+  get "/admin" => "admin#index"
+
   get "/frontpage" => "frontpage#index"
   get "/icon/:public_id", to: "images#icon", as: "icon", constraints: { public_id: /[^\/]+/ }
 

@@ -33,7 +33,8 @@ export function initializeMap (divId = 'maplibre-map') {
     center: mapProperties.center,
     zoom: mapProperties.zoom,
     pitch: mapProperties.pitch,
-    interactive: (window.gon.map_mode !== 'static')
+    maxPitch: 72,
+    interactive: (window.gon.map_mode !== 'static') // can move/zoom map
   })
   // for console debugging
   window.map = map
@@ -45,6 +46,9 @@ export function initializeMap (divId = 'maplibre-map') {
   })
 
   map.on('mousemove', (e) => {
+    lastMousePosition = e.lngLat
+  })
+  map.on('touchend', (e) => {
     lastMousePosition = e.lngLat
   })
 }
@@ -124,7 +128,7 @@ export function initializeControls () {
 }
 
 export function initializeViewMode () {
-  initializeControls()
+  if (window.gon.map_mode !== 'static') { initializeControls() }
 
   map.on('geojson.load', function (e) {
     initializeViewStyles()

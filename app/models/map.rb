@@ -5,7 +5,6 @@ class Map
 
   # one default layer for now
   has_one :layer
-  default_scope -> { order_by(created_at: :asc) }
 
   field :base_map, type: String
   field :center, type: Array
@@ -15,6 +14,7 @@ class Map
   field :name, type: String
   field :description, type: String
   field :public_id, type: String
+  field :private, type: Boolean
 
   delegate :features, to: :layer
   delegate :feature_collection, to: :layer
@@ -31,7 +31,7 @@ class Map
 
   after_save :broadcast_update
   before_create :create_public_id, :create_layer
-  validate :public_id_must_be_unique_or_nil
+  validate :public_id_must_be_unique
 
   def properties
     { name: name,
@@ -45,7 +45,7 @@ class Map
     }
   end
 
-  def keys
+  def self.provider_keys
     { mapbox: ENV["MAPBOX_KEY"],
       maptiler: ENV["MAPTILER_KEY"] }
   end
@@ -62,8 +62,8 @@ class Map
     { properties: properties, layers: [ feature_collection ] }.to_json
   end
 
-  def public_id_must_be_unique_or_nil
-    if public_id.present? && Map.where(public_id: public_id).where.not(id: id).exists?
+  def public_id_must_be_unique
+    if Map.where(public_id: public_id).where.not(id: id).exists?
       errors.add(:public_id, "has already been taken")
     end
   end
