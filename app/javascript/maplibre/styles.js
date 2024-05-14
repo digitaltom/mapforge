@@ -2,6 +2,7 @@ import { map } from 'maplibre/map'
 
 export function initializeViewStyles () {
   map.addLayer(styles['polygon-layer'])
+  map.addLayer(styles['polygon-layer-extrusion'])
   map.addLayer(styles['line-layer'])
   map.addLayer(styles['points-border-layer'])
   map.addLayer(styles['points-layer'])
@@ -51,6 +52,7 @@ export const styles = {
   'polygon-layer-active': {
     id: 'polygon-layer-active',
     type: 'fill',
+    source: 'geojson-source',
     filter: ['all',
       ['in', '$type', 'Polygon'],
       ['==', 'active', 'true']],
@@ -64,6 +66,26 @@ export const styles = {
               ['get', 'fill-opacity'],
               ['get', 'user_fill-opacity'],
               0.8]]
+    }
+  },
+  'polygon-layer-extrusion': {
+    id: 'polygon-layer-extrusion',
+    type: 'fill-extrusion',
+    source: 'geojson-source',
+    filter: ['all',
+      ['in', '$type', 'LineString', 'Polygon']],
+    paint: {
+      'fill-extrusion-color': ['coalesce',
+        ['get', 'fill-extrusion-color'],
+        ['get', 'user_fill-extrusion-color'], 'rgb(10, 135, 10)'],
+      'fill-extrusion-height': ['coalesce',
+        ['get', 'fill-extrusion-height'],
+        ['get', 'user_fill-extrusion-height']],
+      'fill-extrusion-base': ['coalesce',
+        ['get', 'fill-extrusion-base'],
+        ['get', 'user_fill-extrusion-base']],
+      // opacity does not support data expressions!?!
+      'fill-extrusion-opacity': 0.4
     }
   },
   'line-layer': {

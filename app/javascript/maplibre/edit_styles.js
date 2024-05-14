@@ -22,6 +22,7 @@ export const editStyles = [
 
   removeSource(styles['polygon-layer']), // gl-draw-polygon-fill-inactive
   removeSource(styles['polygon-layer-active']),
+  removeSource(styles['polygon-layer-extrusion']),
   removeSource(styles['line-layer']), // 'gl-draw-line-inactive', 'gl-draw-polygon-stroke-inactive',
 
   // midpoints to extend lines/polygons
