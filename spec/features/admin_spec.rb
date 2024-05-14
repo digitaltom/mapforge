@@ -4,9 +4,11 @@ describe 'Admin List' do
   let!(:maps) { create_list(:map, 3) }
 
   before do
-    ENV["ADMIN_USER"] = "test"
-    ENV["ADMIN_PW"] = "test"
-    visit "http://#{ENV["ADMIN_USER"]}:#{ENV["ADMIN_PW"]}@localhost:#{Capybara.server_port}#{admin_path}"
+    allow(ENV).to receive(:fetch).and_call_original
+    allow(ENV).to receive(:fetch).with("ADMIN_USER", "").and_return("test")
+    allow(ENV).to receive(:fetch).with("ADMIN_PW", "").and_return("test")
+
+    visit "http://test:test@localhost:#{Capybara.server_port}#{admin_path}"
   end
 
   it 'shows private links to maps' do

@@ -29,6 +29,7 @@ bundle
 * Put map provider keys (MAPTILER_KEY, MAPBOX_KEY) into `.env.development`
 * MongoDB backend is expected at: `ENV.fetch("MONGO_URL") { "localhost:27017" }`
 * Redis (for action cable) is expected at: `ENV.fetch("REDIS_URL") { "redis://localhost:6379/1" }`
+* Login for /admin is read from `ENV.fetch("ADMIN_USER")` and `ENV.fetch("ADMIN_PW")`
 * To import the initial frontpage, run: `bin/rake seed:frontpage`
 
 ### Base maps
