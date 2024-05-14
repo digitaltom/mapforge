@@ -19,7 +19,7 @@ describe 'Map List' do
     it 'user can create new map' do
       click_link('New map')
       click_button('Create Map')
-      expect(page).to have_css('#map')
+      expect(page).to have_css('#maplibre-map')
     end
   end
 end

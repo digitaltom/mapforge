@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   get "/m/:id" => "maps#show", defaults: { engine: "maplibre" }, as: :maplibre
 
   get "/admin" => "admin#index"
+  delete "/admin/:id" => "admin#destroy", as: :destroy_map
 
   get "/frontpage" => "frontpage#index"
   get "/icon/:public_id", to: "images#icon", as: "icon", constraints: { public_id: /[^\/]+/ }
