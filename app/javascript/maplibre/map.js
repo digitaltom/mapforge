@@ -26,6 +26,10 @@ export function initializeMaplibreProperties () {
 }
 
 export function initializeMap (divId = 'maplibre-map') {
+  // reset map background, + data
+  currentMap = null
+  geojsonData = null
+
   initializeMaplibreProperties()
   maptilersdk.config.apiKey = window.gon.map_keys.maptiler
   map = new maplibregl.Map({
@@ -172,6 +176,7 @@ export function destroy (featureId) {
 
 export function setBackgroundMapLayer (mapName = mapProperties.base_map) {
   if (currentMap === mapName) { return }
+  console.log('Loading base map ' + mapName)
   map.setStyle(basemaps[mapName],
   // adding this so that 'style.load' gets triggered (https://github.com/maplibre/maplibre-gl-js/issues/2587)
     { diff: false })
