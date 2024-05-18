@@ -33,7 +33,6 @@ Extending the [Mapbox Simplestyle Spec](https://github.com/mapbox/simplestyle-sp
 * `stroke`: line color (default: 'darkgreen')
 * `stroke-opacity`: opacity of the line (default: 1.0)
 * `fill`: fill color (default: "#0A870A", green)
-* `fill-opacity`: opacity of the filling (default: 0.3)
 * `fill-extrusion-color`: color of the extrusion (default: green),
 * `fill-extrusion-height`: height in m,
 * `fill-extrusion-base`: ground distance in m (default: 0),
