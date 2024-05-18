@@ -4,7 +4,7 @@ import { map, mapProperties, setBackgroundMapLayer, geojsonData } from 'maplibre
 
 export default class extends Controller {
   update_feature () {
-    const id = document.querySelector('#edit-feature').getAttribute('data-feature-id')
+    const id = document.querySelector('#edit-modal').getAttribute('data-feature-id')
     const geojsonFeature = geojsonData.features.find(f => f.id === id)
     geojsonFeature.properties = JSON.parse(document.querySelector('.feature-details-atts-edit textarea').value)
 

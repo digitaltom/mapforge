@@ -96,9 +96,9 @@ function displayEditButtons (feature) {
     function () { draw.trash() })
   f.addEventListeners(document.querySelector('#edit-button-edit'), ['click', 'touchstart'],
     function () {
-      document.querySelector('#edit-feature').classList.remove('hidden')
+      document.querySelector('#edit-modal').style.display = 'block'
       document.querySelector('.feature-details-atts-edit textarea').value = JSON.stringify(feature.properties)
-      document.querySelector('#edit-feature').setAttribute('data-feature-id', feature.id)
+      document.querySelector('#edit-modal').setAttribute('data-feature-id', feature.id)
     })
 }
 

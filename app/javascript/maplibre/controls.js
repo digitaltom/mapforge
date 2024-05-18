@@ -32,12 +32,12 @@ export class MapSettingsControl {
   constructor (options) {
     this._container = document.createElement('div')
     this._container.innerHTML = '<button class="maplibregl-ctrl-btn maplibregl-ctrl-map" type="button" title="Map settings" aria-label="Map settings" aria-pressed="false"><b><i class="bi bi-globe-americas"></i></b></button>'
-    this._container.onclick = function (event) {
+    this._container.onclick = function (e) {
       if (document.querySelector('#map-modal').style.display === 'block') {
         resetControls()
       } else {
         resetControls()
-        document.querySelector('.maplibregl-ctrl-map').classList.add('active')
+        e.target.closest('button').classList.add('active')
         document.querySelector('#map-modal').style.display = 'block'
         document.querySelector('#map-name').value = mapProperties.name
       }
@@ -60,12 +60,12 @@ export class MapShareControl {
   constructor (options) {
     this._container = document.createElement('div')
     this._container.innerHTML = '<button class="maplibregl-ctrl-btn maplibregl-ctrl-share" type="button" title="Map settings" aria-label="Map settings" aria-pressed="false"><b><i class="bi bi-share-fill"></i></b></button>'
-    this._container.onclick = function (event) {
+    this._container.onclick = function (e) {
       if (document.querySelector('#share-modal').style.display === 'block') {
         resetControls()
       } else {
         resetControls()
-        document.querySelector('.maplibregl-ctrl-share').classList.add('active')
+        e.target.closest('button').classList.add('active')
         document.querySelector('#share-modal').style.display = 'block'
       }
     }
@@ -89,12 +89,12 @@ export class MapLayersControl {
     this._container.innerHTML = '<button class="maplibregl-ctrl-btn maplibregl-ctrl-layers" ' +
       'type="button" title="Map settings" aria-label="Map settings" aria-pressed="false">' +
       '<b><i class="bi bi-stack"></i></b></button>'
-    this._container.onclick = function (event) {
-      if (document.querySelector('#share-modal').style.display === 'block') {
+    this._container.onclick = function (e) {
+      if (document.querySelector('#layers-modal').style.display === 'block') {
         resetControls()
       } else {
         resetControls()
-        document.querySelector('.maplibregl-ctrl-layers').classList.add('active')
+        e.target.closest('button').classList.add('active')
         document.querySelector('#layers-modal').style.display = 'block'
       }
     }
@@ -113,17 +113,10 @@ export class MapLayersControl {
 }
 
 export function resetControls () {
-  // reset map modal
-  functions.e('.maplibregl-ctrl-map', e => { e.classList.remove('active') })
-  functions.e('#map-modal', e => { e.style.display = 'none' })
-  // reset share modal
-  functions.e('.maplibregl-ctrl-share', e => { e.classList.remove('active') })
-  functions.e('#share-modal', e => { e.style.display = 'none' })
-  // reset layers modal
-  functions.e('.maplibregl-ctrl-layers', e => { e.classList.remove('active') })
-  functions.e('#layers-modal', e => { e.style.display = 'none' })
-  // edit modal
-  functions.e('#edit-feature', e => { e.classList.add('hidden') })
+  // reset ctrl buttons
+  functions.e('.maplibregl-ctrl-btn', e => { e.classList.remove('active') })
+  // reset active modals
+  functions.e('.map-modal', e => { e.style.display = 'none' })
   // reset edit buttons
   if (editPopup) { editPopup.remove() }
 }

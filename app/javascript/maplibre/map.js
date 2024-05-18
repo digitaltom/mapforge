@@ -103,7 +103,7 @@ function addTerrain () {
 
   map.setTerrain({
     source: 'terrain',
-    exaggeration: 1.1
+    exaggeration: 1.3
   })
 }
 
