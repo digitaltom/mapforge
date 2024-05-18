@@ -9,32 +9,36 @@ namespace :maps do
     base_url = ENV.fetch("MAPFORGE_HOST", "http://localhost:3000") + "/m/"
     session = Capybara::Session.new(:headless_chrome)
     Map.each do |map|
-      # https://github.com/YusukeIwaki/puppeteer-ruby
-      Puppeteer.launch(headless: true, ignore_https_errors: true) do |browser|
-        context = browser.create_incognito_browser_context
-        page = browser.new_page
-        map_url = base_url + map.id + "?static=true"
-        failure = false
+      begin
+        # https://github.com/YusukeIwaki/puppeteer-ruby
+        Puppeteer.launch(headless: true, ignore_https_errors: true) do |browser|
+          context = browser.create_incognito_browser_context
+          page = browser.new_page
+          map_url = base_url + map.id + "?static=true"
+          failure = false
 
-        page.on("response") do |response|
-          status_code = response.status
-          url = response.url
-          unless status_code >= 200 && status_code < 400
-            if url == map_url
-              puts "Failed to capture: #{url}, Status Code: #{status_code}"
-              failure = true
+          page.on("response") do |response|
+            status_code = response.status
+            url = response.url
+            unless status_code >= 200 && status_code < 400
+              if url == map_url
+                puts "Failed to capture: #{url}, Status Code: #{status_code}"
+                failure = true
+              end
             end
           end
-        end
 
-        page.viewport = Puppeteer::Viewport.new(width: 800, height: 600)
-        puts "Loading " + map_url
-        page.goto(map_url, wait_until: "networkidle0")
+          page.viewport = Puppeteer::Viewport.new(width: 800, height: 600)
+          puts "Loading " + map_url
+          page.goto(map_url, wait_until: "networkidle0")
 
-        unless failure
-          page.screenshot(path: Rails.root.join("public/previews/#{map.public_id}.png").to_s)
-          puts "Stored public/previews/#{map.public_id}.png"
+          unless failure
+            page.screenshot(path: Rails.root.join("public/previews/#{map.public_id}.png").to_s)
+            puts "Stored public/previews/#{map.public_id}.png"
+          end
         end
+      rescue => e
+        puts "Error creating map screenshot: #{e}, #{e.message}"
       end
     end
   end
