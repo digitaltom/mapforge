@@ -53,7 +53,7 @@ created with [maputnik](https://maplibre.org/maputnik/).
 
 * Take screenshots of existing maps for preview:
 
-  `bin/rake maps:screenshots` (use MAPFORGE_HOST to set the host)
+  `bin/rake maps:screenshots[<changed_since_hours>]` (use MAPFORGE_HOST to set the host)
 
 * Animate a marker along a line: `bin/rake animation:path[<map_id>, <line_id>, <point_id>]`
 

@@ -4,11 +4,12 @@ require "selenium-webdriver"
 require_relative "../../spec/support/capybara.rb"
 
 namespace :maps do
-  desc "Take screenshot of all maps"
-  task screenshots: :environment do
+  desc "Take preview screenshots of maps (changed last 24h by default)"
+  task :screenshots, %i[hours] => :environment do |_, args|
     base_url = ENV.fetch("MAPFORGE_HOST", "http://localhost:3000") + "/m/"
     session = Capybara::Session.new(:headless_chrome)
-    Map.each do |map|
+    timeframe = args.hours ? args.hours.to_i.hours.ago : 5.years.ago
+    Map.where(:updated_at.gte => timeframe).each do |map|
       begin
         # https://github.com/YusukeIwaki/puppeteer-ruby
         Puppeteer.launch(headless: true, ignore_https_errors: true) do |browser|
