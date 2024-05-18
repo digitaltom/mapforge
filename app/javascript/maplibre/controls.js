@@ -1,4 +1,4 @@
-import { mapProperties } from 'maplibre/map'
+import { mapProperties, geojsonData } from 'maplibre/map'
 import * as functions from 'helpers/functions'
 import { editPopup } from 'maplibre/edit'
 
@@ -85,6 +85,7 @@ export class MapShareControl {
 
 export class MapLayersControl {
   constructor (options) {
+    const control = this
     this._container = document.createElement('div')
     this._container.innerHTML = '<button class="maplibregl-ctrl-btn maplibregl-ctrl-layers" ' +
       'type="button" title="Map settings" aria-label="Map settings" aria-pressed="false">' +
@@ -94,10 +95,23 @@ export class MapLayersControl {
         resetControls()
       } else {
         resetControls()
+        control.initLayersModal()
         e.target.closest('button').classList.add('active')
         document.querySelector('#layers-modal').style.display = 'block'
       }
     }
+  }
+
+  // create the list of layers + features
+  initLayersModal () {
+    functions.e('#default-layer .layer-elements', e => {
+      geojsonData.features.forEach(feature => {
+        const listItem = document.createElement('li')
+        listItem.textContent = `${feature.geometry.type}: ` +
+            `${feature.title ? feature.title : feature.id}`
+        e.appendChild(listItem)
+      })
+    })
   }
 
   onAdd (map) {
