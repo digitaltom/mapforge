@@ -3,6 +3,6 @@
     - if File.exist?(Rails.root.join("public/previews/#{map.public_id}.png"))
       %img{src: "/previews/#{map.public_id}.png", class: 'preview-image'}
     - else
-      %img{src: "/previews/map.png", class: 'preview-image'}
+      = image_tag "preview.png", class: 'preview-image'
     .map-preview-title= map.properties[:name]
   %i= "last change #{distance_of_time_in_words(DateTime.now, map.updated_at)} ago"
