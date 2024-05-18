@@ -86,7 +86,7 @@ export class MapShareControl {
 export class MapLayersControl {
   constructor (options) {
     this._container = document.createElement('div')
-    this._container.innerHTML = '<button class="maplibregl-ctrl-btn maplibregl-ctrl-share" ' +
+    this._container.innerHTML = '<button class="maplibregl-ctrl-btn maplibregl-ctrl-layers" ' +
       'type="button" title="Map settings" aria-label="Map settings" aria-pressed="false">' +
       '<b><i class="bi bi-stack"></i></b></button>'
     this._container.onclick = function (event) {
@@ -94,8 +94,8 @@ export class MapLayersControl {
         resetControls()
       } else {
         resetControls()
-        document.querySelector('.maplibregl-ctrl-share').classList.add('active')
-        document.querySelector('#share-modal').style.display = 'block'
+        document.querySelector('.maplibregl-ctrl-layers').classList.add('active')
+        document.querySelector('#layers-modal').style.display = 'block'
       }
     }
   }
@@ -119,6 +119,9 @@ export function resetControls () {
   // reset share modal
   functions.e('.maplibregl-ctrl-share', e => { e.classList.remove('active') })
   functions.e('#share-modal', e => { e.style.display = 'none' })
+  // reset layers modal
+  functions.e('.maplibregl-ctrl-layers', e => { e.classList.remove('active') })
+  functions.e('#layers-modal', e => { e.style.display = 'none' })
   // edit modal
   functions.e('#edit-feature', e => { e.classList.add('hidden') })
   // reset edit buttons
