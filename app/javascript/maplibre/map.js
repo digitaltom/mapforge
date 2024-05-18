@@ -149,11 +149,12 @@ export function initializeViewMode () {
 }
 
 export function update (updatedFeature) {
-  console.log('Updating feature ' + updatedFeature.id)
   const feature = geojsonData.features.find(feature => feature.id === updatedFeature.id)
   if (!feature) {
+    console.log('Adding feature ' + updatedFeature.id)
     geojsonData.features.push(updatedFeature)
   } else {
+    console.log('Updating feature ' + updatedFeature.id)
     if (feature.geometry.type === 'Point') {
       const newCoords = updatedFeature.geometry.coordinates
       if (!functions.arraysEqual(feature.geometry.coordinates, newCoords)) {

@@ -2,6 +2,9 @@ import { Controller } from '@hotwired/stimulus'
 import { mapChannel } from 'channels/map_channel'
 import { map, mapProperties, setBackgroundMapLayer, geojsonData } from 'maplibre/map'
 
+// eslint expects variables to get imported, but we load the full lib in header
+const toGeoJSON = window.toGeoJSON
+
 export default class extends Controller {
   update_feature () {
     const id = document.querySelector('#edit-modal').getAttribute('data-feature-id')
@@ -39,5 +42,41 @@ export default class extends Controller {
     mapProperties.terrain = terrain
     mapChannel.send_message('update_map', { center, zoom, pitch, name, terrain })
     return false
+  }
+
+  upload () {
+    const fileInput = document.getElementById('fileInput')
+    const file = fileInput.files[0] // Get the first selected file
+
+    if (file) {
+      const reader = new FileReader()
+      reader.onload = function (event) {
+        // This will be called after the file has been successfully read
+        const content = event.target.result
+
+        const parser = new DOMParser()
+        const xmlDoc = parser.parseFromString(content, 'application/xml')
+
+        // https://github.com/mapbox/togeojson?tab=readme-ov-file#togeojsongpxdoc
+        const geoJSON = toGeoJSON.gpx(xmlDoc)
+        console.log(geoJSON)
+
+        geoJSON.features.forEach(feature => {
+          feature.id = Math.random().toString(36).substring(2, 18)
+          geojsonData.features.push(feature)
+          map.getSource('geojson-source').setData(geojsonData)
+          console.log(geojsonData)
+
+          console.log('Feature ' + feature.id + ' created')
+          mapChannel.send_message('new_feature', feature)
+        })
+      }
+
+      // if (file.type === 'text/plain') {
+      reader.readAsText(file)
+      // } else {
+      //  console.log('Unsupported file type: ' + file.type)
+      // }
+    }
   }
 }
