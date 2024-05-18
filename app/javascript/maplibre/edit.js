@@ -1,7 +1,7 @@
 import { map, geojsonData, initializeControls, lastMousePosition } from 'maplibre/map'
 import { editStyles, initializeEditStyles } from 'maplibre/edit_styles'
 import { mapChannel } from 'channels/map_channel'
-import { MapSettingsControl, MapShareControl, resetControls } from 'maplibre/controls'
+import { ControlGroup, MapSettingsControl, MapShareControl, MapLayersControl, resetControls } from 'maplibre/controls'
 import * as f from 'helpers/functions'
 
 // eslint expects variables to get imported, but we load the full lib in header
@@ -36,8 +36,12 @@ export function initializeEditMode () {
 
   initializeControls()
   map.addControl(draw, 'top-left')
-  map.addControl(new MapSettingsControl(), 'top-left')
-  map.addControl(new MapShareControl(), 'top-left')
+
+  const controlGroup = new ControlGroup(
+    [new MapSettingsControl(),
+      new MapLayersControl(),
+      new MapShareControl()])
+  map.addControl(controlGroup, 'top-left')
 
   map.on('geojson.load', function (e) {
     // callback to load edit styles on top of draw styles.
