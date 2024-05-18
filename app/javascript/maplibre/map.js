@@ -23,6 +23,7 @@ let currentMap
 export function initializeMaplibreProperties () {
   mapProperties = window.gon.map_properties
   console.log('map properties: ' + JSON.stringify(mapProperties))
+  if (mapProperties['name']) { document.title = 'mapforge.org - ' + mapProperties['name'] }
 }
 
 export function initializeMap (divId = 'maplibre-map') {

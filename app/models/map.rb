@@ -22,7 +22,8 @@ class Map
 
   BASE_MAPS = [ "osmTiles", "satelliteTiles", "satelliteStreetTiles",
                "stamenTonerTiles", "openTopoTiles", "mapboxBrightVector",
-               "maptilerDataviz", "maptilerStreets", "maptilerNoStreets", "maptilerWinter" ]
+               "maptilerDataviz", "maptilerStreets", "maptilerNoStreets",
+               "maptilerWinter", "maptilerBike" ]
   DEFAULT_MAP = "osmTiles"
   DEFAULT_CENTER = [ 11.077, 49.447 ].freeze
   DEFAULT_ZOOM = 12
