@@ -85,7 +85,6 @@ export class MapShareControl {
 
 export class MapLayersControl {
   constructor (options) {
-    const control = this
     this._container = document.createElement('div')
     this._container.innerHTML = '<button class="maplibregl-ctrl-btn maplibregl-ctrl-layers" ' +
       'type="button" title="Map settings" aria-label="Map settings" aria-pressed="false">' +
@@ -95,24 +94,11 @@ export class MapLayersControl {
         resetControls()
       } else {
         resetControls()
-        control.initLayersModal()
+        initLayersModal()
         e.target.closest('button').classList.add('active')
         document.querySelector('#layers-modal').style.display = 'block'
       }
     }
-  }
-
-  // create the list of layers + features
-  initLayersModal () {
-    functions.e('#default-layer .layer-elements', e => {
-      e.innerHTML = ''
-      geojsonData.features.forEach(feature => {
-        const listItem = document.createElement('li')
-        listItem.textContent = `${feature.geometry.type}: ` +
-            `${feature.title ? feature.title : feature.id}`
-        e.appendChild(listItem)
-      })
-    })
   }
 
   onAdd (map) {
@@ -125,6 +111,19 @@ export class MapLayersControl {
       this._container.parentNode.removeChild(this._container)
     }
   }
+}
+
+// create the list of layers + features
+export function initLayersModal () {
+  functions.e('#default-layer .layer-elements', e => {
+    e.innerHTML = ''
+    geojsonData.features.forEach(feature => {
+      const listItem = document.createElement('li')
+      listItem.textContent = `${feature.geometry.type}: ` +
+          `${feature.title ? feature.title : feature.id}`
+      e.appendChild(listItem)
+    })
+  })
 }
 
 export function resetControls () {

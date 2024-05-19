@@ -1,6 +1,7 @@
 import { Controller } from '@hotwired/stimulus'
 import { mapChannel } from 'channels/map_channel'
 import { map, mapProperties, setBackgroundMapLayer, geojsonData, upsert } from 'maplibre/map'
+import { initLayersModal } from 'maplibre/controls'
 
 // eslint expects variables to get imported, but we load the full lib in header
 const toGeoJSON = window.toGeoJSON
@@ -46,19 +47,22 @@ export default class extends Controller {
 
   upload () {
     const fileInput = document.getElementById('fileInput')
-    const file = fileInput.files[0] // Get the first selected file
+    const file = fileInput.files[0]
 
     if (file) {
       const reader = new FileReader()
       reader.onload = function (event) {
-        // This will be called after the file has been successfully read
         const content = event.target.result
-
         const parser = new DOMParser()
         const xmlDoc = parser.parseFromString(content, 'application/xml')
+        let geoJSON
 
-        // https://github.com/mapbox/togeojson?tab=readme-ov-file#togeojsongpxdoc
-        const geoJSON = toGeoJSON.gpx(xmlDoc)
+        // https://github.com/mapbox/togeojson?tab=readme-ov-file#api
+        if (file.type === 'application/gpx+xml') {
+          geoJSON = toGeoJSON.gpx(xmlDoc)
+        } else if (file.type === 'application/vnd.google-earth.kml+xml') {
+          geoJSON = toGeoJSON.kml(xmlDoc)
+        }
         console.log(geoJSON)
 
         geoJSON.features.forEach(feature => {
@@ -66,13 +70,15 @@ export default class extends Controller {
           upsert(feature)
           mapChannel.send_message('new_feature', feature)
         })
+        initLayersModal()
       }
 
-      // if (file.type === 'text/plain') {
-      reader.readAsText(file)
-      // } else {
-      //  console.log('Unsupported file type: ' + file.type)
-      // }
+      if (file.type === 'application/gpx+xml' ||
+        file.type === 'application/vnd.google-earth.kml+xml') {
+        reader.readAsText(file)
+      } else {
+        console.log('Unsupported file type: ' + file.type)
+      }
     }
   }
 }

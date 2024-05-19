@@ -3,6 +3,7 @@ import { map } from 'maplibre/map'
 export function initializeViewStyles () {
   map.addLayer(styles['polygon-layer'])
   map.addLayer(styles['polygon-layer-extrusion'])
+  map.addLayer(styles['line-layer-outline'])
   map.addLayer(styles['line-layer'])
   map.addLayer(styles['points-border-layer'])
   map.addLayer(styles['points-layer'])
@@ -86,6 +87,22 @@ export const styles = {
         ['get', 'user_fill-extrusion-base']],
       // opacity does not support data expressions!?!
       'fill-extrusion-opacity': 0.4
+    }
+  },
+  'line-layer-outline': {
+    id: 'line-layer-outline',
+    type: 'line',
+    source: 'geojson-source',
+    filter: ['all',
+      ['in', '$type', 'LineString', 'Polygon']],
+    layout: {
+      'line-join': 'round',
+      'line-cap': 'round'
+    },
+    // Draw prefixes properties with '_user'
+    paint: {
+      'line-color': 'white',
+      'line-width': ['to-number', ['coalesce', ['get', 'stroke-width'], ['get', 'user_stroke-width'], 4]]
     }
   },
   'line-layer': {
