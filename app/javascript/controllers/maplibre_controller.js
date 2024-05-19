@@ -1,10 +1,11 @@
 import { Controller } from '@hotwired/stimulus'
 import { mapChannel } from 'channels/map_channel'
 import { map, mapProperties, setBackgroundMapLayer, geojsonData, upsert } from 'maplibre/map'
-import { initLayersModal } from 'maplibre/controls'
+import { initLayersModal, resetControls } from 'maplibre/controls'
 
 // eslint expects variables to get imported, but we load the full lib in header
 const toGeoJSON = window.toGeoJSON
+const turf = window.turf
 
 export default class extends Controller {
   update_feature () {
@@ -80,5 +81,20 @@ export default class extends Controller {
         console.log('Unsupported file type: ' + file.type)
       }
     }
+  }
+
+  flyto () {
+    const id = this.element.getAttribute('data-feature-id')
+    const feature = geojsonData.features.find(f => f.id === id)
+    // Calculate the centroid
+    const centroid = turf.centroid(feature)
+    console.log('Fly to: ' + feature.id + ' ' + centroid.geometry.coordinates)
+    resetControls()
+    map.flyTo({
+      center: centroid.geometry.coordinates,
+      speed: 0.8,
+      curve: 1,
+      essential: true
+    })
   }
 }

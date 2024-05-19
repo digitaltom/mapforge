@@ -78,7 +78,10 @@ export const styles = {
     paint: {
       'fill-extrusion-color': ['coalesce',
         ['get', 'fill-extrusion-color'],
-        ['get', 'user_fill-extrusion-color'], 'rgb(10, 135, 10)'],
+        ['get', 'user_fill-extrusion-color'],
+        ['get', 'fill'],
+        ['get', 'user_fill'],
+        'rgb(10, 135, 10)'],
       'fill-extrusion-height': ['coalesce',
         ['get', 'fill-extrusion-height'],
         ['get', 'user_fill-extrusion-height']],

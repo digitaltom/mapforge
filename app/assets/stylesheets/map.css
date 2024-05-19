@@ -1,3 +1,15 @@
+.layer-feature-item a {
+  color: black;
+}
+
+.layer-feature-item a:hover {
+  color: rgba(var(--bs-link-color-rgb),var(--bs-link-opacity,1)); /* stylelint-disable-line */
+}
+
+.layer-feature-item i {
+  margin-left: 0.5em;
+}
+
 .feature-popup {
   width: 20em;
   max-width: 35em;

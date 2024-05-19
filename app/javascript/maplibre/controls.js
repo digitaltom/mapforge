@@ -119,8 +119,20 @@ export function initLayersModal () {
     e.innerHTML = ''
     geojsonData.features.forEach(feature => {
       const listItem = document.createElement('li')
+      listItem.classList.add('layer-feature-item')
       listItem.textContent = `${feature.geometry.type}: ` +
-          `${feature.title ? feature.title : feature.id}`
+          (feature.properties.name || feature.properties.title || feature.id)
+      const link = document.createElement('a')
+      link.setAttribute('href', '#')
+      link.setAttribute('onclick', 'return false;')
+      listItem.appendChild(link)
+      const icon = document.createElement('i')
+      icon.classList.add('bi')
+      icon.classList.add('bi-arrow-right-circle')
+      icon.setAttribute('data-feature-id', feature.id)
+      icon.setAttribute('data-controller', 'maplibre')
+      icon.setAttribute('data-action', 'click->maplibre#flyto')
+      link.appendChild(icon)
       e.appendChild(listItem)
     })
   })
