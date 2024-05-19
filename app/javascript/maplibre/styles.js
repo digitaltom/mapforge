@@ -102,7 +102,12 @@ export const styles = {
     // Draw prefixes properties with '_user'
     paint: {
       'line-color': 'white',
-      'line-width': ['to-number', ['coalesce', ['get', 'stroke-width'], ['get', 'user_stroke-width'], 4]]
+      'line-width': ['+', 2,
+        ['to-number', ['coalesce',
+          ['get', 'stroke-width'],
+          ['get', 'user_stroke-width'],
+          3]]],
+      'line-opacity': ['to-number', ['coalesce', ['get', 'stroke-opacity'], ['get', 'user_stroke-opacity'], 1]]
     }
   },
   'line-layer': {
@@ -117,8 +122,12 @@ export const styles = {
     },
     // Draw prefixes properties with '_user'
     paint: {
-      'line-color': ['coalesce', ['get', 'stroke'], ['get', 'user_stroke'], 'rgb(10, 135, 10)'],
-      'line-width': ['to-number', ['coalesce', ['get', 'stroke-width'], ['get', 'user_stroke-width'], 2]]
+      'line-color': ['coalesce', ['get', 'stroke'], ['get', 'user_stroke'], 'green'],
+      'line-width': ['to-number', ['coalesce',
+        ['get', 'stroke-width'],
+        ['get', 'user_stroke-width'],
+        3]],
+      'line-opacity': ['to-number', ['coalesce', ['get', 'stroke-opacity'], ['get', 'user_stroke-opacity'], 1]]
     }
   },
   'points-border-layer': {
