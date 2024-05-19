@@ -1,6 +1,6 @@
 import { Controller } from '@hotwired/stimulus'
 import { mapChannel } from 'channels/map_channel'
-import { map, mapProperties, setBackgroundMapLayer, geojsonData } from 'maplibre/map'
+import { map, mapProperties, setBackgroundMapLayer, geojsonData, upsert } from 'maplibre/map'
 
 // eslint expects variables to get imported, but we load the full lib in header
 const toGeoJSON = window.toGeoJSON
@@ -63,11 +63,7 @@ export default class extends Controller {
 
         geoJSON.features.forEach(feature => {
           feature.id = Math.random().toString(36).substring(2, 18)
-          geojsonData.features.push(feature)
-          map.getSource('geojson-source').setData(geojsonData)
-          console.log(geojsonData)
-
-          console.log('Feature ' + feature.id + ' created')
+          upsert(feature)
           mapChannel.send_message('new_feature', feature)
         })
       }

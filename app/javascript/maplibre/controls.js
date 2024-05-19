@@ -105,6 +105,7 @@ export class MapLayersControl {
   // create the list of layers + features
   initLayersModal () {
     functions.e('#default-layer .layer-elements', e => {
+      e.innerHTML = ''
       geojsonData.features.forEach(feature => {
         const listItem = document.createElement('li')
         listItem.textContent = `${feature.geometry.type}: ` +

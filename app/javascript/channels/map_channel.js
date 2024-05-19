@@ -2,7 +2,7 @@ import consumer from 'channels/consumer'
 import { flash } from 'ol/map'
 import { initializeMapProperties } from 'ol/properties'
 import { updateFeature, deleteFeature } from 'ol/feature'
-import { update, destroy, setBackgroundMapLayer, initializeMaplibreProperties } from 'maplibre/map'
+import { upsert, destroy, setBackgroundMapLayer, initializeMaplibreProperties } from 'maplibre/map'
 
 export let mapChannel
 
@@ -42,7 +42,7 @@ export function initializeSocket () {
           // ol feature update
           if (document.getElementById('map')) { updateFeature(data.feature) }
           // maplibre feature update
-          if (document.getElementById('maplibre-map')) { update(data.feature) }
+          if (document.getElementById('maplibre-map')) { upsert(data.feature) }
           break
         case 'delete_feature':
           // ol feature delete

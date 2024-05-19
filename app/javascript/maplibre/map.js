@@ -148,7 +148,7 @@ export function initializeViewMode () {
   })
 }
 
-export function update (updatedFeature) {
+export function upsert (updatedFeature) {
   const feature = geojsonData.features.find(feature => feature.id === updatedFeature.id)
   if (!feature) {
     console.log('Adding feature ' + updatedFeature.id)

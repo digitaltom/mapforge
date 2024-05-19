@@ -111,13 +111,21 @@ export const styles = {
     filter: ['all',
       ['==', '$type', 'Point'],
       ['!=', 'active', 'true'],
-      ['==', 'meta', 'feature'],
       ['!has', 'marker-symbol'],
       ['!has', 'marker-icon'],
       ['!has', 'user_marker-symbol'],
       ['!has', 'user_marker-icon']],
     paint: {
-      'circle-radius': 8,
+      'circle-radius': [
+        'match',
+        ['get', 'user_marker-color'], // Check the marker-color property
+        'transparent', 0, // If marker-color is 'transparent', set circle-radius to 0
+        [
+          'match',
+          ['get', 'marker-size'], // Then check the marker-size property
+          'large', 15, // If marker-size is 'medium', set circle-radius to 6
+          8 // Default circle-radius if none of the above conditions are met
+        ]],
       'circle-color': ['coalesce', ['get', 'stroke'], '#ffffff']
     }
   },
@@ -128,7 +136,6 @@ export const styles = {
     filter: ['all',
       ['==', '$type', 'Point'],
       ['!=', 'active', 'true'],
-      ['==', 'meta', 'feature'],
       ['!has', 'marker-symbol'],
       ['!has', 'marker-icon'],
       ['!has', 'user_marker-symbol'],

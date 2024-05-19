@@ -117,8 +117,8 @@ function handleUpdate (e) {
   geojsonFeature.geometry = feature.geometry
 
   if (editPopup) { editPopup.remove() }
-  // also update the geojson-source (feature rendered via initializeEditStyles)
-  // to avoid animation
+  // update local geojson-source (feature rendered via initializeEditStyles)
+  // to avoid update/animation via hotwire callback
   map.getSource('geojson-source').setData(geojsonData)
   mapChannel.send_message('update_feature', feature)
 }
