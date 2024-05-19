@@ -23,6 +23,7 @@
     %link{rel: "stylesheet", href: "https://unpkg.com/maplibre-gl@^4.3/dist/maplibre-gl.css", type: "text/css"}
     %link{rel: "stylesheet", href: "https://cdn.maptiler.com/maptiler-sdk-js/v1.2.0/maptiler-sdk.css", type: "text/css"}
     %link{rel: "stylesheet", href: "https://www.unpkg.com/@mapbox/mapbox-gl-draw@1.4.3/dist/mapbox-gl-draw.css", type: "text/css"}
+    %link{rel: "stylesheet", href: "https://cdn.maptiler.com/maptiler-geocoding-control/v1.2.0/style.css", type: "text/css"}
 
     = stylesheet_link_tag "application", "data-turbo-track": "reload"
     = javascript_importmap_tags
@@ -36,6 +37,7 @@
     = javascript_include_tag "https://cdn.maptiler.com/maptiler-sdk-js/v1.2.0/maptiler-sdk.umd.min.js"
     = javascript_include_tag "https://www.unpkg.com/@mapbox/mapbox-gl-draw@1.4.3/dist/mapbox-gl-draw.js"
     = javascript_include_tag "https://www.unpkg.com/@mapbox/togeojson"
+    = javascript_include_tag "https://cdn.maptiler.com/maptiler-geocoding-control/v1.2.0/maplibregl.umd.js"
 
     = yield(:head)
 

@@ -6,6 +6,7 @@ import * as functions from 'helpers/functions'
 // eslint expects variables to get imported, but we load the full lib in header
 const maplibregl = window.maplibregl
 const maptilersdk = window.maptilersdk
+const maplibreglMaptilerGeocoder = window.maplibreglMaptilerGeocoder
 
 export let map
 export let geojsonData //= { type: 'FeatureCollection', features: [] }
@@ -39,7 +40,8 @@ export function initializeMap (divId = 'maplibre-map') {
     zoom: mapProperties.zoom,
     pitch: mapProperties.pitch,
     maxPitch: 72,
-    interactive: (window.gon.map_mode !== 'static') // can move/zoom map
+    interactive: (window.gon.map_mode !== 'static'), // can move/zoom map
+    style: {} // style/map is getting loaded by 'setBackgroundMapLayer'
   })
   // for console debugging
   window.map = map
@@ -108,6 +110,9 @@ function addTerrain () {
 }
 
 export function initializeControls () {
+  const gc = new maplibreglMaptilerGeocoder.GeocodingControl({ apiKey: window.gon.map_keys.maptiler })
+  map.addControl(gc, 'top-right')
+
   map.addControl(
     new maplibregl.NavigationControl({
       visualizePitch: true,
