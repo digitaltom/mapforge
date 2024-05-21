@@ -212,7 +212,7 @@ export const styles = {
       //     "", { "font-scale": 1.2 },
       //     "", { "font-scale": 0.8 }
       // ],
-      'text-field': ['get', 'title'],
+      'text-field': ['coalesce', ['get', 'title'], ['get', 'room']],
       'text-size': 16,
       // must be available via glyphs: https://docs.maptiler.com/gl-style-specification/glyphs/
       // Emojis seem not to be in the character range: https://github.com/maplibre/maplibre-gl-js/issues/2307
