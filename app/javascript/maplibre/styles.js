@@ -147,15 +147,15 @@ export const styles = {
     paint: {
       'circle-radius': [
         'match',
-        ['get', 'user_marker-color'], // Check the marker-color property
+        ['coalesce', ['get', 'user_stroke'], ['get', 'stroke']], // Check the marker-color property
         'transparent', 0, // If marker-color is 'transparent', set circle-radius to 0
         [
           'match',
-          ['get', 'marker-size'], // Then check the marker-size property
+          ['coalesce', ['get', 'user_marker-size'], ['get', 'marker-size']], // Then check the marker-size property
           'large', 15, // If marker-size is 'medium', set circle-radius to 6
           8 // Default circle-radius if none of the above conditions are met
         ]],
-      'circle-color': ['coalesce', ['get', 'stroke'], '#ffffff']
+      'circle-color': ['coalesce', ['get', 'user_stroke'], ['get', 'stroke'], '#ffffff']
     }
   },
   'points-layer': {
@@ -172,15 +172,15 @@ export const styles = {
     paint: {
       'circle-radius': [
         'match',
-        ['get', 'user_marker-color'], // Check the marker-color property
+        ['coalesce', ['get', 'user_marker-color'], ['get', 'marker-color']], // Check the marker-color property
         'transparent', 0, // If marker-color is 'transparent', set circle-radius to 0
         [
           'match',
-          ['get', 'marker-size'], // Then check the marker-size property
+          ['coalesce', ['get', 'user_marker-size'], ['get', 'marker-size']], // Then check the marker-size property
           'large', 12, // If marker-size is 'medium', set circle-radius to 6
           6 // Default circle-radius if none of the above conditions are met
         ]],
-      'circle-color': ['coalesce', ['get', 'marker-color'], 'rgb(10, 135, 10)']
+      'circle-color': ['coalesce', ['get', 'user_marker-color'], ['get', 'marker-color'], 'rgb(10, 135, 10)']
     }
   },
   // support symbols on all feature types

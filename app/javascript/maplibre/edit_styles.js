@@ -97,6 +97,7 @@ export const editStyles = [
       'circle-color': '#fbb03b'
     }
   },
+  // default point behind symbols, transparent points etc.
   {
     id: 'gl-draw-point-point-stroke-inactive',
     type: 'circle',
@@ -107,7 +108,7 @@ export const editStyles = [
       ['!=', 'mode', 'static']
     ],
     paint: {
-      'circle-radius': 7,
+      'circle-radius': 4,
       'circle-opacity': 1,
       'circle-color': '#fff'
     }
