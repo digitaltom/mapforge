@@ -99,3 +99,11 @@
 .ol-attribution {
   font-size: 0.7em;
 }
+
+.maplibregl-ctrl-geocoder form {
+  width: 220px !important;
+}
+
+.maplibregl-ctrl-top-left {
+  top: 2.5em !important;
+}

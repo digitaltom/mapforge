@@ -215,12 +215,18 @@ export const styles = {
       'text-field': ['coalesce', ['get', 'title'], ['get', 'room']],
       'text-size': 16,
       // must be available via glyphs: https://docs.maptiler.com/gl-style-specification/glyphs/
-      // Emojis seem not to be in the character range: https://github.com/maplibre/maplibre-gl-js/issues/2307
-      // 'text-font': ['Noto Color Emoji'], // ['Arial Unicode MS Bold', 'Open Sans Bold'], // Ensure the font supports emojis
-      'text-anchor': 'top'
+      // Emojis are not in the character range: https://github.com/maplibre/maplibre-gl-js/issues/2307
+      // 'text-font': ['coalesce', ['get', 'title-font'], ['Open Sans Regular,Arial Unicode MS Regular']], // Ensure the font supports emojis
+      'text-font': ['system-ui', 'sans-serif'],
+      // if there is a symbol, move the text next to it
+      'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
+      'text-radial-offset': 1.2,
+      'text-justify': 'auto'
     },
     paint: {
-      'text-color': '#123'
+      'text-color': ['coalesce', ['get', 'title-color'], '#fff'],
+      'text-halo-color': ['coalesce', ['get', 'title-shadow'], '#444'],
+      'text-halo-width': 1
     }
   }
 }

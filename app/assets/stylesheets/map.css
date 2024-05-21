@@ -1,3 +1,19 @@
+#mapforge-logo {
+  font-weight: 600;
+  font-size: 1.5em;
+  margin: 0 1em 1em 0.4em;
+}
+
+#map-title {
+  color: white;
+  font-weight: 400;
+  text-shadow: -1px 0 grey, 0 1px grey, 1px 0 grey, 0 -1px grey;
+}
+
+.white-shadow {
+  text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
+}
+
 .layer-feature-item a {
   color: black;
 }

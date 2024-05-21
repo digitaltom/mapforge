@@ -58,6 +58,8 @@ export function initializeMap (divId = 'maplibre-map') {
   map.on('touchend', (e) => {
     lastMousePosition = e.lngLat
   })
+
+  functions.e('#map-title', e => { e.textContent = mapProperties.name })
 }
 
 function loadGeoJsonData () {
