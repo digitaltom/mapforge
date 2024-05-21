@@ -12,7 +12,7 @@ export function initializeViewStyles () {
   map.on('styleimagemissing', loadImage)
 }
 
-// loading images from 'marker-icon' attributes
+// loading images from 'marker-image-url' attributes
 export async function loadImage (e) {
   const imageUrl = e.id
   const response = await map.loadImage(imageUrl)
@@ -141,9 +141,9 @@ export const styles = {
       ['==', '$type', 'Point'],
       ['!=', 'active', 'true'],
       ['!has', 'marker-symbol'],
-      ['!has', 'marker-icon'],
+      ['!has', 'marker-image-url'],
       ['!has', 'user_marker-symbol'],
-      ['!has', 'user_marker-icon']],
+      ['!has', 'user_marker-image-url']],
     paint: {
       'circle-radius': [
         'match',
@@ -166,9 +166,9 @@ export const styles = {
       ['==', '$type', 'Point'],
       ['!=', 'active', 'true'],
       ['!has', 'marker-symbol'],
-      ['!has', 'marker-icon'],
+      ['!has', 'marker-image-url'],
       ['!has', 'user_marker-symbol'],
-      ['!has', 'user_marker-icon']],
+      ['!has', 'user_marker-image-url']],
     paint: {
       'circle-radius': [
         'match',
@@ -191,7 +191,7 @@ export const styles = {
     filter: ['!=', 'active', 'true'],
     layout: {
       'icon-image': ['coalesce',
-        ['get', 'marker-icon'],
+        ['get', 'marker-image-url'],
         // replace marker-symbol value with path to emoji png
         ['case',
           ['has', 'marker-symbol'],

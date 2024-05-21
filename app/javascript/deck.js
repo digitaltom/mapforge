@@ -42,7 +42,7 @@ async function init () {
     pointType: 'icon+circle+text', // 'icon+circle+text',
 
     getIcon: d => ({
-      url: d.properties['marker-icon'],
+      url: d.properties['marker-image-url'],
       height: 100,
       width: 100,
       anchorY: 50
@@ -71,7 +71,7 @@ async function init () {
     getTextSize: 12
     // onClick: info =>
     //   // eslint-disable-next-line
-    //   info.object && alert(`${info.object.properties['marker-icon']} (${info.object.properties.abbrev})`)
+    //   info.object && alert(`${info.object.properties['marker-image-url']} (${info.object.properties.abbrev})`)
     // // beforeId: 'watername_ocean' // In interleaved mode, render the layer under map labels
   })
 
