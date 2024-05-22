@@ -198,9 +198,16 @@ export const styles = {
           ['concat', '/emojis/noto/', ['get', 'marker-symbol'], '.png'],
           '']
       ],
-      'icon-size': 0.5,
+      "icon-size": [
+        "match",
+        ["get", "marker-size"],
+        "small", 0.25,
+        "medium", 0.35,
+        "large", 0.5,
+        0.35
+      ],
       'icon-keep-upright': true,
-      'icon-allow-overlap': true
+      'icon-allow-overlap': false
     }
   },
   'text-layer': {
@@ -220,7 +227,13 @@ export const styles = {
       'text-font': ['system-ui', 'sans-serif'],
       // if there is a symbol, move the text next to it
       'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
-      'text-radial-offset': 1.2,
+      // if there is a symbol, render the text below it
+      'text-radial-offset': [
+        "match",
+        ["to-string", ["has", "marker-symbol"]],
+        'true', 1.2,
+        0
+      ],
       'text-justify': 'auto'
     },
     paint: {
