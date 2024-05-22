@@ -100,10 +100,10 @@
   font-size: 0.7em;
 }
 
-.maplibregl-ctrl-geocoder form {
-  width: 220px !important;
+.search-form {
+  width: 250px !important;
 }
 
 .maplibregl-ctrl-top-left {
-  top: 2.5em !important;
+  top: 3.2em !important;
 }

@@ -112,7 +112,11 @@ function addTerrain () {
 }
 
 export function initializeControls () {
-  const gc = new maplibreglMaptilerGeocoder.GeocodingControl({ apiKey: window.gon.map_keys.maptiler })
+  // https://docs.maptiler.com/sdk-js/modules/geocoding/api/api-reference/#geocoding-options
+  const gc = new maplibreglMaptilerGeocoder.GeocodingControl({
+    apiKey: window.gon.map_keys.maptiler,
+    class: 'search-form'
+  })
   map.addControl(gc, 'top-right')
 
   map.addControl(

@@ -198,12 +198,12 @@ export const styles = {
           ['concat', '/emojis/noto/', ['get', 'marker-symbol'], '.png'],
           '']
       ],
-      "icon-size": [
-        "match",
-        ["get", "marker-size"],
-        "small", 0.25,
-        "medium", 0.35,
-        "large", 0.5,
+      'icon-size': [
+        'match',
+        ['get', 'marker-size'],
+        'small', 0.25,
+        'medium', 0.35,
+        'large', 0.5,
         0.35
       ],
       'icon-keep-upright': true,
@@ -229,8 +229,8 @@ export const styles = {
       'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
       // if there is a symbol, render the text below it
       'text-radial-offset': [
-        "match",
-        ["to-string", ["has", "marker-symbol"]],
+        'match',
+        ['to-string', ['has', 'marker-symbol']],
         'true', 1.2,
         0
       ],

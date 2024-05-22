@@ -1,13 +1,17 @@
 #mapforge-logo {
   font-weight: 600;
   font-size: 1.5em;
-  margin: 0 1em 1em 0.4em;
+  margin: 0 0.7em 1em 0.4em;
+  line-height: 2em;
+  float: left;
 }
 
 #map-title {
   color: white;
   font-weight: 400;
   text-shadow: -1px 0 grey, 0 1px grey, 1px 0 grey, 0 -1px grey;
+  float: left;
+  margin-top: 0.85em;
 }
 
 .white-shadow {
