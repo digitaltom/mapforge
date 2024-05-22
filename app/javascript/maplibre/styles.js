@@ -74,7 +74,7 @@ export const styles = {
     type: 'fill-extrusion',
     source: 'geojson-source',
     filter: ['all',
-      ['in', '$type', 'LineString', 'Polygon']],
+      ['in', '$type', 'Polygon']],
     paint: {
       'fill-extrusion-color': ['coalesce',
         ['get', 'fill-extrusion-color'],
