@@ -147,13 +147,13 @@ export const styles = {
     paint: {
       'circle-radius': [
         'match',
-        ['coalesce', ['get', 'user_stroke'], ['get', 'stroke']], // Check the marker-color property
-        'transparent', 0, // If marker-color is 'transparent', set circle-radius to 0
+        ['coalesce', ['get', 'user_stroke'], ['get', 'stroke']],
+        'transparent', 0,
         [
           'match',
-          ['coalesce', ['get', 'user_marker-size'], ['get', 'marker-size']], // Then check the marker-size property
-          'large', 15, // If marker-size is 'medium', set circle-radius to 6
-          8 // Default circle-radius if none of the above conditions are met
+          ['coalesce', ['get', 'user_marker-size'], ['get', 'marker-size']],
+          'large', 15,
+          8 // Default circle-radius
         ]],
       'circle-color': ['coalesce', ['get', 'user_stroke'], ['get', 'stroke'], '#ffffff']
     }
@@ -172,13 +172,13 @@ export const styles = {
     paint: {
       'circle-radius': [
         'match',
-        ['coalesce', ['get', 'user_marker-color'], ['get', 'marker-color']], // Check the marker-color property
+        ['coalesce', ['get', 'user_marker-color'], ['get', 'marker-color']],
         'transparent', 0, // If marker-color is 'transparent', set circle-radius to 0
         [
           'match',
-          ['coalesce', ['get', 'user_marker-size'], ['get', 'marker-size']], // Then check the marker-size property
-          'large', 12, // If marker-size is 'medium', set circle-radius to 6
-          6 // Default circle-radius if none of the above conditions are met
+          ['coalesce', ['get', 'user_marker-size'], ['get', 'marker-size']],
+          'large', 12,
+          6
         ]],
       'circle-color': ['coalesce', ['get', 'user_marker-color'], ['get', 'marker-color'], 'rgb(10, 135, 10)']
     }
@@ -189,6 +189,7 @@ export const styles = {
     type: 'symbol',
     source: 'geojson-source',
     filter: ['!=', 'active', 'true'],
+    // minzoom: 15, // TODO: only static values possible right now
     layout: {
       'icon-image': ['coalesce',
         ['get', 'marker-image-url'],
@@ -204,22 +205,18 @@ export const styles = {
         'small', 0.25,
         'medium', 0.35,
         'large', 0.5,
-        0.35
-      ],
-      'icon-keep-upright': true,
-      'icon-allow-overlap': false
+        0.35],
+      'icon-overlap': 'always',
+      'icon-ignore-placement': true
     }
   },
   'text-layer': {
     id: 'text-layer',
     type: 'symbol',
     source: 'geojson-source',
+    filter: ['has', 'label'],
     layout: {
-      // "text-field": ["format",
-      //     "", { "font-scale": 1.2 },
-      //     "", { "font-scale": 0.8 }
-      // ],
-      'text-field': ['coalesce', ['get', 'title'], ['get', 'room']],
+      'text-field': ['coalesce', ['get', 'label'], ['get', 'room']],
       'text-size': 16,
       // must be available via glyphs: https://docs.maptiler.com/gl-style-specification/glyphs/
       // Emojis are not in the character range: https://github.com/maplibre/maplibre-gl-js/issues/2307
@@ -227,7 +224,7 @@ export const styles = {
       'text-font': ['system-ui', 'sans-serif'],
       // if there is a symbol, move the text next to it
       'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
-      // if there is a symbol, render the text below it
+      // if there is a symbol, offset the text below it
       'text-radial-offset': [
         'match',
         ['to-string', ['has', 'marker-symbol']],
@@ -237,8 +234,8 @@ export const styles = {
       'text-justify': 'auto'
     },
     paint: {
-      'text-color': ['coalesce', ['get', 'title-color'], '#fff'],
-      'text-halo-color': ['coalesce', ['get', 'title-shadow'], '#444'],
+      'text-color': ['coalesce', ['get', 'label-color'], '#fff'],
+      'text-halo-color': ['coalesce', ['get', 'label-shadow'], '#444'],
       'text-halo-width': 1
     }
   }

@@ -4,12 +4,12 @@ Extending the [Mapbox Simplestyle Spec](https://github.com/mapbox/simplestyle-sp
 
 #### *All* geometries: 
 
-* `title`: Title to show on the map (no emoji support)
-* `title-min-zoom`: Show title only when zoom level >= value 
-* `title-size`: "small", "medium", "large"
-* `title-font`: font in format "Open Sans Regular,Arial Unicode MS Regular" (default)
-* `title-color`: font color in format "#000" (default)
-* `title-shadow`: font shadow in format "#fff" (default)
+* `label`: Label to show on the map (no emoji support)
+* `label-size`: "small", "medium", "large"
+* `label-font`: font in format "Open Sans Regular,Arial Unicode MS Regular" (default)
+* `label-color`: font color in format "#000" or "black" (default)
+* `label-shadow`: font shadow in format "#fff" or "white" (default)
+* `title`: Title
 * `desc`: Detailed description
 
 #### *Point* geometry: 
