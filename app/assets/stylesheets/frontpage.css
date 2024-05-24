@@ -1,5 +1,6 @@
 #frontpage-map {
   opacity: 0.5;
+  transition: opacity 1.5s ease-out;
 }
 
 .mapforge-font {

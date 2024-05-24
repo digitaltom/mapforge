@@ -24,6 +24,7 @@ let currentMap
 export function initializeMaplibreProperties () {
   mapProperties = window.gon.map_properties
   console.log('map properties: ' + JSON.stringify(mapProperties))
+  geojsonData = null
   if (mapProperties.name) { document.title = 'mapforge.org - ' + mapProperties.name }
 }
 
@@ -40,8 +41,8 @@ export function initializeMap (divId = 'maplibre-map') {
     zoom: mapProperties.zoom,
     pitch: mapProperties.pitch,
     maxPitch: 72,
-    interactive: (window.gon.map_mode !== 'static'), // can move/zoom map
-    style: {} // style/map is getting loaded by 'setBackgroundMapLayer'
+    interactive: (window.gon.map_mode !== 'static') // can move/zoom map
+    // style: {} // style/map is getting loaded by 'setBackgroundMapLayer'
   })
   // for console debugging
   window.map = map
@@ -89,8 +90,6 @@ function loadGeoJsonData () {
       geojsonData = data
       console.log('loaded ' + geojsonData.features.length +
         ' features from ' + '/maps/' + window.gon.map_id + '/features')
-      // the features in the rendered layer don't have ids right now, because
-      // mapforge feature ids are not numeric.
       map.getSource('geojson-source').setData(geojsonData)
       map.fire('geojson.load', { detail: { message: 'geojson-source loaded' } })
     })
@@ -143,8 +142,16 @@ export function initializeControls () {
   scale.setUnit('metric')
 }
 
+export function initializeStaticMode () {
+  map.on('geojson.load', function (e) {
+    initializeViewStyles()
+  })
+}
+
 export function initializeViewMode () {
-  if (window.gon.map_mode !== 'static') { initializeControls() }
+  map.on('style.load', () => {
+    initializeControls()
+  })
 
   map.on('geojson.load', function (e) {
     initializeViewStyles()
@@ -196,7 +203,7 @@ export function setBackgroundMapLayer (mapName = mapProperties.base_map) {
   currentMap = mapName
 }
 
-function animatePoint (feature, end, duration = 300) {
+export function animatePoint (feature, end, duration = 300) {
   const starttime = performance.now()
   const start = feature.geometry.coordinates
   console.log('Animating point from: ' + start + ' to ' + end)
@@ -216,3 +223,20 @@ function animatePoint (feature, end, duration = 300) {
   }
   requestAnimationFrame(animate)
 }
+
+// export async function animatePointPath (feature, path) {
+//   const coordinates = path.geometry.coordinates
+//   const length = ol.sphere.getLength(lineString.getGeometry())
+//   console.log('Animating ' + pointFeature.getId() + ' along ' + lineString.getId() +
+//     ' (' + Math.round(length) + 'm)')
+//   // Loop over the coordinates
+//   for (let i = 0; i < coordinates.length - 1; i++) {
+//     const line = new ol.geom.LineString([coordinates[i], coordinates[i + 1]])
+//     const distance = ol.sphere.getLength(line)
+//     const speed = 1 // ~ 500m/s
+//     const time = Math.round(distance) * speed
+//     animateMarker(pointFeature, coordinates[i], coordinates[i + 1], time)
+//     map.render() // trigger postrender
+//     await functions.sleep(time)
+//   }
+// }

@@ -34,14 +34,16 @@ export function initializeEditMode () {
     userProperties: true
   })
 
-  initializeControls()
-  map.addControl(draw, 'top-left')
+  map.on('style.load', () => {
+    initializeControls()
+    map.addControl(draw, 'top-left')
 
-  const controlGroup = new ControlGroup(
-    [new MapSettingsControl(),
-      new MapLayersControl(),
-      new MapShareControl()])
-  map.addControl(controlGroup, 'top-left')
+    const controlGroup = new ControlGroup(
+      [new MapSettingsControl(),
+        new MapLayersControl(),
+        new MapShareControl()])
+    map.addControl(controlGroup, 'top-left')
+  })
 
   map.on('geojson.load', function (e) {
     // callback to load edit styles on top of draw styles.
