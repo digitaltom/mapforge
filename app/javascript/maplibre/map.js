@@ -24,6 +24,7 @@ let currentMap
 export function initializeMaplibreProperties () {
   mapProperties = window.gon.map_properties
   console.log('map properties: ' + JSON.stringify(mapProperties))
+  geojsonData = null
   if (mapProperties.name) { document.title = 'mapforge.org - ' + mapProperties.name }
 }
 
@@ -41,7 +42,7 @@ export function initializeMap (divId = 'maplibre-map') {
     pitch: mapProperties.pitch,
     maxPitch: 72,
     interactive: (window.gon.map_mode !== 'static'), // can move/zoom map
-    style: {} // style/map is getting loaded by 'setBackgroundMapLayer'
+    //style: {} // style/map is getting loaded by 'setBackgroundMapLayer'
   })
   // for console debugging
   window.map = map
@@ -89,8 +90,6 @@ function loadGeoJsonData () {
       geojsonData = data
       console.log('loaded ' + geojsonData.features.length +
         ' features from ' + '/maps/' + window.gon.map_id + '/features')
-      // the features in the rendered layer don't have ids right now, because
-      // mapforge feature ids are not numeric.
       map.getSource('geojson-source').setData(geojsonData)
       map.fire('geojson.load', { detail: { message: 'geojson-source loaded' } })
     })
@@ -143,8 +142,16 @@ export function initializeControls () {
   scale.setUnit('metric')
 }
 
+export function initializeStaticMode () {
+  map.on('geojson.load', function (e) {
+    initializeViewStyles()
+  })
+}
+
 export function initializeViewMode () {
-  if (window.gon.map_mode !== 'static') { initializeControls() }
+  map.on('style.load', () => {
+    initializeControls()
+  })
 
   map.on('geojson.load', function (e) {
     initializeViewStyles()

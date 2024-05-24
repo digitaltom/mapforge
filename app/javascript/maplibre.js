@@ -14,7 +14,11 @@ import { initializeSocket } from 'channels/map_channel'
 async function init () {
   initializeMap('maplibre-map')
   // static mode is used for screenshots + frontpage
-  if (window.gon.map_mode !== 'static') { initializeSocket() }
-  window.gon.map_mode !== 'rw' ? initializeViewMode() : initializeEditMode()
+  if (window.gon.map_mode === 'static') {
+    initializeStaticMode()
+  } else {
+    initializeSocket()
+    window.gon.map_mode !== 'rw' ? initializeViewMode() : initializeEditMode()
+  }
   setBackgroundMapLayer()
 }
