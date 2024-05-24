@@ -41,8 +41,8 @@ export function initializeMap (divId = 'maplibre-map') {
     zoom: mapProperties.zoom,
     pitch: mapProperties.pitch,
     maxPitch: 72,
-    interactive: (window.gon.map_mode !== 'static'), // can move/zoom map
-    //style: {} // style/map is getting loaded by 'setBackgroundMapLayer'
+    interactive: (window.gon.map_mode !== 'static') // can move/zoom map
+    // style: {} // style/map is getting loaded by 'setBackgroundMapLayer'
   })
   // for console debugging
   window.map = map
@@ -203,7 +203,7 @@ export function setBackgroundMapLayer (mapName = mapProperties.base_map) {
   currentMap = mapName
 }
 
-function animatePoint (feature, end, duration = 300) {
+export function animatePoint (feature, end, duration = 300) {
   const starttime = performance.now()
   const start = feature.geometry.coordinates
   console.log('Animating point from: ' + start + ' to ' + end)
@@ -223,3 +223,20 @@ function animatePoint (feature, end, duration = 300) {
   }
   requestAnimationFrame(animate)
 }
+
+// export async function animatePointPath (feature, path) {
+//   const coordinates = path.geometry.coordinates
+//   const length = ol.sphere.getLength(lineString.getGeometry())
+//   console.log('Animating ' + pointFeature.getId() + ' along ' + lineString.getId() +
+//     ' (' + Math.round(length) + 'm)')
+//   // Loop over the coordinates
+//   for (let i = 0; i < coordinates.length - 1; i++) {
+//     const line = new ol.geom.LineString([coordinates[i], coordinates[i + 1]])
+//     const distance = ol.sphere.getLength(line)
+//     const speed = 1 // ~ 500m/s
+//     const time = Math.round(distance) * speed
+//     animateMarker(pointFeature, coordinates[i], coordinates[i + 1], time)
+//     map.render() // trigger postrender
+//     await functions.sleep(time)
+//   }
+// }

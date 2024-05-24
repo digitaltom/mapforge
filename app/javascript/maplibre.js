@@ -1,4 +1,4 @@
-import { initializeMap, setBackgroundMapLayer, initializeViewMode } from 'maplibre/map'
+import { initializeMap, setBackgroundMapLayer, initializeViewMode, initializeStaticMode } from 'maplibre/map'
 import { initializeEditMode } from 'maplibre/edit'
 import { initializeSocket } from 'channels/map_channel'
 
