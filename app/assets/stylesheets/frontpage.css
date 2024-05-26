@@ -21,6 +21,7 @@
   font-size: calc(max(min(3vw, 6em), 1.5em));
   position: absolute; top: 45vh;
   opacity: 0;
+  transition: opacity 1.5s;
 }
 
 .frontpage-buttons .btn {

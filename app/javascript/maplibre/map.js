@@ -111,6 +111,10 @@ function addTerrain () {
 }
 
 export function initializeControls () {
+  map._controls.forEach((control) => {
+    map.removeControl(control)
+  })
+
   // https://docs.maptiler.com/sdk-js/modules/geocoding/api/api-reference/#geocoding-options
   const gc = new maplibreglMaptilerGeocoder.GeocodingControl({
     apiKey: window.gon.map_keys.maptiler,

@@ -64,8 +64,9 @@ async function featureShow () {
       return response.json()
     })
     .then(async function (properties) {
-      // fade out feature map
+      // fade out map
       functions.e('#frontpage-map', e => { e.style.opacity = 0 })
+      functions.e('.frontpage-subtitle', e => { e.style.opacity = 0 })
       await functions.sleep(700)
 
       window.gon.map_id = properties.public_id
@@ -76,13 +77,11 @@ async function featureShow () {
       map.setCenter(properties.center)
       map.setZoom(properties.zoom)
 
-      // set title
+      // give the map some time to load + fade in
+      await functions.sleep(1200)
+      functions.e('#frontpage-map', e => { e.style.opacity = 0.5 })
       functions.e('#frontpage-category-name', e => { e.innerHTML = category.key })
       functions.e('.frontpage-subtitle', e => { e.style.opacity = 1 })
-
-      // fade in map
-      await functions.sleep(700)
-      functions.e('#frontpage-map', e => { e.style.opacity = 0.5 })
 
       if (category.key === 'data') {
       //     // car
