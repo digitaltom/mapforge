@@ -1,6 +1,6 @@
 // loaded in /frontpage/index.html.haml
 import {
-  initializeMap, setBackgroundMapLayer,
+  initializeMap, setBackgroundMapLayer, geojsonData, animatePointPath,
   initializeStaticMode, initializeMaplibreProperties, map
 } from 'maplibre/map'
 import * as functions from 'helpers/functions'
@@ -9,6 +9,7 @@ import * as functions from 'helpers/functions'
 
 let featureShowInterval
 let featureShowIndex = 0
+let category
 const featureShowList = [
   { key: 'friends', map: 'frontpage-category-friends' },
   { key: 'indoors', map: 'frontpage-category-office' },
@@ -26,6 +27,7 @@ const featureShowList = [
 
       console.log('starting frontpage tour')
       featureShow()
+      callbacks()
       featureShowInterval = setInterval(function () {
         featureShow()
       }, 10000)
@@ -53,7 +55,7 @@ function init () {
 
 // Your story/data/friends/events/places/track on a map
 async function featureShow () {
-  const category = featureShowList[featureShowIndex]
+  category = featureShowList[featureShowIndex]
   featureShowIndex = (featureShowIndex + 1) % featureShowList.length
 
   console.log('frontpage tour: ' + category.key)
@@ -67,7 +69,7 @@ async function featureShow () {
       // fade out map
       functions.e('#frontpage-map', e => { e.style.opacity = 0 })
       functions.e('.frontpage-subtitle', e => { e.style.opacity = 0 })
-      await functions.sleep(700)
+      await functions.sleep(500)
 
       window.gon.map_id = properties.public_id
       window.gon.map_properties = properties
@@ -76,25 +78,38 @@ async function featureShow () {
       setBackgroundMapLayer(properties.base_map)
       map.setCenter(properties.center)
       map.setZoom(properties.zoom)
-
-      // give the map some time to load + fade in
-      await functions.sleep(1200)
-      functions.e('#frontpage-map', e => { e.style.opacity = 0.5 })
-      functions.e('#frontpage-category-name', e => { e.innerHTML = category.key })
-      functions.e('.frontpage-subtitle', e => { e.style.opacity = 1 })
-
-      if (category.key === 'data') {
-      //     // car
-      //     animateMarkerPath(featureSource.getFeatureById('d9b8c95728'),
-      //       featureSource.getFeatureById('3174f4452'))
-      //     // train
-      //     animateMarkerPath(featureSource.getFeatureById('38488b9d78'),
-      //       featureSource.getFeatureById('7afc4ef808'))
-      //     // truck
-      //     animateMarkerPath(featureSource.getFeatureById('14a86bd238'),
-      //       featureSource.getFeatureById('19e435d8b8'))
-
-      }
     })
     .catch(error => console.error('Error loading ' + category.key + ': ', error))
+}
+
+function callbacks () {
+  map.on('geojson.load', function (e) {
+    // give the map some time to load + fade in
+    // functions.sleep(1000)
+    functions.e('#frontpage-map', e => { e.style.opacity = 0.5 })
+    functions.e('#frontpage-category-name', e => { e.innerHTML = category.key })
+    functions.e('.frontpage-subtitle', e => { e.style.opacity = 1 })
+    map.fire('category.load')
+  })
+
+  map.on('category.load', function (e) {
+    console.log('frontpage category.load')
+
+    if (category.key === 'data') {
+      // train (d9b8c95728, 3174f4452)
+      const train = geojsonData.features.find(feature => feature.id === '38488b9d78')
+      let path = geojsonData.features.find(feature => feature.id === '7afc4ef808')
+      animatePointPath(train, path)
+
+      // truck (14a86bd238, 19e435d8b8)
+      const truck = geojsonData.features.find(feature => feature.id === '14a86bd238')
+      path = geojsonData.features.find(feature => feature.id === '19e435d8b8')
+      animatePointPath(truck, path)
+
+      // car (d9b8c95728, 3174f4452)
+      const car = geojsonData.features.find(feature => feature.id === 'd9b8c95728')
+      path = geojsonData.features.find(feature => feature.id === '3174f4452')
+      animatePointPath(car, path)
+    }
+  })
 }

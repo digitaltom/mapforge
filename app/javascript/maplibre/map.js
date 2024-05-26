@@ -7,6 +7,7 @@ import * as functions from 'helpers/functions'
 const maplibregl = window.maplibregl
 const maptilersdk = window.maptilersdk
 const maplibreglMaptilerGeocoder = window.maplibreglMaptilerGeocoder
+const turf = window.turf
 
 export let map
 export let geojsonData //= { type: 'FeatureCollection', features: [] }
@@ -161,11 +162,16 @@ export function initializeViewMode () {
     initializeViewStyles()
   })
 
-  map.on('click', 'points-layer', function (e) {
+  map.on('click', 'line-layer', function (e) {
     if (e.features.length === 1) {
       const clickedFeature = e.features[0]
-      console.log(clickedFeature.id)
       console.log('Clicked feature:', clickedFeature)
+
+      if (clickedFeature.geometry.type === 'LineString') {
+        const turfLineString = turf.lineString(clickedFeature.geometry.coordinates)
+        const length = turf.length(turfLineString)
+        console.log('Length: ' + length + 'km')
+      }
     }
   })
 }
@@ -219,6 +225,7 @@ export function animatePoint (feature, end, duration = 300) {
       start[0] + (end[0] - start[0]) * progress,
       start[1] + (end[1] - start[1]) * progress
     ]
+    console.log('new coords: ' + newCoordinates)
     feature.geometry.coordinates = newCoordinates
     map.getSource('geojson-source').setData(geojsonData)
     if (draw) { draw.set(geojsonData) }
@@ -228,19 +235,16 @@ export function animatePoint (feature, end, duration = 300) {
   requestAnimationFrame(animate)
 }
 
-// export async function animatePointPath (feature, path) {
-//   const coordinates = path.geometry.coordinates
-//   const length = ol.sphere.getLength(lineString.getGeometry())
-//   console.log('Animating ' + pointFeature.getId() + ' along ' + lineString.getId() +
-//     ' (' + Math.round(length) + 'm)')
-//   // Loop over the coordinates
-//   for (let i = 0; i < coordinates.length - 1; i++) {
-//     const line = new ol.geom.LineString([coordinates[i], coordinates[i + 1]])
-//     const distance = ol.sphere.getLength(line)
-//     const speed = 1 // ~ 500m/s
-//     const time = Math.round(distance) * speed
-//     animateMarker(pointFeature, coordinates[i], coordinates[i + 1], time)
-//     map.render() // trigger postrender
-//     await functions.sleep(time)
-//   }
-// }
+export async function animatePointPath (feature, path) {
+  const coordinates = path.geometry.coordinates
+  console.log('Animating ' + feature.id + ' along ' + path.id)
+  // Loop over the coordinates
+  for (let i = 0; i < coordinates.length - 1; i++) {
+    const distance = turf.distance(turf.point(coordinates[i]),
+      turf.point(coordinates[i + 1]), { units: 'meters' })
+    const speed = 1 // ~ 500m/s
+    const time = Math.round(distance) * speed
+    animatePoint(feature, coordinates[i + 1], time)
+    await functions.sleep(time)
+  }
+}
