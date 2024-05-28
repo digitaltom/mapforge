@@ -13,7 +13,6 @@ export let map
 export let geojsonData //= { type: 'FeatureCollection', features: [] }
 export let mapProperties
 export let lastMousePosition
-let currentMap
 
 // workflow of event based map loading:
 //
@@ -30,8 +29,7 @@ export function initializeMaplibreProperties () {
 }
 
 export function initializeMap (divId = 'maplibre-map') {
-  // reset map background, + data
-  currentMap = null
+  // reset map data
   geojsonData = null
 
   initializeMaplibreProperties()
@@ -205,12 +203,10 @@ export function destroy (featureId) {
 }
 
 export function setBackgroundMapLayer (mapName = mapProperties.base_map) {
-  if (currentMap === mapName) { return }
   console.log('Loading base map ' + mapName)
   map.setStyle(basemaps[mapName],
   // adding this so that 'style.load' gets triggered (https://github.com/maplibre/maplibre-gl-js/issues/2587)
     { diff: false })
-  currentMap = mapName
 }
 
 export function animatePoint (feature, end, duration = 300) {
@@ -219,13 +215,16 @@ export function animatePoint (feature, end, duration = 300) {
   console.log('Animating point from: ' + start + ' to ' + end)
 
   function animate (timestamp) {
+    // stop animation in case the feature got removed
+    if (!geojsonData || !geojsonData.features.find(f => f.id === feature.id)) { return }
+
     let progress = (timestamp - starttime) / duration
     if (progress > 1) { progress = 1 }
     const newCoordinates = [
       start[0] + (end[0] - start[0]) * progress,
       start[1] + (end[1] - start[1]) * progress
     ]
-    console.log('new coords: ' + newCoordinates)
+    // console.log('new coords: ' + newCoordinates)
     feature.geometry.coordinates = newCoordinates
     map.getSource('geojson-source').setData(geojsonData)
     if (draw) { draw.set(geojsonData) }
@@ -240,10 +239,12 @@ export async function animatePointPath (feature, path) {
   console.log('Animating ' + feature.id + ' along ' + path.id)
   // Loop over the coordinates
   for (let i = 0; i < coordinates.length - 1; i++) {
+    // stop animation in case the feature got removed
+    if (!geojsonData || !geojsonData.features.find(f => f.id === feature.id)) { break }
     const distance = turf.distance(turf.point(coordinates[i]),
       turf.point(coordinates[i + 1]), { units: 'meters' })
-    const speed = 1 // ~ 500m/s
-    const time = Math.round(distance) * speed
+    const speed = 0.75 // ~ 500m/s
+    const time = Math.round(distance) / speed
     animatePoint(feature, coordinates[i + 1], time)
     await functions.sleep(time)
   }
