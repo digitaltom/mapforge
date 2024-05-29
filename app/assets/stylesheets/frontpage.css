@@ -73,8 +73,9 @@
 }
 
 /* https://dev.to/shubhamjain/how-to-create-marker-highlight-effect-in-css-be4 */
+/* source '//s2.svgbox.net/pen-brushes.svg?ic=brush-1&color=ffff43' */
 .highlight {
-    background: url('//s2.svgbox.net/pen-brushes.svg?ic=brush-1&color=ffff43');
+    background: url('/images/pen-brushes.svg');
     margin: -2px -6px;
     padding:  2px  6px;
 }
