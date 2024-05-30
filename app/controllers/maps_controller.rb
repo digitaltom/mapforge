@@ -44,6 +44,11 @@ class MapsController < ApplicationController
     render json: @map.properties.as_json
   end
 
+  # some maplibre style tries to load eg. /atm_11; catching those calls here
+  def catchall
+    head :ok
+  end
+
   private
 
   # Use callbacks to share common setup or constraints between actions.
