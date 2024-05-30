@@ -3,17 +3,18 @@ import {
   initializeMap, setBackgroundMapLayer, geojsonData,
   initializeStaticMode, initializeMaplibreProperties, map
 } from 'maplibre/map'
-import { animatePointPath, rotateCamera } from 'maplibre/animations'
+import { RotateCameraAnimation, AnimatePointAnimation } from 'maplibre/animations'
 import * as functions from 'helpers/functions'
 
 // eslint expects variables to get imported, but we load the full lib in header
 
 let featureShowInterval
 let featureShowIndex = 0
+let activeAnimations = []
 let category
 const featureShowList = [
   { key: 'friends', map: 'frontpage-category-friends' },
-  //{ key: 'indoors', map: 'frontpage-category-office' },
+  { key: 'indoors', map: 'frontpage-category-office' },
   { key: 'data', map: 'frontpage-category-data' }
   // { key: 'story', map: 'frontpage-category-data' },
   // { key: 'events', map: 'frontpage-category-data' },
@@ -46,6 +47,14 @@ const featureShowList = [
 function unload () {
   if (featureShowInterval) { clearInterval(featureShowInterval) }
   featureShowInterval = null
+  stopAnimations()
+}
+
+function stopAnimations () {
+  activeAnimations.forEach(function (a) {
+    a.stopAnimation()
+  })
+  activeAnimations = []
 }
 
 function init () {
@@ -56,9 +65,9 @@ function init () {
 
 // Your story/data/friends/events/places/track on a map
 async function featureShow () {
+  stopAnimations()
   category = featureShowList[featureShowIndex]
   featureShowIndex = (featureShowIndex + 1) % featureShowList.length
-
   console.log('frontpage tour: ' + category.key)
 
   fetch('/maps/' + category.map + '/properties')
@@ -97,24 +106,32 @@ function callbacks () {
     console.log('frontpage category.load')
 
     if (category.key === 'friends') {
-      rotateCamera()
+      const animation = new RotateCameraAnimation()
+      activeAnimations.push(animation)
+      animation.run()
     }
 
     if (category.key === 'data') {
       // train (d9b8c95728, 3174f4452)
       const train = geojsonData.features.find(feature => feature.id === '38488b9d78')
-      let path = geojsonData.features.find(feature => feature.id === '5822e73444157f33c492e33965396ae8')
-      animatePointPath(train, path)
+      let path = geojsonData.features.find(feature => feature.id === '7afc4ef808')
+      const trainAnimation = new AnimatePointAnimation()
+      activeAnimations.push(trainAnimation)
+      trainAnimation.animatePointPath(train, path)
 
-      // // truck (14a86bd238, 19e435d8b8)
-      // const truck = geojsonData.features.find(feature => feature.id === '14a86bd238')
-      // path = geojsonData.features.find(feature => feature.id === '19e435d8b8')
-      // animatePointPath(truck, path)
+      // truck (14a86bd238, 19e435d8b8)
+      const truck = geojsonData.features.find(feature => feature.id === '14a86bd238')
+      path = geojsonData.features.find(feature => feature.id === '19e435d8b8')
+      const truckAnimation = new AnimatePointAnimation()
+      activeAnimations.push(truckAnimation)
+      truckAnimation.animatePointPath(truck, path)
 
-      // // car (d9b8c95728, 3174f4452)
-      // const car = geojsonData.features.find(feature => feature.id === 'd9b8c95728')
-      // path = geojsonData.features.find(feature => feature.id === '3174f4452')
-      // animatePointPath(car, path)
+      // car (d9b8c95728, 3174f4452)
+      const car = geojsonData.features.find(feature => feature.id === 'd9b8c95728')
+      path = geojsonData.features.find(feature => feature.id === '3174f4452')
+      const carAnimation = new AnimatePointAnimation()
+      activeAnimations.push(carAnimation)
+      carAnimation.animatePointPath(car, path)
     }
   })
 }

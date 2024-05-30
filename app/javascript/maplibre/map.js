@@ -1,6 +1,7 @@
 import { basemaps } from 'maplibre/basemaps'
 import { draw } from 'maplibre/edit'
 import { initializeViewStyles } from 'maplibre/styles'
+import { AnimatePointAnimation } from 'maplibre/animations'
 import * as functions from 'helpers/functions'
 
 // eslint expects variables to get imported, but we load the full lib in header
@@ -184,7 +185,8 @@ export function upsert (updatedFeature) {
     if (feature.geometry.type === 'Point') {
       const newCoords = updatedFeature.geometry.coordinates
       if (!functions.arraysEqual(feature.geometry.coordinates, newCoords)) {
-        animatePoint(feature, newCoords)
+        const animation = new AnimatePointAnimation()
+        animation.animatePoint(feature, newCoords)
       }
     } else {
       feature.geometry = updatedFeature.geometry
