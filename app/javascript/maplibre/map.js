@@ -14,6 +14,7 @@ export let map
 export let geojsonData //= { type: 'FeatureCollection', features: [] }
 export let mapProperties
 export let lastMousePosition
+let backgroundMapLayer
 
 // workflow of event based map loading:
 //
@@ -200,8 +201,10 @@ export function destroy (featureId) {
 }
 
 export function setBackgroundMapLayer (mapName = mapProperties.base_map) {
+  if (backgroundMapLayer === mapName) { return }
   console.log('Loading base map ' + mapName)
   map.setStyle(basemaps[mapName],
   // adding this so that 'style.load' gets triggered (https://github.com/maplibre/maplibre-gl-js/issues/2587)
     { diff: false })
+  backgroundMapLayer = mapName
 }
