@@ -25,7 +25,7 @@ export class RotateCameraAnimation extends AnimationManager {
   run = (timestamp = 0) => {
     // clamp the rotation between 0-360 degrees
     // Divide timestamp by 100 to slow rotation to ~10 degrees / sec
-    map.rotateTo((timestamp / 250) % 360, { duration: 0 })
+    map.rotateTo((timestamp / 400) % 360, { duration: 0 })
     this.animationId = requestAnimationFrame(this.run)
   }
 }
