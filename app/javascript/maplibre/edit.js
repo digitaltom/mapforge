@@ -101,6 +101,7 @@ function displayEditButtons (feature) {
     function () {
       document.querySelector('#edit-modal').style.display = 'block'
       document.querySelector('.feature-details-atts-edit textarea').value = JSON.stringify(feature.properties)
+      document.querySelector('#edit-modal .error').innerHTML = ''
       document.querySelector('#edit-modal').setAttribute('data-feature-id', feature.id)
     })
 }
