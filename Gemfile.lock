@@ -288,6 +288,8 @@ GEM
       websocket-driver (>= 0.6.0)
     racc (1.8.0)
     rack (3.0.11)
+    rack-cache (1.17.0)
+      rack (>= 0.4)
     rack-session (2.0.0)
       rack (>= 3.0.0)
     rack-test (2.1.0)
@@ -517,6 +519,7 @@ DEPENDENCIES
   mongoid_rails_migrations
   puma
   puppeteer-ruby
+  rack-cache
   rails
   redis (>= 4.0.1)
   rgeo
