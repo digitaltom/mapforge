@@ -110,11 +110,7 @@ function addTerrain () {
   })
 }
 
-export function initializeControls () {
-  map._controls.forEach((control) => {
-    map.removeControl(control)
-  })
-
+export function initializeDefaultControls () {
   // https://docs.maptiler.com/sdk-js/modules/geocoding/api/api-reference/#geocoding-options
   const gc = new maplibreglMaptilerGeocoder.GeocodingControl({
     apiKey: window.gon.map_keys.maptiler,
@@ -122,27 +118,26 @@ export function initializeControls () {
   })
   map.addControl(gc, 'top-right')
 
-  map.addControl(
-    new maplibregl.NavigationControl({
-      visualizePitch: true,
-      showZoom: true,
-      showCompass: true
-    })
-  )
+  const nav = new maplibregl.NavigationControl({
+    visualizePitch: true,
+    showZoom: true,
+    showCompass: true
+  })
+  map.addControl(nav)
 
-  map.addControl(new maptilersdk.MaptilerGeolocateControl({
+  const locate = new maptilersdk.MaptilerGeolocateControl({
     positionOptions: {
       enableHighAccuracy: true
     },
     trackUserLocation: true
-  }), 'top-right')
+  })
+  map.addControl(locate, 'top-right')
 
   const scale = new maptilersdk.ScaleControl({
     maxWidth: 80,
     unit: 'metric'
   })
   map.addControl(scale)
-
   scale.setUnit('metric')
 }
 
@@ -153,8 +148,8 @@ export function initializeStaticMode () {
 }
 
 export function initializeViewMode () {
-  map.on('style.load', () => {
-    initializeControls()
+  map.once('style.load', () => {
+    initializeDefaultControls()
   })
 
   map.on('geojson.load', function (e) {

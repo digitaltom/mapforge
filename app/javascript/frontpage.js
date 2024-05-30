@@ -118,7 +118,7 @@ function callbacks () {
         center: center.geometry.coordinates,
         zoom: 19.2,
         essential: true,
-        bearing: 0,
+        // bearing: 0,
         speed: 0.1, // make the flying slow
         curve: 1, // change the speed at which it zooms out
         // This can be any easing function: it takes a number between

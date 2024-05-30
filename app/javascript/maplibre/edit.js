@@ -1,4 +1,4 @@
-import { map, geojsonData, initializeControls, lastMousePosition } from 'maplibre/map'
+import { map, geojsonData, initializeDefaultControls, lastMousePosition } from 'maplibre/map'
 import { editStyles, initializeEditStyles } from 'maplibre/edit_styles'
 import { mapChannel } from 'channels/map_channel'
 import { ControlGroup, MapSettingsControl, MapShareControl, MapLayersControl, resetControls } from 'maplibre/controls'
@@ -34,8 +34,9 @@ export function initializeEditMode () {
     userProperties: true
   })
 
-  map.on('style.load', () => {
-    initializeControls()
+  map.once('style.load', () => {
+    initializeDefaultControls()
+
     map.addControl(draw, 'top-left')
 
     const controlGroup = new ControlGroup(
