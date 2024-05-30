@@ -111,6 +111,24 @@ function callbacks () {
       animation.run()
     }
 
+    if (category.key === 'indoors') {
+      const center = geojsonData.features.find(feature => feature.id === 'f2c7934029981a12545be52f0656caff')
+      console.log(center.geometry.coordinates)
+      map.flyTo({
+        center: center.geometry.coordinates,
+        zoom: 19.2,
+        essential: true,
+        bearing: 0,
+        speed: 0.1, // make the flying slow
+        curve: 1, // change the speed at which it zooms out
+        // This can be any easing function: it takes a number between
+        // 0 and 1 and returns another number between 0 and 1.
+        easing (t) {
+          return t
+        }
+      })
+    }
+
     if (category.key === 'data') {
       // train (d9b8c95728, 3174f4452)
       const train = geojsonData.features.find(feature => feature.id === '38488b9d78')
