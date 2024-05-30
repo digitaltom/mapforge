@@ -42,9 +42,8 @@ module Mapforge
        verbose: true,
        etag: true,
        max_age: 60.minutes.to_i,
-       metastore:   'file:tmp/cache/rack/meta',
-       entitystore: 'file:tmp/cache/rack/body'
+       metastore:   "file:tmp/cache/rack/meta",
+       entitystore: "file:tmp/cache/rack/body"
     }
-
   end
 end

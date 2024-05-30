@@ -12,7 +12,7 @@ gem "importmap-rails"
 gem "turbo-rails"
 gem "jbuilder"
 gem "bootsnap", require: false
-gem 'rack-cache', :require => 'rack/cache'
+gem "rack-cache", require: "rack/cache"
 
 # Javascript
 gem "gon"
