@@ -12,6 +12,8 @@
   text-shadow: -1px 0 grey, 0 1px grey, 1px 0 grey, 0 -1px grey;
   float: left;
   margin-top: 0.85em;
+  overflow: hidden;
+  height: 3em;
 }
 
 .white-shadow {

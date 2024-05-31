@@ -14,11 +14,26 @@
  *= require_self
  */
 
-/* The Emoji font is also referred to in point.js */
+/* General styles used throughout the whole app */
+
 html,
 body {
   font-family: system-ui, sans-serif;
   font-weight: 300;
+}
+
+.flex-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.flex-center {
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-no-wrap {
+  flex-wrap: nowrap;
 }
 
 .map {

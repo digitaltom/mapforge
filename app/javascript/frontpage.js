@@ -135,21 +135,21 @@ function callbacks () {
       let path = geojsonData.features.find(feature => feature.id === '7afc4ef808')
       const trainAnimation = new AnimatePointAnimation()
       activeAnimations.push(trainAnimation)
-      trainAnimation.animatePointPath(train, path)
+      // trainAnimation.animatePointPath(train, path)
 
       // truck (14a86bd238, 19e435d8b8)
       const truck = geojsonData.features.find(feature => feature.id === '14a86bd238')
       path = geojsonData.features.find(feature => feature.id === '19e435d8b8')
       const truckAnimation = new AnimatePointAnimation()
       activeAnimations.push(truckAnimation)
-      truckAnimation.animatePointPath(truck, path)
+      // truckAnimation.animatePointPath(truck, path)
 
       // car (d9b8c95728, 3174f4452)
       const car = geojsonData.features.find(feature => feature.id === 'd9b8c95728')
       path = geojsonData.features.find(feature => feature.id === '3174f4452')
       const carAnimation = new AnimatePointAnimation()
       activeAnimations.push(carAnimation)
-      carAnimation.animatePointPath(car, path)
+      // carAnimation.animatePointPath(car, path)
     }
   })
 }

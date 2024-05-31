@@ -99,24 +99,3 @@
 .ol-attribution {
   font-size: 0.7em;
 }
-
-/* small search form on mobile */
-@media (0 <= width <= 500px) {
-  .search-form {
-    display: none !important;
-  }
-}
-
-@media (500px < width <= 700px) {
-  .search-form {
-    width: unset !important;
-  }
-
-  .search-form input {
-    width: 150px !important;
-  }
-}
-
-.maplibregl-ctrl-top-left {
-  top: 3.2em !important;
-}
