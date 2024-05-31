@@ -1,9 +1,9 @@
 #mapforge-logo {
   font-weight: 600;
   font-size: 1.5em;
-  margin: 0 0.7em 1em 0.4em;
-  line-height: 2em;
-  float: left;
+  margin-left: 1.5em;
+  line-height: 1.8em;
+  z-index: 100;
 }
 
 #map-title {
@@ -11,13 +11,15 @@
   font-weight: 400;
   text-shadow: -1px 0 grey, 0 1px grey, 1px 0 grey, 0 -1px grey;
   float: left;
-  margin-top: 0.85em;
+  margin-top: 0.8em;
   overflow: hidden;
   height: 3em;
+  margin-left: 1em;
 }
 
 .white-shadow {
-  text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
+  text-shadow: -1px 0 #eee, 0 1px #eee, 1px 0 #eee, 0 -1px #eee;
+  color: #333;
 }
 
 .layer-feature-item a {

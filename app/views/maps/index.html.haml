@@ -1,6 +1,8 @@
-%h1
-  Mapforge
-
+.flex-container.flex-no-wrap
+  = render 'shared/menu'
+  %span#mapforge-logo.mapforge-font.white-shadow
+    Mapforge Maps
+  %span#map-title
 
 #maps.flex-container
   - @maps.each do |map|

@@ -1,7 +1,8 @@
-- content_for(:title) { 'Mapforge Admin' }
-%h1
-  Mapforge Admin
-
+.flex-container.flex-no-wrap
+  = render 'shared/menu'
+  %span#mapforge-logo.mapforge-font.white-shadow
+    Mapforge Admin
+  %span#map-title
 
 #maps.flex-container
   - @maps.each do |map|
