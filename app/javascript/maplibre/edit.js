@@ -1,7 +1,7 @@
 import { map, geojsonData, initializeDefaultControls, lastMousePosition } from 'maplibre/map'
 import { editStyles, initializeEditStyles } from 'maplibre/edit_styles'
 import { mapChannel } from 'channels/map_channel'
-import { ControlGroup, MapSettingsControl, MapShareControl, MapLayersControl, resetControls } from 'maplibre/controls'
+import { ControlGroup, MapSettingsControl, MapShareControl, MapLayersControl } from 'maplibre/controls'
 import * as f from 'helpers/functions'
 
 // eslint expects variables to get imported, but we load the full lib in header
@@ -66,9 +66,6 @@ export function initializeEditMode () {
   map.on('draw.create', handleCreate)
   map.on('draw.update', handleUpdate)
   map.on('draw.delete', handleDelete)
-
-  map.on('click', resetControls)
-  map.on('touchstart', resetControls)
 }
 
 function sourcedataHandler (e) {

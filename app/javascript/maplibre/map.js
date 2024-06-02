@@ -1,5 +1,6 @@
 import { basemaps } from 'maplibre/basemaps'
 import { draw } from 'maplibre/edit'
+import { resetControls } from 'maplibre/controls'
 import { initializeViewStyles } from 'maplibre/styles'
 import { AnimatePointAnimation } from 'maplibre/animations'
 import * as functions from 'helpers/functions'
@@ -33,6 +34,7 @@ export function initializeMaplibreProperties () {
 export function initializeMap (divId = 'maplibre-map') {
   // reset map data
   geojsonData = null
+  backgroundMapLayer = null
 
   initializeMaplibreProperties()
   maptilersdk.config.apiKey = window.gon.map_keys.maptiler
@@ -61,7 +63,28 @@ export function initializeMap (divId = 'maplibre-map') {
     lastMousePosition = e.lngLat
   })
 
+  map.on('click', resetControls)
+  map.on('touchstart', resetControls)
+
   functions.e('#map-title', e => { e.textContent = mapProperties.name })
+
+  map.on('click', 'line-layer', function (e) {
+    if (e.features.length === 1) {
+      const clickedFeature = e.features[0]
+      console.log('Clicked feature:', clickedFeature)
+
+      if (clickedFeature.geometry.type === 'MultiLineString') {
+        const turfLineString = turf.multiLineString(clickedFeature.geometry.coordinates)
+        const length = turf.length(turfLineString)
+        console.log('Length: ' + length + 'km')
+      }
+
+      new maplibregl.Popup()
+        .setLngLat(lastMousePosition)
+        .setHTML(`Country name: ${clickedFeature.properties.title}`)
+        .addTo(map)
+    }
+  })
 }
 
 function loadGeoJsonData () {
@@ -155,19 +178,6 @@ export function initializeViewMode () {
 
   map.on('geojson.load', function (e) {
     initializeViewStyles()
-  })
-
-  map.on('click', 'line-layer', function (e) {
-    if (e.features.length === 1) {
-      const clickedFeature = e.features[0]
-      console.log('Clicked feature:', clickedFeature)
-
-      if (clickedFeature.geometry.type === 'LineString') {
-        const turfLineString = turf.lineString(clickedFeature.geometry.coordinates)
-        const length = turf.length(turfLineString)
-        console.log('Length: ' + length + 'km')
-      }
-    }
   })
 }
 

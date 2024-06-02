@@ -143,6 +143,8 @@ export function resetControls () {
   functions.e('.maplibregl-ctrl-btn', e => { e.classList.remove('active') })
   // reset active modals
   functions.e('.map-modal', e => { e.style.display = 'none' })
+  // collapse menu
+  functions.e('#burger-menu-toggle', e => { e.checked = false })
   // reset edit buttons
   if (editPopup) { editPopup.remove() }
 }
