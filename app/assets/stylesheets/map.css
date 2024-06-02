@@ -1,7 +1,8 @@
 #mapforge-logo {
   font-weight: 600;
   font-size: 1.5em;
-  margin-left: 1.3em;
+  margin-left: 1.5em;
+  margin-top: 0.1em;
   line-height: 1.8em;
   z-index: 100;
 }

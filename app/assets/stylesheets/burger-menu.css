@@ -1,11 +1,28 @@
 .burger-menu-btn {
   position: absolute;
-  top: 20px;
-  left: 14px;
-  width: 20px;
-  height: 20px;
+  top: 7px;
+  left: 10px;
+  width: 33px;
+  height: 33px;
   cursor: pointer;
   z-index: 20;
+}
+
+.burger-menu-btn-background {
+  position: absolute;
+  top: 7px;
+  left: 10px;
+  width: 33px;
+  height: 33px;
+  z-index: 10;
+  background-color: #fff;
+  opacity: 0.85;
+  border-radius: 3px;
+}
+
+.burger-menu-btn > span {
+  left: 6px;
+  width: 20px;
 }
 
 .burger-menu-btn > span,
@@ -13,8 +30,9 @@
 .burger-menu-btn > span::after {
   display: block;
   position: absolute;
-  width: 100%;
   height: 2px;
+  top: 15px;
+  width: 20px;
   background-color: #333;
   box-shadow: 0 0 1px 1px #eee;
   transition-duration: .25s;
@@ -55,6 +73,13 @@
 #burger-menu-toggle:checked + .burger-menu-btn > span::after {
   box-shadow: 0 0 0 1px #444;
 }
+
+.burger-menu-btn:hover ~.burger-menu-btn-background {
+  background-color: rgb(0 0 0/15%) !important;
+  transition:
+    background-color 0.2s ease-in-out
+}
+
 
 /* Expanded Menu */
 
