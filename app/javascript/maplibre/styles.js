@@ -2,6 +2,8 @@ import { map } from 'maplibre/map'
 
 export function initializeViewStyles () {
   map.addLayer(styles['polygon-layer'])
+  map.addLayer(styles['polygon-layer-extrusion'])
+  map.addLayer(styles['line-layer-outline'])
   map.addLayer(styles['line-layer'])
   map.addLayer(styles['points-border-layer'])
   map.addLayer(styles['points-layer'])
@@ -10,7 +12,7 @@ export function initializeViewStyles () {
   map.on('styleimagemissing', loadImage)
 }
 
-// loading images from 'marker-icon' attributes
+// loading images from 'marker-image-url' attributes
 export async function loadImage (e) {
   const imageUrl = e.id
   const response = await map.loadImage(imageUrl)
@@ -51,6 +53,7 @@ export const styles = {
   'polygon-layer-active': {
     id: 'polygon-layer-active',
     type: 'fill',
+    source: 'geojson-source',
     filter: ['all',
       ['in', '$type', 'Polygon'],
       ['==', 'active', 'true']],
@@ -66,6 +69,50 @@ export const styles = {
               0.8]]
     }
   },
+  'polygon-layer-extrusion': {
+    id: 'polygon-layer-extrusion',
+    type: 'fill-extrusion',
+    source: 'geojson-source',
+    filter: ['all',
+      ['in', '$type', 'Polygon']],
+    paint: {
+      'fill-extrusion-color': ['coalesce',
+        ['get', 'fill-extrusion-color'],
+        ['get', 'user_fill-extrusion-color'],
+        ['get', 'fill'],
+        ['get', 'user_fill'],
+        'rgb(10, 135, 10)'],
+      'fill-extrusion-height': ['coalesce',
+        ['get', 'fill-extrusion-height'],
+        ['get', 'user_fill-extrusion-height']],
+      'fill-extrusion-base': ['coalesce',
+        ['get', 'fill-extrusion-base'],
+        ['get', 'user_fill-extrusion-base']],
+      // opacity does not support data expressions!?!
+      'fill-extrusion-opacity': 0.4
+    }
+  },
+  'line-layer-outline': {
+    id: 'line-layer-outline',
+    type: 'line',
+    source: 'geojson-source',
+    filter: ['all',
+      ['in', '$type', 'LineString', 'Polygon']],
+    layout: {
+      'line-join': 'round',
+      'line-cap': 'round'
+    },
+    // Draw prefixes properties with '_user'
+    paint: {
+      'line-color': 'white',
+      'line-width': ['+', 2,
+        ['to-number', ['coalesce',
+          ['get', 'stroke-width'],
+          ['get', 'user_stroke-width'],
+          3]]],
+      'line-opacity': ['to-number', ['coalesce', ['get', 'stroke-opacity'], ['get', 'user_stroke-opacity'], 1]]
+    }
+  },
   'line-layer': {
     id: 'line-layer',
     type: 'line',
@@ -78,8 +125,12 @@ export const styles = {
     },
     // Draw prefixes properties with '_user'
     paint: {
-      'line-color': ['coalesce', ['get', 'stroke'], ['get', 'user_stroke'], 'rgb(10, 135, 10)'],
-      'line-width': ['to-number', ['coalesce', ['get', 'stroke-width'], ['get', 'user_stroke-width'], 2]]
+      'line-color': ['coalesce', ['get', 'stroke'], ['get', 'user_stroke'], 'green'],
+      'line-width': ['to-number', ['coalesce',
+        ['get', 'stroke-width'],
+        ['get', 'user_stroke-width'],
+        3]],
+      'line-opacity': ['to-number', ['coalesce', ['get', 'stroke-opacity'], ['get', 'user_stroke-opacity'], 1]]
     }
   },
   'points-border-layer': {
@@ -89,14 +140,22 @@ export const styles = {
     filter: ['all',
       ['==', '$type', 'Point'],
       ['!=', 'active', 'true'],
-      ['==', 'meta', 'feature'],
       ['!has', 'marker-symbol'],
-      ['!has', 'marker-icon'],
+      ['!has', 'marker-image-url'],
       ['!has', 'user_marker-symbol'],
-      ['!has', 'user_marker-icon']],
+      ['!has', 'user_marker-image-url']],
     paint: {
-      'circle-radius': 8,
-      'circle-color': ['coalesce', ['get', 'stroke'], '#ffffff']
+      'circle-radius': [
+        'match',
+        ['coalesce', ['get', 'user_stroke'], ['get', 'stroke']],
+        'transparent', 0,
+        [
+          'match',
+          ['coalesce', ['get', 'user_marker-size'], ['get', 'marker-size']],
+          'large', 15,
+          8 // Default circle-radius
+        ]],
+      'circle-color': ['coalesce', ['get', 'user_stroke'], ['get', 'stroke'], '#ffffff']
     }
   },
   'points-layer': {
@@ -106,14 +165,22 @@ export const styles = {
     filter: ['all',
       ['==', '$type', 'Point'],
       ['!=', 'active', 'true'],
-      ['==', 'meta', 'feature'],
       ['!has', 'marker-symbol'],
-      ['!has', 'marker-icon'],
+      ['!has', 'marker-image-url'],
       ['!has', 'user_marker-symbol'],
-      ['!has', 'user_marker-icon']],
+      ['!has', 'user_marker-image-url']],
     paint: {
-      'circle-radius': 6,
-      'circle-color': ['coalesce', ['get', 'marker-color'], 'rgb(10, 135, 10)']
+      'circle-radius': [
+        'match',
+        ['coalesce', ['get', 'user_marker-color'], ['get', 'marker-color']],
+        'transparent', 0, // If marker-color is 'transparent', set circle-radius to 0
+        [
+          'match',
+          ['coalesce', ['get', 'user_marker-size'], ['get', 'marker-size']],
+          'large', 12,
+          6
+        ]],
+      'circle-color': ['coalesce', ['get', 'user_marker-color'], ['get', 'marker-color'], 'rgb(10, 135, 10)']
     }
   },
   // support symbols on all feature types
@@ -122,38 +189,54 @@ export const styles = {
     type: 'symbol',
     source: 'geojson-source',
     filter: ['!=', 'active', 'true'],
+    // minzoom: 15, // TODO: only static values possible right now
     layout: {
       'icon-image': ['coalesce',
-        ['get', 'marker-icon'],
+        ['get', 'marker-image-url'],
         // replace marker-symbol value with path to emoji png
         ['case',
           ['has', 'marker-symbol'],
           ['concat', '/emojis/noto/', ['get', 'marker-symbol'], '.png'],
           '']
       ],
-      'icon-size': 0.5,
-      'icon-keep-upright': true,
-      'icon-allow-overlap': true
+      'icon-size': [
+        'match',
+        ['get', 'marker-size'],
+        'small', 0.25,
+        'medium', 0.35,
+        'large', 0.5,
+        0.35],
+      'icon-overlap': 'always',
+      'icon-ignore-placement': true
     }
   },
   'text-layer': {
     id: 'text-layer',
     type: 'symbol',
     source: 'geojson-source',
+    filter: ['has', 'label'],
     layout: {
-      // "text-field": ["format",
-      //     "", { "font-scale": 1.2 },
-      //     "", { "font-scale": 0.8 }
-      // ],
-      'text-field': ['get', 'title'],
+      'text-field': ['coalesce', ['get', 'label'], ['get', 'room']],
       'text-size': 16,
       // must be available via glyphs: https://docs.maptiler.com/gl-style-specification/glyphs/
-      // Emojis seem not to be in the character range: https://github.com/maplibre/maplibre-gl-js/issues/2307
-      // 'text-font': ['Noto Color Emoji'], // ['Arial Unicode MS Bold', 'Open Sans Bold'], // Ensure the font supports emojis
-      'text-anchor': 'top'
+      // Emojis are not in the character range: https://github.com/maplibre/maplibre-gl-js/issues/2307
+      // 'text-font': ['coalesce', ['get', 'title-font'], ['Open Sans Regular,Arial Unicode MS Regular']], // Ensure the font supports emojis
+      'text-font': ['system-ui', 'sans-serif'],
+      // if there is a symbol, move the text next to it
+      'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
+      // if there is a symbol, offset the text below it
+      'text-radial-offset': [
+        'match',
+        ['to-string', ['has', 'marker-symbol']],
+        'true', 1.2,
+        0
+      ],
+      'text-justify': 'auto'
     },
     paint: {
-      'text-color': '#123'
+      'text-color': ['coalesce', ['get', 'label-color'], '#fff'],
+      'text-halo-color': ['coalesce', ['get', 'label-shadow'], '#444'],
+      'text-halo-width': 1
     }
   }
 }

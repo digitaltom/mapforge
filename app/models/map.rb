@@ -22,7 +22,8 @@ class Map
 
   BASE_MAPS = [ "osmTiles", "satelliteTiles", "satelliteStreetTiles",
                "stamenTonerTiles", "openTopoTiles", "mapboxBrightVector",
-               "maptilerDataviz", "maptilerStreets", "maptilerNoStreets", "maptilerWinter" ]
+               "maptilerDataviz", "maptilerStreets", "maptilerNoStreets",
+               "maptilerWinter", "maptilerBike" ]
   DEFAULT_MAP = "osmTiles"
   DEFAULT_CENTER = [ 11.077, 49.447 ].freeze
   DEFAULT_ZOOM = 12
@@ -38,8 +39,8 @@ class Map
       description: description,
       public_id: public_id,
       base_map: base_map || DEFAULT_MAP,
-      center: center || DEFAULT_CENTER,
-      zoom: zoom || DEFAULT_ZOOM,
+      center: center || default_center,
+      zoom: zoom || default_zoom,
       pitch: pitch || DEFAULT_PITCH,
       terrain: terrain || DEFAULT_TERRAIN
     }
@@ -87,6 +88,20 @@ class Map
   end
 
   private
+
+  def default_center
+    if features.present?
+      # TODO: this is a quick&dirty way to center the map at the first feature
+      coords = features.first[:geometry][:coordinates]
+      [ coords.flatten[0], coords.flatten[1] ]
+    else
+     DEFAULT_CENTER
+    end
+  end
+
+  def default_zoom
+    DEFAULT_ZOOM
+  end
 
   def broadcast_update
     # broadcast to private + public channel

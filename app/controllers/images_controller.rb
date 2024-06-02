@@ -2,6 +2,7 @@ class ImagesController < ApplicationController
   before_action :set_image, only: %i[icon]
 
   def icon
+    expires_in 60.minutes, public: true
     # resize, crop if necessary to maintain aspect ratio (centre gravity)
     image_url = @image.img.thumb("100x100#", quality: 95).rounded.url
     redirect_to image_url

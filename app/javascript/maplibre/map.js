@@ -1,17 +1,20 @@
 import { basemaps } from 'maplibre/basemaps'
 import { draw } from 'maplibre/edit'
 import { initializeViewStyles } from 'maplibre/styles'
+import { AnimatePointAnimation } from 'maplibre/animations'
 import * as functions from 'helpers/functions'
 
 // eslint expects variables to get imported, but we load the full lib in header
 const maplibregl = window.maplibregl
 const maptilersdk = window.maptilersdk
+const maplibreglMaptilerGeocoder = window.maplibreglMaptilerGeocoder
+const turf = window.turf
 
 export let map
 export let geojsonData //= { type: 'FeatureCollection', features: [] }
 export let mapProperties
 export let lastMousePosition
-let currentMap
+let backgroundMapLayer
 
 // workflow of event based map loading:
 //
@@ -23,9 +26,14 @@ let currentMap
 export function initializeMaplibreProperties () {
   mapProperties = window.gon.map_properties
   console.log('map properties: ' + JSON.stringify(mapProperties))
+  geojsonData = null
+  if (mapProperties.name) { document.title = 'mapforge.org - ' + mapProperties.name }
 }
 
 export function initializeMap (divId = 'maplibre-map') {
+  // reset map data
+  geojsonData = null
+
   initializeMaplibreProperties()
   maptilersdk.config.apiKey = window.gon.map_keys.maptiler
   map = new maplibregl.Map({
@@ -35,6 +43,7 @@ export function initializeMap (divId = 'maplibre-map') {
     pitch: mapProperties.pitch,
     maxPitch: 72,
     interactive: (window.gon.map_mode !== 'static') // can move/zoom map
+    // style: {} // style/map is getting loaded by 'setBackgroundMapLayer'
   })
   // for console debugging
   window.map = map
@@ -51,6 +60,8 @@ export function initializeMap (divId = 'maplibre-map') {
   map.on('touchend', (e) => {
     lastMousePosition = e.lngLat
   })
+
+  functions.e('#map-title', e => { e.textContent = mapProperties.name })
 }
 
 function loadGeoJsonData () {
@@ -80,8 +91,6 @@ function loadGeoJsonData () {
       geojsonData = data
       console.log('loaded ' + geojsonData.features.length +
         ' features from ' + '/maps/' + window.gon.map_id + '/features')
-      // the features in the rendered layer don't have ids right now, because
-      // mapforge feature ids are not numeric.
       map.getSource('geojson-source').setData(geojsonData)
       map.fire('geojson.load', { detail: { message: 'geojson-source loaded' } })
     })
@@ -98,61 +107,82 @@ function addTerrain () {
 
   map.setTerrain({
     source: 'terrain',
-    exaggeration: 1.1
+    exaggeration: 1.3
   })
 }
 
-export function initializeControls () {
-  map.addControl(
-    new maplibregl.NavigationControl({
-      visualizePitch: true,
-      showZoom: true,
-      showCompass: true
-    })
-  )
+export function initializeDefaultControls () {
+  // https://docs.maptiler.com/sdk-js/modules/geocoding/api/api-reference/#geocoding-options
+  const gc = new maplibreglMaptilerGeocoder.GeocodingControl({
+    apiKey: window.gon.map_keys.maptiler,
+    class: 'search-form'
+  })
+  map.addControl(gc, 'top-right')
 
-  map.addControl(new maptilersdk.MaptilerGeolocateControl({
+  const nav = new maplibregl.NavigationControl({
+    visualizePitch: true,
+    showZoom: true,
+    showCompass: true
+  })
+  map.addControl(nav)
+
+  const locate = new maptilersdk.MaptilerGeolocateControl({
     positionOptions: {
       enableHighAccuracy: true
     },
     trackUserLocation: true
-  }), 'top-right')
+  })
+  map.addControl(locate, 'top-right')
 
   const scale = new maptilersdk.ScaleControl({
     maxWidth: 80,
     unit: 'metric'
   })
   map.addControl(scale)
-
   scale.setUnit('metric')
 }
 
+export function initializeStaticMode () {
+  map.on('geojson.load', function (e) {
+    initializeViewStyles()
+  })
+}
+
 export function initializeViewMode () {
-  if (window.gon.map_mode !== 'static') { initializeControls() }
+  map.once('style.load', () => {
+    initializeDefaultControls()
+  })
 
   map.on('geojson.load', function (e) {
     initializeViewStyles()
   })
 
-  map.on('click', 'points-layer', function (e) {
+  map.on('click', 'line-layer', function (e) {
     if (e.features.length === 1) {
       const clickedFeature = e.features[0]
-      console.log(clickedFeature.id)
       console.log('Clicked feature:', clickedFeature)
+
+      if (clickedFeature.geometry.type === 'LineString') {
+        const turfLineString = turf.lineString(clickedFeature.geometry.coordinates)
+        const length = turf.length(turfLineString)
+        console.log('Length: ' + length + 'km')
+      }
     }
   })
 }
 
-export function update (updatedFeature) {
-  console.log('Updating feature ' + updatedFeature.id)
+export function upsert (updatedFeature) {
   const feature = geojsonData.features.find(feature => feature.id === updatedFeature.id)
   if (!feature) {
+    console.log('Adding feature ' + updatedFeature.id)
     geojsonData.features.push(updatedFeature)
   } else {
+    console.log('Updating feature ' + updatedFeature.id)
     if (feature.geometry.type === 'Point') {
       const newCoords = updatedFeature.geometry.coordinates
       if (!functions.arraysEqual(feature.geometry.coordinates, newCoords)) {
-        animatePoint(feature, newCoords)
+        const animation = new AnimatePointAnimation()
+        animation.animatePoint(feature, newCoords)
       }
     } else {
       feature.geometry = updatedFeature.geometry
@@ -171,30 +201,10 @@ export function destroy (featureId) {
 }
 
 export function setBackgroundMapLayer (mapName = mapProperties.base_map) {
-  if (currentMap === mapName) { return }
+  if (backgroundMapLayer === mapName) { return }
+  console.log('Loading base map ' + mapName)
   map.setStyle(basemaps[mapName],
   // adding this so that 'style.load' gets triggered (https://github.com/maplibre/maplibre-gl-js/issues/2587)
     { diff: false })
-  currentMap = mapName
-}
-
-function animatePoint (feature, end, duration = 300) {
-  const starttime = performance.now()
-  const start = feature.geometry.coordinates
-  console.log('Animating point from: ' + start + ' to ' + end)
-
-  function animate (timestamp) {
-    let progress = (timestamp - starttime) / duration
-    if (progress > 1) { progress = 1 }
-    const newCoordinates = [
-      start[0] + (end[0] - start[0]) * progress,
-      start[1] + (end[1] - start[1]) * progress
-    ]
-    feature.geometry.coordinates = newCoordinates
-    map.getSource('geojson-source').setData(geojsonData)
-    if (draw) { draw.set(geojsonData) }
-
-    if (progress < 1) { requestAnimationFrame(animate) }
-  }
-  requestAnimationFrame(animate)
+  backgroundMapLayer = mapName
 }

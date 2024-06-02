@@ -61,8 +61,10 @@ export function isMobileDevice () {
 
 // takes a css selector and callback method
 export function e (selector, callback) {
-  const element = document.querySelector(selector)
-  if (element) { callback(element) }
+  const elements = document.querySelectorAll(selector)
+  elements.forEach(element => {
+    callback(element)
+  })
 }
 
 export function addEventListeners (element, events, callback) {

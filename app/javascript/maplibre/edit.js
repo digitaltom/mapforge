@@ -1,7 +1,7 @@
-import { map, geojsonData, initializeControls, lastMousePosition } from 'maplibre/map'
+import { map, geojsonData, initializeDefaultControls, lastMousePosition } from 'maplibre/map'
 import { editStyles, initializeEditStyles } from 'maplibre/edit_styles'
 import { mapChannel } from 'channels/map_channel'
-import { MapSettingsControl, MapShareControl, resetControls } from 'maplibre/controls'
+import { ControlGroup, MapSettingsControl, MapShareControl, MapLayersControl, resetControls } from 'maplibre/controls'
 import * as f from 'helpers/functions'
 
 // eslint expects variables to get imported, but we load the full lib in header
@@ -34,10 +34,17 @@ export function initializeEditMode () {
     userProperties: true
   })
 
-  initializeControls()
-  map.addControl(draw, 'top-left')
-  map.addControl(new MapSettingsControl(), 'top-left')
-  map.addControl(new MapShareControl(), 'top-left')
+  map.once('style.load', () => {
+    initializeDefaultControls()
+
+    map.addControl(draw, 'top-left')
+
+    const controlGroup = new ControlGroup(
+      [new MapSettingsControl(),
+        new MapLayersControl(),
+        new MapShareControl()])
+    map.addControl(controlGroup, 'top-left')
+  })
 
   map.on('geojson.load', function (e) {
     // callback to load edit styles on top of draw styles.
@@ -92,9 +99,10 @@ function displayEditButtons (feature) {
     function () { draw.trash() })
   f.addEventListeners(document.querySelector('#edit-button-edit'), ['click', 'touchstart'],
     function () {
-      document.querySelector('#edit-feature').classList.remove('hidden')
+      document.querySelector('#edit-modal').style.display = 'block'
       document.querySelector('.feature-details-atts-edit textarea').value = JSON.stringify(feature.properties)
-      document.querySelector('#edit-feature').setAttribute('data-feature-id', feature.id)
+      document.querySelector('#edit-modal .error').innerHTML = ''
+      document.querySelector('#edit-modal').setAttribute('data-feature-id', feature.id)
     })
 }
 
@@ -113,8 +121,8 @@ function handleUpdate (e) {
   geojsonFeature.geometry = feature.geometry
 
   if (editPopup) { editPopup.remove() }
-  // also update the geojson-source (feature rendered via initializeEditStyles)
-  // to avoid animation
+  // update local geojson-source (feature rendered via initializeEditStyles)
+  // to avoid update/animation via hotwire callback
   map.getSource('geojson-source').setData(geojsonData)
   mapChannel.send_message('update_feature', feature)
 }

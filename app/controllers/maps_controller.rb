@@ -2,7 +2,6 @@ class MapsController < ApplicationController
   before_action :set_map, only: %i[show features properties]
 
   def index
-    gon.map_keys = Map.provider_keys
     @maps = Map.where.not(private: true).includes(layer: :features).order(updated_at: :desc)
   end
 
@@ -11,7 +10,6 @@ class MapsController < ApplicationController
     gon.map_mode = (params[:id] == @map.id.to_s) ? "rw" : "ro"
     gon.map_mode = "static" if params["static"]
     gon.map_properties = @map.properties
-    gon.map_keys = Map.provider_keys
 
     respond_to do |format|
       format.html do
@@ -35,13 +33,7 @@ class MapsController < ApplicationController
   def create
     @map = Map.create!(map_params)
 
-    redirect_to map_url(@map), notice: "Map was successfully created."
-  end
-
-  def destroy
-    Map.find_by(id: params[:id]).destroy!
-
-    redirect_to maps_path, notice: "Map was deleted."
+    redirect_to maplibre_url(@map), notice: "Map was successfully created."
   end
 
   def features
@@ -50,6 +42,11 @@ class MapsController < ApplicationController
 
   def properties
     render json: @map.properties.as_json
+  end
+
+  # some maplibre style tries to load eg. /atm_11; catching those calls here
+  def catchall
+    head :ok
   end
 
   private

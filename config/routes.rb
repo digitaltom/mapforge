@@ -10,7 +10,12 @@ Rails.application.routes.draw do
   get "/d/:id" => "maps#show", defaults: { engine: "deck" }, as: :deck
   get "/m/:id" => "maps#show", defaults: { engine: "maplibre" }, as: :maplibre
 
+  # some maplibre style tries to load eg. /atm_11; catching those calls here
+  get "/atm_11" => "maps#catchall", as: :catchall
+  get "/m/atm_11" => "maps#catchall"
+
   get "/admin" => "admin#index"
+  delete "/admin/:id" => "admin#destroy", as: :destroy_map
 
   get "/frontpage" => "frontpage#index"
   get "/icon/:public_id", to: "images#icon", as: "icon", constraints: { public_id: /[^\/]+/ }

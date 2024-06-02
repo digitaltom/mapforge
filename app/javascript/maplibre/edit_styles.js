@@ -22,6 +22,8 @@ export const editStyles = [
 
   removeSource(styles['polygon-layer']), // gl-draw-polygon-fill-inactive
   removeSource(styles['polygon-layer-active']),
+  removeSource(styles['polygon-layer-extrusion']),
+  removeSource(styles['line-layer-outline']),
   removeSource(styles['line-layer']), // 'gl-draw-line-inactive', 'gl-draw-polygon-stroke-inactive',
 
   // midpoints to extend lines/polygons
@@ -95,6 +97,7 @@ export const editStyles = [
       'circle-color': '#fbb03b'
     }
   },
+  // default point behind symbols, transparent points etc.
   {
     id: 'gl-draw-point-point-stroke-inactive',
     type: 'circle',
@@ -105,7 +108,7 @@ export const editStyles = [
       ['!=', 'mode', 'static']
     ],
     paint: {
-      'circle-radius': 7,
+      'circle-radius': 4,
       'circle-opacity': 1,
       'circle-color': '#fff'
     }

@@ -123,6 +123,7 @@ export const basemaps = {
   satelliteStreets: 'https://api.maptiler.com/maps/hybrid/style.json?key=' + window.gon.map_keys.maptiler,
   satellite: 'https://api.maptiler.com/maps/satellite/style.json?key=' + window.gon.map_keys.maptiler,
   maptilerWinter: 'https://api.maptiler.com/maps/winter-v2/style.json?key=' + window.gon.map_keys.maptiler,
+  maptilerBike: 'https://api.maptiler.com/maps/64d03850-97e0-4aaa-bd1d-8287a9792de1/style.json?key=' + window.gon.map_keys.maptiler,
 
   // ol compat:
   osmTiles: 'https://api.maptiler.com/maps/basic-v2/style.json?key=' + window.gon.map_keys.maptiler,

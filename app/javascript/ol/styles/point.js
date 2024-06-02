@@ -6,7 +6,7 @@ const pointSizes = { small: 12, medium: 16, large: 22, symbol: 26 }
 const symbolSizes = { small: 15, medium: 30, large: 45 }
 
 function circleSize (feature, resolution) {
-  return (feature.get('marker-symbol') || feature.get('marker-icon')) ? symbolSizes : pointSizes
+  return (feature.get('marker-symbol') || feature.get('marker-image-url')) ? symbolSizes : pointSizes
 }
 
 function circleStyle (feature, resolution) {
@@ -63,7 +63,7 @@ function symbolHoverStyle (feature, resolution) {
 function iconStyle (feature, resolution) {
   const size = symbolSizes[feature.get('marker-size')] || symbolSizes.medium
   return new ol.style.Icon({
-    src: feature.get('marker-icon'),
+    src: feature.get('marker-image-url'),
     width: size - 2 // don't overlap the circle
   })
 }
@@ -74,7 +74,7 @@ export function pointStyle (feature, resolution) {
     text: title(feature, resolution)
   })
 
-  if (feature.get('marker-icon')) {
+  if (feature.get('marker-image-url')) {
     const icon = new ol.style.Style({
       image: iconStyle(feature, resolution)
     })
@@ -92,7 +92,7 @@ export function pointHoverStyle (feature, resolution) {
     text: title(feature, resolution, true)
   })
 
-  if (feature.get('marker-icon')) {
+  if (feature.get('marker-image-url')) {
     const icon = new ol.style.Style({
       image: iconStyle(feature, resolution)
     })
