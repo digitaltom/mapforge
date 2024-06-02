@@ -1,5 +1,6 @@
 # ignore the original filenames
 
-emoji_*.png
-[0-9]*.png
-[A-F]*.png
+openmoji/emoji_*.png
+openmoji/[0-9]*.png
+openmoji/[A-F]*.png
+src

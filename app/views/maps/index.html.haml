@@ -1,10 +1,12 @@
-%h1
-  Mapforge
-
+.flex-container.flex-no-wrap
+  = render 'shared/menu'
+  %span#mapforge-logo.mapforge-font.white-shadow
+    Mapforge Maps
+  %span#map-title
 
 #maps.flex-container
   - @maps.each do |map|
-    = render map
+    .flex-item= render map
 
 = link_to "New map", new_map_path
 

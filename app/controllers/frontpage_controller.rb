@@ -5,6 +5,5 @@ class FrontpageController < ApplicationController
     gon.map_id = @map.public_id
     gon.map_mode = "static"
     gon.map_properties = @map.properties
-    gon.map_keys = Map.provider_keys
   end
 end

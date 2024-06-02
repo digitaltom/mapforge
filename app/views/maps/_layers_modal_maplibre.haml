@@ -1,0 +1,12 @@
+#layers-modal.map-modal{'data-controller': "maplibre"}
+  %h2 Layers
+
+  #default-layer
+    %h4.layer-name Default Layer
+    %input#fileInput{ type: "file" }
+    %button{ data: { action: "click->maplibre#upload" } }
+      Import gpx/kml
+    %ul.layer-elements
+
+
+

@@ -1,0 +1,15 @@
+/ hamburger manu from https://codepen.io/alvarotrigo/pen/yLzaPVJ
+.hamburger-menu
+  %input#burger-menu-toggle{type: "checkbox"}
+  %label.burger-menu-btn{for: "burger-menu-toggle"}
+    %span
+
+  %ul.burger-menu-box
+    %li
+      = link_to 'Frontpage', frontpage_path, class: 'burger-menu-item'
+    %li
+      = link_to 'Maps', maps_path, class: 'burger-menu-item'
+    %li
+      = link_to 'Admin', admin_path, class: 'burger-menu-item'
+    %li
+      = link_to 'Github', 'https://github.com/digitaltom/mapforge', class: 'burger-menu-item'

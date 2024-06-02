@@ -1,6 +1,8 @@
-%h1
-  Mapforge
-
+.flex-container.flex-no-wrap
+  = render 'shared/menu'
+  %span#mapforge-logo.mapforge-font.white-shadow
+    Mapforge Admin
+  %span#map-title
 
 #maps.flex-container
   - @maps.each do |map|
@@ -9,7 +11,7 @@
         - if File.exist?(Rails.root.join("public/previews/#{map.public_id}.png"))
           %img{src: "/previews/#{map.public_id}.png", class: 'preview-image'}
         - else
-          %img{src: "/previews/map.png", class: 'preview-image'}
+          = image_tag "preview.png", class: 'preview-image'
         .map-preview-title= map.properties[:name]
       %i= "last change #{distance_of_time_in_words(DateTime.now, map.updated_at)} ago"
       %br
@@ -18,7 +20,7 @@
       public id:
       = link_to map.public_id, maplibre_path(id: map.public_id)
       %br
-      = link_to 'Delete', map_path(id: map.id), data: { turbo_method: :delete }
+      = button_to 'Delete', destroy_map_path(id: map.id), method: :delete, data: { turbo_method: :delete }
 
 
 = link_to "New map", new_map_path

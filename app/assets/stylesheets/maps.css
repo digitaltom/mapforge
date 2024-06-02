@@ -1,8 +1,3 @@
-.flex-container {
- display: flex; /* Establishes a flex container */
- flex-wrap: wrap;
-}
-
 .flex-item {
  flex: 1; /* Each item will grow to take up equal space within the container */
  margin: 1em;
@@ -14,6 +9,7 @@
   border-style: solid;
   border-color: #000;
   min-width: 15em;
+  max-width: 35em;
   text-align: center;
 }
 
@@ -35,6 +31,7 @@
 .map-preview-title {
   position: relative;
   top: -9em;
+  height: 1em;
   color: #fff;
   color: black;
   text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;

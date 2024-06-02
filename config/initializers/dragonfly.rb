@@ -13,6 +13,8 @@ Dragonfly.app.configure do
   #   root_path: Rails.root.join('public/system/dragonfly', Rails.env),
   #   server_root: Rails.root.join('public')
 
+  response_header "cache-control", "public, max-age=3600"
+
   # custom processors: http://markevans.github.io/dragonfly/processors
   processor :rounded do |content|
     content.shell_update(ext: "png") do |old_path, new_path|

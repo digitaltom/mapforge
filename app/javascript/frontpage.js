@@ -1,17 +1,17 @@
 // loaded in /frontpage/index.html.haml
-import { map, initializeMap, vectorSourceFromUrl, setBackgroundMapLayer } from 'ol/map'
-import { initializeMapProperties } from 'ol/properties'
-import { vectorStyle } from 'ol/styles'
+import {
+  initializeMap, setBackgroundMapLayer, geojsonData,
+  initializeStaticMode, initializeMaplibreProperties, map
+} from 'maplibre/map'
+import { RotateCameraAnimation } from 'maplibre/animations'
 import * as functions from 'helpers/functions'
-import * as dom from 'helpers/dom'
-import { animateMarkerPath } from 'ol/animations'
 
 // eslint expects variables to get imported, but we load the full lib in header
-const ol = window.ol
 
 let featureShowInterval
-let featureLayer
 let featureShowIndex = 0
+let activeAnimations = []
+let category
 const featureShowList = [
   { key: 'friends', map: 'frontpage-category-friends' },
   { key: 'indoors', map: 'frontpage-category-office' },
@@ -29,6 +29,7 @@ const featureShowList = [
 
       console.log('starting frontpage tour')
       featureShow()
+      callbacks()
       featureShowInterval = setInterval(function () {
         featureShow()
       }, 10000)
@@ -46,27 +47,27 @@ const featureShowList = [
 function unload () {
   if (featureShowInterval) { clearInterval(featureShowInterval) }
   featureShowInterval = null
-  if (featureLayer) {
-    featureLayer.getSource().clear()
-    map.removeLayer(featureLayer)
-  }
+  stopAnimations()
+}
+
+function stopAnimations () {
+  activeAnimations.forEach(function (a) {
+    a.stopAnimation()
+  })
+  activeAnimations = []
 }
 
 function init () {
   unload()
-  initializeMapProperties()
   initializeMap('frontpage-map')
-
-  map.getInteractions().forEach(function (interaction) {
-    interaction.setActive(false)
-  })
+  initializeStaticMode()
 }
 
 // Your story/data/friends/events/places/track on a map
 async function featureShow () {
-  const category = featureShowList[featureShowIndex]
+  stopAnimations()
+  category = featureShowList[featureShowIndex]
   featureShowIndex = (featureShowIndex + 1) % featureShowList.length
-
   console.log('frontpage tour: ' + category.key)
 
   fetch('/maps/' + category.map + '/properties')
@@ -75,53 +76,80 @@ async function featureShow () {
       return response.json()
     })
     .then(async function (properties) {
-      // fade out feature layer
-      if (featureLayer) {
-        functions.e('.category-features', e => { e.style.opacity = 0 })
-        functions.e('.frontpage-subtitle', e => { e.style.opacity = 0 })
-        functions.e('.map-layer', e => { e.style.opacity = 0 })
+      // fade out map
+      functions.e('#frontpage-map', e => { e.style.opacity = 0 })
+      functions.e('.frontpage-subtitle', e => { e.style.opacity = 0 })
+      await functions.sleep(500)
 
-        await functions.sleep(2000)
-        featureLayer.getSource().clear()
-        map.removeLayer(featureLayer)
-        functions.e('.category-features', e => e.remove())
-      }
+      window.gon.map_id = properties.public_id
+      window.gon.map_properties = properties
 
+      initializeMaplibreProperties()
       setBackgroundMapLayer(properties.base_map)
-      map.getView().setCenter(ol.proj.fromLonLat(properties.center))
-      map.getView().setZoom(properties.zoom)
-      // animateView(ol.proj.fromLonLat(properties.center), properties.zoom)
+      map.setCenter(properties.center)
+      map.setZoom(properties.zoom)
+    })
+    .catch(error => console.error('Error loading ' + category.key + ': ', error))
+}
 
-      // set title
-      functions.e('#frontpage-category-name', e => { e.innerHTML = category.key })
-      functions.e('.frontpage-subtitle', e => { e.style.opacity = 1 })
+function callbacks () {
+  map.on('geojson.load', function (e) {
+    // give the map some time to load + fade in
+    // functions.sleep(1000)
+    functions.e('#frontpage-map', e => { e.style.opacity = 0.5 })
+    functions.e('#frontpage-category-name', e => { e.innerHTML = category.key })
+    functions.e('.frontpage-subtitle', e => { e.style.opacity = 1 })
+    map.fire('category.load')
+  })
 
-      // load a data layer onto the map
-      const url = '/maps/' + category.map + '/features'
-      const featureSource = vectorSourceFromUrl(url)
+  map.on('category.load', function (e) {
+    console.log('frontpage category.load')
 
-      featureLayer = new ol.layer.Vector({
-        source: featureSource,
-        style: vectorStyle,
-        className: 'category-features fade-in'
-      })
-      map.addLayer(featureLayer)
-      dom.waitForElement('.category-features', async function changeOpacity (el) {
-        await functions.sleep(500)
-        el.style.opacity = 1
+    if (category.key === 'friends') {
+      const animation = new RotateCameraAnimation()
+      activeAnimations.push(animation)
+      animation.run()
+    }
 
-        if (category.key === 'data') {
-          // car
-          animateMarkerPath(featureSource.getFeatureById('d9b8c95728'),
-            featureSource.getFeatureById('3174f4452'))
-          // train
-          animateMarkerPath(featureSource.getFeatureById('38488b9d78'),
-            featureSource.getFeatureById('7afc4ef808'))
-          // truck
-          animateMarkerPath(featureSource.getFeatureById('14a86bd238'),
-            featureSource.getFeatureById('19e435d8b8'))
+    if (category.key === 'indoors') {
+      const center = geojsonData.features.find(feature => feature.id === 'f2c7934029981a12545be52f0656caff')
+      console.log(center.geometry.coordinates)
+      map.flyTo({
+        center: center.geometry.coordinates,
+        zoom: 19.2,
+        essential: true,
+        // bearing: 0,
+        speed: 0.1, // make the flying slow
+        curve: 1, // change the speed at which it zooms out
+        // This can be any easing function: it takes a number between
+        // 0 and 1 and returns another number between 0 and 1.
+        easing (t) {
+          return t
         }
       })
-    })
-    .catch(error => console.error('Error loading map properties:', error))
+    }
+
+    if (category.key === 'data') {
+      // train (d9b8c95728, 3174f4452)
+      // const train = geojsonData.features.find(feature => feature.id === '38488b9d78')
+      // let path = geojsonData.features.find(feature => feature.id === '7afc4ef808')
+      // const trainAnimation = new AnimatePointAnimation()
+      // activeAnimations.push(trainAnimation)
+      // trainAnimation.animatePointPath(train, path)
+
+      // truck (14a86bd238, 19e435d8b8)
+      // const truck = geojsonData.features.find(feature => feature.id === '14a86bd238')
+      // path = geojsonData.features.find(feature => feature.id === '19e435d8b8')
+      // const truckAnimation = new AnimatePointAnimation()
+      // activeAnimations.push(truckAnimation)
+      // truckAnimation.animatePointPath(truck, path)
+
+      // car (d9b8c95728, 3174f4452)
+      // const car = geojsonData.features.find(feature => feature.id === 'd9b8c95728')
+      // path = geojsonData.features.find(feature => feature.id === '3174f4452')
+      // const carAnimation = new AnimatePointAnimation()
+      // activeAnimations.push(carAnimation)
+      // carAnimation.animatePointPath(car, path)
+    }
+  })
 }

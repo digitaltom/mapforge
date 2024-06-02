@@ -31,11 +31,11 @@ describe 'Map' do
     end
 
     it 'can share public link' do
-      expect(page).to have_link('Viewer link', href: '/maps/' + subject.public_id)
+      expect(page).to have_link('Viewer link', href: '/m/' + subject.public_id)
     end
 
     it 'can share private link' do
-      expect(page).to have_link('Edit link', href: '/maps/' + subject.id)
+      expect(page).to have_link('Edit link', href: '/m/' + subject.id)
     end
 
     it 'can download geojson' do
@@ -43,7 +43,7 @@ describe 'Map' do
     end
 
     it 'can download map export' do
-      expect(page).to have_link('Download map export', href: '/maps/' + subject.public_id + '.json')
+      expect(page).to have_link('Download map export', href: '/m/' + subject.public_id + '.json')
     end
   end
 end

@@ -51,6 +51,8 @@ jobs:
     env:
       RAILS_ENV: test
       COVERAGE: true
+      ADMIN_USER: 'test'
+      ADMIN_PW: 'test'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
