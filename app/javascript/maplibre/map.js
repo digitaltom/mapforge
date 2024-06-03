@@ -1,7 +1,7 @@
 import { basemaps } from 'maplibre/basemaps'
 import { draw } from 'maplibre/edit'
 import { resetControls } from 'maplibre/controls'
-import { initializeViewStyles } from 'maplibre/styles'
+import { initializeViewStyles, viewStyleNames } from 'maplibre/styles'
 import { AnimatePointAnimation } from 'maplibre/animations'
 import * as functions from 'helpers/functions'
 
@@ -68,22 +68,14 @@ export function initializeMap (divId = 'maplibre-map') {
 
   functions.e('#map-title', e => { e.textContent = mapProperties.name })
 
-  map.on('click', 'line-layer', function (e) {
-    if (e.features.length === 1) {
-      const clickedFeature = e.features[0]
-      console.log('Clicked feature:', clickedFeature)
-
-      if (clickedFeature.geometry.type === 'MultiLineString') {
-        const turfLineString = turf.multiLineString(clickedFeature.geometry.coordinates)
-        const length = turf.length(turfLineString)
-        console.log('Length: ' + length + 'km')
+  viewStyleNames.forEach(styleName => {
+    map.on('click', styleName, function (e) {
+      if (e.features.length >= 1) {
+        const clickedFeature = e.features[0]
+        console.log('Clicked feature:', clickedFeature)
+        showFeatureDetails(clickedFeature)
       }
-
-      new maplibregl.Popup()
-        .setLngLat(lastMousePosition)
-        .setHTML(`Country name: ${clickedFeature.properties.title}`)
-        .addTo(map)
-    }
+    })
   })
 }
 
@@ -217,4 +209,17 @@ export function setBackgroundMapLayer (mapName = mapProperties.base_map) {
   // adding this so that 'style.load' gets triggered (https://github.com/maplibre/maplibre-gl-js/issues/2587)
     { diff: false })
   backgroundMapLayer = mapName
+}
+
+export function showFeatureDetails (feature) {
+  document.querySelector('#feature-details-modal').style.display = 'block'
+  let desc = feature.properties.desc
+  const title = feature.properties.title || feature.properties.label
+  if (feature.geometry.type === 'LineString') {
+    const turfLineString = turf.lineString(feature.geometry.coordinates)
+    const length = turf.length(turfLineString)
+    desc += '<br>Distance: ' + Math.round(length * 1000) + 'm'
+  }
+  document.querySelector('#feature-details-header').innerHTML = title
+  document.querySelector('#feature-details-body').innerHTML = desc
 }

@@ -1,14 +1,20 @@
 import { map } from 'maplibre/map'
 
+export const viewStyleNames = [
+  'polygon-layer',
+  'polygon-layer-extrusion',
+  'line-layer-outline',
+  'line-layer',
+  'points-border-layer',
+  'points-layer',
+  'symbols-layer',
+  'text-layer'
+]
+
 export function initializeViewStyles () {
-  map.addLayer(styles['polygon-layer'])
-  map.addLayer(styles['polygon-layer-extrusion'])
-  map.addLayer(styles['line-layer-outline'])
-  map.addLayer(styles['line-layer'])
-  map.addLayer(styles['points-border-layer'])
-  map.addLayer(styles['points-layer'])
-  map.addLayer(styles['symbols-layer'])
-  map.addLayer(styles['text-layer'])
+  viewStyleNames.forEach(styleName => {
+    map.addLayer(styles[styleName])
+  })
   map.on('styleimagemissing', loadImage)
 }
 

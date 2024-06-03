@@ -1,0 +1,26 @@
+.map-modal {
+  display: none;
+  position: absolute;
+  overflow-y: auto;
+  max-height: calc(100vh - 4em);
+  top: 0;
+  left: 45%;
+  transform: translate(-50%);
+  width: calc(100% - 3em); /* make sure left controls stay visible */
+  max-width: 35em;
+  margin: 0.5em 0.5em 0.5em 3em;
+  background: white;
+  z-index: 1000;
+  padding: 0.5em;
+  opacity: 0.95;
+  border-radius: 3px;
+  transition:
+    opacity 0.7s linear,
+    right 0.7s ease-in-out;
+}
+
+#feature-details-modal {
+  top: unset;
+  bottom: 30px;
+  max-width: 800px;
+}
