@@ -33,7 +33,7 @@ class MapsController < ApplicationController
   def create
     @map = Map.create!(map_params)
 
-    redirect_to maplibre_url(@map), notice: "Map was successfully created."
+    redirect_to map_url(@map), notice: "Map was successfully created."
   end
 
   def features

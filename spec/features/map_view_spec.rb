@@ -69,7 +69,7 @@ describe 'Map' do
     end
 
     it 'maplibre' do
-      visit maplibre_path(map.public_id)
+      visit map_path(map.public_id)
     end
   end
 end

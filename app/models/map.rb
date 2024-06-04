@@ -20,7 +20,7 @@ class Map
   delegate :feature_collection, to: :layer
   delegate :features_count, to: :layer
 
-  BASE_MAPS = [ "osmTiles", "satelliteTiles", "satelliteStreetTiles",
+  BASE_MAPS = [ "osmRasterTiles", "satelliteTiles", "satelliteStreetTiles",
                "stamenTonerTiles", "openTopoTiles", "mapboxBrightVector",
                "maptilerDataviz", "maptilerStreets", "maptilerNoStreets",
                "maptilerWinter", "maptilerBike" ]

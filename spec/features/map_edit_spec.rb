@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe 'Map' do
-  subject(:map) { Map.create! }
+  subject(:map) { create(:map) }
 
   before do
     visit map_path(map)
@@ -9,14 +9,14 @@ describe 'Map' do
 
   context 'with initial map rendering' do
     it 'shows map edit buttons' do
-      expect(page).to have_css('#map')
-      expect(page).to have_css('.button-map')
+      expect(page).to have_css('#maplibre-map')
+      expect(page).to have_css('.maplibregl-ctrl-map')
     end
   end
 
   context 'when changing map properties' do
     it 'update gets saved' do
-      find('.button-map').click
+      find('.maplibregl-ctrl-map').click
       expect(page).to have_text('Configure Map')
       find_all('.layer-preview ')[2].click
       sleep(1) # make sure actioncable request is processed
@@ -26,7 +26,7 @@ describe 'Map' do
 
   context 'when sharing map' do
     before do
-      find('.button-sharing').click
+      find('.maplibregl-ctrl-share').click
       expect(page).to have_text('Share Map')
     end
 
@@ -39,7 +39,7 @@ describe 'Map' do
     end
 
     it 'can download geojson' do
-      expect(page).to have_link('Download geojson', href: '/maps/' + subject.public_id + '/features')
+      expect(page).to have_link('Download geojson', href: '/m/' + subject.public_id + '/features')
     end
 
     it 'can download map export' do

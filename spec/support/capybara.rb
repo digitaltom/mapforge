@@ -8,6 +8,12 @@ def chrome_driver_arguments(headless: false)
   options = Selenium::WebDriver::Chrome::Options.new
   options.args << '--window-size=1300,700' # always set a size where the sidebar is open by default
   options.args << '--lang=en_US'
+  options.args << '--enable-logging'
+
+  options.logging_prefs = {
+    browser: 'ALL', # Capture all JavaScript errors
+    driver: 'SEVERE' # Capture severe WebDriver errors
+  }
 
   if headless
     options.args << '--headless'

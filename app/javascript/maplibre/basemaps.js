@@ -112,6 +112,29 @@ export const basemaps = {
     ],
     glyphs: 'https://fonts.openmaptiles.org/{fontstack}/{range}.pbf'
   },
+  osmRasterTiles: {
+    version: 8,
+    sources: {
+      'raster-tiles': {
+        type: 'raster',
+        tiles: [
+          'https://c.tile.openstreetmap.org/{z}/{x}/{y}.png'
+        ],
+        tileSize: 256,
+        attribution: '<a href="https://www.openstreetmap.org/copyright">© OpenStreetMap Contributors</a>'
+      }
+    },
+    layers: [
+      {
+        id: 'simple-tiles',
+        type: 'raster',
+        source: 'raster-tiles',
+        minzoom: 0,
+        maxzoom: 22
+      }
+    ],
+    glyphs: 'https://api.maptiler.com/fonts/{fontstack}/{range}.pbf?key=' + window.gon.map_keys.maptiler
+  },
 
   // 3D Houses
   maptilerBasic: 'https://api.maptiler.com/maps/basic-v2/style.json?key=' + window.gon.map_keys.maptiler,
@@ -130,15 +153,3 @@ export const basemaps = {
   satelliteStreetTiles: 'https://api.maptiler.com/maps/hybrid/style.json?key=' + window.gon.map_keys.maptiler,
   mapboxBrightVector: 'https://api.maptiler.com/maps/streets/style.json?key=' + window.gon.map_keys.maptiler
 }
-
-//   osmDefaultTiles: function () {
-//     return new ol.layer.Tile({ source: new ol.source.OSM(), className: mapClasses })
-//   },
-
-//   mapboxBrightVector: function () {
-//     return new olms.MapboxVectorLayer({
-//       styleUrl: 'mapbox://styles/mapbox/bright-v9',
-//       accessToken: window.gon.map_keys.mapbox,
-//       className: mapClasses + ' map-layer-mapboxBrightVector'
-//     })
-//   },

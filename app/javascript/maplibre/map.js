@@ -94,7 +94,8 @@ function loadGeoJsonData () {
     return
   }
 
-  fetch('/maps/' + window.gon.map_id + '/features')
+  const url = '/m/' + window.gon.map_id + '/features'
+  fetch(url)
     .then(response => {
       if (!response.ok) {
         throw new Error('Network response was not ok')
@@ -102,10 +103,9 @@ function loadGeoJsonData () {
       return response.json()
     })
     .then(data => {
-      console.log('loaded GeoJSON data: ', data)
+      console.log('loaded GeoJSON data: ', JSON.stringify(data))
       geojsonData = data
-      console.log('loaded ' + geojsonData.features.length +
-        ' features from ' + '/maps/' + window.gon.map_id + '/features')
+      console.log('loaded ' + geojsonData.features.length + ' features from ' + url)
       map.getSource('geojson-source').setData(geojsonData)
       map.fire('geojson.load', { detail: { message: 'geojson-source loaded' } })
     })

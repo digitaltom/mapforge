@@ -50,6 +50,20 @@ RSpec.configure do |config|
     end
   end
 
+  # raise on js console errors
+  class JavaScriptError< StandardError; end
+  RSpec.configure do |config|
+    config.after(:each, type: :feature) do |spec|
+      levels = [ "SEVERE" ]
+      errors = page.driver.browser.logs.get(:browser)
+                 .select { |e| levels.include?(e.level) && e.message.present? }
+                 .map(&:message)
+      if errors.present?
+        raise JavaScriptError, errors.join("\n\n")
+      end
+    end
+  end
+
   # If you enable ActiveRecord support you should uncomment these lines,
   # note if you'd prefer not to run each example within a transaction, you
   # should set use_transactional_fixtures to false.
