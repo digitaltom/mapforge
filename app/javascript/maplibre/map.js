@@ -220,6 +220,11 @@ export function showFeatureDetails (feature) {
     const length = turf.length(turfLineString)
     desc += '<br>Distance: ' + Math.round(length * 1000) + 'm'
   }
+  if (feature.geometry.type === 'Polygon') {
+    const turfPolygon = turf.polygon(feature.geometry.coordinates)
+    const area = turf.area(turfPolygon)
+    desc += '<br>Area: ' + (area / 1000000).toFixed(2) + ' km²'
+  }
   document.querySelector('#feature-details-header').innerHTML = title
   document.querySelector('#feature-details-body').innerHTML = desc
 }

@@ -1,4 +1,5 @@
 import { map } from 'maplibre/map'
+import * as f from 'helpers/functions'
 
 export const viewStyleNames = [
   'polygon-layer',
@@ -16,6 +17,7 @@ export function initializeViewStyles () {
     map.addLayer(styles[styleName])
   })
   map.on('styleimagemissing', loadImage)
+  f.e('.map', e => { e.setAttribute("data-loaded", "true") })
 }
 
 // loading images from 'marker-image-url' attributes
