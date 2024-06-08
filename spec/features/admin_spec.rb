@@ -1,6 +1,7 @@
 require 'rails_helper'
 
-describe 'Admin List' do
+# skip console errors because of the auth credentials in the url
+describe 'Admin List', :skip_console_errors do
   let!(:maps) { create_list(:map, 3) }
 
   before do
@@ -8,7 +9,7 @@ describe 'Admin List' do
     allow(ENV).to receive(:fetch).with("ADMIN_USER", "").and_return("test")
     allow(ENV).to receive(:fetch).with("ADMIN_PW", "").and_return("test")
 
-    visit "http://test:test@localhost:#{Capybara.server_port}#{admin_path}"
+    visit "http://test:test@#{Capybara.server_host}:#{Capybara.server_port}#{admin_path}"
   end
 
   it 'shows private links to maps' do

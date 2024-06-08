@@ -54,16 +54,18 @@ RSpec.configure do |config|
   class JavaScriptError< StandardError; end
   RSpec.configure do |config|
     config.after(:each, type: :feature) do |spec|
-      levels = [ "SEVERE" ]
-      # "maplibre-gl.js TypeError: Failed to fetch" seems to be caused by
-      # the js file being cached already
-      exclude = [ /TypeError: Failed to fetch/ ]
-      errors = page.driver.browser.logs.get(:browser)
-                 .select { |e| levels.include?(e.level) && e.message.present? }
-                 .reject { |e| exclude.any? { |ex| e.message =~ ex } }
-                 .map(&:message)
-      if errors.present?
-        raise JavaScriptError, errors.join("\n\n")
+      unless spec.metadata[:skip_console_errors]
+        levels = [ "SEVERE" ]
+        # "maplibre-gl.js TypeError: Failed to fetch" seems to be caused by
+        # the js file being cached already
+        exclude = [ /TypeError: Failed to fetch/ ]
+        errors = page.driver.browser.logs.get(:browser)
+                   .select { |e| levels.include?(e.level) && e.message.present? }
+                   .reject { |e| exclude.any? { |ex| e.message =~ ex } }
+                   .map(&:message)
+        if errors.present?
+          raise JavaScriptError, errors.join("\n\n")
+        end
       end
     end
   end
