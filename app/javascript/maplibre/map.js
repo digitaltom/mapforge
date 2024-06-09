@@ -96,7 +96,7 @@ function loadGeoJsonData () {
   if (geojsonData) {
     // data is already loaded
     map.getSource('geojson-source').setData(geojsonData)
-    map.fire('geojson.load', { detail: { message: 'geojson-source loaded' } })
+    map.fire('geojson.load', { detail: { message: 'geojson-source cached' } })
     return
   }
 

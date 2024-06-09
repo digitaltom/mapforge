@@ -41,11 +41,11 @@ describe 'Map' do
     before do
       visit map_path(map)
       expect(page).to have_css('.maplibregl-canvas')
-      expect(page).to have_css("#maplibre-map[data-geojson-loaded='true']")
     end
 
     context 'with selected feature' do
       before do
+        expect(page).to have_css("#maplibre-map[data-loaded='true']")
         click_coord('#maplibre-map', 50, 50)
         expect(page).to have_css('#edit-button-edit')
       end
