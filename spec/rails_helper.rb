@@ -1,6 +1,6 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 require 'simplecov'
-# SimpleCov.minimum_coverage 98
+SimpleCov.minimum_coverage 100
 SimpleCov.start 'rails' do
   add_filter 'app/jobs/application_job.rb'
   add_filter 'lib/tasks'

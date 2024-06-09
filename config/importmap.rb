@@ -12,12 +12,10 @@ pin "deck.gl", to: "https://unpkg.com/deck.gl/dist.min.js", preload: true
 pin_all_from "app/javascript/controllers", under: "controllers"
 pin_all_from "app/javascript/channels", under: "channels"
 
-pin_all_from "app/javascript/ol", under: "ol"
 pin_all_from "app/javascript/maplibre", under: "maplibre"
 pin_all_from "app/javascript/helpers", under: "helpers"
 
 # page initializers
 pin "frontpage"
-pin "map"
 pin "deck"
 pin "maplibre"

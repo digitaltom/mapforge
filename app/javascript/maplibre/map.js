@@ -226,7 +226,7 @@ export function showFeatureDetails (feature) {
   if (feature.geometry.type === 'LineString') {
     const turfLineString = turf.lineString(feature.geometry.coordinates)
     const length = turf.length(turfLineString)
-    desc += '<br>Distance: ' + Math.round(length * 1000) + 'm'
+    desc += '<br>Length: ' + Math.round(length * 1000) + 'm'
   }
   if (feature.geometry.type === 'Polygon') {
     const turfPolygon = turf.polygon(feature.geometry.coordinates)
