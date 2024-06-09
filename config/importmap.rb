@@ -7,7 +7,7 @@ pin "@hotwired/stimulus", to: "stimulus.min.js", preload: true
 pin "@hotwired/stimulus-loading", to: "stimulus-loading.js", preload: true
 pin "@rails/actioncable", to: "actioncable.esm.js", preload: true
 
-pin "deck.gl", to: "https://unpkg.com/deck.gl/dist.min.js", preload: true
+pin "deck.gl", to: "https://unpkg.com/deck.gl/dist.min.js"
 
 pin_all_from "app/javascript/controllers", under: "controllers"
 pin_all_from "app/javascript/channels", under: "channels"
