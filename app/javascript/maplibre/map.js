@@ -22,8 +22,10 @@ let backgroundMapLayer
 // * initializeMap() - set map object
 // * setup map callbacks (initializeViewMode(), initializeEditMode())
 // * setBackgroundMapLayer() -> 'style.load' event
-//   -> loadGeoJsonData() -> 'geojson.load' event
-//      -> triggers callbacks for setting geojson/draw style layers
+//   -> initializeDefaultControls(), loadGeoJsonData() -> 'geojson.load' event
+//      -> triggers callbacks for setting geojson/draw style layers,
+//         sets data-geojson-loaded attribute to true
+
 export function initializeMaplibreProperties () {
   mapProperties = window.gon.map_properties
   console.log('map properties: ' + JSON.stringify(mapProperties))
@@ -54,6 +56,10 @@ export function initializeMap (divId = 'maplibre-map') {
   map.on('style.load', () => {
     loadGeoJsonData()
     if (mapProperties.terrain) { addTerrain() }
+  })
+
+  map.on('geojson.load', function (e) {
+    functions.e('#maplibre-map', e => { e.setAttribute('data-geojson-loaded', true) })
   })
 
   map.on('mousemove', (e) => {
@@ -105,8 +111,10 @@ function loadGeoJsonData () {
     .then(data => {
       console.log('loaded GeoJSON data: ', JSON.stringify(data))
       geojsonData = data
-      console.log('loaded ' + geojsonData.features.length + ' features from ' + url)
-      map.getSource('geojson-source').setData(geojsonData)
+      if (geojsonData.features.length > 0) {
+        console.log('loaded ' + geojsonData.features.length + ' features from ' + url)
+        map.getSource('geojson-source').setData(geojsonData)
+      }
       map.fire('geojson.load', { detail: { message: 'geojson-source loaded' } })
     })
     .catch(error => {

@@ -92,7 +92,7 @@ class Map
   def default_center
     if features.present?
       # TODO: this is a quick&dirty way to center the map at the first feature
-      coords = features.first[:geometry][:coordinates]
+      coords = features.first[:geometry]["coordinates"]
       [ coords.flatten[0], coords.flatten[1] ]
     else
      DEFAULT_CENTER

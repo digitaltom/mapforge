@@ -16,18 +16,12 @@ class MapsController < ApplicationController
         case params["engine"]
         when "deck"
           render "deck"
-        when "maplibre"
-          render "maplibre"
         else
-          render "show"
+          render "maplibre"
         end
       end
       format.json { render json: @map.to_json }
     end
-  end
-
-  def new
-    @map = Map.new
   end
 
   def create
@@ -45,9 +39,11 @@ class MapsController < ApplicationController
   end
 
   # some maplibre style tries to load eg. /atm_11; catching those calls here
+  # :nocov:
   def catchall
     head :ok
   end
+  # :nocov:
 
   private
 

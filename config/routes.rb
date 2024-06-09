@@ -4,10 +4,10 @@ Rails.application.routes.draw do
   scope "/m" do
     get "", to: "maps#index", as: "maps"
     get "/", to: "maps#index"
-    get "/:id" => "maps#show", defaults: { engine: "maplibre" }, as: :map
-    post "" => "maps#create", defaults: { engine: "maplibre" }, as: :create_map
-    get "/:id/features" => "maps#features", defaults: { engine: "maplibre" }, as: :map_features
-    get "/:id/properties" => "maps#properties", defaults: { engine: "maplibre" }, as: :map_properties
+    get "/:id" => "maps#show", as: :map
+    post "" => "maps#create", as: :create_map
+    get "/:id/features" => "maps#features", as: :map_features
+    get "/:id/properties" => "maps#properties", as: :map_properties
   end
   get "/d/:id" => "maps#show", defaults: { engine: "deck" }, as: :deck
 

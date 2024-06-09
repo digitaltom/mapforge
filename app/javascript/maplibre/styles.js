@@ -17,7 +17,7 @@ export function initializeViewStyles () {
     map.addLayer(styles[styleName])
   })
   map.on('styleimagemissing', loadImage)
-  f.e('.map', e => { e.setAttribute("data-loaded", "true") })
+  f.e('.map', e => { e.setAttribute('data-loaded', 'true') })
 }
 
 // loading images from 'marker-image-url' attributes

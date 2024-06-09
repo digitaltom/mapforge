@@ -32,6 +32,7 @@ describe 'Frontpage' do
     it 'user can create new map' do
       click_link('create')
       expect(page).to have_css('#maplibre-map')
+      expect(page).to have_css('.mapbox-gl-draw_point')
     end
   end
 
@@ -46,10 +47,14 @@ end
 
 describe 'Frontpage rake task' do
   before do
-    Rails.application.load_tasks
     capture_stdout do
+      Rails.application.load_tasks
       Rake::Task['seed:frontpage'].invoke
     end
+  end
+
+  after do
+    # Rails.logger
   end
 
   it 'makes frontpage functional' do

@@ -6,36 +6,30 @@ describe 'Map' do
   context 'with empty map' do
     before do
       visit map_path(map)
-      expect(page).to have_css('.ol-layers')
+      expect(page).to have_css('.maplibregl-canvas')
     end
 
     it 'shows feature edit buttons' do
-      expect(page).to have_css('.button-map')
-      expect(page).to have_css('.button-edit')
+      expect(page).to have_css('.mapbox-gl-draw_line')
+      expect(page).to have_css('.mapbox-gl-draw_polygon')
+      expect(page).to have_css('.mapbox-gl-draw_point')
     end
 
     context 'when adding features' do
-      before do
-        find('.button-edit').click
-      end
-
       it 'adding a marker to the map' do
-        find('.button-marker').click
-        expect(page).to have_text('Click on a location to place a marker')
-        expect { click_coord('#map', 50, 50) }.to change { Feature.point.count }.by(1)
-        expect(page).to have_text('Feature added')
+        find('.mapbox-gl-draw_point').click
+        expect { click_coord('#maplibre-map', 50, 50) }.to change { Feature.point.count }.by(1)
       end
 
       it 'adding a polygon to the map' do
-        find('.button-polygon').click
-        expect(page).to have_text('Click on a location on your map to start marking an area')
-        click_coord('#map', 50, 50)
-        click_coord('#map', 50, 150)
-        click_coord('#map', 150, 150)
-        click_coord('#map', 150, 50)
-        click_coord('#map', 50, 50)
+        find('.mapbox-gl-draw_polygon').click
+        click_coord('#maplibre-map', 50, 50)
+        click_coord('#maplibre-map', 50, 150)
+        click_coord('#maplibre-map', 150, 150)
+        click_coord('#maplibre-map', 150, 50)
+        click_coord('#maplibre-map', 50, 50)
 
-        expect(page).to have_text('Feature added')
+        sleep(0.5) # wait for websocket msg
         expect(Feature.polygon.count).to eq(1)
       end
     end
@@ -46,97 +40,31 @@ describe 'Map' do
 
     before do
       visit map_path(map)
-      expect(page).to have_css('.ol-layers')
-    end
-
-    context 'with selected edit mode' do
-    before do
-      # make sure features are loaded
-      expect(page).to have_css('.ol-layer')
-      find('.button-edit').click
-    end
-
-    it 'shows flash hint' do
-      expect(page).to have_text('Click on a map element to modify it')
+      expect(page).to have_css('.maplibregl-canvas')
+      expect(page).to have_css("#maplibre-map[data-geojson-loaded='true']")
     end
 
     context 'with selected feature' do
       before do
-        click_coord('#map', 50, 50)
-        expect(page).to have_css('.feature-details-edit')
+        click_coord('#maplibre-map', 50, 50)
+        expect(page).to have_css('#edit-button-edit')
       end
 
       it 'shows feature title + details' do
         expect(page).to have_text('Poly Title')
-        textarea = find('textarea')
-        expect(textarea.value).to eq(polygon.properties.to_json)
       end
 
       it 'can update feature' do
+        find('#edit-button-edit').click
         fill_in 'properties', with: '{"title": "TEST"}'
         find('.feature-update').click
-        expect(page).to have_text('Feature updated')
         expect(polygon.reload.properties).to eq({ "title" => "TEST" })
       end
 
       it 'can delete feature' do
-        find('.feature-delete').click
-        expect(page).to have_text('Feature deleted')
+        find('#edit-button-trash').click
+        sleep(0.5) # wait for websocket msg
         expect(Feature.count).to eq(0)
-      end
-    end
-
-    context 'when undo-ing / redo-ing' do
-      before do
-        click_coord('#map', 50, 50)
-      end
-
-      it 'can undo property changes' do
-        fill_in 'properties', with: '{"title":"change1"}'
-        find('.feature-update').click
-        expect(page).to have_text('Feature updated')
-        expect(polygon.reload.properties).to eq({ "title" => "change1" })
-        fill_in 'properties', with: '{"title": "change2"}'
-        find('.feature-update').click
-        expect(page).to have_text('Feature updated')
-        expect(polygon.reload.properties).to eq({ "title" => "change2" })
-        find('.button-undo').click
-        expect(page).to have_text('Feature updated')
-        expect(page).to have_field('properties', with: '{"title":"change1"}')
-      end
-
-      it 'can redo property changes' do
-        fill_in 'properties', with: '{"title":"change1"}'
-        find('.feature-update').click
-        expect(page).to have_text('Feature updated')
-        expect(polygon.reload.properties).to eq({ "title" => "change1" })
-        fill_in 'properties', with: '{"title": "change2"}'
-        find('.feature-update').click
-        expect(page).to have_text('Feature updated')
-        expect(polygon.reload.properties).to eq({ "title" => "change2" })
-        find('.button-undo').click
-        expect(page).to have_text('Feature updated')
-        expect(page).to have_field('properties', with: '{"title":"change1"}')
-        find('.button-redo').click
-        expect(page).to have_text('Feature updated')
-        expect(page).to have_field('properties', with: '{"title":"change2"}')
-      end
-    end
-    end
-
-    context 'with selected view mode' do
-      before do
-        # make sure features are loaded
-        expect(page).to have_css('.ol-layer')
-        # first click goes to edit mode, second to view mode
-        find('.button-edit').click
-        find('.button-edit').click
-      end
-
-      it 'shows feature popup' do
-        click_coord('#map', 50, 50)
-        expect(page).to have_css('#feature-popup')
-        expect(page).to have_text('Poly Title')
       end
     end
   end

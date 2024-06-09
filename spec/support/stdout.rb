@@ -1,16 +1,16 @@
 require 'stringio'
 
 def capture_stdout
-  out = StringIO.new
-  err = StringIO.new
-  logger = Rails.logger
-  $stdout = out
-  $stderr = err
-  Rails.logger = ActiveSupport::TaggedLogging.new(Logger.new(out))
+  original_stdout = $stdout
+  original_stderr = $stderr
+  original_logger = Rails.logger
+
+  buffers = { stdout: StringIO.new, stderr: StringIO.new }
+  $stdout = buffers[:stdout]
+  $stderr = buffers[:stderr]
   yield
-  [ out.string, err.string ]
 ensure
-  $stdout = STDOUT
-  $stderr = STDERR
-  Rails.logger = logger
+  $stdout = original_stdout
+  $stderr = original_stderr
+  Rails.logger = original_logger
 end
