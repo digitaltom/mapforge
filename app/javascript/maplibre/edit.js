@@ -52,7 +52,9 @@ export function initializeEditMode () {
     map.on('sourcedata', sourcedataHandler)
 
     // draw has its own layers based on editStyles
-    draw.set(geojsonData)
+    if (geojsonData.features.length > 0) {
+      draw.set(geojsonData)
+    }
   })
 
   map.on('draw.selectionchange', function (e) {

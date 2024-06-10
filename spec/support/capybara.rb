@@ -28,7 +28,7 @@ end
 
 # == Configure Capybara
 Capybara.configure do |config|
-  config.default_max_wait_time = 15
+  config.default_max_wait_time = 10
   config.match = :one
   config.ignore_hidden_elements = true
   config.visible_text_only = true

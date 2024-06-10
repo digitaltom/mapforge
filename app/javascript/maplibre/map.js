@@ -119,6 +119,7 @@ function loadGeoJsonData () {
     })
     .catch(error => {
       console.error('Failed to fetch GeoJSON:', error)
+      console.error('geojsonData: ' + JSON.stringify(geojsonData))
     })
 }
 
