@@ -22,7 +22,7 @@ class Map
 
   BASE_MAPS = [ "osmRasterTiles", "satelliteTiles",
                 "stamenTonerTiles", "openTopoTiles" ]
-  MAPTILER_MAPS = [ "maptilerHybrid", "maptilerDataviz", "maptilerStreets",
+  MAPTILER_MAPS = [ "maptilerBuildings", "maptilerHybrid", "maptilerDataviz", "maptilerStreets",
                     "maptilerNoStreets", "maptilerWinter", "maptilerBike" ]
 
   DEFAULT_CENTER = [ 11.077, 49.447 ].freeze
@@ -105,12 +105,9 @@ class Map
 
   def get_base_map
     if MAPTILER_MAPS.include?(base_map)
-      if ENV["MAPTILER_KEY"].present?
-        return base_map
-      else
-        logger.warn("Cannot use maptiler map #{base_map} without MAPTILER_KEY")
-        return default_base_map
-      end
+      return base_map if ENV["MAPTILER_KEY"].present?
+      logger.warn("Cannot use maptiler map #{base_map} without MAPTILER_KEY")
+      return default_base_map
     elsif BASE_MAPS.include?(base_map)
       return base_map
     end

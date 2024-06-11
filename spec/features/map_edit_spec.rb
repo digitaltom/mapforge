@@ -20,7 +20,7 @@ describe 'Map' do
       expect(page).to have_text('Configure Map')
       find_all('.layer-preview ')[2].click
       sleep(1) # make sure actioncable request is processed
-      expect(map.reload.base_map).to eq 'satelliteStreetTiles'
+      expect(map.reload.base_map).to eq 'stamenTonerTiles'
     end
   end
 

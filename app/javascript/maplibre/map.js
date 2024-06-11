@@ -136,7 +136,6 @@ function addTerrain () {
 }
 
 export function initializeDefaultControls () {
-
   // https://docs.maptiler.com/sdk-js/modules/geocoding/api/api-reference/#geocoding-options
   if (window.gon.map_keys.maptiler) {
     const gc = new maplibreglMaptilerGeocoder.GeocodingControl({
