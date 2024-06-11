@@ -47,8 +47,7 @@ export function initializeEditMode () {
   })
 
   map.on('geojson.load', function (e) {
-    // callback to load edit styles on top of draw styles.
-    // triggered once when 'draw' is initialized
+    // register callback to reload edit styles when source layer changed
     map.on('sourcedata', sourcedataHandler)
 
     // draw has its own layers based on editStyles

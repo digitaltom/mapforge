@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'Map' do
+describe 'Map public view' do
   let(:map) { create(:map) }
 
   context 'with initial map rendering' do

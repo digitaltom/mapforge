@@ -20,11 +20,11 @@ class Map
   delegate :feature_collection, to: :layer
   delegate :features_count, to: :layer
 
-  BASE_MAPS = [ "osmRasterTiles", "satelliteTiles", "satelliteStreetTiles",
-               "stamenTonerTiles", "openTopoTiles", "mapboxBrightVector",
-               "maptilerDataviz", "maptilerStreets", "maptilerNoStreets",
-               "maptilerWinter", "maptilerBike" ]
-  DEFAULT_MAP = "osmTiles"
+  BASE_MAPS = [ "osmRasterTiles", "satelliteTiles",
+                "stamenTonerTiles", "openTopoTiles" ]
+  MAPTILER_MAPS = [ "maptilerHybrid", "maptilerDataviz", "maptilerStreets",
+                    "maptilerNoStreets", "maptilerWinter", "maptilerBike" ]
+
   DEFAULT_CENTER = [ 11.077, 49.447 ].freeze
   DEFAULT_ZOOM = 12
   DEFAULT_PITCH = 30
@@ -38,7 +38,7 @@ class Map
     { name: name,
       description: description,
       public_id: public_id,
-      base_map: base_map || DEFAULT_MAP,
+      base_map: get_base_map,
       center: center || default_center,
       zoom: zoom || default_zoom,
       pitch: pitch || DEFAULT_PITCH,
@@ -101,6 +101,25 @@ class Map
 
   def default_zoom
     DEFAULT_ZOOM
+  end
+
+  def get_base_map
+    if MAPTILER_MAPS.include?(base_map)
+      if ENV["MAPTILER_KEY"].present?
+        return base_map
+      else
+        logger.warn("Cannot use maptiler map #{base_map} without MAPTILER_KEY")
+        return default_base_map
+      end
+    elsif BASE_MAPS.include?(base_map)
+      return base_map
+    end
+    logger.warn("Map #{base_map} not found, falling back to #{default_base_map}")
+    default_base_map
+  end
+
+  def default_base_map
+    ENV["DEFAULT_MAP"] || "osmRasterTiles"
   end
 
   def broadcast_update

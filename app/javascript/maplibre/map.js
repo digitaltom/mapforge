@@ -55,7 +55,7 @@ export function initializeMap (divId = 'maplibre-map') {
   // after basemap style is ready/changed, load geojson layer
   map.on('style.load', () => {
     loadGeoJsonData()
-    if (mapProperties.terrain) { addTerrain() }
+    if (mapProperties.terrain && window.gon.map_keys.maptiler) { addTerrain() }
   })
 
   map.on('geojson.load', function (e) {
@@ -136,12 +136,15 @@ function addTerrain () {
 }
 
 export function initializeDefaultControls () {
+
   // https://docs.maptiler.com/sdk-js/modules/geocoding/api/api-reference/#geocoding-options
-  const gc = new maplibreglMaptilerGeocoder.GeocodingControl({
-    apiKey: window.gon.map_keys.maptiler,
-    class: 'search-form'
-  })
-  map.addControl(gc, 'top-right')
+  if (window.gon.map_keys.maptiler) {
+    const gc = new maplibreglMaptilerGeocoder.GeocodingControl({
+      apiKey: window.gon.map_keys.maptiler,
+      class: 'search-form'
+    })
+    map.addControl(gc, 'top-right')
+  }
 
   const nav = new maplibregl.NavigationControl({
     visualizePitch: true,
@@ -213,11 +216,15 @@ export function destroy (featureId) {
 
 export function setBackgroundMapLayer (mapName = mapProperties.base_map) {
   if (backgroundMapLayer === mapName) { return }
-  console.log('Loading base map ' + mapName)
-  map.setStyle(basemaps[mapName],
-  // adding this so that 'style.load' gets triggered (https://github.com/maplibre/maplibre-gl-js/issues/2587)
-    { diff: false })
-  backgroundMapLayer = mapName
+  if (basemaps[mapName]) {
+    console.log('Loading base map ' + mapName)
+    map.setStyle(basemaps[mapName],
+    // adding this so that 'style.load' gets triggered (https://github.com/maplibre/maplibre-gl-js/issues/2587)
+      { diff: false })
+    backgroundMapLayer = mapName
+  } else {
+    console.error('Base map ' + mapName + ' not available!')
+  }
 }
 
 export function showFeatureDetails (feature) {

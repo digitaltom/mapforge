@@ -226,10 +226,11 @@ export const styles = {
     layout: {
       'text-field': ['coalesce', ['get', 'label'], ['get', 'room']],
       'text-size': 16,
-      // must be available via glyphs: https://docs.maptiler.com/gl-style-specification/glyphs/
+      // must be available via glyphs:
+      // openmaptiles: https://github.com/openmaptiles/fonts/tree/gh-pages
+      // maptiler: https://docs.maptiler.com/gl-style-specification/glyphs/
       // Emojis are not in the character range: https://github.com/maplibre/maplibre-gl-js/issues/2307
-      // 'text-font': ['coalesce', ['get', 'title-font'], ['Open Sans Regular,Arial Unicode MS Regular']], // Ensure the font supports emojis
-      'text-font': ['system-ui', 'sans-serif'],
+      'text-font': ['Klokantech Noto Sans Regular'],
       // if there is a symbol, move the text next to it
       'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
       // if there is a symbol, offset the text below it
