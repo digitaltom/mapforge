@@ -1,4 +1,4 @@
-import { map, geojsonData, initializeDefaultControls, lastMousePosition } from 'maplibre/map'
+import { map, geojsonData, initializeDefaultControls, lastMousePosition, showFeatureDetails } from 'maplibre/map'
 import { editStyles, initializeEditStyles } from 'maplibre/edit_styles'
 import { mapChannel } from 'channels/map_channel'
 import { ControlGroup, MapSettingsControl, MapShareControl, MapLayersControl } from 'maplibre/controls'
@@ -47,12 +47,13 @@ export function initializeEditMode () {
   })
 
   map.on('geojson.load', function (e) {
-    // callback to load edit styles on top of draw styles.
-    // triggered once when 'draw' is initialized
+    // register callback to reload edit styles when source layer changed
     map.on('sourcedata', sourcedataHandler)
 
     // draw has its own layers based on editStyles
-    draw.set(geojsonData)
+    if (geojsonData.features.length > 0) {
+      draw.set(geojsonData)
+    }
   })
 
   map.on('draw.selectionchange', function (e) {
@@ -60,6 +61,7 @@ export function initializeEditMode () {
     if (selectedFeature) {
       console.log('selected: ' + JSON.stringify(selectedFeature))
       displayEditButtons(selectedFeature)
+      showFeatureDetails(selectedFeature)
     }
   })
 

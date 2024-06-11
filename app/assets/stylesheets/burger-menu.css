@@ -31,8 +31,8 @@
   display: block;
   position: absolute;
   height: 2px;
-  top: 15px;
-  width: 20px;
+  top: 16px;
+  width: 21px;
   background-color: #333;
   box-shadow: 0 0 1px 1px #eee;
   transition-duration: .25s;
@@ -88,7 +88,7 @@
   position: fixed;
   top: 0;
   left: -100%;
-  width: 300px;
+  width: 200px;
   height: 100%;
   margin: 0;
   padding: 80px 0;

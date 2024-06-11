@@ -1,7 +1,7 @@
 import { basemaps } from 'maplibre/basemaps'
 import { draw } from 'maplibre/edit'
 import { resetControls } from 'maplibre/controls'
-import { initializeViewStyles } from 'maplibre/styles'
+import { initializeViewStyles, viewStyleNames } from 'maplibre/styles'
 import { AnimatePointAnimation } from 'maplibre/animations'
 import * as functions from 'helpers/functions'
 
@@ -22,8 +22,10 @@ let backgroundMapLayer
 // * initializeMap() - set map object
 // * setup map callbacks (initializeViewMode(), initializeEditMode())
 // * setBackgroundMapLayer() -> 'style.load' event
-//   -> loadGeoJsonData() -> 'geojson.load' event
-//      -> triggers callbacks for setting geojson/draw style layers
+//   -> initializeDefaultControls(), loadGeoJsonData() -> 'geojson.load' event
+//      -> triggers callbacks for setting geojson/draw style layers,
+//         sets data-geojson-loaded attribute to true
+
 export function initializeMaplibreProperties () {
   mapProperties = window.gon.map_properties
   console.log('map properties: ' + JSON.stringify(mapProperties))
@@ -53,7 +55,11 @@ export function initializeMap (divId = 'maplibre-map') {
   // after basemap style is ready/changed, load geojson layer
   map.on('style.load', () => {
     loadGeoJsonData()
-    if (mapProperties.terrain) { addTerrain() }
+    if (mapProperties.terrain && window.gon.map_keys.maptiler) { addTerrain() }
+  })
+
+  map.on('geojson.load', function (e) {
+    functions.e('#maplibre-map', e => { e.setAttribute('data-geojson-loaded', true) })
   })
 
   map.on('mousemove', (e) => {
@@ -68,22 +74,14 @@ export function initializeMap (divId = 'maplibre-map') {
 
   functions.e('#map-title', e => { e.textContent = mapProperties.name })
 
-  map.on('click', 'line-layer', function (e) {
-    if (e.features.length === 1) {
-      const clickedFeature = e.features[0]
-      console.log('Clicked feature:', clickedFeature)
-
-      if (clickedFeature.geometry.type === 'MultiLineString') {
-        const turfLineString = turf.multiLineString(clickedFeature.geometry.coordinates)
-        const length = turf.length(turfLineString)
-        console.log('Length: ' + length + 'km')
+  viewStyleNames.forEach(styleName => {
+    map.on('click', styleName, function (e) {
+      if (e.features.length >= 1) {
+        const clickedFeature = e.features[0]
+        console.log('Clicked feature:', clickedFeature)
+        showFeatureDetails(clickedFeature)
       }
-
-      new maplibregl.Popup()
-        .setLngLat(lastMousePosition)
-        .setHTML(`Country name: ${clickedFeature.properties.title}`)
-        .addTo(map)
-    }
+    })
   })
 }
 
@@ -98,11 +96,12 @@ function loadGeoJsonData () {
   if (geojsonData) {
     // data is already loaded
     map.getSource('geojson-source').setData(geojsonData)
-    map.fire('geojson.load', { detail: { message: 'geojson-source loaded' } })
+    map.fire('geojson.load', { detail: { message: 'geojson-source cached' } })
     return
   }
 
-  fetch('/maps/' + window.gon.map_id + '/features')
+  const url = '/m/' + window.gon.map_id + '/features'
+  fetch(url)
     .then(response => {
       if (!response.ok) {
         throw new Error('Network response was not ok')
@@ -110,15 +109,17 @@ function loadGeoJsonData () {
       return response.json()
     })
     .then(data => {
-      console.log('loaded GeoJSON data: ', data)
+      console.log('loaded GeoJSON data: ', JSON.stringify(data))
       geojsonData = data
-      console.log('loaded ' + geojsonData.features.length +
-        ' features from ' + '/maps/' + window.gon.map_id + '/features')
-      map.getSource('geojson-source').setData(geojsonData)
+      if (geojsonData.features.length > 0) {
+        console.log('loaded ' + geojsonData.features.length + ' features from ' + url)
+        map.getSource('geojson-source').setData(geojsonData)
+      }
       map.fire('geojson.load', { detail: { message: 'geojson-source loaded' } })
     })
     .catch(error => {
       console.error('Failed to fetch GeoJSON:', error)
+      console.error('geojsonData: ' + JSON.stringify(geojsonData))
     })
 }
 
@@ -136,11 +137,13 @@ function addTerrain () {
 
 export function initializeDefaultControls () {
   // https://docs.maptiler.com/sdk-js/modules/geocoding/api/api-reference/#geocoding-options
-  const gc = new maplibreglMaptilerGeocoder.GeocodingControl({
-    apiKey: window.gon.map_keys.maptiler,
-    class: 'search-form'
-  })
-  map.addControl(gc, 'top-right')
+  if (window.gon.map_keys.maptiler) {
+    const gc = new maplibreglMaptilerGeocoder.GeocodingControl({
+      apiKey: window.gon.map_keys.maptiler,
+      class: 'search-form'
+    })
+    map.addControl(gc, 'top-right')
+  }
 
   const nav = new maplibregl.NavigationControl({
     visualizePitch: true,
@@ -212,9 +215,31 @@ export function destroy (featureId) {
 
 export function setBackgroundMapLayer (mapName = mapProperties.base_map) {
   if (backgroundMapLayer === mapName) { return }
-  console.log('Loading base map ' + mapName)
-  map.setStyle(basemaps[mapName],
-  // adding this so that 'style.load' gets triggered (https://github.com/maplibre/maplibre-gl-js/issues/2587)
-    { diff: false })
-  backgroundMapLayer = mapName
+  if (basemaps[mapName]) {
+    console.log('Loading base map ' + mapName)
+    map.setStyle(basemaps[mapName],
+    // adding this so that 'style.load' gets triggered (https://github.com/maplibre/maplibre-gl-js/issues/2587)
+      { diff: false })
+    backgroundMapLayer = mapName
+  } else {
+    console.error('Base map ' + mapName + ' not available!')
+  }
+}
+
+export function showFeatureDetails (feature) {
+  document.querySelector('#feature-details-modal').style.display = 'block'
+  let desc = feature.properties.desc
+  const title = feature.properties.title || feature.properties.label
+  if (feature.geometry.type === 'LineString') {
+    const turfLineString = turf.lineString(feature.geometry.coordinates)
+    const length = turf.length(turfLineString)
+    desc += '<br>Length: ' + Math.round(length * 1000) + 'm'
+  }
+  if (feature.geometry.type === 'Polygon') {
+    const turfPolygon = turf.polygon(feature.geometry.coordinates)
+    const area = turf.area(turfPolygon)
+    desc += '<br>Area: ' + (area / 1000000).toFixed(2) + ' km²'
+  }
+  document.querySelector('#feature-details-header').innerHTML = title
+  document.querySelector('#feature-details-body').innerHTML = desc
 }

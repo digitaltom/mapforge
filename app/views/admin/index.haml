@@ -7,7 +7,7 @@
 #maps.flex-container
   - @maps.each do |map|
     %div.flex-item.map-preview{id: dom_id(map)}
-      = link_to maplibre_path(id: map.id) do
+      = link_to map_path(id: map.id) do
         - if File.exist?(Rails.root.join("public/previews/#{map.public_id}.png"))
           %img{src: "/previews/#{map.public_id}.png", class: 'preview-image'}
         - else
@@ -18,12 +18,9 @@
       = "#{map.features.count} features"
       %br
       public id:
-      = link_to map.public_id, maplibre_path(id: map.public_id)
+      = link_to map.public_id, map_path(id: map.public_id)
       %br
-      = button_to 'Delete', destroy_map_path(id: map.id), method: :delete, data: { turbo_method: :delete }
-
-
-= link_to "New map", new_map_path
+      = button_to 'Delete', destroy_map_path(id: map.id), method: :delete, data: { turbo_method: :delete }, class: 'btn btn-secondary'
 
 %hr
 

@@ -1,7 +1,4 @@
 import consumer from 'channels/consumer'
-import { flash } from 'ol/map'
-import { initializeMapProperties } from 'ol/properties'
-import { updateFeature, deleteFeature } from 'ol/feature'
 import { upsert, destroy, setBackgroundMapLayer, initializeMaplibreProperties } from 'maplibre/map'
 
 export let mapChannel
@@ -32,29 +29,23 @@ export function initializeSocket () {
       console.log('Disconnected from map_channel ' + window.gon.map_id)
       mapChannel = null
       // show error with delay to avoid showing it on unload/refresh
-      setTimeout(function () { flash('Connection to server lost', 'error') }, 500)
+      // setTimeout(function () { flash('Connection to server lost', 'error') }, 500)
     },
 
     received (data) {
       console.log('received from map_channel: ' + JSON.stringify(data))
       switch (data.event) {
         case 'update_feature':
-          // ol feature update
-          if (document.getElementById('map')) { updateFeature(data.feature) }
-          // maplibre feature update
-          if (document.getElementById('maplibre-map')) { upsert(data.feature) }
+          upsert(data.feature)
           break
         case 'delete_feature':
           // ol feature delete
-          if (document.getElementById('map')) { deleteFeature(data.feature.id) }
-          // maplibre feature delete
-          if (document.getElementById('maplibre-map')) { destroy(data.feature.id) }
+          destroy(data.feature.id)
           break
         case 'update_map':
           window.gon.map_properties = data.map
-          if (document.getElementById('map')) { initializeMapProperties() }
-          if (document.getElementById('maplibre-map')) { initializeMaplibreProperties() }
-          if (document.getElementById('maplibre-map')) { setBackgroundMapLayer() }
+          initializeMaplibreProperties()
+          setBackgroundMapLayer()
           break
       }
     },

@@ -1,7 +1,6 @@
 FactoryBot.define do
   factory :map do
-    base_map { 'osmDefaultTiles' }
+    base_map { 'osmRasterTiles' }
     center { Map::DEFAULT_CENTER }
-    # layer { create(:layer) }
   end
 end

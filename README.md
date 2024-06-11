@@ -66,7 +66,11 @@ Linters:
 
 Fix style with eslint: `npm run fix:js`
 
-Specs: `bundle exec rspec`
+To run the test suite: `bundle exec rspec`
+
+The repository is also covered with automatic Github Actions jobs. You can
+run those locally with the tool [act](https://github.com/nektos/act).
+For example `act -j test`.
 
 
 ## Container build

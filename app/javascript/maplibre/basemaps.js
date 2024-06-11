@@ -1,12 +1,3 @@
-// import * as functions from 'helpers/functions'
-
-// eslint expects variables to get imported, but we load the full lib in header
-// const maplibregl = window.maplibregl
-
-// BASE_MAPS = [ "osmTiles", "satelliteTiles", "satelliteStreetTiles",
-//              "stamenTonerTiles", "openTopoTiles", "mapboxBrightVector",
-//              "maptilerDataviz", "maptilerStreets", "maptilerNoStreets" ]
-
 // Maptiler SDK shortcuts: https://docs.maptiler.com/sdk-js/api/map-styles/#mapstylelist
 
 export const basemaps = {
@@ -112,6 +103,29 @@ export const basemaps = {
     ],
     glyphs: 'https://fonts.openmaptiles.org/{fontstack}/{range}.pbf'
   },
+  osmRasterTiles: {
+    version: 8,
+    sources: {
+      'raster-tiles': {
+        type: 'raster',
+        tiles: [
+          'https://c.tile.openstreetmap.org/{z}/{x}/{y}.png'
+        ],
+        tileSize: 256,
+        attribution: '<a href="https://www.openstreetmap.org/copyright">© OpenStreetMap Contributors</a>'
+      }
+    },
+    layers: [
+      {
+        id: 'simple-tiles',
+        type: 'raster',
+        source: 'raster-tiles',
+        minzoom: 0,
+        maxzoom: 22
+      }
+    ],
+    glyphs: 'http://fonts.openmaptiles.org/{fontstack}/{range}.pbf'
+  },
 
   // 3D Houses
   maptilerBasic: 'https://api.maptiler.com/maps/basic-v2/style.json?key=' + window.gon.map_keys.maptiler,
@@ -120,25 +134,8 @@ export const basemaps = {
   maptilerDataviz: 'https://api.maptiler.com/maps/dataviz/style.json?key=' + window.gon.map_keys.maptiler,
   maptilerStreets: '/layers/streets.json?key=' + window.gon.map_keys.maptiler,
   maptilerNoStreets: '/layers/nostreets.json?key=' + window.gon.map_keys.maptiler,
-  satelliteStreets: 'https://api.maptiler.com/maps/hybrid/style.json?key=' + window.gon.map_keys.maptiler,
-  satellite: 'https://api.maptiler.com/maps/satellite/style.json?key=' + window.gon.map_keys.maptiler,
+  maptilerSatellite: 'https://api.maptiler.com/maps/satellite/style.json?key=' + window.gon.map_keys.maptiler,
   maptilerWinter: 'https://api.maptiler.com/maps/winter-v2/style.json?key=' + window.gon.map_keys.maptiler,
   maptilerBike: 'https://api.maptiler.com/maps/64d03850-97e0-4aaa-bd1d-8287a9792de1/style.json?key=' + window.gon.map_keys.maptiler,
-
-  // ol compat:
-  osmTiles: 'https://api.maptiler.com/maps/basic-v2/style.json?key=' + window.gon.map_keys.maptiler,
-  satelliteStreetTiles: 'https://api.maptiler.com/maps/hybrid/style.json?key=' + window.gon.map_keys.maptiler,
-  mapboxBrightVector: 'https://api.maptiler.com/maps/streets/style.json?key=' + window.gon.map_keys.maptiler
+  maptilerHybrid: 'https://api.maptiler.com/maps/hybrid/style.json?key=' + window.gon.map_keys.maptiler
 }
-
-//   osmDefaultTiles: function () {
-//     return new ol.layer.Tile({ source: new ol.source.OSM(), className: mapClasses })
-//   },
-
-//   mapboxBrightVector: function () {
-//     return new olms.MapboxVectorLayer({
-//       styleUrl: 'mapbox://styles/mapbox/bright-v9',
-//       accessToken: window.gon.map_keys.mapbox,
-//       className: mapClasses + ' map-layer-mapboxBrightVector'
-//     })
-//   },
