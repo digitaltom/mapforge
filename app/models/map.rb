@@ -15,6 +15,7 @@ class Map
   field :description, type: String
   field :public_id, type: String
   field :private, type: Boolean
+  field :private_id, type: Integer
 
   delegate :features, to: :layer
   delegate :feature_collection, to: :layer
@@ -30,9 +31,11 @@ class Map
   DEFAULT_PITCH = 30
   DEFAULT_TERRAIN = false
 
+  JAVA_MAXINT = 2147483647
+
   after_save :broadcast_update
   before_create :create_public_id, :create_layer
-  validate :public_id_must_be_unique
+  validate :public_id_must_be_unique, :private_id_must_be_unique
 
   def properties
     { name: name,
@@ -55,6 +58,19 @@ class Map
     self.public_id = SecureRandom.hex(4).tap { |i| i[0..1] = "11" } unless public_id.present?
   end
 
+  def create_private_id
+    return if private_id.presence
+
+    private_id = nil
+
+    loop do
+      private_id = SecureRandom.rand(1..JAVA_MAXINT)
+      break unless Map.where(private_id: private_id).where.not(id: id).exists?
+    end
+
+    self.private_id = private_id
+  end
+
   def create_layer
     self.layer = Layer.create!(map: self) unless layer.present?
   end
@@ -66,6 +82,13 @@ class Map
   def public_id_must_be_unique
     if Map.where(public_id: public_id).where.not(id: id).exists?
       errors.add(:public_id, "has already been taken")
+    end
+  end
+
+  def private_id_must_be_unique
+    return if private_id.nil?
+    if Map.where(private_id: private_id).where.not(id: id).exists?
+      errors.add(:private_id, "has already been taken")
     end
   end
 
