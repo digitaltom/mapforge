@@ -213,8 +213,8 @@ export function destroy (featureId) {
   map.getSource('geojson-source').setData(geojsonData)
 }
 
-export function setBackgroundMapLayer (mapName = mapProperties.base_map) {
-  if (backgroundMapLayer === mapName) { return }
+export function setBackgroundMapLayer (mapName = mapProperties.base_map, force = false) {
+  if (backgroundMapLayer === mapName && !force) { return }
   if (basemaps[mapName]) {
     console.log('Loading base map ' + mapName)
     map.setStyle(basemaps[mapName],
