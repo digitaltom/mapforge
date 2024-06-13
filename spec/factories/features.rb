@@ -8,13 +8,13 @@ FactoryBot.define do
     transient do
       coordinates { nil }
       title { nil }
-      description { nil }
+      desc { nil }
     end
 
     after :build do |feature, evaluator|
       feature.geometry['coordinates'] = evaluator.coordinates if evaluator.coordinates
       feature.properties['title'] = evaluator.title if evaluator.title
-      feature.properties['description'] = evaluator.description if evaluator.description
+      feature.properties['desc'] = evaluator.desc if evaluator.desc
     end
 
     # the following traits are visible in the default view of the map (in nbg)

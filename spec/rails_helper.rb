@@ -1,10 +1,9 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 require 'simplecov'
-SimpleCov.minimum_coverage 98
+SimpleCov.minimum_coverage 100
 SimpleCov.start 'rails' do
   add_filter 'app/jobs/application_job.rb'
-  add_filter 'app/controllers/frontpage_controller.rb'
-  # formatter(ENV['CI'] ? SimpleCov::Formatter::Codecov : SimpleCov::Formatter::HTMLFormatter)
+  add_filter 'lib/tasks'
 end
 
 require 'spec_helper'
@@ -44,9 +43,30 @@ RSpec.configure do |config|
   config.include Features::Helpers, type: :feature
   config.include FactoryBot::Syntax::Methods
 
-  config.around do |example|
+  config.around do |spec|
     DatabaseCleaner.cleaning do
-      example.run
+      spec.run
+    end
+  end
+
+  # raise on js console errors
+  class JavaScriptError< StandardError; end
+  RSpec.configure do |config|
+    config.after(:each, type: :feature) do |spec|
+      unless spec.metadata[:skip_console_errors]
+        levels = [ "SEVERE" ]
+        # "maplibre-gl.js TypeError: Failed to fetch" seems to be caused by
+        # the js file being cached already
+        exclude = [ /TypeError: Failed to fetch/,
+                    /The user aborted a request/ ]
+        errors = page.driver.browser.logs.get(:browser)
+                   .select { |e| levels.include?(e.level) && e.message.present? }
+                   .reject { |e| exclude.any? { |ex| e.message =~ ex } }
+                   .map(&:message)
+        if errors.present?
+          raise JavaScriptError, errors.join("\n\n")
+        end
+      end
     end
   end
 

@@ -1,5 +1,5 @@
 import { hexToRgb } from 'helpers/functions'
-import { mapProperties, initializeMapProperties } from 'ol/properties'
+import { mapProperties, initializeMaplibreProperties } from 'maplibre/map'
 
 // eslint expects variables to get imported, but we load the full lib in header
 const maplibregl = window.maplibregl
@@ -15,7 +15,7 @@ const deck = window.deck;
 })
 
 async function init () {
-  initializeMapProperties()
+  initializeMaplibreProperties()
 
   const map = new maplibregl.Map({
     container: 'deck-map', // container ID
@@ -34,7 +34,7 @@ async function init () {
   // https://deck.gl/docs/api-reference/layers/geojson-layer
   const geojsonLayer = new deck.GeoJsonLayer({
     id: 'geojson',
-    data: '/maps/' + window.gon.map_id + '/features',
+    data: '/m/' + window.gon.map_id + '/features',
     // Styles
     stroked: true, // Ensure strokes are visible
     filled: true,

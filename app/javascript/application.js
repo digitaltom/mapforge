@@ -2,7 +2,6 @@
 import '@hotwired/turbo-rails'
 import 'controllers'
 
-import 'map'
 import 'frontpage'
 import 'deck'
 import 'maplibre'

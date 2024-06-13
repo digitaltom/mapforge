@@ -8,7 +8,7 @@ describe 'Admin List' do
     allow(ENV).to receive(:fetch).with("ADMIN_USER", "").and_return("test")
     allow(ENV).to receive(:fetch).with("ADMIN_PW", "").and_return("test")
 
-    visit "http://test:test@localhost:#{Capybara.server_port}#{admin_path}"
+    visit admin_path
   end
 
   it 'shows private links to maps' do

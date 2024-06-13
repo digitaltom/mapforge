@@ -1,15 +1,23 @@
 import { map } from 'maplibre/map'
+import * as f from 'helpers/functions'
+
+export const viewStyleNames = [
+  'polygon-layer',
+  'polygon-layer-extrusion',
+  'line-layer-outline',
+  'line-layer',
+  'points-border-layer',
+  'points-layer',
+  'symbols-layer',
+  'text-layer'
+]
 
 export function initializeViewStyles () {
-  map.addLayer(styles['polygon-layer'])
-  map.addLayer(styles['polygon-layer-extrusion'])
-  map.addLayer(styles['line-layer-outline'])
-  map.addLayer(styles['line-layer'])
-  map.addLayer(styles['points-border-layer'])
-  map.addLayer(styles['points-layer'])
-  map.addLayer(styles['symbols-layer'])
-  map.addLayer(styles['text-layer'])
+  viewStyleNames.forEach(styleName => {
+    map.addLayer(styles[styleName])
+  })
   map.on('styleimagemissing', loadImage)
+  f.e('#maplibre-map', e => { e.setAttribute('data-loaded', true) })
 }
 
 // loading images from 'marker-image-url' attributes
@@ -207,7 +215,7 @@ export const styles = {
         'large', 0.5,
         0.35],
       'icon-overlap': 'always',
-      'icon-ignore-placement': true
+      'icon-ignore-placement': true // other symbols can be visible even if they collide with the icon
     }
   },
   'text-layer': {
@@ -218,20 +226,22 @@ export const styles = {
     layout: {
       'text-field': ['coalesce', ['get', 'label'], ['get', 'room']],
       'text-size': 16,
-      // must be available via glyphs: https://docs.maptiler.com/gl-style-specification/glyphs/
+      // must be available via glyphs:
+      // openmaptiles: https://github.com/openmaptiles/fonts/tree/gh-pages
+      // maptiler: https://docs.maptiler.com/gl-style-specification/glyphs/
       // Emojis are not in the character range: https://github.com/maplibre/maplibre-gl-js/issues/2307
-      // 'text-font': ['coalesce', ['get', 'title-font'], ['Open Sans Regular,Arial Unicode MS Regular']], // Ensure the font supports emojis
-      'text-font': ['system-ui', 'sans-serif'],
-      // if there is a symbol, move the text next to it
+      'text-font': ['Klokantech Noto Sans Regular'],
+      // arrange text to avoid collision
       'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
-      // if there is a symbol, offset the text below it
+      // distance the text from the element depending on the type
       'text-radial-offset': [
         'match',
         ['to-string', ['has', 'marker-symbol']],
         'true', 1.2,
-        0
+        0.6
       ],
-      'text-justify': 'auto'
+      'text-justify': 'auto',
+      'text-ignore-placement': false // hide on collision
     },
     paint: {
       'text-color': ['coalesce', ['get', 'label-color'], '#fff'],

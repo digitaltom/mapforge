@@ -22,11 +22,19 @@ export default class extends Controller {
     }
   }
 
+  // alternative to https://maplibre.org/maplibre-gl-js/docs/API/classes/TerrainControl/
+  update_terrain (event) {
+    const terrain = document.querySelector('#map-terrain').checked
+    if (mapProperties.terrain !== terrain) {
+      mapProperties.terrain = terrain
+      setBackgroundMapLayer(mapProperties.base_map, true)
+      mapChannel.send_message('update_map', { terrain })
+    }
+  }
+
   update_basemap (event) {
     const layerPreviews = document.querySelectorAll('.layer-preview')
     mapProperties.base_map = event.target.dataset.layer
-    // alternative to https://maplibre.org/maplibre-gl-js/docs/API/classes/TerrainControl/
-    mapProperties.terrain = document.querySelector('#map-terrain').checked
     setBackgroundMapLayer(mapProperties.base_map)
     mapChannel.send_message('update_map', { base_map: mapProperties.base_map, terrain: mapProperties.terrain })
     layerPreviews.forEach(layerPreview => { layerPreview.classList.remove('active') })
@@ -39,16 +47,13 @@ export default class extends Controller {
     const zoom = map.getZoom()
     const pitch = map.getPitch()
     const name = document.querySelector('#map-name').value
-    const terrain = document.querySelector('#map-terrain').checked
     document.querySelector('#map-center').innerHTML = center
     document.querySelector('#map-zoom').innerHTML = zoom
     document.querySelector('#map-pitch').innerHTML = pitch
     mapProperties.center = center
     mapProperties.zoom = zoom
     mapProperties.pitch = pitch
-    mapProperties.terrain = terrain
-    mapChannel.send_message('update_map', { center, zoom, pitch, name, terrain })
-    return false
+    mapChannel.send_message('update_map', { center, zoom, pitch, name })
   }
 
   upload () {
@@ -97,8 +102,8 @@ export default class extends Controller {
     resetControls()
     map.flyTo({
       center: centroid.geometry.coordinates,
-      speed: 0.8,
-      curve: 1,
+      speed: 0.4,
+      curve: 3,
       essential: true
     })
   }
