@@ -1,7 +1,8 @@
-import { map, geojsonData, initializeDefaultControls, lastMousePosition, showFeatureDetails } from 'maplibre/map'
+import { map, geojsonData, initializeDefaultControls, lastMousePosition } from 'maplibre/map'
 import { editStyles, initializeEditStyles } from 'maplibre/edit_styles'
 import { mapChannel } from 'channels/map_channel'
 import { ControlGroup, MapSettingsControl, MapShareControl, MapLayersControl } from 'maplibre/controls'
+import { showFeatureDetails } from 'maplibre/modals'
 import * as f from 'helpers/functions'
 
 // eslint expects variables to get imported, but we load the full lib in header
