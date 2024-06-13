@@ -20,7 +20,7 @@ class Api::UloggerController < ApplicationController
                  'coordinates' => [ params[:lon], params[:lat], params[:altitude] ] }
 
     timestamp = Time.at(params[:time].to_i).to_datetime
-    properties = { 'title' => timestamp.to_s, 'description' => "Accuracy: #{params[:accuracy]}" }
+    properties = { 'title' => timestamp.to_s, 'description' => description || '' }
 
     feature = Feature.new(geometry: geometry, properties: properties)
     feature.save!
@@ -37,5 +37,12 @@ class Api::UloggerController < ApplicationController
   def set_map
     @map =  Map.find_by(private_id: params[:trackid].to_i)
     render json: { error: true } unless @map
+  end
+
+  def description
+    %i[accuracy speed bearing provider].filter_map do |key|
+      val = params.fetch(key, nil)
+      "#{key.to_s.humanize}: #{val}" if val.present?
+    end.join("\n")
   end
 end
