@@ -215,7 +215,7 @@ export const styles = {
         'large', 0.5,
         0.35],
       'icon-overlap': 'always',
-      'icon-ignore-placement': true
+      'icon-ignore-placement': true // other symbols can be visible even if they collide with the icon
     }
   },
   'text-layer': {
@@ -231,16 +231,17 @@ export const styles = {
       // maptiler: https://docs.maptiler.com/gl-style-specification/glyphs/
       // Emojis are not in the character range: https://github.com/maplibre/maplibre-gl-js/issues/2307
       'text-font': ['Klokantech Noto Sans Regular'],
-      // if there is a symbol, move the text next to it
+      // arrange text to avoid collision
       'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
-      // if there is a symbol, offset the text below it
+      // distance the text from the element depending on the type
       'text-radial-offset': [
         'match',
         ['to-string', ['has', 'marker-symbol']],
         'true', 1.2,
-        0
+        0.6
       ],
-      'text-justify': 'auto'
+      'text-justify': 'auto',
+      'text-ignore-placement': false // hide on collision
     },
     paint: {
       'text-color': ['coalesce', ['get', 'label-color'], '#fff'],

@@ -228,8 +228,8 @@ export function setBackgroundMapLayer (mapName = mapProperties.base_map, force =
 
 export function showFeatureDetails (feature) {
   document.querySelector('#feature-details-modal').style.display = 'block'
-  let desc = feature.properties.desc
-  const title = feature.properties.title || feature.properties.label
+  let desc = feature?.properties?.desc
+  const title = feature?.properties?.title || feature?.properties?.label
   if (feature.geometry.type === 'LineString') {
     const turfLineString = turf.lineString(feature.geometry.coordinates)
     const length = turf.length(turfLineString)
