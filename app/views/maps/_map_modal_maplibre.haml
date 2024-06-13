@@ -10,6 +10,10 @@
     - active = (@map.properties[:base_map] == base_map)
     = image_tag("base_maps/#{base_map}.jpg", data: { layer: base_map, action: "click->maplibre#update_basemap"},
                 class: "layer-preview #{"active" if active}")
+  - if ENV['MAPTILER_KEY']
+    - Map::MAPTILER_MAPS.each do |base_map|
+      - active = (@map.properties[:base_map] == base_map)
+      = image_tag("base_maps/#{base_map}.jpg", data: { layer: base_map, action: "click->maplibre#update_basemap"}, class: "layer-preview #{"active" if active}")
   %br
   Center:
   %span#map-center
@@ -28,6 +32,6 @@
   %br
   %span
     %label{ for: "map-terrain"} Terrain:
-    %input#map-terrain{type: "checkbox", checked: @map.properties[:terrain],      data: { action: "click->maplibre#update_basemap"} }
+    %input#map-terrain{type: "checkbox", checked: @map.properties[:terrain],      data: { action: "click->maplibre#update_terrain"} }
   %br
   %a#set-map-center{href: '#', data: { action: "click->maplibre#update_mapdata" } } Set initial map view to current center/zoom/pitch

@@ -2,8 +2,8 @@
   %h2 Share Map
 
   %ul
-    %li= link_to 'Viewer link', maplibre_path(id: @map.public_id)
-    %li= link_to 'Edit link', maplibre_path(@map)
-    %li= link_to 'Download geojson', features_map_path(@map.public_id)
-    %li= link_to 'Download map export', maplibre_path(id: @map.public_id, format: :json)
+    %li= link_to 'Viewer link', map_path(id: @map.public_id)
+    %li= link_to 'Edit link', map_path(@map)
+    %li= link_to 'Download geojson', map_features_path(@map.public_id)
+    %li= link_to 'Download map export', map_path(id: @map.public_id, format: :json)
 

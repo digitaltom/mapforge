@@ -1,18 +1,19 @@
 Rails.application.routes.draw do
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
-  resources :maps do
-    member do
-      get :features
-      get :properties
-    end
+  # some maplibre style tries to load eg. /atm_11; catching those calls here
+  get "/:map_resource" => "maps#catchall", as: :catchall, constraints: { map_resource: /[a-z]+_11/ }
+  get "/m/:map_resource" => "maps#catchall", constraints: { map_resource: /[a-z]+_11/ }
+
+  scope "/m" do
+    get "", to: "maps#index", as: "maps"
+    get "/", to: "maps#index"
+    get "/:id" => "maps#show", as: :map
+    post "" => "maps#create", as: :create_map
+    get "/:id/features" => "maps#features", as: :map_features
+    get "/:id/properties" => "maps#properties", as: :map_properties
   end
   get "/d/:id" => "maps#show", defaults: { engine: "deck" }, as: :deck
-  get "/m/:id" => "maps#show", defaults: { engine: "maplibre" }, as: :maplibre
-
-  # some maplibre style tries to load eg. /atm_11; catching those calls here
-  get "/atm_11" => "maps#catchall", as: :catchall
-  get "/m/atm_11" => "maps#catchall"
 
   get "/admin" => "admin#index"
   delete "/admin/:id" => "admin#destroy", as: :destroy_map

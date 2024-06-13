@@ -8,6 +8,12 @@ def chrome_driver_arguments(headless: false)
   options = Selenium::WebDriver::Chrome::Options.new
   options.args << '--window-size=1300,700' # always set a size where the sidebar is open by default
   options.args << '--lang=en_US'
+  options.args << '--enable-logging'
+
+  options.logging_prefs = {
+    browser: 'ALL', # Capture all JavaScript errors
+    driver: 'SEVERE' # Capture severe WebDriver errors
+  }
 
   if headless
     options.args << '--headless'
@@ -22,7 +28,7 @@ end
 
 # == Configure Capybara
 Capybara.configure do |config|
-  config.default_max_wait_time = 15
+  config.default_max_wait_time = 10
   config.match = :one
   config.ignore_hidden_elements = true
   config.visible_text_only = true

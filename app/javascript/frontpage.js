@@ -70,7 +70,7 @@ async function featureShow () {
   featureShowIndex = (featureShowIndex + 1) % featureShowList.length
   console.log('frontpage tour: ' + category.key)
 
-  fetch('/maps/' + category.map + '/properties')
+  fetch('/m/' + category.map + '/properties')
     .then(response => {
       if (!response.ok) { throw new Error("Map '" + category.map + "' not found.") }
       return response.json()

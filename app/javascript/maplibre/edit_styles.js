@@ -1,5 +1,6 @@
 import { styles, loadImage } from 'maplibre/styles'
 import { map } from 'maplibre/map'
+import * as f from 'helpers/functions'
 
 // MapboxDraw cannot render symbol+text styles.
 // Adding those as extra layers to the map.
@@ -7,6 +8,7 @@ export function initializeEditStyles () {
   map.addLayer(styles['symbols-layer'])
   map.addLayer(styles['text-layer'])
   map.on('styleimagemissing', loadImage)
+  f.e('#maplibre-map', e => { e.setAttribute('data-loaded', true) })
 }
 
 // started from https://github.com/mapbox/mapbox-gl-draw/blob/main/src/lib/theme.js

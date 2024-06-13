@@ -1,13 +1,15 @@
-// import * as functions from 'helpers/functions'
-
-// eslint expects variables to get imported, but we load the full lib in header
-// const maplibregl = window.maplibregl
-
-// BASE_MAPS = [ "osmTiles", "satelliteTiles", "satelliteStreetTiles",
-//              "stamenTonerTiles", "openTopoTiles", "mapboxBrightVector",
-//              "maptilerDataviz", "maptilerStreets", "maptilerNoStreets" ]
-
 // Maptiler SDK shortcuts: https://docs.maptiler.com/sdk-js/api/map-styles/#mapstylelist
+
+const openmaptilesGlyphs = 'https://fonts.openmaptiles.org/{fontstack}/{range}.pbf'
+const defaultRasterLayer = [
+  {
+    id: 'simple-tiles',
+    type: 'raster',
+    source: 'raster-tiles',
+    minzoom: 0,
+    maxzoom: 22
+  }
+]
 
 export const basemaps = {
   stamenWatercolorTiles: {
@@ -24,16 +26,8 @@ export const basemaps = {
         attribution: 'Map tiles by <a target="_blank" href="http://stamen.com">Stamen Design</a>; Hosting by <a href="https://stadiamaps.com/" target="_blank">Stadia Maps</a>. Data &copy; <a href="https://www.openstreetmap.org/about" target="_blank">OpenStreetMap</a> contributors'
       }
     },
-    layers: [
-      {
-        id: 'simple-tiles',
-        type: 'raster',
-        source: 'raster-tiles',
-        minzoom: 0,
-        maxzoom: 22
-      }
-    ],
-    glyphs: 'https://fonts.openmaptiles.org/{fontstack}/{range}.pbf'
+    layers: defaultRasterLayer,
+    glyphs: openmaptilesGlyphs
   },
   stamenTonerTiles: {
     version: 8,
@@ -49,16 +43,8 @@ export const basemaps = {
         attribution: 'Map tiles by <a target="_blank" href="http://stamen.com">Stamen Design</a>; Hosting by <a href="https://stadiamaps.com/" target="_blank">Stadia Maps</a>. Data &copy; <a href="https://www.openstreetmap.org/about" target="_blank">OpenStreetMap</a> contributors'
       }
     },
-    layers: [
-      {
-        id: 'simple-tiles',
-        type: 'raster',
-        source: 'raster-tiles',
-        minzoom: 0,
-        maxzoom: 22
-      }
-    ],
-    glyphs: 'https://fonts.openmaptiles.org/{fontstack}/{range}.pbf'
+    layers: defaultRasterLayer,
+    glyphs: openmaptilesGlyphs
   },
   openTopoTiles: {
     version: 8,
@@ -77,16 +63,8 @@ export const basemaps = {
            '<a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank">(CC-BY-SA)</a>'
       }
     },
-    layers: [
-      {
-        id: 'simple-tiles',
-        type: 'raster',
-        source: 'raster-tiles',
-        minzoom: 0,
-        maxzoom: 22
-      }
-    ],
-    glyphs: 'https://fonts.openmaptiles.org/{fontstack}/{range}.pbf'
+    layers: defaultRasterLayer,
+    glyphs: openmaptilesGlyphs
   },
   satelliteTiles: {
     version: 8,
@@ -101,16 +79,23 @@ export const basemaps = {
           'Sources: Esri, DigitalGlobe, GeoEye, i-cubed, USDA FSA, USGS, AEX, Getmapping, Aerogrid, IGN, IGP, swisstopo, and the GIS User Community'
       }
     },
-    layers: [
-      {
-        id: 'simple-tiles',
+    layers: defaultRasterLayer,
+    glyphs: openmaptilesGlyphs
+  },
+  osmRasterTiles: {
+    version: 8,
+    sources: {
+      'raster-tiles': {
         type: 'raster',
-        source: 'raster-tiles',
-        minzoom: 0,
-        maxzoom: 18.5
+        tiles: [
+          'https://c.tile.openstreetmap.org/{z}/{x}/{y}.png'
+        ],
+        tileSize: 256,
+        attribution: '<a href="https://www.openstreetmap.org/copyright">© OpenStreetMap Contributors</a>'
       }
-    ],
-    glyphs: 'https://fonts.openmaptiles.org/{fontstack}/{range}.pbf'
+    },
+    layers: defaultRasterLayer,
+    glyphs: openmaptilesGlyphs
   },
 
   // 3D Houses
@@ -120,25 +105,8 @@ export const basemaps = {
   maptilerDataviz: 'https://api.maptiler.com/maps/dataviz/style.json?key=' + window.gon.map_keys.maptiler,
   maptilerStreets: '/layers/streets.json?key=' + window.gon.map_keys.maptiler,
   maptilerNoStreets: '/layers/nostreets.json?key=' + window.gon.map_keys.maptiler,
-  satelliteStreets: 'https://api.maptiler.com/maps/hybrid/style.json?key=' + window.gon.map_keys.maptiler,
-  satellite: 'https://api.maptiler.com/maps/satellite/style.json?key=' + window.gon.map_keys.maptiler,
+  maptilerSatellite: 'https://api.maptiler.com/maps/satellite/style.json?key=' + window.gon.map_keys.maptiler,
   maptilerWinter: 'https://api.maptiler.com/maps/winter-v2/style.json?key=' + window.gon.map_keys.maptiler,
   maptilerBike: 'https://api.maptiler.com/maps/64d03850-97e0-4aaa-bd1d-8287a9792de1/style.json?key=' + window.gon.map_keys.maptiler,
-
-  // ol compat:
-  osmTiles: 'https://api.maptiler.com/maps/basic-v2/style.json?key=' + window.gon.map_keys.maptiler,
-  satelliteStreetTiles: 'https://api.maptiler.com/maps/hybrid/style.json?key=' + window.gon.map_keys.maptiler,
-  mapboxBrightVector: 'https://api.maptiler.com/maps/streets/style.json?key=' + window.gon.map_keys.maptiler
+  maptilerHybrid: 'https://api.maptiler.com/maps/hybrid/style.json?key=' + window.gon.map_keys.maptiler
 }
-
-//   osmDefaultTiles: function () {
-//     return new ol.layer.Tile({ source: new ol.source.OSM(), className: mapClasses })
-//   },
-
-//   mapboxBrightVector: function () {
-//     return new olms.MapboxVectorLayer({
-//       styleUrl: 'mapbox://styles/mapbox/bright-v9',
-//       accessToken: window.gon.map_keys.mapbox,
-//       className: mapClasses + ' map-layer-mapboxBrightVector'
-//     })
-//   },

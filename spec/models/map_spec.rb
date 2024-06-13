@@ -19,4 +19,18 @@ describe Map do
       end
     end
   end
+
+  describe '#properties' do
+    context 'when map has no center defined' do
+      before do
+        map.features << point
+      end
+      let(:map) { create(:map, center: nil) }
+      let(:point) { create(:feature, :point) }
+
+      it 'sets center to first feature' do
+        expect(map.properties[:center]).to eq point.geometry['coordinates']
+      end
+    end
+  end
 end
