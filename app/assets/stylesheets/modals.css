@@ -43,4 +43,16 @@
   top: unset;
   bottom: 0;
   max-width: 800px;
+  left: 50%;
+  width: 90%;
+  margin: unset;
+  margin-bottom: 0.5em;
+}
+
+#feature-details-meta {
+  float: right;
+  font-size: 80%;
+  color: #999;
+  position: relative;
+  top: -2em;
 }
