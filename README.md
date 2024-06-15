@@ -5,11 +5,13 @@
 
 # README
 
-## Geojson
+Mapforge is an open source (Ruby on Rails) web application that lets you create and share geojson layers on top of different base maps. It uses [maplibre gl](https://maplibre.org/maplibre-gl-js/docs/) as map library and supports desktop and mobile views. Your view is connected in to the server via websockets, so all changes are immediately visible to all clients for collaborative editing or creating real-time maps.
 
-This app supports and stores data in an extended version of the [geojson](https://macwright.com/2015/03/23/geojson-second-bite.html)
-[mapbox simplestyle spec](https://github.com/mapbox/simplestyle-spec/tree/master/1.1.0).
-See [docs/geojson.md](docs/geojson.md) for supported attributes.
+![Mapforge Screenshot](https://github.com/digitaltom/mapforge/blob/main/docs/screenshot.png?raw=true)
+
+The geojson layer can get styled to your needs in an extended version of the [geojson](https://macwright.com/2015/03/23/geojson-second-bite.html)
+[mapbox simplestyle spec](https://github.com/mapbox/simplestyle-spec/tree/master/1.1.0). See [docs/geojson.md](docs/geojson.md) for supported attributes.
+
 
 ## Development Setup
 
@@ -35,8 +37,9 @@ bundle
 ### Base maps
 
 Available base maps are defined in app/javascript/map/layers/background_maps.js.
-There are also examples for using maptiler vector maps with custom styles, for example
-created with [maputnik](https://maplibre.org/maputnik/).
+
+Some base maps are only available with a https://www.maptiler.com/cloud/ key, provided as ENV `MAPTILER_KEY`.
+There are also examples for using maptiler vector maps with custom styles, for example created with [maputnik](https://maplibre.org/maputnik/).
 
 
 ## Rake tasks
