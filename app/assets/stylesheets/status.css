@@ -1,0 +1,11 @@
+#status-container {
+  position: fixed;
+  z-index: 99;
+  bottom: -1em;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition:
+    opacity 0.7s linear,
+    bottom 0.7s ease-in-out;
+}
