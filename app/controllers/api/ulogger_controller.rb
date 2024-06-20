@@ -2,17 +2,19 @@ class Api::UloggerController < ApplicationController
   skip_before_action :verify_authenticity_token
   before_action :set_map, only: %i[addpos]
 
+  JAVA_MAXINT = 2147483647
+
   def auth
     render json: { error: false }
   end
 
   def addtrack
-    @map = Map.find_by(name: params[:track]) || Map.create!(name: params[:track])
+    track_id = create_numeric_map_id
 
-    trackid = @map.create_private_id
+    @map = Map.create!(id: track_id, name: params[:track])
     @map.save!
 
-    render json: { error: false, trackid: trackid }
+    render json: { error: false, trackid: track_id }
   end
 
   def addpos
@@ -35,7 +37,7 @@ class Api::UloggerController < ApplicationController
   private
 
   def set_map
-    @map =  Map.find_by(private_id: params[:trackid].to_i)
+    @map =  Map.find_by(id: params[:trackid].to_i)
     render json: { error: true } unless @map
   end
 
@@ -45,4 +47,16 @@ class Api::UloggerController < ApplicationController
       "#{key.to_s.humanize}: #{val}" if val.present?
     end.join("\n")
   end
+
+  def create_numeric_map_id
+    id = nil
+
+    loop do
+      id = SecureRandom.rand(1..JAVA_MAXINT)
+      break unless Map.where(id: id).where.not(id: id).exists?
+    end
+
+    id
+  end
+
 end
