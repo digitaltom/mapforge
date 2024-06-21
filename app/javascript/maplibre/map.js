@@ -5,6 +5,7 @@ import { initializeViewStyles, viewStyleNames } from 'maplibre/styles'
 import { AnimatePointAnimation } from 'maplibre/animations'
 import { showFeatureDetails } from 'maplibre/modals'
 import * as functions from 'helpers/functions'
+import { status } from 'helpers/status'
 
 // eslint expects variables to get imported, but we load the full lib in header
 const maplibregl = window.maplibregl
@@ -54,6 +55,7 @@ export function initializeMap (divId = 'maplibre-map') {
 
   // after basemap style is ready/changed, load geojson layer
   map.on('style.load', () => {
+    status('Map style loaded')
     loadGeoJsonData()
     if (mapProperties.terrain && window.gon.map_keys.maptiler) { addTerrain() }
   })
@@ -78,7 +80,8 @@ export function initializeMap (divId = 'maplibre-map') {
     map.on('click', styleName, function (e) {
       if (e.features.length >= 1) {
         const clickedFeature = e.features[0]
-        console.log('Clicked feature:', clickedFeature)
+        console.log('Selected feature:', clickedFeature)
+        status('Selected feature: ' + clickedFeature.id)
         showFeatureDetails(clickedFeature)
       }
     })
@@ -115,6 +118,7 @@ function loadGeoJsonData () {
         console.log('loaded ' + geojsonData.features.length + ' features from ' + url)
         map.getSource('geojson-source').setData(geojsonData)
       }
+      status('Geojson layer loaded')
       map.fire('geojson.load', { detail: { message: 'geojson-source loaded' } })
     })
     .catch(error => {
@@ -133,6 +137,7 @@ function addTerrain () {
     source: 'terrain',
     exaggeration: 1.3
   })
+  status('Terrain added to map')
 }
 
 export function initializeDefaultControls () {
@@ -166,6 +171,7 @@ export function initializeDefaultControls () {
   })
   map.addControl(scale)
   scale.setUnit('metric')
+  status('Controls added to map')
 }
 
 export function initializeStaticMode () {
@@ -187,10 +193,10 @@ export function initializeViewMode () {
 export function upsert (updatedFeature) {
   const feature = geojsonData.features.find(feature => feature.id === updatedFeature.id)
   if (!feature) {
-    console.log('Adding feature ' + updatedFeature.id)
+    status('Adding feature ' + updatedFeature.id)
     geojsonData.features.push(updatedFeature)
   } else {
-    console.log('Updating feature ' + updatedFeature.id)
+    status('Updating feature ' + updatedFeature.id)
     if (feature.geometry.type === 'Point') {
       const newCoords = updatedFeature.geometry.coordinates
       if (!functions.arraysEqual(feature.geometry.coordinates, newCoords)) {
@@ -207,7 +213,7 @@ export function upsert (updatedFeature) {
 }
 
 export function destroy (featureId) {
-  console.log('Deleting feature ' + featureId)
+  status('Deleting feature ' + featureId)
   geojsonData.features = geojsonData.features.filter(feature => feature.id !== featureId)
   if (draw) { draw.set(geojsonData) }
   map.getSource('geojson-source').setData(geojsonData)
@@ -216,7 +222,7 @@ export function destroy (featureId) {
 export function setBackgroundMapLayer (mapName = mapProperties.base_map, force = false) {
   if (backgroundMapLayer === mapName && !force) { return }
   if (basemaps[mapName]) {
-    console.log('Loading base map ' + mapName)
+    status('Loading base map ' + mapName)
     map.setStyle(basemaps[mapName],
     // adding this so that 'style.load' gets triggered (https://github.com/maplibre/maplibre-gl-js/issues/2587)
       { diff: false })

@@ -1,11 +1,17 @@
 #status-container {
   position: fixed;
   z-index: 99;
-  bottom: -1em;
+  bottom: 0.3em;
   left: 50%;
   transform: translateX(-50%);
   opacity: 0;
   transition:
     opacity 0.7s linear,
     bottom 0.7s ease-in-out;
+  background-color: rgba(255 255 255 / 85%);
+  box-shadow: 0 0 6px 2px rgb(0 0 0 / 8%);
+  border-radius: 3px;
+  padding: 0 0.5em;
+  font-size: 14px;
+  color: rgba(0 0 0 / 75%);
 }

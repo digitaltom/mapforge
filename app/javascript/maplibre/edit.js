@@ -3,6 +3,7 @@ import { editStyles, initializeEditStyles } from 'maplibre/edit_styles'
 import { mapChannel } from 'channels/map_channel'
 import { ControlGroup, MapSettingsControl, MapShareControl, MapLayersControl } from 'maplibre/controls'
 import { showFeatureDetails } from 'maplibre/modals'
+import { status } from 'helpers/status'
 import * as f from 'helpers/functions'
 
 // eslint expects variables to get imported, but we load the full lib in header
@@ -60,6 +61,7 @@ export function initializeEditMode () {
   map.on('draw.selectionchange', function (e) {
     selectedFeature = e.features[0]
     if (selectedFeature) {
+      status('selected ' + selectedFeature.id)
       console.log('selected: ' + JSON.stringify(selectedFeature))
       displayEditButtons(selectedFeature)
       showFeatureDetails(selectedFeature)
@@ -110,6 +112,7 @@ function handleCreate (e) {
   const feature = e.features[0] // Assuming one feature is created at a time
 
   console.log('Feature ' + feature.id + ' created')
+  status('Feature ' + feature.id + ' created')
   mapChannel.send_message('new_feature', feature)
 }
 
@@ -117,6 +120,7 @@ function handleUpdate (e) {
   const feature = e.features[0] // Assuming one feature is created at a time
 
   console.log('Feature ' + feature.id + ' changed')
+  status('Feature ' + feature.id + ' changed')
   const geojsonFeature = geojsonData.features.find(f => f.id === feature.id)
   geojsonFeature.geometry = feature.geometry
 
@@ -132,5 +136,6 @@ function handleDelete (e) {
 
   if (editPopup) { editPopup.remove() }
   console.log('Feature ' + deletedFeature.id + ' deleted')
+  status('Feature ' + deletedFeature.id + ' deleted')
   mapChannel.send_message('delete_feature', deletedFeature)
 }
