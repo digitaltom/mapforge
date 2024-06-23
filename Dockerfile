@@ -28,7 +28,8 @@ RUN bundle install && \
     bundle exec bootsnap precompile --gemfile
 
 # Install JavaScript dependencies
-RUN npm install
+COPY package.json package-lock.json ./
+RUN npm install --omit=dev
 
 # Copy application code
 COPY . .
