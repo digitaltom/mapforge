@@ -19,13 +19,16 @@ FROM base as build
 
 # Install packages needed to build gems
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y ruby-dev build-essential git libvips pkg-config libproj-dev proj-bin
+    apt-get install --no-install-recommends -y ruby-dev build-essential git npm libvips pkg-config libproj-dev proj-bin
 
 # Install application gems
 COPY Gemfile Gemfile.lock ./
 RUN bundle install && \
     rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
     bundle exec bootsnap precompile --gemfile
+
+# Install JavaScript dependencies
+RUN npm install
 
 # Copy application code
 COPY . .

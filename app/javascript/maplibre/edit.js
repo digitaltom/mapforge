@@ -5,9 +5,10 @@ import { ControlGroup, MapSettingsControl, MapShareControl, MapLayersControl } f
 import { showFeatureDetails } from 'maplibre/modals'
 import { status } from 'helpers/status'
 import * as f from 'helpers/functions'
+import MapboxDraw from '@mapbox/mapbox-gl-draw'
+import * as MapboxDrawWaypoint from 'mapbox-gl-draw-waypoint'
 
 // eslint expects variables to get imported, but we load the full lib in header
-const MapboxDraw = window.MapboxDraw
 const maplibregl = window.maplibregl
 
 export let draw
@@ -33,7 +34,10 @@ export function initializeEditMode () {
     },
     styles: editStyles,
     // user properties are available, prefixed with 'user_'
-    userProperties: true
+    userProperties: true,
+    // MapboxDrawWaypoint disables dragging polygons + lines,
+    // + switches to direct_select mode directly
+    modes: MapboxDrawWaypoint.enable(MapboxDraw.modes)
   })
 
   map.once('style.load', () => {
@@ -98,7 +102,7 @@ function displayEditButtons (feature) {
 
   // Add event listeners for buttons
   f.addEventListeners(document.querySelector('#edit-button-trash'), ['click', 'touchstart'],
-    function () { draw.trash() })
+    function () { handleDelete({ features: [feature] }) })
   f.addEventListeners(document.querySelector('#edit-button-edit'), ['click', 'touchstart'],
     function () {
       document.querySelector('#edit-modal').style.display = 'block'

@@ -17,3 +17,12 @@ pin_all_from "app/javascript/helpers", under: "helpers"
 pin "frontpage"
 pin "deck", preload: false
 pin "maplibre"
+
+# vendor
+# examples: https://generator.jspm.io/
+# https://github.com/mapbox/mapbox-gl-draw
+pin "@mapbox/mapbox-gl-draw", to: "https://ga.jspm.io/npm:@mapbox/mapbox-gl-draw@1.4.3/dist/mapbox-gl-draw.js",
+preload: false
+# https://github.com/zakjan/mapbox-gl-draw-waypoint
+pin "mapbox-gl-draw-waypoint",
+to: "https://ga.jspm.io/npm:mapbox-gl-draw-waypoint@1.2.3/dist/mapbox-gl-draw-waypoint.esm.js", preload: false
