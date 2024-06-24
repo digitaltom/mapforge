@@ -25,4 +25,7 @@ pin "@mapbox/mapbox-gl-draw", to: "https://ga.jspm.io/npm:@mapbox/mapbox-gl-draw
 preload: false
 # https://github.com/zakjan/mapbox-gl-draw-waypoint
 pin "mapbox-gl-draw-waypoint",
-to: "https://ga.jspm.io/npm:mapbox-gl-draw-waypoint@1.2.3/dist/mapbox-gl-draw-waypoint.esm.js", preload: false
+  to: "https://ga.jspm.io/npm:mapbox-gl-draw-waypoint@1.2.3/dist/mapbox-gl-draw-waypoint.esm.js", preload: false
+# https://github.com/piraveenankirupakaran/mapbox-gl-draw-paint-mode
+# local download because of removal of css import
+pin "mapbox-gl-draw-paint-mode" # @1.1.1

@@ -7,6 +7,7 @@ import { status } from 'helpers/status'
 import * as f from 'helpers/functions'
 import MapboxDraw from '@mapbox/mapbox-gl-draw'
 import * as MapboxDrawWaypoint from 'mapbox-gl-draw-waypoint'
+import PaintMode from 'mapbox-gl-draw-paint-mode'
 
 // eslint expects variables to get imported, but we load the full lib in header
 const maplibregl = window.maplibregl
@@ -22,6 +23,7 @@ MapboxDraw.constants.classes.CONTROL_GROUP = 'maplibregl-ctrl-group'
 // https://github.com/mapbox/mapbox-gl-draw
 export function initializeEditMode () {
   console.log('Initializing MapboxDraw')
+  const modes = MapboxDrawWaypoint.enable(MapboxDraw.modes)
   draw = new MapboxDraw({
     displayControlsDefault: false,
     controls: {
@@ -37,7 +39,10 @@ export function initializeEditMode () {
     userProperties: true,
     // MapboxDrawWaypoint disables dragging polygons + lines,
     // + switches to direct_select mode directly
-    modes: MapboxDrawWaypoint.enable(MapboxDraw.modes)
+    modes: {
+      ...modes,
+      draw_paint_mode: PaintMode
+    }
   })
 
   map.once('style.load', () => {
@@ -63,6 +68,7 @@ export function initializeEditMode () {
   })
 
   map.on('draw.selectionchange', function (e) {
+    if (!e.features?.length) { return }
     selectedFeature = e.features[0]
     if (selectedFeature) {
       status('selected ' + selectedFeature.id)
