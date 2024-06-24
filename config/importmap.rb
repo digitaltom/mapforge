@@ -4,7 +4,7 @@
 pin "application"
 pin "@hotwired/turbo-rails", to: "turbo.min.js"
 pin "@hotwired/stimulus", to: "stimulus.min.js"
-pin "@hotwired/stimulus-loading", to: "stimulus-loading.js"
+pin "@hotwired/stimulus-loading", to: "stimulus-loading.js", preload: false
 pin "@rails/actioncable", to: "actioncable.esm.js"
 
 pin_all_from "app/javascript/controllers", under: "controllers"
@@ -28,4 +28,4 @@ pin "mapbox-gl-draw-waypoint",
   to: "https://ga.jspm.io/npm:mapbox-gl-draw-waypoint@1.2.3/dist/mapbox-gl-draw-waypoint.esm.js", preload: false
 # https://github.com/piraveenankirupakaran/mapbox-gl-draw-paint-mode
 # local download because of removal of css import
-pin "mapbox-gl-draw-paint-mode" # @1.1.1
+pin "mapbox-gl-draw-paint-mode", preload: false # @1.1.1
