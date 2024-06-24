@@ -3,5 +3,4 @@ import '@hotwired/turbo-rails'
 import 'controllers'
 
 import 'frontpage'
-import 'deck'
 import 'maplibre'
