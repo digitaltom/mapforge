@@ -78,12 +78,11 @@ export function initializeMap (divId = 'maplibre-map') {
 
   viewStyleNames.forEach(styleName => {
     map.on('click', styleName, function (e) {
-      if (e.features.length >= 1) {
-        const clickedFeature = e.features[0]
-        console.log('Selected feature:', clickedFeature)
-        status('Selected feature: ' + clickedFeature.id)
-        showFeatureDetails(clickedFeature)
-      }
+      if (!e.features?.length) { return }
+      const clickedFeature = e.features[0]
+      // TODO: These features don't have an id.
+      console.log('Selected feature:', clickedFeature)
+      showFeatureDetails(clickedFeature)
     })
   })
 }

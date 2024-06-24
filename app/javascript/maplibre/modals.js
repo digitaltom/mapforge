@@ -12,17 +12,34 @@ function featureTitle (feature) {
 function featureMeta (feature) {
   let meta = feature.id
   if (feature.geometry.type === 'Point') {
-    meta += '<br>' + feature.geometry.coordinates
-  }
-  if (feature.geometry.type === 'LineString') {
+    meta += '<br>' + feature.geometry.coordinates[0].toFixed(6) +
+      ', ' + feature.geometry.coordinates[1].toFixed(6)
+  } else if (feature.geometry.type === 'LineString') {
     const turfLineString = turf.lineString(feature.geometry.coordinates)
     const length = turf.length(turfLineString)
-    meta += '<br>' + Math.round(length * 1000) + 'm'
-  }
-  if (feature.geometry.type === 'Polygon') {
+    if (length <= 2 ) {
+      meta += '<br>' + Math.round(length * 1000) + ' m'
+    } else {
+      // 2 decimals
+      meta += '<br>' + Math.round(length * 100) / 100 + ' km'
+    }
+  } else if (feature.geometry.type === 'MultiLineString') {
+    const turfLineString = turf.multiLineString(feature.geometry.coordinates)
+    const length = turf.length(turfLineString)
+    if (length <= 2 ) {
+      meta += '<br>' + Math.round(length * 1000) + ' m'
+    } else {
+      // 2 decimals
+      meta += '<br>' + Math.round(length * 100) / 100 + ' km'
+    }
+  } else if (feature.geometry.type === 'Polygon') {
     const turfPolygon = turf.polygon(feature.geometry.coordinates)
     const area = turf.area(turfPolygon)
-    meta += '<br>' + (area / 1000000).toFixed(2) + ' km²'
+    if (area < 1000000 ) {
+      meta += '<br>' + (area / 100).toFixed(2) + ' m²'
+    } else {
+      meta += '<br>' + (area / 1000000).toFixed(2) + ' km²'
+    }
   }
   return meta
 }
