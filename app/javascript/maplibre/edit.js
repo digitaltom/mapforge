@@ -8,9 +8,7 @@ import * as f from 'helpers/functions'
 import MapboxDraw from '@mapbox/mapbox-gl-draw'
 import * as MapboxDrawWaypoint from 'mapbox-gl-draw-waypoint'
 import PaintMode from 'mapbox-gl-draw-paint-mode'
-
-// eslint expects variables to get imported, but we load the full lib in header
-const maplibregl = window.maplibregl
+import maplibregl from 'maplibre-gl'
 
 export let draw
 let selectedFeature

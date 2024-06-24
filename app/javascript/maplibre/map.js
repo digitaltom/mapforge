@@ -6,9 +6,9 @@ import { AnimatePointAnimation } from 'maplibre/animations'
 import { showFeatureDetails } from 'maplibre/modals'
 import * as functions from 'helpers/functions'
 import { status } from 'helpers/status'
+import maplibregl from 'maplibre-gl'
 
 // eslint expects variables to get imported, but we load the full lib in header
-const maplibregl = window.maplibregl
 const maptilersdk = window.maptilersdk
 const maplibreglMaptilerGeocoder = window.maplibreglMaptilerGeocoder
 

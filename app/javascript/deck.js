@@ -1,8 +1,8 @@
 import { hexToRgb } from 'helpers/functions'
 import { mapProperties, initializeMaplibreProperties } from 'maplibre/map'
+import maplibregl from 'maplibre-gl'
 
 // eslint expects variables to get imported, but we load the full lib in header
-const maplibregl = window.maplibregl
 const deck = window.deck;
 
 ['turbo:load'].forEach(function (e) {
