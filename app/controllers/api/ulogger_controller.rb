@@ -18,11 +18,11 @@ class Api::UloggerController < ApplicationController
   end
 
   def addpos
-    geometry = { 'type' => 'Point',
-                 'coordinates' => [ params[:lon], params[:lat], params[:altitude] ] }
+    geometry = { "type" => "Point",
+                 "coordinates" => [ params[:lon], params[:lat], params[:altitude] ] }
 
     timestamp = Time.at(params[:time].to_i).to_datetime
-    properties = { 'title' => timestamp.to_s, 'description' => description || '' }
+    properties = { "title" => timestamp.to_s, "description" => description || "" }
 
     feature = Feature.new(geometry: geometry, properties: properties)
     feature.save!
@@ -38,7 +38,7 @@ class Api::UloggerController < ApplicationController
 
   def set_map
     @map =  Map.find_by(id: params[:trackid].to_i)
-    render json: { error: true, message: 'Invalid trackid' } unless @map
+    render json: { error: true, message: "Invalid trackid" } unless @map
   end
 
   def description
@@ -58,5 +58,4 @@ class Api::UloggerController < ApplicationController
 
     id
   end
-
 end
