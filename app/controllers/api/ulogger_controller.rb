@@ -38,7 +38,7 @@ class Api::UloggerController < ApplicationController
 
   def set_map
     @map =  Map.find_by(id: params[:trackid].to_i)
-    render json: { error: true } unless @map
+    render json: { error: true, message: 'Invalid trackid' } unless @map
   end
 
   def description
