@@ -1,5 +1,6 @@
-import { map } from 'maplibre/map'
+import { map, highlightedFeature } from 'maplibre/map'
 import * as f from 'helpers/functions'
+import { showFeatureDetails } from 'maplibre/modals'
 
 export const viewStyleNames = [
   'polygon-layer',
@@ -15,6 +16,23 @@ export const viewStyleNames = [
 export function initializeViewStyles () {
   viewStyleNames.forEach(styleName => {
     map.addLayer(styles[styleName])
+
+    map.on('mousemove', (e) => {
+      // query features across all layers
+      const features = map.queryRenderedFeatures(e.point)
+      if (!features?.length) { return }
+      const hoveredFeature = features[0]
+
+      if (highlightedFeature) {
+        map.setFeatureState({ source: 'geojson-source', id: highlightedFeature.id },
+          { hover: false })
+      }
+      // highlightedFeature = hoveredFeature
+      showFeatureDetails(hoveredFeature)
+      map.setFeatureState(
+        { source: 'geojson-source', id: hoveredFeature.id },
+        { hover: true })
+    })
   })
   map.on('styleimagemissing', loadImage)
   f.e('#maplibre-map', e => { e.setAttribute('data-loaded', true) })
@@ -51,11 +69,19 @@ export const styles = {
         ['get', 'fill'],
         ['get', 'user_fill'],
         'rgb(10, 135, 10)'],
-      'fill-opacity':
-          ['to-number', ['coalesce',
-            ['get', 'fill-opacity'],
-            ['get', 'user_fill-opacity'],
-            0.5]]
+
+      'fill-opacity': [
+        'case',
+        ['boolean', ['feature-state', 'hover'], false],
+        ['to-number', ['coalesce',
+          ['get', 'fill-opacity'],
+          ['get', 'user_fill-opacity'],
+          0.5]],
+        ['to-number', ['coalesce',
+          ['get', 'fill-opacity'],
+          ['get', 'user_fill-opacity'],
+          0.8]]
+      ]
     }
   },
   'polygon-layer-active': {

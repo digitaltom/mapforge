@@ -30,4 +30,4 @@ pin "mapbox-gl-draw-waypoint",
 # local download because of removal of css import
 pin "mapbox-gl-draw-paint-mode", preload: false # @1.1.1
 # https://github.com/maplibre/maplibre-gl-js
-pin "maplibre-gl", to: "https://ga.jspm.io/npm:maplibre-gl@4.4.1/dist/maplibre-gl.js"
+pin "maplibre-gl", to: "https://ga.jspm.io/npm:maplibre-gl@4.5.0/dist/maplibre-gl.js"

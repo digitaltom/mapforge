@@ -121,6 +121,7 @@ function handleCreate (e) {
 
   console.log('Feature ' + feature.id + ' created')
   status('Feature ' + feature.id + ' created')
+  geojsonData.features.push(feature)
   mapChannel.send_message('new_feature', feature)
 }
 
