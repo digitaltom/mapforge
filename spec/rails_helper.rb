@@ -8,6 +8,7 @@ end
 
 require 'spec_helper'
 ENV['RAILS_ENV'] ||= 'test'
+
 require_relative '../config/environment'
 # Prevent database truncation if the environment is production
 abort('The Rails environment is running in production mode!') if Rails.env.production?
@@ -17,8 +18,6 @@ require 'rspec/rails'
 require 'database_cleaner/mongoid'
 require 'capybara-screenshot/rspec'
 require 'mongoid-rspec'
-
-Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
@@ -33,7 +32,7 @@ Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 # directory. Alternatively, in the individual `*_spec.rb` files, manually
 # require only the support files necessary.
 #
-# Rails.root.glob('spec/support/**/*.rb').sort.each { |f| require f }
+Rails.root.glob('spec/support/**/*.rb').sort.each { |f| require f }
 
 RSpec.configure do |config|
   # Remove this line to enable support for ActiveRecord
