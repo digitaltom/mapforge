@@ -13,8 +13,8 @@ function featureTitle (feature) {
 function featureMeta (feature) {
   let meta = feature.id
   if (feature.geometry.type === 'Point') {
-    meta += '<br>' + feature.geometry.coordinates[0].toFixed(6) +
-      ', ' + feature.geometry.coordinates[1].toFixed(6)
+    meta += '<br>' + parseFloat(feature.geometry.coordinates[0]).toFixed(6) +
+      ', ' + parseFloat(feature.geometry.coordinates[1]).toFixed(6)
   } else if (feature.geometry.type === 'LineString') {
     const turfLineString = turf.lineString(feature.geometry.coordinates)
     const length = turf.length(turfLineString)
