@@ -1,4 +1,4 @@
-import { styles, loadImage, resetHighlightedFeature, highlightFeature } from 'maplibre/styles'
+import { styles, loadImage } from 'maplibre/styles'
 import { map } from 'maplibre/map'
 import * as f from 'helpers/functions'
 
@@ -8,13 +8,7 @@ export function initializeEditStyles () {
   map.addLayer(styles['symbols-layer'])
   map.addLayer(styles['text-layer'])
   map.on('styleimagemissing', loadImage)
-
-  map.on('mousemove', (e) => {
-    resetHighlightedFeature()
-    const features = map.queryRenderedFeatures(e.point)
-    if (!features?.length) { return }
-    highlightFeature(features[0])
-  })
+  // TODO setting feature state (hover) doesn't work on draw features
 
   f.e('#maplibre-map', e => { e.setAttribute('data-loaded', true) })
 }

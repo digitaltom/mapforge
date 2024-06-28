@@ -14,10 +14,10 @@ export const viewStyleNames = [
   'text-layer'
 ]
 
-export function resetHighlightedFeature () {
+export function resetHighlightedFeature (source = 'geojson-source') {
   if (highlightedFeatureId) {
     map.setFeatureState({
-      source: 'geojson-source',
+      source,
       id: highlightedFeatureId
     },
     { hover: false })
@@ -27,13 +27,14 @@ export function resetHighlightedFeature () {
   f.e('.map-modal', e => { e.style.display = 'none' })
 }
 
-export function highlightFeature (feature) {
+export function highlightFeature (feature, source = 'geojson-source') {
   // in draw mode there is no feature.id
   highlightedFeatureId = feature.id || feature.properties.id
   if (highlightedFeatureId) {
     showFeatureDetails(feature)
+    // A feature's state is not part of the GeoJSON or vector tile data
     map.setFeatureState(
-      { source: 'geojson-source', id: highlightedFeatureId },
+      { source, id: highlightedFeatureId },
       { hover: true })
   }
 }
