@@ -30,7 +30,6 @@ let backgroundMapLayer
 export function initializeMaplibreProperties () {
   mapProperties = window.gon.map_properties
   console.log('map properties: ' + JSON.stringify(mapProperties))
-  geojsonData = null
   if (mapProperties.name) { document.title = 'mapforge.org - ' + mapProperties.name }
 }
 

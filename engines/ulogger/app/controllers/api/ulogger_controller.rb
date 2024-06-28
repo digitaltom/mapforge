@@ -9,25 +9,31 @@ module Ulogger
     end
 
     def addtrack
-      track_id, padded_id = create_numeric_map_id
-      @map = Map.create!(id: padded_id, name: params[:track])
+      map_id, padded_id = create_numeric_map_id
+      @map = Map.create!(id: padded_id, name: params[:track],
+                         public_id: params[:track], private: true)
       @map.save!
-      render json: { error: false, trackid: track_id }
+      render json: { error: false, trackid: map_id }
     end
 
     def addpos
-      geometry = { "type" => "Point",
-                   "coordinates" => [ params[:lon], params[:lat], params[:altitude] ] }
+      coords = [ params[:lon].to_f, params[:lat].to_f, params[:altitude].to_f ]
 
-      timestamp = Time.at(params[:time].to_i).to_datetime
-      properties = { "title" => timestamp.to_s, "description" => description || "" }
+      # if the map has no track yet, create one, else append
+      track = @map.features.line_string.first
+      track = Feature.new(layer: @map.layer, geometry: { 'coordinates' => [] }) unless track
+      track_coords = track.geometry['coordinates'] << coords
+      track.update(geometry: { "type" => "LineString",
+                               "coordinates" => track_coords })
 
-      feature = Feature.new(geometry: geometry, properties: properties)
-      feature.save!
+      # add point with details
+      geometry = { "type" => "Point", "coordinates" => coords }
 
-      @map.features << feature
-      @map.center = [ params[:lon], params[:lat] ]
-      @map.save!
+      timestamp = Time.at(params[:time].to_i).to_datetime.strftime("%Y-%m-%d %H:%M:%S")
+      properties = { "title" => timestamp, "desc" => description || "" }
+
+      @map.features.create!(geometry: geometry, properties: properties)
+      @map.update!(center: [ params[:lon].to_f, params[:lat].to_f ])
 
       render json: { error: false }
     end
@@ -40,7 +46,7 @@ module Ulogger
     end
 
     def description
-      %i[accuracy speed bearing provider].filter_map do |key|
+      %i[accuracy speed bearing provider altitude].filter_map do |key|
         val = params.fetch(key, nil)
         "#{key.to_s.humanize}: #{val}" if val.present?
       end.join("\n")

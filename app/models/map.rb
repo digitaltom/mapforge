@@ -6,7 +6,7 @@ class Map
   # one default layer for now
   has_one :layer
 
-  field :base_map, type: String
+  field :base_map, type: String, default: -> { default_base_map }
   field :center, type: Array
   field :zoom, type: String
   field :terrain, type: Boolean
@@ -22,8 +22,9 @@ class Map
 
   BASE_MAPS = [ "osmRasterTiles", "satelliteTiles",
                 "stamenTonerTiles", "openTopoTiles" ]
-  MAPTILER_MAPS = [ "maptilerBuildings", "maptilerHybrid", "maptilerDataviz", "maptilerStreets",
-                    "maptilerNoStreets", "maptilerWinter", "maptilerBike" ]
+  MAPTILER_MAPS = [ "maptilerBuildings", "maptilerHybrid", "maptilerDataviz",
+                    "maptilerStreets", "maptilerNoStreets", "maptilerWinter",
+                    "maptilerBike", "maptilerBasic" ]
 
   DEFAULT_CENTER = [ 11.077, 49.447 ].freeze
   DEFAULT_ZOOM = 12
@@ -111,7 +112,7 @@ class Map
     elsif BASE_MAPS.include?(base_map)
       return base_map
     end
-    logger.warn("Map #{base_map} not found, falling back to #{default_base_map}")
+    logger.warn("Map '#{base_map}' not found, falling back to #{default_base_map}")
     default_base_map
   end
 

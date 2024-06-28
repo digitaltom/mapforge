@@ -51,9 +51,15 @@ RSpec.describe Api::UloggerController do
     it { expect(response_body['error']).to eq(false) }
 
     it 'adds point feature at coordinates' do
-      expect(map.reload.features.count).to eq 1
-      expect(map.reload.features.first.geometry['coordinates']).
-        to eq ([ "11.1268342", "49.4492029", "374.29" ])
+      expect(map.reload.features.point.count).to eq 1
+      expect(map.reload.features.point.first.geometry['coordinates']).
+        to eq ([ 11.1268342, 49.4492029, 374.29 ])
+    end
+
+    it 'adds linestring feature at coordinates' do
+      expect(map.reload.features.line_string.count).to eq 1
+      expect(map.reload.features.line_string.first.geometry['coordinates']).
+        to eq ([ [ 11.1268342, 49.4492029, 374.29 ] ])
     end
   end
 end
