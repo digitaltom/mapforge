@@ -30,7 +30,7 @@ export function resetHighlightedFeature (source = 'geojson-source') {
 export function highlightFeature (feature, source = 'geojson-source') {
   // in draw mode there is no feature.id
   highlightedFeatureId = feature.id || feature.properties.id
-  if (highlightedFeatureId) {
+  if (highlightedFeatureId && window.gon.map_mode !== 'static') {
     showFeatureDetails(feature)
     // A feature's state is not part of the GeoJSON or vector tile data
     map.setFeatureState(
