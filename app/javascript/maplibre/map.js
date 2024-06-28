@@ -1,9 +1,8 @@
 import { basemaps } from 'maplibre/basemaps'
 import { draw } from 'maplibre/edit'
 import { resetControls } from 'maplibre/controls'
-import { initializeViewStyles, viewStyleNames } from 'maplibre/styles'
+import { initializeViewStyles } from 'maplibre/styles'
 import { AnimatePointAnimation } from 'maplibre/animations'
-import { showFeatureDetails } from 'maplibre/modals'
 import * as functions from 'helpers/functions'
 import { status } from 'helpers/status'
 import maplibregl from 'maplibre-gl'
@@ -76,23 +75,6 @@ export function initializeMap (divId = 'maplibre-map') {
   map.on('touchstart', resetControls)
 
   functions.e('#map-title', e => { e.textContent = mapProperties.name })
-
-  viewStyleNames.forEach(styleName => {
-    map.on('click', styleName, function (e) {
-      if (!e.features?.length) { return }
-      const clickedFeature = e.features[0]
-      console.log('Selected feature:', clickedFeature)
-      if (highlightedFeature) {
-        map.setFeatureState({ source: 'geojson-source', id: highlightedFeature.id },
-          { hover: false })
-      }
-      highlightedFeature = clickedFeature
-      showFeatureDetails(clickedFeature)
-      map.setFeatureState(
-        { source: 'geojson-source', id: clickedFeature.id },
-        { hover: true })
-    })
-  })
 }
 
 function loadGeoJsonData () {

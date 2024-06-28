@@ -1,7 +1,8 @@
-import { map, highlightedFeature } from 'maplibre/map'
+import { map } from 'maplibre/map'
 import * as f from 'helpers/functions'
 import { showFeatureDetails } from 'maplibre/modals'
 
+let highlightedFeatureId
 export const viewStyleNames = [
   'polygon-layer',
   'polygon-layer-extrusion',
@@ -13,27 +14,48 @@ export const viewStyleNames = [
   'text-layer'
 ]
 
+export function resetHighlightedFeature () {
+  if (highlightedFeatureId) {
+    map.setFeatureState({
+      source: 'geojson-source',
+      id: highlightedFeatureId
+    },
+    { hover: false })
+    highlightedFeatureId = null
+  }
+  // reset active modals
+  f.e('.map-modal', e => { e.style.display = 'none' })
+}
+
+export function highlightFeature (feature) {
+  // in draw mode there is no feature.id
+  highlightedFeatureId = feature.id || feature.properties.id
+  if (highlightedFeatureId) {
+    showFeatureDetails(feature)
+    map.setFeatureState(
+      { source: 'geojson-source', id: highlightedFeatureId },
+      { hover: true })
+  }
+}
+
 export function initializeViewStyles () {
   viewStyleNames.forEach(styleName => {
     map.addLayer(styles[styleName])
 
-    map.on('mousemove', (e) => {
-      // query features across all layers
-      const features = map.queryRenderedFeatures(e.point)
-      if (!features?.length) { return }
-      const hoveredFeature = features[0]
-
-      if (highlightedFeature) {
-        map.setFeatureState({ source: 'geojson-source', id: highlightedFeature.id },
-          { hover: false })
-      }
-      // highlightedFeature = hoveredFeature
-      showFeatureDetails(hoveredFeature)
-      map.setFeatureState(
-        { source: 'geojson-source', id: hoveredFeature.id },
-        { hover: true })
+    // click is only needed for mobile now
+    map.on('click', styleName, function (e) {
+      if (!e.features?.length) { return }
+      highlightFeature(e.features[0])
     })
   })
+
+  map.on('mousemove', (e) => {
+    resetHighlightedFeature()
+    const features = map.queryRenderedFeatures(e.point)
+    if (!features?.length) { return }
+    highlightFeature(features[0])
+  })
+
   map.on('styleimagemissing', loadImage)
   f.e('#maplibre-map', e => { e.setAttribute('data-loaded', true) })
 }
