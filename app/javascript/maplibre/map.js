@@ -1,9 +1,8 @@
 import { basemaps } from 'maplibre/basemaps'
 import { draw } from 'maplibre/edit'
 import { resetControls } from 'maplibre/controls'
-import { initializeViewStyles, viewStyleNames } from 'maplibre/styles'
+import { initializeViewStyles } from 'maplibre/styles'
 import { AnimatePointAnimation } from 'maplibre/animations'
-import { showFeatureDetails } from 'maplibre/modals'
 import * as functions from 'helpers/functions'
 import { status } from 'helpers/status'
 import maplibregl from 'maplibre-gl'
@@ -16,6 +15,7 @@ export let map
 export let geojsonData //= { type: 'FeatureCollection', features: [] }
 export let mapProperties
 export let lastMousePosition
+export let highlightedFeature
 let backgroundMapLayer
 
 // workflow of event based map loading:
@@ -75,22 +75,13 @@ export function initializeMap (divId = 'maplibre-map') {
   map.on('touchstart', resetControls)
 
   functions.e('#map-title', e => { e.textContent = mapProperties.name })
-
-  viewStyleNames.forEach(styleName => {
-    map.on('click', styleName, function (e) {
-      if (!e.features?.length) { return }
-      const clickedFeature = e.features[0]
-      // TODO: These features don't have an id.
-      console.log('Selected feature:', clickedFeature)
-      showFeatureDetails(clickedFeature)
-    })
-  })
 }
 
 function loadGeoJsonData () {
   // https://maplibre.org/maplibre-style-spec/sources/#geojson
   map.addSource('geojson-source', {
     type: 'geojson',
+    promoteId: 'id',
     data: { type: 'FeatureCollection', features: [] }, // geojsonData,
     cluster: false
   })
@@ -115,6 +106,9 @@ function loadGeoJsonData () {
       geojsonData = data
       if (geojsonData.features.length > 0) {
         console.log('loaded ' + geojsonData.features.length + ' features from ' + url)
+        // this is a workaround for the maplibre limitation of numeric ids:
+        // https://github.com/mapbox/mapbox-gl-js/issues/2716
+        geojsonData.features.forEach(feature => { feature.properties.id = feature.id })
         map.getSource('geojson-source').setData(geojsonData)
       }
       status('Geojson layer loaded')
@@ -192,10 +186,10 @@ export function initializeViewMode () {
 export function upsert (updatedFeature) {
   const feature = geojsonData.features.find(feature => feature.id === updatedFeature.id)
   if (!feature) {
-    status('Adding feature ' + updatedFeature.id)
+    updatedFeature.properties.id = updatedFeature.id
     geojsonData.features.push(updatedFeature)
+    status('Added feature ' + updatedFeature.id)
   } else {
-    status('Updating feature ' + updatedFeature.id)
     if (feature.geometry.type === 'Point') {
       const newCoords = updatedFeature.geometry.coordinates
       if (!functions.arraysEqual(feature.geometry.coordinates, newCoords)) {
@@ -206,6 +200,7 @@ export function upsert (updatedFeature) {
       feature.geometry = updatedFeature.geometry
     }
     feature.properties = updatedFeature.properties
+    status('Updated feature ' + updatedFeature.id)
   }
   if (draw) { draw.set(geojsonData) }
   map.getSource('geojson-source').setData(geojsonData)

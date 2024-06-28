@@ -1,6 +1,8 @@
 import { map } from 'maplibre/map'
 import * as f from 'helpers/functions'
+import { showFeatureDetails } from 'maplibre/modals'
 
+let highlightedFeatureId
 export const viewStyleNames = [
   'polygon-layer',
   'polygon-layer-extrusion',
@@ -12,10 +14,49 @@ export const viewStyleNames = [
   'text-layer'
 ]
 
+export function resetHighlightedFeature (source = 'geojson-source') {
+  if (highlightedFeatureId) {
+    map.setFeatureState({
+      source,
+      id: highlightedFeatureId
+    },
+    { hover: false })
+    highlightedFeatureId = null
+  }
+  // reset active modals
+  f.e('.map-modal', e => { e.style.display = 'none' })
+}
+
+export function highlightFeature (feature, source = 'geojson-source') {
+  // in draw mode there is no feature.id
+  highlightedFeatureId = feature.id || feature.properties.id
+  if (highlightedFeatureId) {
+    showFeatureDetails(feature)
+    // A feature's state is not part of the GeoJSON or vector tile data
+    map.setFeatureState(
+      { source, id: highlightedFeatureId },
+      { hover: true })
+  }
+}
+
 export function initializeViewStyles () {
   viewStyleNames.forEach(styleName => {
     map.addLayer(styles[styleName])
+
+    // click is only needed for mobile now
+    map.on('click', styleName, function (e) {
+      if (!e.features?.length) { return }
+      highlightFeature(e.features[0])
+    })
   })
+
+  map.on('mousemove', (e) => {
+    resetHighlightedFeature()
+    const features = map.queryRenderedFeatures(e.point)
+    if (!features?.length) { return }
+    highlightFeature(features[0])
+  })
+
   map.on('styleimagemissing', loadImage)
   f.e('#maplibre-map', e => { e.setAttribute('data-loaded', true) })
 }
@@ -51,11 +92,19 @@ export const styles = {
         ['get', 'fill'],
         ['get', 'user_fill'],
         'rgb(10, 135, 10)'],
-      'fill-opacity':
-          ['to-number', ['coalesce',
-            ['get', 'fill-opacity'],
-            ['get', 'user_fill-opacity'],
-            0.5]]
+
+      'fill-opacity': [
+        'case',
+        ['boolean', ['feature-state', 'hover'], false],
+        ['to-number', ['coalesce',
+          ['get', 'fill-opacity'],
+          ['get', 'user_fill-opacity'],
+          0.5]],
+        ['to-number', ['coalesce',
+          ['get', 'fill-opacity'],
+          ['get', 'user_fill-opacity'],
+          0.8]]
+      ]
     }
   },
   'polygon-layer-active': {

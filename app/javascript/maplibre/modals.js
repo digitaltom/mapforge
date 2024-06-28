@@ -2,7 +2,8 @@
 const turf = window.turf
 
 function featureTitle (feature) {
-  const title = feature?.properties?.title || feature?.properties?.label
+  const title = feature?.properties?.title || feature?.properties?.user_title ||
+    feature?.properties?.label || feature?.properties?.user_label
   if (!title || title === '') {
     return '<i>No title</i>'
   }

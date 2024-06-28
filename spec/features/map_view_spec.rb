@@ -31,13 +31,13 @@ describe 'Map public view' do
       expect(page).to have_css('.map[data-loaded="true"]')
     end
 
-    # it 'shows feature details on hover' do
-    #   hover_coord('.map', 0, 0)
-    #   expect(page).to have_css('#feature-popup')
-    #   expect(page).to have_text('Poly Title')
-    #   expect(page).to have_text('Poly Desc')
-    #   expect(page).to have_text('27.64 km')
-    # end
+    it 'shows feature details on hover' do
+      hover_coord('.map', 50, 50)
+      expect(page).to have_css('#feature-details-modal')
+      expect(page).to have_text('Poly Title')
+      expect(page).to have_text('Poly Desc')
+      expect(page).to have_text('24.09 km²')
+    end
 
     it 'shows feature details on click' do
       click_coord('.map', 50, 50)

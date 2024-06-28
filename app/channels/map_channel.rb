@@ -37,7 +37,10 @@ class MapChannel < ApplicationCable::Channel
   def feature_atts(data)
     # TODO: validate nested atts
     # ActionController::Parameters.new(data).permit(:type, :id, geometry: [:type, coordinates: []], properties: {})
-    data.slice("type", "id", "geometry", "properties")
+    atts = data.slice("type", "id", "geometry", "properties")
+    # drop the id in properties which is a workaround for https://github.com/mapbox/mapbox-gl-js/issues/2716
+    atts["properties"].delete("id")
+    atts
   end
 
   def map_atts(data)

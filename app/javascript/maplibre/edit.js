@@ -59,7 +59,7 @@ export function initializeEditMode () {
     // register callback to reload edit styles when source layer changed
     map.on('sourcedata', sourcedataHandler)
 
-    // draw has its own layers based on editStyles
+    // draw has its own style layers based on editStyles
     if (geojsonData.features.length > 0) {
       draw.set(geojsonData)
     }
@@ -121,6 +121,7 @@ function handleCreate (e) {
 
   console.log('Feature ' + feature.id + ' created')
   status('Feature ' + feature.id + ' created')
+  geojsonData.features.push(feature)
   mapChannel.send_message('new_feature', feature)
 }
 

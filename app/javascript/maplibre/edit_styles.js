@@ -8,6 +8,8 @@ export function initializeEditStyles () {
   map.addLayer(styles['symbols-layer'])
   map.addLayer(styles['text-layer'])
   map.on('styleimagemissing', loadImage)
+  // TODO setting feature state (hover) doesn't work on draw features
+
   f.e('#maplibre-map', e => { e.setAttribute('data-loaded', true) })
 }
 
