@@ -8,15 +8,15 @@ Rails.application.routes.draw do
   scope "/m" do
     get "", to: "maps#index", as: "maps"
     get "/", to: "maps#index"
-    get "/:id" => "maps#show", as: :map
+    get "/:id" => "maps#show", as: :map, constraints: { id: /[^\/]+/ }
     post "" => "maps#create", as: :create_map
-    get "/:id/features" => "maps#features", as: :map_features
-    get "/:id/properties" => "maps#properties", as: :map_properties
+    get "/:id/features" => "maps#features", as: :map_features, constraints: { id: /[^\/]+/ }
+    get "/:id/properties" => "maps#properties", as: :map_properties, constraints: { id: /[^\/]+/ }
   end
-  get "/d/:id" => "maps#show", defaults: { engine: "deck" }, as: :deck
+  get "/d/:id" => "maps#show", defaults: { engine: "deck" }, as: :deck, constraints: { id: /[^\/]+/ }
 
   get "/admin" => "admin#index"
-  delete "/admin/:id" => "admin#destroy", as: :destroy_map
+  delete "/admin/:id" => "admin#destroy", as: :destroy_map, constraints: { id: /[^\/]+/ }
 
   get "/frontpage" => "frontpage#index"
   get "/icon/:public_id", to: "images#icon", as: "icon", constraints: { public_id: /[^\/]+/ }
