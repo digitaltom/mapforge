@@ -84,7 +84,7 @@ async function featureShow () {
       window.gon.map_id = properties.public_id
       window.gon.map_properties = properties
 
-      initializeMaplibreProperties()
+      initializeMaplibreProperties(true)
       setBackgroundMapLayer(properties.base_map)
       map.setCenter(properties.center)
       map.setZoom(properties.zoom)

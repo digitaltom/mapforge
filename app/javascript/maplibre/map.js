@@ -27,10 +27,11 @@ let backgroundMapLayer
 //      -> triggers callbacks for setting geojson/draw style layers,
 //         sets data-geojson-loaded attribute to true
 
-export function initializeMaplibreProperties () {
+export function initializeMaplibreProperties (resetGeojsonData = false) {
   mapProperties = window.gon.map_properties
   console.log('map properties: ' + JSON.stringify(mapProperties))
   if (mapProperties.name) { document.title = 'mapforge.org - ' + mapProperties.name }
+  if (resetGeojsonData) { geojsonData = null }
 }
 
 export function initializeMap (divId = 'maplibre-map') {
@@ -76,7 +77,7 @@ export function initializeMap (divId = 'maplibre-map') {
   functions.e('#map-title', e => { e.textContent = mapProperties.name })
 }
 
-function loadGeoJsonData () {
+export function loadGeoJsonData () {
   // https://maplibre.org/maplibre-style-spec/sources/#geojson
   map.addSource('geojson-source', {
     type: 'geojson',
@@ -217,7 +218,8 @@ export function setBackgroundMapLayer (mapName = mapProperties.base_map, force =
   if (basemaps[mapName]) {
     status('Loading base map ' + mapName)
     map.setStyle(basemaps[mapName],
-    // adding this so that 'style.load' gets triggered (https://github.com/maplibre/maplibre-gl-js/issues/2587)
+      // adding this so that 'style.load' gets triggered (https://github.com/maplibre/maplibre-gl-js/issues/2587)
+      // which will trigger loadGeoJsonData()
       { diff: false })
     backgroundMapLayer = mapName
   } else {

@@ -45,7 +45,7 @@ export function initializeViewStyles () {
 
     // click is only needed for mobile now
     map.on('click', styleName, function (e) {
-      if (!e.features?.length) { return }
+      if (!e.features?.length || window.gon.map_mode === 'static') { return }
       highlightFeature(e.features[0])
     })
   })
@@ -53,7 +53,7 @@ export function initializeViewStyles () {
   map.on('mousemove', (e) => {
     resetHighlightedFeature()
     const features = map.queryRenderedFeatures(e.point)
-    if (!features?.length) { return }
+    if (!features?.length || window.gon.map_mode === 'static') { return }
     highlightFeature(features[0])
   })
 
