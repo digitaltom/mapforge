@@ -54,7 +54,11 @@ export function initializeViewStyles () {
     resetHighlightedFeature()
     const features = map.queryRenderedFeatures(e.point)
     if (!features?.length || window.gon.map_mode === 'static') { return }
-    highlightFeature(features[0])
+    if (features[0].source === 'geojson-source') {
+      highlightFeature(features[0])
+    } else {
+      // console.log(features[0])
+    }
   })
 
   map.on('styleimagemissing', loadImage)
