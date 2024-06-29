@@ -92,9 +92,12 @@ class Map
 
   def default_center
     if features.present?
-      # TODO: this is a quick&dirty way to center the map at the first feature
-      coords = features.first[:geometry]["coordinates"]
-      [ coords.flatten[0], coords.flatten[1] ]
+      # setting center to average of all coordinates
+      coordinates = features.map { |feature| feature.geometry["coordinates"] }
+      coordinates = coordinates.flatten.each_slice(2).to_a
+      average_latitude = coordinates.map(&:first).reduce(:+) / coordinates.size.to_f
+      average_longitude = coordinates.map(&:last).reduce(:+) / coordinates.size.to_f
+      [ average_latitude, average_longitude ]
     else
      DEFAULT_CENTER
     end
