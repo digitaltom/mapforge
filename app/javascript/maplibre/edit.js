@@ -1,7 +1,7 @@
 import { map, geojsonData, initializeDefaultControls, lastMousePosition } from 'maplibre/map'
 import { editStyles, initializeEditStyles } from 'maplibre/edit_styles'
 import { mapChannel } from 'channels/map_channel'
-import { ControlGroup, MapSettingsControl, MapShareControl, MapLayersControl } from 'maplibre/controls'
+import { ControlGroup, MapSettingsControl, MapShareControl, MapLayersControl, resetControls } from 'maplibre/controls'
 import { showFeatureDetails } from 'maplibre/modals'
 import { status } from 'helpers/status'
 import * as f from 'helpers/functions'
@@ -79,6 +79,21 @@ export function initializeEditMode () {
   map.on('draw.create', handleCreate)
   map.on('draw.update', handleUpdate)
   map.on('draw.delete', handleDelete)
+
+  // Mapbox Draw kills the click event on mobile (https://github.com/mapbox/mapbox-gl-js/issues/9114)
+  // patching click on touchstart + touchend on same position
+  let touchStartPosition
+  let touchEndPosition
+  map.on('touchstart', (e) => {
+    touchStartPosition = e.point
+  })
+  map.on('touchend', (e) => {
+    touchEndPosition = e.point
+    if (touchStartPosition.x === touchEndPosition.x &&
+      touchStartPosition.y === touchEndPosition.y) {
+      resetControls()
+    }
+  })
 }
 
 function sourcedataHandler (e) {

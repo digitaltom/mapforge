@@ -1,7 +1,7 @@
 import consumer from 'channels/consumer'
 import {
   upsert, destroy, setBackgroundMapLayer, mapProperties,
-  initializeMaplibreProperties, geojsonData
+  initializeMaplibreProperties, geojsonData, map
 } from 'maplibre/map'
 import { status } from 'helpers/status'
 
@@ -24,6 +24,7 @@ export function initializeSocket () {
     connected () {
       // Called when the subscription is ready for use on the server
       console.log('Connected to map_channel ' + window.gon.map_id)
+      map.fire('online', { detail: { message: 'Connected to map_channel' } })
       mapChannel = this
       if (geojsonData) {
         status('Connection to server re-established')
@@ -37,6 +38,7 @@ export function initializeSocket () {
     disconnected () {
       // Called when the subscription has been terminated by the server
       console.log('Disconnected from map_channel ' + window.gon.map_id)
+      map.fire('offline', { detail: { message: 'Disconnected from map_channel' } })
       mapChannel = null
       // show error with delay to avoid showing it on unload/refresh
       setTimeout(function () { status('Connection to server lost', 'error') }, 500)
@@ -53,6 +55,7 @@ export function initializeSocket () {
           destroy(data.feature.id)
           break
         case 'update_map':
+          // TODO re-center map if center changed
           window.gon.map_properties = data.map
           initializeMaplibreProperties()
           setBackgroundMapLayer()

@@ -72,7 +72,6 @@ export function initializeMap (divId = 'maplibre-map') {
   })
 
   map.on('click', resetControls)
-  map.on('touchstart', resetControls)
 
   functions.e('#map-title', e => { e.textContent = mapProperties.name })
 }
@@ -102,7 +101,7 @@ export function loadGeoJsonData () {
       return response.json()
     })
     .then(data => {
-      console.log('loaded GeoJSON data: ', JSON.stringify(data))
+      console.log('loaded GeoJSON from server: ', JSON.stringify(data))
       geojsonData = data
       if (geojsonData.features.length > 0) {
         console.log('loaded ' + geojsonData.features.length + ' features from ' + url)
