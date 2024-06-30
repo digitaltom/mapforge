@@ -16,11 +16,8 @@ export const viewStyleNames = [
 
 export function resetHighlightedFeature (source = 'geojson-source') {
   if (highlightedFeatureId) {
-    map.setFeatureState({
-      source,
-      id: highlightedFeatureId
-    },
-    { hover: false })
+    map.setFeatureState({ source, id: highlightedFeatureId },
+      { active: false })
     highlightedFeatureId = null
   }
   // reset active modals
@@ -33,9 +30,8 @@ export function highlightFeature (feature, source = 'geojson-source') {
   if (highlightedFeatureId) {
     showFeatureDetails(feature)
     // A feature's state is not part of the GeoJSON or vector tile data
-    map.setFeatureState(
-      { source, id: highlightedFeatureId },
-      { hover: true })
+    map.setFeatureState({ source, id: highlightedFeatureId },
+      { active: true })
   }
 }
 
@@ -83,6 +79,39 @@ export async function loadImage (e) {
 // Expressions: https://maplibre.org/maplibre-style-spec/expressions/
 // layout is fixed, paint flexible
 
+// shared styles
+// Mapbox.Draw layers prefix user properties with '_user'
+
+const featureColor = 'rgb(10, 135, 10)' // green
+const featureOutlineColor = 'white'
+
+const fillColor = ['coalesce',
+  ['get', 'fill'], ['get', 'user_fill'], featureColor]
+const fillOpacity = ['*', 0.7, ['to-number', ['coalesce',
+  ['get', 'fill-opacity'], ['get', 'user_fill-opacity'], 1]]]
+const fillOpacityActive = ['*', 0.4, ['to-number', ['coalesce',
+  ['get', 'fill-opacity'], ['get', 'user_fill-opacity'], 1]]]
+
+const lineColor = ['coalesce', ['get', 'stroke'], ['get', 'user_stroke'], featureColor]
+const lineWidth = ['to-number', ['coalesce',
+  ['get', 'stroke-width'], ['get', 'user_stroke-width'], 3]]
+const lineWidthActive = ['+', 1, lineWidth]
+const lineOpacity = ['to-number', ['coalesce',
+  ['get', 'stroke-opacity'], ['get', 'user_stroke-opacity'], 0.8]]
+const lineOpacityActive = 1
+const outlineColor = featureOutlineColor
+const outlineWidth = ['+', 2, lineWidth]
+const outlineWidthActive = ['+', 1, outlineWidth]
+
+const pointColor = ['coalesce', ['get', 'user_marker-color'], ['get', 'marker-color'], featureColor]
+const pointSize = ['coalesce', ['get', 'user_marker-size'], ['get', 'marker-size'], 6]
+const pointSizeActive = ['+', 2, pointSize]
+const pointOutlineSize = ['+', 2, pointSize]
+const pointOutlineSizeActive = ['+', 2, pointOutlineSize]
+const pointOutlineColor = ['coalesce', ['get', 'user_stroke'], ['get', 'stroke'], featureOutlineColor]
+const pointOpacity = 0.7
+const pointOpacityActive = 0.9
+
 export const styles = {
   'polygon-layer': {
     id: 'polygon-layer',
@@ -92,42 +121,13 @@ export const styles = {
       ['in', '$type', 'Polygon'],
       ['!=', 'active', 'true']],
     paint: {
-      'fill-color': ['coalesce',
-        ['get', 'fill'],
-        ['get', 'user_fill'],
-        'rgb(10, 135, 10)'],
-
+      'fill-color': fillColor,
       'fill-opacity': [
         'case',
-        ['boolean', ['feature-state', 'hover'], false],
-        ['to-number', ['coalesce',
-          ['get', 'fill-opacity'],
-          ['get', 'user_fill-opacity'],
-          0.5]],
-        ['to-number', ['coalesce',
-          ['get', 'fill-opacity'],
-          ['get', 'user_fill-opacity'],
-          0.8]]
+        ['boolean', ['feature-state', 'active'], false],
+        fillOpacityActive,
+        fillOpacity
       ]
-    }
-  },
-  'polygon-layer-active': {
-    id: 'polygon-layer-active',
-    type: 'fill',
-    source: 'geojson-source',
-    filter: ['all',
-      ['in', '$type', 'Polygon'],
-      ['==', 'active', 'true']],
-    paint: {
-      'fill-color': ['coalesce',
-        ['get', 'fill'],
-        ['get', 'user_fill'],
-        'rgb(10, 135, 10)'],
-      'fill-opacity':
-            ['to-number', ['coalesce',
-              ['get', 'fill-opacity'],
-              ['get', 'user_fill-opacity'],
-              0.8]]
     }
   },
   'polygon-layer-extrusion': {
@@ -142,7 +142,7 @@ export const styles = {
         ['get', 'user_fill-extrusion-color'],
         ['get', 'fill'],
         ['get', 'user_fill'],
-        'rgb(10, 135, 10)'],
+        featureColor],
       'fill-extrusion-height': ['coalesce',
         ['get', 'fill-extrusion-height'],
         ['get', 'user_fill-extrusion-height']],
@@ -150,7 +150,7 @@ export const styles = {
         ['get', 'fill-extrusion-base'],
         ['get', 'user_fill-extrusion-base']],
       // opacity does not support data expressions!?!
-      'fill-extrusion-opacity': 0.4
+      'fill-extrusion-opacity': 0.7
     }
   },
   'line-layer-outline': {
@@ -163,15 +163,15 @@ export const styles = {
       'line-join': 'round',
       'line-cap': 'round'
     },
-    // Draw prefixes properties with '_user'
     paint: {
-      'line-color': 'white',
-      'line-width': ['+', 2,
-        ['to-number', ['coalesce',
-          ['get', 'stroke-width'],
-          ['get', 'user_stroke-width'],
-          3]]],
-      'line-opacity': ['to-number', ['coalesce', ['get', 'stroke-opacity'], ['get', 'user_stroke-opacity'], 1]]
+      'line-color': outlineColor,
+      'line-width': [
+        'case',
+        ['boolean', ['feature-state', 'active'], false],
+        outlineWidthActive,
+        outlineWidth
+      ],
+      'line-opacity': lineOpacity
     }
   },
   'line-layer': {
@@ -186,12 +186,19 @@ export const styles = {
     },
     // Draw prefixes properties with '_user'
     paint: {
-      'line-color': ['coalesce', ['get', 'stroke'], ['get', 'user_stroke'], 'green'],
-      'line-width': ['to-number', ['coalesce',
-        ['get', 'stroke-width'],
-        ['get', 'user_stroke-width'],
-        3]],
-      'line-opacity': ['to-number', ['coalesce', ['get', 'stroke-opacity'], ['get', 'user_stroke-opacity'], 1]]
+      'line-color': lineColor,
+      'line-width': [
+        'case',
+        ['boolean', ['feature-state', 'active'], false],
+        lineWidthActive,
+        lineWidth
+      ],
+      'line-opacity': [
+        'case',
+        ['boolean', ['feature-state', 'active'], false],
+        lineOpacityActive,
+        lineOpacity
+      ]
     }
   },
   'points-border-layer': {
@@ -209,14 +216,13 @@ export const styles = {
       'circle-radius': [
         'match',
         ['coalesce', ['get', 'user_stroke'], ['get', 'stroke']],
-        'transparent', 0,
-        [
-          'match',
-          ['coalesce', ['get', 'user_marker-size'], ['get', 'marker-size']],
-          'large', 15,
-          8 // Default circle-radius
+        'transparent', 0, // If marker-color is 'transparent', set circle-radius to 0
+        ['case',
+          ['boolean', ['feature-state', 'active'], false],
+          pointOutlineSizeActive,
+          pointOutlineSize
         ]],
-      'circle-color': ['coalesce', ['get', 'user_stroke'], ['get', 'stroke'], '#ffffff']
+      'circle-color': pointOutlineColor
     }
   },
   'points-layer': {
@@ -235,13 +241,18 @@ export const styles = {
         'match',
         ['coalesce', ['get', 'user_marker-color'], ['get', 'marker-color']],
         'transparent', 0, // If marker-color is 'transparent', set circle-radius to 0
-        [
-          'match',
-          ['coalesce', ['get', 'user_marker-size'], ['get', 'marker-size']],
-          'large', 12,
-          6
+        ['case',
+          ['boolean', ['feature-state', 'active'], false],
+          pointSizeActive,
+          pointSize
         ]],
-      'circle-color': ['coalesce', ['get', 'user_marker-color'], ['get', 'marker-color'], 'rgb(10, 135, 10)']
+      'circle-color': pointColor,
+      'circle-opacity': [
+        'case',
+        ['boolean', ['feature-state', 'active'], false],
+        pointOpacityActive,
+        pointOpacity
+      ]
     }
   },
   // support symbols on all feature types
