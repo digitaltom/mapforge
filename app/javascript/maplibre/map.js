@@ -92,7 +92,8 @@ export function loadGeoJsonData () {
     return
   }
 
-  const url = '/m/' + window.gon.map_id + '/features'
+  const host = new URL(window.location.href).origin
+  const url = host + '/m/' + window.gon.map_id + '/features'
   fetch(url)
     .then(response => {
       if (!response.ok) {

@@ -1,4 +1,4 @@
-#edit-modal.map-modal{'data-controller': "maplibre"}
+#edit-modal.map-modal{'data-controller': "feature"}
   .edit-feature
     %h4.feature-details-title
     %p.feature-details-desc
@@ -8,5 +8,5 @@
       %br
       %span.error test
     %a{href: 'https://github.com/digitaltom/mapforge/blob/main/docs/geojson.md', target: '_blank'} Help
-    %button.feature-update{ 'data-action': "click->maplibre#update_feature"} Update
+    %button.feature-update{ 'data-action': "click->feature#update_feature"} Update
 
