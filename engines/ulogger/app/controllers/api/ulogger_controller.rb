@@ -4,6 +4,14 @@ module Ulogger
 
     JAVA_MAXINT = 2147483647
 
+    METADATA = [
+      [ :accuracy, '%.2f m' ],
+      [ :speed, '%.2f m/s' ],
+      [ :bearing, '%.1f°' ],
+      [ :provider, '%s' ],
+      [ :altitude, '%.2f m' ]
+    ]
+
     def auth
       render json: { error: false }
     end
@@ -46,9 +54,10 @@ module Ulogger
     end
 
     def description
-      %i[accuracy speed bearing provider altitude].filter_map do |key|
+      METADATA.filter_map do |dtype|
+        key, format = dtype
         val = params.fetch(key, nil)
-        "#{key.to_s.humanize}: #{val}" if val.present?
+        "- %s: #{format}" % [ key.to_s.humanize, val ] if val.present?
       end.join("\n")
     end
 
