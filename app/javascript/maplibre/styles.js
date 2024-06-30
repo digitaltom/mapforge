@@ -8,8 +8,10 @@ export const viewStyleNames = [
   'polygon-layer-extrusion',
   'line-layer-outline',
   'line-layer',
+  'line-layer-hit',
   'points-border-layer',
   'points-layer',
+  'points-hit-layer',
   'symbols-layer',
   'text-layer'
 ]
@@ -26,6 +28,7 @@ export function resetHighlightedFeature (source = 'geojson-source') {
 
 export function highlightFeature (feature, source = 'geojson-source') {
   // in draw mode there is no feature.id
+  resetHighlightedFeature()
   highlightedFeatureId = feature.id || feature.properties.id
   if (highlightedFeatureId) {
     showFeatureDetails(feature)
@@ -105,9 +108,9 @@ const outlineWidthActive = ['+', 1, outlineWidth]
 
 const pointColor = ['coalesce', ['get', 'user_marker-color'], ['get', 'marker-color'], featureColor]
 const pointSize = ['coalesce', ['get', 'user_marker-size'], ['get', 'marker-size'], 6]
-const pointSizeActive = ['+', 2, pointSize]
+const pointSizeActive = ['+', 1, pointSize]
 const pointOutlineSize = ['+', 2, pointSize]
-const pointOutlineSizeActive = ['+', 2, pointOutlineSize]
+const pointOutlineSizeActive = ['+', 1, pointOutlineSize]
 const pointOutlineColor = ['coalesce', ['get', 'user_stroke'], ['get', 'stroke'], featureOutlineColor]
 const pointOpacity = 0.7
 const pointOpacityActive = 0.9
@@ -201,6 +204,17 @@ export const styles = {
       ]
     }
   },
+  'line-layer-hit': {
+    id: 'line-layer-hit',
+    type: 'line',
+    source: 'geojson-source',
+    filter: ['all',
+      ['in', '$type', 'LineString']],
+    paint: {
+      'line-width': ['+', 15, outlineWidth],
+      'line-opacity': 0
+    }
+  },
   'points-border-layer': {
     id: 'points-border-layer',
     type: 'circle',
@@ -253,6 +267,22 @@ export const styles = {
         pointOpacityActive,
         pointOpacity
       ]
+    }
+  },
+  'points-hit-layer': {
+    id: 'points-hit-layer',
+    type: 'circle',
+    source: 'geojson-source',
+    filter: ['all',
+      ['==', '$type', 'Point'],
+      ['!=', 'active', 'true'],
+      ['!has', 'marker-symbol'],
+      ['!has', 'marker-image-url'],
+      ['!has', 'user_marker-symbol'],
+      ['!has', 'user_marker-image-url']],
+    paint: {
+      'circle-radius': ['+', 3, pointOutlineSize],
+      'circle-opacity': 0
     }
   },
   // support symbols on all feature types
