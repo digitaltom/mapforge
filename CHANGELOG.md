@@ -2,14 +2,33 @@
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## 2024-06
+
+* Burger menu navigation
+* Dropped openlayers
+* Modal for feature details
+* Make Mapforge run without maptiler key
+* Support µlogger API
+
+## 2024-05
 
 * Switch to maplibre backend
+* Admin map listing
+* Layer view listing all features on the map
+* gpx + kml upload
+* Search bar
+* Framework to control + cancel animations
+* Adding rack-cache and cache-control headers for dragonfly media
+* Calculate default map center based on features
 
-## 0.1
+## 2024-04
+
+* Introduce dragonfly to store 'icon' marker types
+* Testing deck.gl + maplibre gl backends
+* Adding emoji pngs to use from 'marker-symbol' attribute
+
+## 2024-03
 
 * Added Bootstrap5
 * Upgrade to Openlayers 9

@@ -5,7 +5,9 @@
 
 # README
 
-Mapforge is an open source (Ruby on Rails) web application that lets you create and share geojson layers on top of different base maps. It uses [maplibre gl](https://maplibre.org/maplibre-gl-js/docs/) as map library and supports desktop and mobile views. Your view is connected in to the server via websockets, so all changes are immediately visible to all clients for collaborative editing or creating real-time maps.
+Mapforge is an open source (Ruby on Rails) web application that lets you create and share geojson layers on top of different base maps. It uses [maplibre gl](https://maplibre.org/maplibre-gl-js/docs/) as map library and supports desktop and mobile views. Your browser is connected to the server via websockets, so all changes are immediately visible to all clients for collaborative editing or creating real-time maps.
+
+A reference installation is running at [mapforge.org](https://mapforge.org), see the [changelog](CHANGELOG.md) here.
 
 ![Mapforge Screenshot](https://github.com/digitaltom/mapforge/blob/main/docs/screenshot.png?raw=true)
 
@@ -16,6 +18,8 @@ The geojson layer can get styled to your needs in an extended version of the [ge
 ## Development Setup
 
 ### Install dependencies:
+
+For openSUSE (Debian):
 
 ```
 zypper in proj-devel # (libproj-dev) for building rgeo-proj4
@@ -28,15 +32,15 @@ bundle
 
 `bin/thrust rails server`
 
-* Put map provider keys (MAPTILER_KEY, MAPBOX_KEY) into `.env.development`
+* To use [Maptiler](https://www.maptiler.com/) base maps, provide the key (MAPTILER_KEY) in `.env.development`
 * MongoDB backend is expected at: `ENV.fetch("MONGO_URL") { "localhost:27017" }`
 * Redis (for action cable) is expected at: `ENV.fetch("REDIS_URL") { "redis://localhost:6379/1" }`
-* Login for /admin is read from `ENV.fetch("ADMIN_USER")` and `ENV.fetch("ADMIN_PW")`
+* Login credentials for /admin is read from `ENV.fetch("ADMIN_USER")` and `ENV.fetch("ADMIN_PW")`
 * To import the initial frontpage, run: `bin/rake seed:frontpage`
 
 ### Base maps
 
-Available base maps are defined in app/javascript/map/layers/background_maps.js.
+Available base maps are defined in app/javascript/maplibre/basemaps.js.
 
 Some base maps are only available with a https://www.maptiler.com/cloud/ key, provided as ENV `MAPTILER_KEY`.
 There are also examples for using maptiler vector maps with custom styles, for example created with [maputnik](https://maplibre.org/maputnik/).
@@ -44,11 +48,11 @@ There are also examples for using maptiler vector maps with custom styles, for e
 
 ## Rake tasks
 
-* Create map from a mapforge export:
+* Import map from a mapforge export:
 
   `bin/rake seed:mapforge_file['db/seeds/examples/fosdem.json']`
 
-* Create map from geojson (samples in db/seeds):
+* Import map from geojson (samples in db/seeds):
 
   `bin/rake seed:geojson_file['db/seeds/examples/germany_areas.json']`
 
