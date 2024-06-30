@@ -54,6 +54,7 @@
   font-size: 80%;
   color: #999;
   position: relative;
-  top: -2em;
+  top: -1.8em;
+  margin-right: 1em;
   text-align: right;
 }

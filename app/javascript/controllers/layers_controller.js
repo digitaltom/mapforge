@@ -2,6 +2,7 @@ import { Controller } from '@hotwired/stimulus'
 import { mapChannel } from 'channels/map_channel'
 import { map, geojsonData, upsert } from 'maplibre/map'
 import { initLayersModal, resetControls } from 'maplibre/controls'
+import { highlightFeature } from 'maplibre/styles'
 
 // eslint expects variables to get imported, but we load the full lib in header
 const toGeoJSON = window.toGeoJSON
@@ -52,6 +53,7 @@ export default class extends Controller {
     const centroid = turf.centroid(feature)
     console.log('Fly to: ' + feature.id + ' ' + centroid.geometry.coordinates)
     resetControls()
+    highlightFeature(feature)
     map.flyTo({
       center: centroid.geometry.coordinates,
       speed: 0.4,

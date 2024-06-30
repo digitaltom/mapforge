@@ -1,7 +1,7 @@
 import { basemaps } from 'maplibre/basemaps'
 import { draw } from 'maplibre/edit'
 import { resetControls } from 'maplibre/controls'
-import { initializeViewStyles } from 'maplibre/styles'
+import { initializeViewStyles, resetHighlightedFeature } from 'maplibre/styles'
 import { AnimatePointAnimation } from 'maplibre/animations'
 import * as functions from 'helpers/functions'
 import { status } from 'helpers/status'
@@ -211,6 +211,7 @@ export function destroy (featureId) {
   geojsonData.features = geojsonData.features.filter(feature => feature.id !== featureId)
   if (draw) { draw.set(geojsonData) }
   map.getSource('geojson-source').setData(geojsonData)
+  resetHighlightedFeature()
 }
 
 export function setBackgroundMapLayer (mapName = mapProperties.base_map, force = false) {

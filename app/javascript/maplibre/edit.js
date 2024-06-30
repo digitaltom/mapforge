@@ -1,4 +1,4 @@
-import { map, geojsonData, initializeDefaultControls, lastMousePosition } from 'maplibre/map'
+import { map, geojsonData, initializeDefaultControls } from 'maplibre/map'
 import { editStyles, initializeEditStyles } from 'maplibre/edit_styles'
 import { mapChannel } from 'channels/map_channel'
 import { ControlGroup, MapSettingsControl, MapShareControl, MapLayersControl, resetControls } from 'maplibre/controls'
@@ -8,7 +8,6 @@ import * as f from 'helpers/functions'
 import MapboxDraw from '@mapbox/mapbox-gl-draw'
 import * as MapboxDrawWaypoint from 'mapbox-gl-draw-waypoint'
 import PaintMode from 'mapbox-gl-draw-paint-mode'
-import maplibregl from 'maplibre-gl'
 
 export let draw
 let selectedFeature
@@ -106,19 +105,7 @@ function sourcedataHandler (e) {
 }
 
 function displayEditButtons (feature) {
-  let coordinates = lastMousePosition
-  if (feature.geometry.type === 'Point') {
-    coordinates = feature.geometry.coordinates
-  }
-  editPopup = new maplibregl.Popup({
-    closeButton: false,
-    className: 'edit-popup',
-    offset: [0, -20]
-  })
-    .setLngLat(coordinates)
-    .setHTML(document.getElementById('edit-buttons').innerHTML)
-    .addTo(map)
-
+  document.querySelector('#edit-buttons').classList.remove('hidden')
   // Add event listeners for buttons
   f.addEventListeners(document.querySelector('#edit-button-trash'), ['click', 'touchstart'],
     function () { handleDelete({ features: [feature] }) })
