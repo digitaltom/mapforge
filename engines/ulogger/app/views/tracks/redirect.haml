@@ -1,0 +1,6 @@
+:javascript
+  let mapId = window.location.hash.substring(1); // Remove the '#'
+  if (mapId.length) {
+    console.log("Redirecting to '" + mapId + "'")
+    window.location.href = '/ulogger?id=' + encodeURIComponent(mapId)
+  }
