@@ -42,7 +42,7 @@ RSpec.describe Api::UloggerController do
     subject { response }
     let(:map) { create(:map, id: "%024d" % [ trackid ]) }
     let(:trackid) { 924977797 }
-    let(:payload) { { action: 'addpos', altitude: 374.29,
+    let(:payload) { { action: 'addpos', altitude: 374.29, speed: 4.3,
       provider: 'network', trackid: trackid, accuracy: 16.113,
       lon: 11.1268342, time: 1717959606, lat: 49.4492029 } }
     let(:response_body) { JSON.parse(response.body) }
@@ -54,6 +54,11 @@ RSpec.describe Api::UloggerController do
       expect(map.reload.features.point.count).to eq 1
       expect(map.reload.features.point.first.geometry['coordinates']).
         to eq ([ 11.1268342, 49.4492029, 374.29 ])
+    end
+
+    it "writes formatted metadata to the point's description" do
+      expect(map.reload.features.point.first.properties['desc']).
+        to eq "- Altitude: 374.29 m\n- Speed: 15.5 km/h\n- Accuracy: 16.11 m\n- Provider: network"
     end
 
     it 'adds linestring feature at coordinates' do
