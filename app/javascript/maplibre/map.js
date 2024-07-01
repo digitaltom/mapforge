@@ -153,13 +153,17 @@ export function initializeDefaultControls () {
   })
   map.addControl(nav)
 
-  const locate = new maptilersdk.MaptilerGeolocateControl({
+  // https://maplibre.org/maplibre-gl-js/docs/API/classes/GeolocateControl
+  const geolocate = new maplibregl.GeolocateControl({
     positionOptions: {
       enableHighAccuracy: true
     },
     trackUserLocation: true
   })
-  map.addControl(locate, 'top-right')
+  geolocate.on('error', () => {
+    status('Error detecting location', 'warning')
+  })
+  map.addControl(geolocate, 'top-right')
 
   const scale = new maptilersdk.ScaleControl({
     maxWidth: 80,
