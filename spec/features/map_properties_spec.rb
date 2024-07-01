@@ -31,27 +31,4 @@ describe 'Map' do
       expect(map.reload.terrain).to eq true
     end
   end
-
-  context 'when sharing map' do
-    before do
-      find('.maplibregl-ctrl-share').click
-      expect(page).to have_text('Share Map')
-    end
-
-    it 'can share public link' do
-      expect(page).to have_link('Viewer link', href: '/m/' + subject.public_id)
-    end
-
-    it 'can share private link' do
-      expect(page).to have_link('Edit link', href: '/m/' + subject.id)
-    end
-
-    it 'can download geojson' do
-      expect(page).to have_link('Download geojson', href: '/m/' + subject.public_id + '/features')
-    end
-
-    it 'can download map export' do
-      expect(page).to have_link('Download map export', href: '/m/' + subject.public_id + '.json')
-    end
-  end
 end

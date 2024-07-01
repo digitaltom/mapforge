@@ -12,6 +12,7 @@ Rails.application.routes.draw do
     get "/:id" => "maps#show", as: :map, constraints: { id: ID_PATTERN }
     post "" => "maps#create", as: :create_map
     get "/:id/features" => "maps#features", as: :map_features, constraints: { id: ID_PATTERN }
+    get "/:id/export" => "maps#show", as: :map_export, constraints: { id: ID_PATTERN }, defaults: { format: "json" }
     get "/:id/properties" => "maps#properties", as: :map_properties, constraints: { id: ID_PATTERN }
   end
   get "/d/:id" => "maps#show", defaults: { engine: "deck" }, as: :deck, constraints: { id: ID_PATTERN }

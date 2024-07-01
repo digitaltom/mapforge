@@ -31,7 +31,7 @@ class MapsController < ApplicationController
   end
 
   def features
-    render json: @map.feature_collection.as_json
+    render json: @map.feature_collection
   end
 
   def properties
