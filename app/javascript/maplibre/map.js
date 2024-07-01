@@ -40,7 +40,6 @@ export function initializeMap (divId = 'maplibre-map') {
   backgroundMapLayer = null
 
   initializeMaplibreProperties()
-  maptilersdk.config.apiKey = window.gon.map_keys.maptiler
   map = new maplibregl.Map({
     container: divId,
     center: mapProperties.center,
@@ -154,6 +153,7 @@ export function initializeDefaultControls () {
   map.addControl(nav)
 
   // https://maplibre.org/maplibre-gl-js/docs/API/classes/GeolocateControl
+  // Note: This might work only via https
   const geolocate = new maplibregl.GeolocateControl({
     positionOptions: {
       enableHighAccuracy: true
@@ -165,8 +165,8 @@ export function initializeDefaultControls () {
   })
   map.addControl(geolocate, 'top-right')
 
-  const scale = new maptilersdk.ScaleControl({
-    maxWidth: 80,
+  const scale = new maplibregl.ScaleControl({
+    maxWidth: 100,
     unit: 'metric'
   })
   map.addControl(scale)
