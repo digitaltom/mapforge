@@ -5,11 +5,11 @@ module Ulogger
     JAVA_MAXINT = 2147483647
 
     METADATA = [
-      [ :accuracy, '%.2f m' ],
-      [ :speed, '%.2f m/s' ],
+      [ :altitude, '%.2f m' ],
+      [ :speed, '%.1f km/h', ->(x) { x.to_f * 3.6 } ],
       [ :bearing, '%.1f°' ],
-      [ :provider, '%s' ],
-      [ :altitude, '%.2f m' ]
+      [ :accuracy, '%.2f m' ],
+      [ :provider, '%s' ]
     ]
 
     def auth
@@ -55,9 +55,12 @@ module Ulogger
 
     def description
       METADATA.filter_map do |dtype|
-        key, format = dtype
+        key, format, lambda = dtype
         val = params.fetch(key, nil)
-        "- %s: #{format}" % [ key.to_s.humanize, val ] if val.present?
+        if val.present?
+          val = lambda.call(val) if lambda
+          "- %s: #{format}" % [ key.to_s.humanize, val ]
+        end
       end.join("\n")
     end
 
