@@ -4,7 +4,7 @@ module Ulogger
 
     JAVA_MAXINT = 2147483647
 
-    METADATA = [
+    METADATA_FORMAT = [
       [ :altitude, '%.2f m' ],
       [ :speed, '%.1f km/h', ->(x) { x.to_f * 3.6 } ],
       [ :bearing, '%.1f°' ],
@@ -54,7 +54,7 @@ module Ulogger
     end
 
     def description
-      METADATA.filter_map do |dtype|
+      METADATA_FORMAT.filter_map do |dtype|
         key, format, lambda = dtype
         val = params.fetch(key, nil)
         if val.present?
