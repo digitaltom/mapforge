@@ -20,7 +20,7 @@
     / maptiler-sdk.css include maplibre-gl css
     %link{rel: "stylesheet", href: "https://cdn.maptiler.com/maptiler-sdk-js/v2.1.0/maptiler-sdk.css", type: "text/css"}
     %link{rel: "stylesheet", href: "https://unpkg.com/@mapbox/mapbox-gl-draw@1.4.3/dist/mapbox-gl-draw.css", type: "text/css"}
-    %link{rel: "stylesheet", href: "https://cdn.maptiler.com/maptiler-geocoding-control/v1.3.0/style.css", type: "text/css"}
+    %link{rel: "stylesheet", href: "https://cdn.maptiler.com/maptiler-geocoding-control/v1.3.1/style.css", type: "text/css"}
 
     = stylesheet_link_tag "application", "data-turbo-track": "reload"
 
@@ -33,8 +33,6 @@
     / https://github.com/maptiler/maptiler-sdk-js/releases
     / used for LocateControl, ScaleControl
     = javascript_include_tag "https://cdn.maptiler.com/maptiler-sdk-js/v2.1.0/maptiler-sdk.umd.min.js"
-    / https://github.com/maptiler/maptiler-geocoding-control
-    = javascript_include_tag "https://cdn.maptiler.com/maptiler-geocoding-control/v1.3.0/maplibregl.umd.js"
 
     = yield(:head)
 

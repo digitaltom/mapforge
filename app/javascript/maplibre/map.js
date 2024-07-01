@@ -6,10 +6,10 @@ import { AnimatePointAnimation } from 'maplibre/animations'
 import * as functions from 'helpers/functions'
 import { status } from 'helpers/status'
 import maplibregl from 'maplibre-gl'
+import { GeocodingControl } from 'maptiler-geocoding-control'
 
 // eslint expects variables to get imported, but we load the full lib in header
 const maptilersdk = window.maptilersdk
-const maplibreglMaptilerGeocoder = window.maplibreglMaptilerGeocoder
 
 export let map
 export let geojsonData //= { type: 'FeatureCollection', features: [] }
@@ -52,6 +52,7 @@ export function initializeMap (divId = 'maplibre-map') {
   })
   // for console debugging
   window.map = map
+  window.maplibregl = maplibregl
 
   // after basemap style is ready/changed, load geojson layer
   map.on('style.load', () => {
@@ -136,9 +137,11 @@ function addTerrain () {
 export function initializeDefaultControls () {
   // https://docs.maptiler.com/sdk-js/modules/geocoding/api/api-reference/#geocoding-options
   if (window.gon.map_keys.maptiler) {
-    const gc = new maplibreglMaptilerGeocoder.GeocodingControl({
+    const gc = new GeocodingControl({
       apiKey: window.gon.map_keys.maptiler,
-      class: 'search-form'
+      class: 'search-form',
+      marker: false, // TODO rendering markers is broken with maplibre importmap
+      maplibregl
     })
     map.addControl(gc, 'top-right')
   }
