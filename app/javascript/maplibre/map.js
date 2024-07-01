@@ -8,9 +8,6 @@ import { status } from 'helpers/status'
 import maplibregl from 'maplibre-gl'
 import { GeocodingControl } from 'maptiler-geocoding-control'
 
-// eslint expects variables to get imported, but we load the full lib in header
-const maptilersdk = window.maptilersdk
-
 export let map
 export let geojsonData //= { type: 'FeatureCollection', features: [] }
 export let mapProperties

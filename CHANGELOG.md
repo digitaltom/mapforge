@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file.
 
 
+## 2024-07
+
+* geojson import
+
+
 ## 2024-06
 
 * Burger menu navigation

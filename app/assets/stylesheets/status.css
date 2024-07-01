@@ -17,9 +17,9 @@
 }
 
 .status-error {
-  background-color: rgba(255, 147, 94, 0.85) !important;
+  background-color: rgb(255 147 94 / 85%) !important;
 }
 
 .status-warning {
-  background-color: rgba(255, 210, 123, 0.85) !important;
+  background-color: rgb(255 210 123 / 85%) !important;
 }

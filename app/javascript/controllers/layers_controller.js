@@ -18,14 +18,17 @@ export default class extends Controller {
       reader.onload = function (event) {
         const content = event.target.result
         const parser = new DOMParser()
-        const xmlDoc = parser.parseFromString(content, 'application/xml')
         let geoJSON
 
         // https://github.com/mapbox/togeojson?tab=readme-ov-file#api
         if (file.type === 'application/gpx+xml') {
+          const xmlDoc = parser.parseFromString(content, 'application/xml')
           geoJSON = toGeoJSON.gpx(xmlDoc)
         } else if (file.type === 'application/vnd.google-earth.kml+xml') {
+          const xmlDoc = parser.parseFromString(content, 'application/xml')
           geoJSON = toGeoJSON.kml(xmlDoc)
+        } else if (file.type === 'application/geo+json') {
+          geoJSON = JSON.parse(content)
         }
         console.log(geoJSON)
 
@@ -38,7 +41,8 @@ export default class extends Controller {
       }
 
       if (file.type === 'application/gpx+xml' ||
-        file.type === 'application/vnd.google-earth.kml+xml') {
+        file.type === 'application/vnd.google-earth.kml+xml' ||
+        file.type === 'application/geo+json') {
         reader.readAsText(file)
       } else {
         console.log('Unsupported file type: ' + file.type)
