@@ -1,8 +1,8 @@
 # µlogger API for Mapforge
 
-App: https://f-droid.org/packages/net.fabiszewski.ulogger
-Server: https://github.com/bfabiszewski/ulogger-server
-Client: https://github.com/bfabiszewski/ulogger-android
+* App: https://f-droid.org/packages/net.fabiszewski.ulogger
+* Original server project: https://github.com/bfabiszewski/ulogger-server
+* Client project: https://github.com/bfabiszewski/ulogger-android
 
 ![Mapforge µlogger track](https://github.com/digitaltom/mapforge/blob/main/engines/ulogger/docs/track.jpg?raw=true)
 
