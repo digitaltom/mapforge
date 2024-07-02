@@ -1,4 +1,4 @@
-import { map } from 'maplibre/map'
+import { map, geojsonData } from 'maplibre/map'
 import * as f from 'helpers/functions'
 import { showFeatureDetails } from 'maplibre/modals'
 
@@ -27,13 +27,14 @@ export function resetHighlightedFeature (source = 'geojson-source') {
 }
 
 export function highlightFeature (feature, source = 'geojson-source') {
-  // in draw mode there is no feature.id
   resetHighlightedFeature()
-  highlightedFeatureId = feature.id || feature.properties.id
-  if (highlightedFeatureId) {
-    showFeatureDetails(feature)
+  if (feature.id) {
+    highlightedFeatureId = feature.id
+    // load feature from source, the style only returns the dimensions on screen
+    const sourceFeature = geojsonData.features.find(f => f.id === feature.id)
+    showFeatureDetails(sourceFeature)
     // A feature's state is not part of the GeoJSON or vector tile data
-    map.setFeatureState({ source, id: highlightedFeatureId },
+    map.setFeatureState({ source, id: feature.id },
       { active: true })
   }
 }
@@ -98,13 +99,13 @@ const fillOpacityActive = ['*', 0.4, ['to-number', ['coalesce',
 const lineColor = ['coalesce', ['get', 'stroke'], ['get', 'user_stroke'], featureColor]
 const lineWidth = ['to-number', ['coalesce',
   ['get', 'stroke-width'], ['get', 'user_stroke-width'], 3]]
-const lineWidthActive = ['+', 1, lineWidth]
+const lineWidthActive = ['+', 2, lineWidth]
 const lineOpacity = ['to-number', ['coalesce',
   ['get', 'stroke-opacity'], ['get', 'user_stroke-opacity'], 0.8]]
 const lineOpacityActive = 1
 const outlineColor = featureOutlineColor
-const outlineWidth = ['+', 2, lineWidth]
-const outlineWidthActive = ['+', 1, outlineWidth]
+const outlineWidth = ['+', 4, lineWidth]
+const outlineWidthActive = ['+', 3, outlineWidth]
 
 const pointColor = ['coalesce', ['get', 'user_marker-color'], ['get', 'marker-color'], featureColor]
 const pointSize = ['coalesce', ['get', 'user_marker-size'], ['get', 'marker-size'], 6]
