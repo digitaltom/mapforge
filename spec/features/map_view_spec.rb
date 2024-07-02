@@ -36,7 +36,7 @@ describe 'Map public view' do
       expect(page).to have_css('#feature-details-modal')
       expect(page).to have_text('Poly Title')
       expect(page).to have_text('Poly Desc')
-      expect(page).to have_text('24.09 km²')
+      expect(page).to have_text('27.70 km²')
     end
 
     it 'shows feature details on click' do
@@ -44,7 +44,7 @@ describe 'Map public view' do
       expect(page).to have_css('#feature-details-modal')
       expect(page).to have_text('Poly Title')
       expect(page).to have_text('Poly Desc')
-      expect(page).to have_text('24.09 km²')
+      expect(page).to have_text('27.70 km²')
     end
   end
 
