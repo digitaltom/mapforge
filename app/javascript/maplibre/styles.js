@@ -9,7 +9,6 @@ export const viewStyleNames = [
   'line-layer-outline',
   'line-layer',
   'line-layer-hit',
-  'points-border-layer',
   'points-layer',
   'points-hit-layer',
   'symbols-layer',
@@ -93,8 +92,7 @@ const fillColor = ['coalesce',
   ['get', 'fill'], ['get', 'user_fill'], featureColor]
 const fillOpacity = ['*', 0.7, ['to-number', ['coalesce',
   ['get', 'fill-opacity'], ['get', 'user_fill-opacity'], 1]]]
-const fillOpacityActive = ['*', 0.4, ['to-number', ['coalesce',
-  ['get', 'fill-opacity'], ['get', 'user_fill-opacity'], 1]]]
+const fillOpacityActive = ['*', 0.7, fillOpacity]
 
 const lineColor = ['coalesce', ['get', 'stroke'], ['get', 'user_stroke'], featureColor]
 const lineWidth = ['to-number', ['coalesce',
@@ -108,13 +106,23 @@ const outlineWidth = ['+', 4, lineWidth]
 const outlineWidthActive = ['+', 3, outlineWidth]
 
 const pointColor = ['coalesce', ['get', 'user_marker-color'], ['get', 'marker-color'], featureColor]
-const pointSize = ['coalesce', ['get', 'user_marker-size'], ['get', 'marker-size'], 6]
+const pointSize = ['to-number', ['coalesce',
+  ['get', 'user_marker-size'], ['get', 'marker-size'],
+  ['case',
+    ['has', 'marker-symbol'],
+    12, 6]]]
 const pointSizeActive = ['+', 1, pointSize]
-const pointOutlineSize = ['+', 2, pointSize]
+const pointOutlineSize = ['to-number', ['coalesce', ['get', 'user_stroke-width'], ['get', 'stroke-width'], 2]]
 const pointOutlineSizeActive = ['+', 1, pointOutlineSize]
 const pointOutlineColor = ['coalesce', ['get', 'user_stroke'], ['get', 'stroke'], featureOutlineColor]
 const pointOpacity = 0.7
 const pointOpacityActive = 0.9
+
+// factor of the original icon size (72x72)
+// default: 1/6 = 12px (2 * default radius pointSize)
+const iconSizeFactor = ['/', pointSize, 6]
+const iconSize = ['*', 1 / 6, iconSizeFactor]
+// const iconSizeActive = ['*', 1.1, iconSize] // icon-size is not a paint property
 
 export const styles = {
   'polygon-layer': {
@@ -216,57 +224,37 @@ export const styles = {
       'line-opacity': 0
     }
   },
-  'points-border-layer': {
-    id: 'points-border-layer',
-    type: 'circle',
-    source: 'geojson-source',
-    filter: ['all',
-      ['==', '$type', 'Point'],
-      ['!=', 'active', 'true'],
-      ['!has', 'marker-symbol'],
-      ['!has', 'marker-image-url'],
-      ['!has', 'user_marker-symbol'],
-      ['!has', 'user_marker-image-url']],
-    paint: {
-      'circle-radius': [
-        'match',
-        ['coalesce', ['get', 'user_stroke'], ['get', 'stroke']],
-        'transparent', 0, // If marker-color is 'transparent', set circle-radius to 0
-        ['case',
-          ['boolean', ['feature-state', 'active'], false],
-          pointOutlineSizeActive,
-          pointOutlineSize
-        ]],
-      'circle-color': pointOutlineColor
-    }
-  },
   'points-layer': {
     id: 'points-layer',
     type: 'circle',
     source: 'geojson-source',
     filter: ['all',
       ['==', '$type', 'Point'],
-      ['!=', 'active', 'true'],
-      ['!has', 'marker-symbol'],
-      ['!has', 'marker-image-url'],
-      ['!has', 'user_marker-symbol'],
-      ['!has', 'user_marker-image-url']],
+      ['!=', 'active', 'true']
+    ],
     paint: {
-      'circle-radius': [
+      'circle-radius': ['case',
+        ['boolean', ['feature-state', 'active'], false],
+        pointSizeActive,
+        pointSize
+      ],
+      'circle-color': pointColor,
+      'circle-opacity': [
         'match',
         ['coalesce', ['get', 'user_marker-color'], ['get', 'marker-color']],
         'transparent', 0, // If marker-color is 'transparent', set circle-radius to 0
-        ['case',
+        [
+          'case',
           ['boolean', ['feature-state', 'active'], false],
-          pointSizeActive,
-          pointSize
+          pointOpacityActive,
+          pointOpacity
         ]],
-      'circle-color': pointColor,
-      'circle-opacity': [
+      'circle-stroke-color': pointOutlineColor,
+      'circle-stroke-width': [
         'case',
         ['boolean', ['feature-state', 'active'], false],
-        pointOpacityActive,
-        pointOpacity
+        pointOutlineSizeActive,
+        pointOutlineSize
       ]
     }
   },
@@ -276,13 +264,10 @@ export const styles = {
     source: 'geojson-source',
     filter: ['all',
       ['==', '$type', 'Point'],
-      ['!=', 'active', 'true'],
-      ['!has', 'marker-symbol'],
-      ['!has', 'marker-image-url'],
-      ['!has', 'user_marker-symbol'],
-      ['!has', 'user_marker-image-url']],
+      ['!=', 'active', 'true']
+    ],
     paint: {
-      'circle-radius': ['+', 3, pointOutlineSize],
+      'circle-radius': ['+', 5, pointSize],
       'circle-opacity': 0
     }
   },
@@ -296,21 +281,17 @@ export const styles = {
     layout: {
       'icon-image': ['coalesce',
         ['get', 'marker-image-url'],
-        // replace marker-symbol value with path to emoji png
+        // replacing marker-symbol value with path to emoji png
         ['case',
           ['has', 'marker-symbol'],
           ['concat', '/emojis/noto/', ['get', 'marker-symbol'], '.png'],
           '']
       ],
-      'icon-size': [
-        'match',
-        ['get', 'marker-size'],
-        'small', 0.25,
-        'medium', 0.35,
-        'large', 0.5,
-        0.35],
+      'icon-size': iconSize,
       'icon-overlap': 'always',
       'icon-ignore-placement': true // other symbols can be visible even if they collide with the icon
+    },
+    paint: {
     }
   },
   'text-layer': {
