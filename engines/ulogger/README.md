@@ -17,3 +17,7 @@ New Track
 
 Append New Trackpoint
 `curl -H 'Content-Type: application/x-www-form-urlencoded' -X POST http://localhost:3000/ulogger/client/index.php -d 'action=addpos&altitude=374.299987792969&provider=network&trackid=18&accuracy=16.113000869751&lon=11.1158342&time=1717959606&lat=49.4442029'`
+
+## Development
+
+Run tests with: `bin/rspec --pattern "engines/**/*_spec.rb"`

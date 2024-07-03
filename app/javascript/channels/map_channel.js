@@ -41,7 +41,7 @@ export function initializeSocket () {
       map.fire('offline', { detail: { message: 'Disconnected from map_channel' } })
       mapChannel = null
       // show error with delay to avoid showing it on unload/refresh
-      setTimeout(function () { status('Connection to server lost', 'error', 60 * 60 * 1000) }, 500)
+      setTimeout(function () { status('Connection to server lost', 'error', 60 * 60 * 1000) }, 1000)
     },
 
     received (data) {

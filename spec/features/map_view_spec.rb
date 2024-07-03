@@ -63,6 +63,18 @@ describe 'Map public view' do
     end
   end
 
+  context 'with lost websocket' do
+    before do
+      visit map_path(map.public_id)
+      expect(page).to have_css('.map[data-loaded="true"]')
+    end
+
+    it 'shows warning' do
+      ActionCable.server.connections.each(&:close)
+      expect(page).to have_text('Connection to server lost')
+    end
+  end
+
   context 'with other engines' do
     it 'deck.gl' do
       visit deck_path(map.public_id)

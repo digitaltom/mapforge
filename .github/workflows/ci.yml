@@ -67,7 +67,7 @@ jobs:
       - name: Run tests
         id: rspec
         run: |
-          bin/rspec
+          bin/rspec --pattern "spec/**/*_spec.rb,engines/**/*_spec.rb"
         shell: bash
       - name: Upload screenshots
         if: failure()
