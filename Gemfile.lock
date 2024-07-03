@@ -288,7 +288,7 @@ GEM
       mime-types (>= 3.0)
       websocket-driver (>= 0.6.0)
     racc (1.8.0)
-    rack (3.1.4)
+    rack (3.1.6)
     rack-cache (1.17.0)
       rack (>= 0.4)
     rack-session (2.0.0)
