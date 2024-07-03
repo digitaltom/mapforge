@@ -103,10 +103,10 @@ export function loadGeoJsonData () {
       geojsonData = data
       if (geojsonData.features.length > 0) {
         console.log('loaded ' + geojsonData.features.length + ' features from ' + url)
-        // this with `promoteId: 'id'` is a workaround for the maplibre
-        // limitation of numeric ids:
+        // this + `promoteId: 'id'` is a workaround for the maplibre limitation:
         // https://github.com/mapbox/mapbox-gl-js/issues/2716
-        // because to highlight a feature we need the id
+        // because to highlight a feature we need the id,
+        // and in the style layers it only accepts mumeric ids in the id field initially
         geojsonData.features.forEach(feature => { feature.properties.id = feature.id })
         map.getSource('geojson-source').setData(geojsonData)
         // drop the properties.id after sending to the map

@@ -10,6 +10,7 @@ const defaultRasterLayer = [
     maxzoom: 22
   }
 ]
+const host = new URL(window.location.href).origin
 
 export const basemaps = {
   stamenWatercolorTiles: {
@@ -103,8 +104,8 @@ export const basemaps = {
   maptilerOpenStreetmap: 'https://api.maptiler.com/maps/openstreetmap/style.json?key=' + window.gon.map_keys.maptiler,
   maptilerBuildings: 'https://api.maptiler.com/maps/streets/style.json?key=' + window.gon.map_keys.maptiler,
   maptilerDataviz: 'https://api.maptiler.com/maps/dataviz/style.json?key=' + window.gon.map_keys.maptiler,
-  maptilerStreets: '/layers/streets.json?key=' + window.gon.map_keys.maptiler,
-  maptilerNoStreets: '/layers/nostreets.json?key=' + window.gon.map_keys.maptiler,
+  maptilerStreets: host + '/layers/streets.json?key=' + window.gon.map_keys.maptiler,
+  maptilerNoStreets: host + '/layers/nostreets.json?key=' + window.gon.map_keys.maptiler,
   maptilerSatellite: 'https://api.maptiler.com/maps/satellite/style.json?key=' + window.gon.map_keys.maptiler,
   maptilerWinter: 'https://api.maptiler.com/maps/winter-v2/style.json?key=' + window.gon.map_keys.maptiler,
   maptilerBike: 'https://api.maptiler.com/maps/64d03850-97e0-4aaa-bd1d-8287a9792de1/style.json?key=' + window.gon.map_keys.maptiler,
