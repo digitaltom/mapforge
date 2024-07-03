@@ -1,4 +1,4 @@
-import { styles, loadImage } from 'maplibre/styles'
+import { styles, loadImage, pointSize } from 'maplibre/styles'
 import { map } from 'maplibre/map'
 import * as f from 'helpers/functions'
 
@@ -22,6 +22,8 @@ export function initializeEditStyles () {
 // mapbox gl draw doesn't use 'feature-state', but switches between different
 // source layers 'mapbox-gl-draw-cold' + 'mapbox-gl-draw-hot'
 
+const highlightColor = '#fbb03b'
+
 export const editStyles = [
 
   removeSource(styles['polygon-layer']), // gl-draw-polygon-fill-inactive
@@ -38,9 +40,10 @@ export const editStyles = [
       ['==', 'meta', 'midpoint']],
     paint: {
       'circle-radius': 6,
-      'circle-color': '#fbb03b'
+      'circle-color': highlightColor
     }
   },
+  // active polygon outline
   {
     id: 'gl-draw-polygon-stroke-active',
     type: 'line',
@@ -52,11 +55,12 @@ export const editStyles = [
       'line-join': 'round'
     },
     paint: {
-      'line-color': '#fbb03b',
+      'line-color': highlightColor,
       'line-dasharray': [0.2, 2],
       'line-width': 5
     }
   },
+  // active linestring
   {
     id: 'gl-draw-line-active',
     type: 'line',
@@ -69,7 +73,7 @@ export const editStyles = [
       'line-join': 'round'
     },
     paint: {
-      'line-color': '#fbb03b',
+      'line-color': highlightColor,
       'line-dasharray': [0.2, 2],
       'line-width': 5
     }
@@ -97,7 +101,7 @@ export const editStyles = [
     ],
     paint: {
       'circle-radius': 5,
-      'circle-color': '#fbb03b'
+      'circle-color': highlightColor
     }
   },
   // default point behind symbols, transparent points etc.
@@ -138,8 +142,10 @@ export const editStyles = [
       ['!=', 'meta', 'midpoint'],
       ['==', 'active', 'true']],
     paint: {
-      'circle-radius': 7,
-      'circle-color': '#fbb03b'
+      'circle-radius': pointSize,
+      'circle-color': highlightColor,
+      'circle-stroke-color': '#fff',
+      'circle-stroke-width': 3
     }
   },
   {

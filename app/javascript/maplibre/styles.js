@@ -106,7 +106,7 @@ const outlineWidth = ['+', 4, lineWidth]
 const outlineWidthActive = ['+', 3, outlineWidth]
 
 const pointColor = ['coalesce', ['get', 'user_marker-color'], ['get', 'marker-color'], featureColor]
-const pointSize = ['to-number', ['coalesce',
+export const pointSize = ['to-number', ['coalesce',
   ['get', 'user_marker-size'], ['get', 'marker-size'],
   ['case',
     ['has', 'marker-symbol'],
@@ -119,9 +119,10 @@ const pointOpacity = 0.7
 const pointOpacityActive = 0.9
 
 // factor of the original icon size (72x72)
+// in case of icon url, we don't know the size
 // default: 1/6 = 12px (2 * default radius pointSize)
 const iconSizeFactor = ['/', pointSize, 6]
-const iconSize = ['*', 1 / 6, iconSizeFactor]
+const iconSize = ['*', 1 / 7, iconSizeFactor]
 // const iconSizeActive = ['*', 1.1, iconSize] // icon-size is not a paint property
 
 export const styles = {
@@ -255,7 +256,8 @@ export const styles = {
         ['boolean', ['feature-state', 'active'], false],
         pointOutlineSizeActive,
         pointOutlineSize
-      ]
+      ],
+      'circle-stroke-opacity': 0.8
     }
   },
   'points-hit-layer': {
@@ -292,6 +294,7 @@ export const styles = {
       'icon-ignore-placement': true // other symbols can be visible even if they collide with the icon
     },
     paint: {
+      // cannot set circle-stroke-* in the symbol layer :-(
     }
   },
   'text-layer': {
