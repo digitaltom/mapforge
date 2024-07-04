@@ -9,7 +9,8 @@ module Ulogger
       [ :speed, '%.1f km/h', ->(x) { x.to_f * 3.6 } ],
       [ :bearing, '%.1f°' ],
       [ :accuracy, '%.2f m' ],
-      [ :provider, '%s' ]
+      [ :provider, '%s' ],
+      [ :comment, '%s' ]
     ]
 
     def auth
@@ -39,6 +40,20 @@ module Ulogger
 
       timestamp = Time.at(params[:time].to_i).to_datetime.strftime("%Y-%m-%d %H:%M:%S")
       properties = { "title" => timestamp, "desc" => description || "" }
+
+      uploaded = params.fetch(:image, nil)
+
+      if uploaded.is_a?(ActionDispatch::Http::UploadedFile)
+        img = Image.create(img: uploaded.tempfile)
+        image_properties = {
+          "marker-color" => "transparent",
+          "stroke" => "#fff",
+          "marker-size" => "large",
+          "marker-image-url" => "/icon/" + img.public_id,
+          "stroke-width" => "3" }
+
+        properties.merge!(image_properties)
+      end
 
       @map.features.create!(geometry: geometry, properties: properties)
       @map.update!(center: [ params[:lon].to_f, params[:lat].to_f ])
