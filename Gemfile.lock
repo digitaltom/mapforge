@@ -407,7 +407,7 @@ GEM
       rubocop-minitest
       rubocop-performance
       rubocop-rails
-    rubocop-rspec (3.0.1)
+    rubocop-rspec (3.0.2)
       rubocop (~> 1.61)
     rubocop-rubycw (0.1.6)
       rubocop (~> 1.0)
