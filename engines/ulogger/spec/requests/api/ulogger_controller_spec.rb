@@ -44,7 +44,7 @@ RSpec.describe Api::UloggerController do
     let(:trackid) { 924977797 }
     let(:payload) { { action: 'addpos', altitude: 374.29, speed: 4.3,
       provider: 'network', trackid: trackid, accuracy: 16.113,
-      lon: 11.1268342, time: 1717959606, lat: 49.4492029 } }
+      lon: 11.1268342, time: 1717959606, lat: 49.4492029, comment: '🥸' } }
     let(:response_body) { JSON.parse(response.body) }
 
     it { is_expected.to have_http_status(200) }
@@ -58,13 +58,28 @@ RSpec.describe Api::UloggerController do
 
     it "writes formatted metadata to the point's description" do
       expect(map.reload.features.point.first.properties['desc']).
-        to eq "- Altitude: 374.29 m\n- Speed: 15.5 km/h\n- Accuracy: 16.11 m\n- Provider: network"
+        to eq "- Altitude: 374.29 m\n- Speed: 15.5 km/h\n- Accuracy: 16.11 m\n- Provider: network\n- Comment: 🥸"
     end
 
     it 'adds linestring feature at coordinates' do
       expect(map.reload.features.line_string.count).to eq 1
       expect(map.reload.features.line_string.first.geometry['coordinates']).
         to eq ([ [ 11.1268342, 49.4492029, 374.29 ] ])
+    end
+
+    context "with attached image file" do
+      before do
+        payload[:image] = fixture_file_upload('2024-04-04_00-14.png', 'image/png', :binary)
+      end
+
+      it "saves the image to the database" do
+        expect { post('/ulogger/client/index.php', params: payload) }.to change(Image, :count)
+      end
+
+      it "adds a marker-image-url to the point" do
+        post('/ulogger/client/index.php', params: payload)
+        expect(map.reload.features.point.last.properties['marker-image-url']).not_to be_empty
+      end
     end
   end
 end

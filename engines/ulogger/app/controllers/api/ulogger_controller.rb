@@ -44,7 +44,7 @@ module Ulogger
       uploaded = params.fetch(:image, nil)
 
       if uploaded.is_a?(ActionDispatch::Http::UploadedFile)
-        img = Image.create(img: File.new(uploaded.tempfile))
+        img = Image.create(img: uploaded.tempfile)
         image_properties = {
           "marker-color" => "transparent",
           "stroke" => "#fff",
