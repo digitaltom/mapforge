@@ -29,6 +29,9 @@ export default class extends Controller {
           geoJSON = toGeoJSON.kml(xmlDoc)
         } else if (file.type === 'application/geo+json') {
           geoJSON = JSON.parse(content)
+        } else if (file.type === 'application/json') {
+          // mapforge export file
+          geoJSON = JSON.parse(content).layers[0]
         }
         console.log(geoJSON)
 
@@ -42,7 +45,8 @@ export default class extends Controller {
 
       if (file.type === 'application/gpx+xml' ||
         file.type === 'application/vnd.google-earth.kml+xml' ||
-        file.type === 'application/geo+json') {
+        file.type === 'application/geo+json' ||
+        file.type === 'application/json') {
         reader.readAsText(file)
       } else {
         console.log('Unsupported file type: ' + file.type)
