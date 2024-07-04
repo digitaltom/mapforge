@@ -47,6 +47,13 @@
   width: 90%;
   margin: unset;
   margin-bottom: 1.5em;
+  transition:
+    height 0.3s linear
+}
+
+#feature-details-modal.expanded {
+  min-height: 300px;
+  max-height: 95%;
 }
 
 #feature-details-meta {

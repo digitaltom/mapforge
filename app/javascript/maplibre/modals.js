@@ -46,8 +46,12 @@ function featureMeta (feature) {
 }
 
 export function showFeatureDetails (feature) {
-  document.querySelector('#feature-details-modal').style.display = 'block'
-  document.querySelector('#feature-details-modal').setAttribute('data-feature-id', feature.id)
+  document.querySelector('#edit-feature').classList.add('hidden')
+  const modal = document.querySelector('#feature-details-modal')
+  modal.classList.remove('expanded')
+  modal.style.display = 'block'
+  modal.setAttribute('data-feature-id', feature.id)
+
   const desc = feature?.properties?.desc || ''
   document.querySelector('#feature-details-header').innerHTML = featureTitle(feature)
   document.querySelector('#feature-details-meta').innerHTML = featureMeta(feature)

@@ -4,7 +4,6 @@ import { mapChannel } from 'channels/map_channel'
 import { ControlGroup, MapSettingsControl, MapShareControl, MapLayersControl, resetControls } from 'maplibre/controls'
 import { showFeatureDetails } from 'maplibre/modals'
 import { status } from 'helpers/status'
-import * as f from 'helpers/functions'
 import MapboxDraw from '@mapbox/mapbox-gl-draw'
 import * as MapboxDrawWaypoint from 'mapbox-gl-draw-waypoint'
 import PaintMode from 'mapbox-gl-draw-paint-mode'
@@ -94,22 +93,6 @@ export function initializeEditMode () {
   })
 
   document.querySelector('#edit-buttons').classList.remove('hidden')
-  // Add event listeners for buttons
-  f.addEventListeners(document.querySelector('#edit-button-trash'), ['click', 'touchstart'],
-    function () {
-      const id = document.querySelector('#feature-details-modal').getAttribute('data-feature-id')
-      const feature = geojsonData.features.find(f => f.id === id)
-      handleDelete({ features: [feature] })
-    })
-  f.addEventListeners(document.querySelector('#edit-button-edit'), ['click', 'touchstart'],
-    function () {
-      const id = document.querySelector('#feature-details-modal').getAttribute('data-feature-id')
-      const feature = geojsonData.features.find(f => f.id === id)
-      document.querySelector('#edit-modal').style.display = 'block'
-      document.querySelector('.feature-details-atts-edit textarea').value = JSON.stringify(feature.properties)
-      document.querySelector('#edit-modal .error').innerHTML = ''
-      document.querySelector('#edit-modal').setAttribute('data-feature-id', feature.id)
-    })
 }
 
 function sourcedataHandler (e) {
@@ -143,7 +126,7 @@ function handleUpdate (e) {
   mapChannel.send_message('update_feature', feature)
 }
 
-function handleDelete (e) {
+export function handleDelete (e) {
   const deletedFeature = e.features[0] // Assuming one feature is deleted at a time
 
   if (editPopup) { editPopup.remove() }

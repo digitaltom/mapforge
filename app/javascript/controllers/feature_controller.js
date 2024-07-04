@@ -1,19 +1,38 @@
 import { Controller } from '@hotwired/stimulus'
 import { mapChannel } from 'channels/map_channel'
 import { map, geojsonData } from 'maplibre/map'
+import { handleDelete } from 'maplibre/edit'
 
 export default class extends Controller {
+  delete_feature () {
+    const feature = this.getFeature()
+    handleDelete({ features: [feature] })
+  }
+
+  edit_feature () {
+    const feature = this.getFeature()
+    document.querySelector('#feature-details-modal').classList.add('expanded')
+    document.querySelector('#edit-feature').classList.remove('hidden')
+
+    document.querySelector('.feature-details-atts-edit textarea').value = JSON.stringify(feature.properties)
+    document.querySelector('#edit-feature .error').innerHTML = ''
+  }
+
   update_feature () {
-    document.querySelector('#edit-modal .error').innerHTML = ''
-    const id = document.querySelector('#edit-modal').getAttribute('data-feature-id')
-    const geojsonFeature = geojsonData.features.find(f => f.id === id)
+    const feature = this.getFeature()
+    document.querySelector('#edit-feature .error').innerHTML = ''
     try {
-      geojsonFeature.properties = JSON.parse(document.querySelector('.feature-details-atts-edit textarea').value)
+      feature.properties = JSON.parse(document.querySelector('.feature-details-atts-edit textarea').value)
       map.getSource('geojson-source').setData(geojsonData)
-      mapChannel.send_message('update_feature', geojsonFeature)
+      mapChannel.send_message('update_feature', feature)
     } catch (error) {
       console.error('Error updating feature:', error.message)
-      document.querySelector('#edit-modal .error').innerHTML = error.message
+      document.querySelector('#edit-feature .error').innerHTML = error.message
     }
+  }
+
+  getFeature () {
+    const id = document.querySelector('#feature-details-modal').getAttribute('data-feature-id')
+    return geojsonData.features.find(f => f.id === id)
   }
 }
