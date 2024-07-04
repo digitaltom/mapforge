@@ -70,7 +70,6 @@ export function initializeEditMode () {
     if (selectedFeature) {
       status('selected ' + selectedFeature.id)
       console.log('selected: ' + JSON.stringify(selectedFeature))
-      displayEditButtons(selectedFeature)
       showFeatureDetails(selectedFeature)
     }
   })
@@ -93,6 +92,24 @@ export function initializeEditMode () {
       resetControls()
     }
   })
+
+  document.querySelector('#edit-buttons').classList.remove('hidden')
+  // Add event listeners for buttons
+  f.addEventListeners(document.querySelector('#edit-button-trash'), ['click', 'touchstart'],
+    function () {
+      const id = document.querySelector('#feature-details-modal').getAttribute('data-feature-id')
+      const feature = geojsonData.features.find(f => f.id === id)
+      handleDelete({ features: [feature] })
+    })
+  f.addEventListeners(document.querySelector('#edit-button-edit'), ['click', 'touchstart'],
+    function () {
+      const id = document.querySelector('#feature-details-modal').getAttribute('data-feature-id')
+      const feature = geojsonData.features.find(f => f.id === id)
+      document.querySelector('#edit-modal').style.display = 'block'
+      document.querySelector('.feature-details-atts-edit textarea').value = JSON.stringify(feature.properties)
+      document.querySelector('#edit-modal .error').innerHTML = ''
+      document.querySelector('#edit-modal').setAttribute('data-feature-id', feature.id)
+    })
 }
 
 function sourcedataHandler (e) {
@@ -104,24 +121,9 @@ function sourcedataHandler (e) {
   }
 }
 
-function displayEditButtons (feature) {
-  document.querySelector('#edit-buttons').classList.remove('hidden')
-  // Add event listeners for buttons
-  f.addEventListeners(document.querySelector('#edit-button-trash'), ['click', 'touchstart'],
-    function () { handleDelete({ features: [feature] }) })
-  f.addEventListeners(document.querySelector('#edit-button-edit'), ['click', 'touchstart'],
-    function () {
-      document.querySelector('#edit-modal').style.display = 'block'
-      document.querySelector('.feature-details-atts-edit textarea').value = JSON.stringify(feature.properties)
-      document.querySelector('#edit-modal .error').innerHTML = ''
-      document.querySelector('#edit-modal').setAttribute('data-feature-id', feature.id)
-    })
-}
-
 function handleCreate (e) {
   const feature = e.features[0] // Assuming one feature is created at a time
 
-  console.log('Feature ' + feature.id + ' created')
   status('Feature ' + feature.id + ' created')
   geojsonData.features.push(feature)
   mapChannel.send_message('new_feature', feature)
@@ -130,7 +132,6 @@ function handleCreate (e) {
 function handleUpdate (e) {
   const feature = e.features[0] // Assuming one feature is created at a time
 
-  console.log('Feature ' + feature.id + ' changed')
   status('Feature ' + feature.id + ' changed')
   const geojsonFeature = geojsonData.features.find(f => f.id === feature.id)
   geojsonFeature.geometry = feature.geometry
@@ -146,7 +147,6 @@ function handleDelete (e) {
   const deletedFeature = e.features[0] // Assuming one feature is deleted at a time
 
   if (editPopup) { editPopup.remove() }
-  console.log('Feature ' + deletedFeature.id + ' deleted')
   status('Feature ' + deletedFeature.id + ' deleted')
   mapChannel.send_message('delete_feature', deletedFeature)
 }

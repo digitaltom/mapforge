@@ -11,3 +11,7 @@
 Metrics/MethodLength:
   Exclude:
     - 'app/models/map.rb'
+
+Layout/LineLength:
+  Exclude:
+    - 'engines/ulogger/config/routes.rb' # keep long lines to have 100% coverage running rspec without engines.

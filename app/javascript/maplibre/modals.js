@@ -47,7 +47,8 @@ function featureMeta (feature) {
 
 export function showFeatureDetails (feature) {
   document.querySelector('#feature-details-modal').style.display = 'block'
-  const desc = feature?.properties?.desc
+  document.querySelector('#feature-details-modal').setAttribute('data-feature-id', feature.id)
+  const desc = feature?.properties?.desc || ''
   document.querySelector('#feature-details-header').innerHTML = featureTitle(feature)
   document.querySelector('#feature-details-meta').innerHTML = featureMeta(feature)
   if (desc) { document.querySelector('#feature-details-body').innerHTML = desc }
