@@ -48,9 +48,9 @@ module Ulogger
         image_properties = {
           "marker-color" => "transparent",
           "stroke" => "#fff",
-          "marker-size" => "large",
-          "marker-image-url" => "/icon/" + img.public_id,
-          "stroke-width" => "3" }
+          "marker-size" => 20,
+          "stroke-width" => 13,
+          "marker-image-url" => "/icon/" + img.public_id }
 
         properties.merge!(image_properties)
       end

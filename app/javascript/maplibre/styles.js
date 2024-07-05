@@ -113,7 +113,7 @@ export const pointSize = ['to-number', ['coalesce',
     12, 6]]]
 const pointSizeActive = ['+', 1, pointSize]
 const pointOutlineSize = ['to-number', ['coalesce', ['get', 'user_stroke-width'], ['get', 'stroke-width'], 2]]
-const pointOutlineSizeActive = ['+', 1, pointOutlineSize]
+export const pointOutlineSizeActive = ['+', 1, pointOutlineSize]
 const pointOutlineColor = ['coalesce', ['get', 'user_stroke'], ['get', 'stroke'], featureOutlineColor]
 const pointOpacity = 0.7
 const pointOpacityActive = 0.9
@@ -290,7 +290,7 @@ export const styles = {
           '']
       ],
       'icon-size': iconSize,
-      'icon-overlap': 'always',
+      'icon-overlap': 'never', // https://maplibre.org/maplibre-style-spec/layers/#icon-overlap
       'icon-ignore-placement': true // other symbols can be visible even if they collide with the icon
     },
     paint: {

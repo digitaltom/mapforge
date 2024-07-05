@@ -2,6 +2,7 @@ import { Controller } from '@hotwired/stimulus'
 import { mapChannel } from 'channels/map_channel'
 import { map, geojsonData } from 'maplibre/map'
 import { handleDelete } from 'maplibre/edit'
+import { status } from 'helpers/status'
 
 export default class extends Controller {
   delete_feature () {
@@ -27,6 +28,7 @@ export default class extends Controller {
       mapChannel.send_message('update_feature', feature)
     } catch (error) {
       console.error('Error updating feature:', error.message)
+      status('Error updating feature', 'error')
       document.querySelector('#edit-feature .error').innerHTML = error.message
     }
   }
