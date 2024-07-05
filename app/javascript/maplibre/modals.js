@@ -47,6 +47,7 @@ function featureMeta (feature) {
 
 export function showFeatureDetails (feature) {
   document.querySelector('#edit-feature').classList.add('hidden')
+  document.querySelector('#feature-details-body').classList.remove('hidden')
   const modal = document.querySelector('#feature-details-modal')
   modal.classList.remove('expanded')
   modal.style.display = 'block'

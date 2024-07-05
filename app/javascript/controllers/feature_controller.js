@@ -10,12 +10,18 @@ export default class extends Controller {
     handleDelete({ features: [feature] })
   }
 
-  edit_feature () {
+  toggle_edit_feature () {
     const feature = this.getFeature()
-    document.querySelector('#feature-details-modal').classList.add('expanded')
-    document.querySelector('#edit-feature').classList.remove('hidden')
-
-    document.querySelector('.feature-details-atts-edit textarea').value = JSON.stringify(feature.properties)
+    if (document.querySelector('#edit-feature').classList.contains('hidden')) {
+      document.querySelector('#feature-details-modal').classList.add('expanded')
+      document.querySelector('#edit-feature').classList.remove('hidden')
+      document.querySelector('#feature-details-body').classList.add('hidden')
+      document.querySelector('.feature-details-atts-edit textarea').value = JSON.stringify(feature.properties)
+    } else {
+      document.querySelector('#feature-details-modal').classList.remove('expanded')
+      document.querySelector('#edit-feature').classList.add('hidden')
+      document.querySelector('#feature-details-body').classList.remove('hidden')
+    }
     document.querySelector('#edit-feature .error').innerHTML = ''
   }
 

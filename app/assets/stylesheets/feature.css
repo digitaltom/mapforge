@@ -1,0 +1,50 @@
+#feature-details-modal {
+  top: unset;
+  bottom: 0;
+  max-width: 800px;
+  left: 50%;
+  width: 90%;
+  margin: unset;
+  margin-bottom: 1.5em;
+  transition:
+    height 0.3s linear
+}
+
+#feature-details-modal.expanded {
+  min-height: 300px;
+  max-height: 95%;
+}
+
+#feature-details-meta {
+  float: right;
+  font-size: 80%;
+  color: #999;
+  position: relative;
+  top: -1.8em;
+  margin-right: 1em;
+  text-align: right;
+}
+
+.edit-button-group {
+  box-shadow: 0 0 6px 2px rgba(0 0 0 / 38%) !important;
+}
+
+#edit-buttons {
+  float: right;
+}
+
+.edit-button {
+  cursor: pointer;
+  font-size: 1.2em;
+  opacity: 0.75;
+}
+
+#edit-feature textarea {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.feature-details-atts-edit .error {
+  color: red;
+}

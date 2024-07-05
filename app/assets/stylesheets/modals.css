@@ -38,30 +38,3 @@
   border-color: #000;
   opacity: 1;
 }
-
-#feature-details-modal {
-  top: unset;
-  bottom: 0;
-  max-width: 800px;
-  left: 50%;
-  width: 90%;
-  margin: unset;
-  margin-bottom: 1.5em;
-  transition:
-    height 0.3s linear
-}
-
-#feature-details-modal.expanded {
-  min-height: 300px;
-  max-height: 95%;
-}
-
-#feature-details-meta {
-  float: right;
-  font-size: 80%;
-  color: #999;
-  position: relative;
-  top: -1.8em;
-  margin-right: 1em;
-  text-align: right;
-}
