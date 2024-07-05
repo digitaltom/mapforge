@@ -1,5 +1,8 @@
+import { marked } from 'marked'
+
 // eslint expects variables to get imported, but we load the full lib in header
 const turf = window.turf
+window.marked = marked
 
 function featureTitle (feature) {
   const title = feature?.properties?.title || feature?.properties?.user_title ||
@@ -46,15 +49,16 @@ function featureMeta (feature) {
 }
 
 export function showFeatureDetails (feature) {
-  document.querySelector('#edit-feature').classList.add('hidden')
+  document.querySelector('#feature-edit-raw').classList.add('hidden')
+  document.querySelector('#feature-edit-ui').classList.add('hidden')
   document.querySelector('#feature-details-body').classList.remove('hidden')
   const modal = document.querySelector('#feature-details-modal')
   modal.classList.remove('expanded')
   modal.style.display = 'block'
   modal.setAttribute('data-feature-id', feature.id)
 
-  const desc = feature?.properties?.desc || ''
+  const desc = marked(feature?.properties?.desc || '')
   document.querySelector('#feature-details-header').innerHTML = featureTitle(feature)
   document.querySelector('#feature-details-meta').innerHTML = featureMeta(feature)
-  if (desc) { document.querySelector('#feature-details-body').innerHTML = desc }
+  document.querySelector('#feature-details-body').innerHTML = desc
 }

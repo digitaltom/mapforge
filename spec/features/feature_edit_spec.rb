@@ -55,7 +55,7 @@ describe 'Map' do
       end
 
       it 'can update feature' do
-        find('#edit-button-edit').click
+        find('#edit-button-raw').click
         fill_in 'properties', with: '{"title": "TEST"}'
         find('.feature-update').click
         expect(polygon.reload.properties).to eq({ "title" => "TEST" })
