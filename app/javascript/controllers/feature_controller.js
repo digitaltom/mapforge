@@ -8,7 +8,9 @@ import { showFeatureDetails } from 'maplibre/modals'
 export default class extends Controller {
   delete_feature () {
     const feature = this.getFeature()
-    handleDelete({ features: [feature] })
+    if (confirm('Really delete this element?')) {
+      handleDelete({ features: [feature] })
+    }
   }
 
   toggle_edit_feature (event) {

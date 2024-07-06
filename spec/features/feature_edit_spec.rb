@@ -62,7 +62,9 @@ describe 'Map' do
       end
 
       it 'can delete feature' do
-        find('#edit-button-trash').click
+        accept_alert do
+          find('#edit-button-trash').click
+        end
         sleep(0.5) # wait for websocket msg
         expect(Feature.count).to eq(0)
       end

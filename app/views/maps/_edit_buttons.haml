@@ -1,6 +1,6 @@
 #edit-buttons.hidden
   .maplibregl-ctrl-group.maplibregl-ctrl.edit-button-group
-    %button.edit-button#edit-button-trash{title: "Delete", 'data-action': "click->feature#delete_feature"}
+    %button.edit-button#edit-button-trash{title: "Delete", data: { action: "click->feature#delete_feature" } }
       %i.bi.bi-trash-fill
     %button.edit-button#edit-button-edit{title: "Edit", 'data-action': "click->feature#toggle_edit_feature", 'data-ui': 'true'}
       %i.bi.bi-pencil-square
