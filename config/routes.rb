@@ -21,7 +21,10 @@ Rails.application.routes.draw do
   delete "/admin/:id" => "admin#destroy", as: :destroy_map, constraints: { id: ID_PATTERN }
 
   get "/frontpage" => "frontpage#index"
+
   get "/icon/:public_id", to: "images#icon", as: "icon", constraints: { public_id: ID_PATTERN }
+  get "/image/:public_id", to: "images#image", as: "image", constraints: { public_id: ID_PATTERN }
+
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
