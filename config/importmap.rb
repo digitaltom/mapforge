@@ -29,8 +29,13 @@ pin "mapbox-gl-draw-waypoint",
 # https://github.com/piraveenankirupakaran/mapbox-gl-draw-paint-mode
 # local download because of removal of css import
 pin "mapbox-gl-draw-paint-mode", preload: false # @1.1.1
+# https://github.com/jaredreich/pell
+pin "pell", to: "https://ga.jspm.io/npm:pell@1.0.6/dist/pell.min.js"
 # https://github.com/maplibre/maplibre-gl-js
 pin "maplibre-gl", to: "https://ga.jspm.io/npm:maplibre-gl@4.5.0/dist/maplibre-gl.js"
 # https://github.com/maptiler/maptiler-geocoding-control
 pin "maptiler-geocoding-control", to: "https://ga.jspm.io/npm:@maptiler/geocoding-control@1.3.1/maplibregl.js"
+# render markdown
 pin "marked", to: "https://ga.jspm.io/npm:marked@13.0.2/lib/marked.esm.js"
+# html to markdown: https://github.com/mixmark-io/turndown
+pin "turndown", to: "https://ga.jspm.io/npm:turndown@7.2.0/lib/turndown.browser.es.js"
