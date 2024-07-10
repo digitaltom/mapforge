@@ -22,7 +22,7 @@ class Feature
     { id: _id.to_s,
       type:,
       geometry:,
-      properties: }
+      properties: properties || {} }
   end
 
   # input file formats are typically gps format EPSG:4326 (WGS 84) or

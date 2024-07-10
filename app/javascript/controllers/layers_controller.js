@@ -37,6 +37,7 @@ export default class extends Controller {
 
         geoJSON.features.forEach(feature => {
           feature.id = Math.random().toString(36).substring(2, 18)
+          feature.properties ||= {}
           upsert(feature)
           mapChannel.send_message('new_feature', feature)
         })

@@ -48,6 +48,23 @@ describe 'Map public view' do
     end
   end
 
+  context 'with features that don\'t have properties' do
+    # this polygon is in the middle of nbg (default view)
+    let!(:polygon) { create(:feature, :polygon_middle, layer: map.layer, properties: nil) }
+
+    before do
+      visit map_path(map.public_id)
+      # make sure features are loaded
+      expect(page).to have_css('.map[data-loaded="true"]')
+    end
+
+    it 'shows feature details on hover' do
+      hover_coord('.map', 50, 50)
+      expect(page).to have_css('#feature-details-modal')
+      expect(page).to have_text('No title')
+    end
+  end
+
   context 'with features added server side' do
     before do
       visit map_path(map.public_id)
