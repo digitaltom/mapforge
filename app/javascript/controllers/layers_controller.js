@@ -5,7 +5,6 @@ import { initLayersModal, resetControls } from 'maplibre/controls'
 import { highlightFeature } from 'maplibre/styles'
 
 // eslint expects variables to get imported, but we load the full lib in header
-const toGeoJSON = window.toGeoJSON
 const turf = window.turf
 
 export default class extends Controller {
@@ -23,10 +22,10 @@ export default class extends Controller {
         // https://github.com/mapbox/togeojson?tab=readme-ov-file#api
         if (file.type === 'application/gpx+xml') {
           const xmlDoc = parser.parseFromString(content, 'application/xml')
-          geoJSON = toGeoJSON.gpx(xmlDoc)
+          geoJSON = window.toGeoJSON.gpx(xmlDoc)
         } else if (file.type === 'application/vnd.google-earth.kml+xml') {
           const xmlDoc = parser.parseFromString(content, 'application/xml')
-          geoJSON = toGeoJSON.kml(xmlDoc)
+          geoJSON = window.toGeoJSON.kml(xmlDoc)
         } else if (file.type === 'application/geo+json') {
           geoJSON = JSON.parse(content)
         } else if (file.type === 'application/json') {
