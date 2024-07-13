@@ -24,12 +24,16 @@ describe Map do
     context 'when map has no center defined' do
       before do
         map.features << point
+        map.features << poly
+        map.features << line
       end
       let(:map) { create(:map, center: nil) }
-      let(:point) { create(:feature, :point) }
+      let(:point) { create(:feature, :point_with_elevation) }
+      let(:poly) { create(:feature, :polygon_middle) }
+      let(:line) { create(:feature, :line_string) }
 
-      it 'sets center to first feature' do
-        expect(map.properties[:center]).to eq point.geometry['coordinates']
+      it 'sets center to midpoint of all features' do
+        expect(map.properties[:center]).to eq [ 11.0670007125, 49.4592973375 ]
       end
     end
   end

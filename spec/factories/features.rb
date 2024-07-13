@@ -25,6 +25,13 @@ FactoryBot.define do
       end
     end
 
+    trait :point_with_elevation do
+      geometry do
+        { 'type' => 'Point',
+          'coordinates' => [ 11.0557138, 49.4731983, 333 ] }
+      end
+    end
+
     # this polygon is in the middle of nbg (default view)
     trait :polygon_middle do
       geometry do
