@@ -6,10 +6,11 @@ class MapsController < ApplicationController
   end
 
   def show
+    @map_properties = @map.properties
     gon.map_id = params[:id]
     gon.map_mode = (params[:id] == @map.id.to_s) ? "rw" : "ro"
     gon.map_mode = "static" if params["static"]
-    gon.map_properties = @map.properties
+    gon.map_properties = @map_properties
 
     respond_to do |format|
       format.html do
