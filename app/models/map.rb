@@ -40,8 +40,10 @@ class Map
       description: description,
       public_id: public_id,
       base_map: get_base_map,
-      center: center || default_center,
-      zoom: zoom || default_zoom,
+      center: center,
+      default_center: default_center,
+      zoom: zoom,
+      default_zoom: default_zoom,
       pitch: pitch || DEFAULT_PITCH,
       terrain: terrain || DEFAULT_TERRAIN
     }
@@ -90,18 +92,11 @@ class Map
 
   private
 
-  # reduce all coordinates to 2, dropping elevation
-  def drop_height(coordinates)
-    coordinates.map do |e|
-      e.all? { |c| !c.is_a?(Array) } ? e[0...2] : drop_height(e)
-    end
-  end
-
   def default_center
     if features.present?
       # setting center to average of all coordinates
-      coordinates = features.map { |feature| feature.geometry["coordinates"] }
-      coordinates = drop_height(coordinates).flatten.each_slice(2).to_a
+      coordinates = features.map { |feature| feature.coordinates(include_height: false) }
+      coordinates = coordinates.flatten.each_slice(2).to_a
       average_latitude = coordinates.map(&:first).reduce(:+) / coordinates.size.to_f
       average_longitude = coordinates.map(&:last).reduce(:+) / coordinates.size.to_f
       [ average_latitude, average_longitude ]
@@ -111,7 +106,11 @@ class Map
   end
 
   def default_zoom
-    DEFAULT_ZOOM
+    if features.present?
+      DEFAULT_ZOOM
+    else
+     DEFAULT_ZOOM
+    end
   end
 
   def get_base_map

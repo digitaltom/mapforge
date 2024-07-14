@@ -33,7 +33,7 @@ describe Map do
       let(:line) { create(:feature, :line_string) }
 
       it 'sets center to midpoint of all features' do
-        expect(map.properties[:center]).to eq [ 11.0670007125, 49.4592973375 ]
+        expect(map.properties[:default_center]).to eq [ 11.0670007125, 49.4592973375 ]
       end
     end
   end

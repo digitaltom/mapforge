@@ -17,7 +17,7 @@
   %br
   Center:
   %span#map-center
-    = @map.properties[:center].join(', ')
+    = (@map.properties[:center] || @map.properties[:default_center]).join(', ')
     %i#map-center-current
   %br
   Zoom:
