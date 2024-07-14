@@ -8,8 +8,9 @@
     Mapforge
   %span#map-title
 
-= render 'status'
-= render 'maps/modals/settings'
-= render 'maps/modals/layers'
-= render 'maps/modals/share'
-= render 'maps/modals/feature_details'
+- unless params["static"]
+  = render 'status'
+  = render 'maps/modals/settings'
+  = render 'maps/modals/layers'
+  = render 'maps/modals/share'
+  = render 'maps/modals/feature_details'

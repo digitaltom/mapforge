@@ -39,6 +39,7 @@ class Map
     { name: name,
       description: description,
       public_id: public_id,
+      private: private,
       base_map: get_base_map,
       center: center,
       default_center: default_center,

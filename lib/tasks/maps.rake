@@ -16,7 +16,7 @@ namespace :maps do
           context = browser.create_incognito_browser_context
           page = browser.new_page
           page.default_timeout = 60000
-          map_url = base_url + map.id + "?static=true"
+          map_url = base_url + map.public_id + "?static=true"
           failure = false
 
           page.on("response") do |response|
