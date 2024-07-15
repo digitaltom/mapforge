@@ -257,7 +257,7 @@ export const styles = {
         pointOutlineSizeActive,
         pointOutlineSize
       ],
-      'circle-stroke-opacity': 0.8
+      'circle-stroke-opacity': pointOpacity + 0.2
     }
   },
   'points-hit-layer': {
@@ -316,7 +316,7 @@ export const styles = {
       'text-radial-offset': [
         'match',
         ['to-string', ['has', 'marker-symbol']],
-        'true', 1.2,
+        'true', 1.4,
         0.6
       ],
       'text-justify': 'auto',

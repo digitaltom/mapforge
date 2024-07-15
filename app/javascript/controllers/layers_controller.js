@@ -31,7 +31,7 @@ export default class extends Controller {
         } else if (file.type === 'application/json') {
           // mapforge or geojson export file
           geoJSON = JSON.parse(content)
-          if (geoJSON.layers) { geoJSON = JSON.json.layers[0] }
+          if (geoJSON.layers) { geoJSON = geoJSON.layers[0] }
         }
         console.log(geoJSON)
 
