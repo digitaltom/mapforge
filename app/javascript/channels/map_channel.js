@@ -56,7 +56,6 @@ export function initializeSocket () {
           destroy(data.feature.id)
           break
         case 'update_map':
-          // TODO re-center map if center changed
           window.gon.map_properties = data.map
           initializeMaplibreProperties()
           setBackgroundMapLayer()

@@ -32,6 +32,8 @@ class Map
   DEFAULT_TERRAIN = false
 
   after_save :broadcast_update
+  # broadcast updates when the layer changed because of default_center + default_zoom
+  after_touch :broadcast_update
   before_create :create_public_id, :create_layer
   validate :public_id_must_be_unique
 

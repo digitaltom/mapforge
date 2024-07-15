@@ -24,11 +24,24 @@ let backgroundMapLayer
 //      -> triggers callbacks for setting geojson/draw style layers,
 //         sets data-geojson-loaded attribute to true
 
-export function initializeMaplibreProperties (properties = window.gon.map_properties) {
-  mapProperties = properties
+export function initializeMaplibreProperties () {
+  const last = mapProperties
+  mapProperties = window.gon.map_properties
   console.log('map properties: ' + JSON.stringify(mapProperties))
   if (mapProperties.name) { document.title = 'mapforge.org - ' + mapProperties.name }
   functions.e('#map-title', e => { e.textContent = mapProperties.name })
+  // animate to new center if center or zoom changed, or view is on default_center and it changed
+  if ((last && last.center?.toString() !== mapProperties?.center?.toString()) ||
+    (map && [map.getCenter().lng, map.getCenter().lat].toString() === last?.default_center?.toString()) ||
+    (last && last.zoom !== mapProperties.zoom)) {
+    map.flyTo({
+      center: mapProperties.center || mapProperties.default_center,
+      zoom: mapProperties.zoom || mapProperties.default_zoom,
+      speed: 0.3,
+      curve: 0.2,
+      essential: true
+    })
+  }
 }
 
 export function resetGeojsonData () {
