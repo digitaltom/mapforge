@@ -109,8 +109,8 @@ const pointColor = ['coalesce', ['get', 'user_marker-color'], ['get', 'marker-co
 export const pointSize = ['to-number', ['coalesce',
   ['get', 'user_marker-size'], ['get', 'marker-size'],
   ['case',
-    ['has', 'marker-symbol'],
-    12, 6]]]
+    ['any', ['has', 'user_marker-symbol'], ['has', 'marker-symbol']],
+    14, 6]]]
 const pointSizeActive = ['+', 1, pointSize]
 const pointOutlineSize = ['to-number', ['coalesce', ['get', 'user_stroke-width'], ['get', 'stroke-width'], 2]]
 export const pointOutlineSizeActive = ['+', 1, pointOutlineSize]
