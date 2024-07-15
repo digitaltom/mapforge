@@ -105,7 +105,10 @@ const outlineColor = featureOutlineColor
 const outlineWidth = ['+', 4, lineWidth]
 const outlineWidthActive = ['+', 3, outlineWidth]
 
-const pointColor = ['coalesce', ['get', 'user_marker-color'], ['get', 'marker-color'], featureColor]
+const pointColor = ['coalesce', ['get', 'user_marker-color'], ['get', 'marker-color'],
+  ['case',
+    ['any', ['has', 'user_marker-symbol'], ['has', 'marker-symbol']],
+    'white', featureColor]]
 export const pointSize = ['to-number', ['coalesce',
   ['get', 'user_marker-size'], ['get', 'marker-size'],
   ['case',
