@@ -1,7 +1,7 @@
 // loaded in /frontpage/index.html.haml
 import {
   initializeMap, setBackgroundMapLayer, geojsonData,
-  initializeStaticMode, initializeMaplibreProperties, map
+  initializeStaticMode, initializeMaplibreProperties, map, resetGeojsonData
 } from 'maplibre/map'
 import { RotateCameraAnimation } from 'maplibre/animations'
 import * as functions from 'helpers/functions'
@@ -84,7 +84,8 @@ async function featureShow () {
       window.gon.map_id = properties.public_id
       window.gon.map_properties = properties
 
-      initializeMaplibreProperties(true)
+      initializeMaplibreProperties()
+      resetGeojsonData()
       setBackgroundMapLayer(properties.base_map)
       map.setCenter(properties.center)
       map.setZoom(properties.zoom)

@@ -24,11 +24,15 @@ let backgroundMapLayer
 //      -> triggers callbacks for setting geojson/draw style layers,
 //         sets data-geojson-loaded attribute to true
 
-export function initializeMaplibreProperties (resetGeojsonData = false) {
-  mapProperties = window.gon.map_properties
+export function initializeMaplibreProperties (properties = window.gon.map_properties) {
+  mapProperties = properties
   console.log('map properties: ' + JSON.stringify(mapProperties))
   if (mapProperties.name) { document.title = 'mapforge.org - ' + mapProperties.name }
-  if (resetGeojsonData) { geojsonData = null }
+  functions.e('#map-title', e => { e.textContent = mapProperties.name })
+}
+
+export function resetGeojsonData () {
+  geojsonData = null
 }
 
 export function initializeMap (divId = 'maplibre-map') {
@@ -69,8 +73,6 @@ export function initializeMap (divId = 'maplibre-map') {
   })
 
   map.on('click', resetControls)
-
-  functions.e('#map-title', e => { e.textContent = mapProperties.name })
 }
 
 export function loadGeoJsonData () {
