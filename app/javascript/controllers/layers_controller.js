@@ -3,6 +3,7 @@ import { mapChannel } from 'channels/map_channel'
 import { map, geojsonData, upsert } from 'maplibre/map'
 import { initLayersModal, resetControls } from 'maplibre/controls'
 import { highlightFeature } from 'maplibre/styles'
+import { status } from 'helpers/status'
 
 // eslint expects variables to get imported, but we load the full lib in header
 const turf = window.turf
@@ -41,6 +42,7 @@ export default class extends Controller {
           upsert(feature)
           mapChannel.send_message('new_feature', feature)
         })
+        status('File imported')
         initLayersModal()
       }
 
@@ -62,11 +64,13 @@ export default class extends Controller {
     const centroid = turf.centroid(feature)
     console.log('Fly to: ' + feature.id + ' ' + centroid.geometry.coordinates)
     resetControls()
-    highlightFeature(feature)
+    map.once('moveend', function () {
+      highlightFeature(feature)
+    })
     map.flyTo({
       center: centroid.geometry.coordinates,
-      speed: 0.4,
-      curve: 3,
+      duration: 1000,
+      curve: 2,
       essential: true
     })
   }
