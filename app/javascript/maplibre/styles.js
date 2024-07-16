@@ -113,8 +113,8 @@ export const pointSize = ['to-number', ['coalesce',
   ['get', 'user_marker-size'], ['get', 'marker-size'],
   ['case',
     ['any', ['has', 'user_marker-symbol'], ['has', 'marker-symbol']],
-    14, 6]]]
-const pointSizeActive = ['+', 1, pointSize]
+    16, 6]]]
+const pointSizeActive = ['+', 2, pointSize]
 const pointOutlineSize = ['to-number', ['coalesce', ['get', 'user_stroke-width'], ['get', 'stroke-width'], 2]]
 export const pointOutlineSizeActive = ['+', 1, pointOutlineSize]
 const pointOutlineColor = ['coalesce', ['get', 'user_stroke'], ['get', 'stroke'], featureOutlineColor]
@@ -125,7 +125,7 @@ const pointOpacityActive = 0.9
 // in case of icon url, we don't know the size
 // default: 1/6 = 12px (2 * default radius pointSize)
 const iconSizeFactor = ['/', pointSize, 6]
-const iconSize = ['*', 1 / 7, iconSizeFactor]
+const iconSize = ['*', 1 / 8, iconSizeFactor]
 // const iconSizeActive = ['*', 1.1, iconSize] // icon-size is not a paint property
 
 export const styles = {
@@ -254,7 +254,13 @@ export const styles = {
           pointOpacityActive,
           pointOpacity
         ]],
-      'circle-stroke-color': pointOutlineColor,
+      'circle-blur': 0.1,
+      'circle-stroke-color': [
+        'case',
+        ['boolean', ['feature-state', 'active'], false],
+        featureColor,
+        pointOutlineColor
+      ],
       'circle-stroke-width': [
         'case',
         ['boolean', ['feature-state', 'active'], false],
@@ -293,7 +299,7 @@ export const styles = {
           ['concat', '/emojis/noto/', ['get', 'marker-symbol'], '.png'],
           '']
       ],
-      'icon-size': iconSize,
+      'icon-size': iconSize, // cannot scale on hover because it's not a paint property
       'icon-overlap': 'always', // https://maplibre.org/maplibre-style-spec/layers/#icon-overlap
       'icon-ignore-placement': true // other symbols can be visible even if they collide with the icon
     },
