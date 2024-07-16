@@ -348,7 +348,7 @@ GEM
       io-console (~> 0.5)
     request_store (1.6.0)
       rack (>= 1.4)
-    rexml (3.3.1)
+    rexml (3.3.2)
       strscan
     rgeo (3.0.1)
     rgeo-geojson (2.1.1)
