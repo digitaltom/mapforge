@@ -237,6 +237,7 @@ export const styles = {
       ['!=', 'active', 'true']
     ],
     paint: {
+      'circle-pitch-scale': 'map', // points get bigger when camera is closer
       'circle-radius': ['case',
         ['boolean', ['feature-state', 'active'], false],
         pointSizeActive,
@@ -293,7 +294,7 @@ export const styles = {
           '']
       ],
       'icon-size': iconSize,
-      'icon-overlap': 'never', // https://maplibre.org/maplibre-style-spec/layers/#icon-overlap
+      'icon-overlap': 'always', // https://maplibre.org/maplibre-style-spec/layers/#icon-overlap
       'icon-ignore-placement': true // other symbols can be visible even if they collide with the icon
     },
     paint: {
@@ -326,8 +327,8 @@ export const styles = {
       'text-ignore-placement': false // hide on collision
     },
     paint: {
-      'text-color': ['coalesce', ['get', 'label-color'], '#fff'],
-      'text-halo-color': ['coalesce', ['get', 'label-shadow'], '#444'],
+      'text-color': ['coalesce', ['get', 'label-color'], '#000'],
+      'text-halo-color': ['coalesce', ['get', 'label-shadow'], '#fff'],
       'text-halo-width': 1
     }
   }
