@@ -32,9 +32,10 @@ export function initializeMaplibreProperties () {
   if (mapProperties.name) { document.title = 'mapforge.org - ' + mapProperties.name }
   functions.e('#map-title', e => { e.textContent = mapProperties.name })
   // animate to new center if center or zoom changed, or view is on default_center and it changed
-  if ((last && last.center?.toString() !== mapProperties?.center?.toString()) ||
-    (map && [map.getCenter().lng, map.getCenter().lat].toString() === last?.default_center?.toString()) ||
-    (last && last.zoom !== mapProperties.zoom)) {
+  if ((last && (last.center?.toString() !== mapProperties?.center?.toString())) ||
+    (map && mapAtCoords(last?.default_center)) ||
+    (last && (last.zoom !== mapProperties.zoom))) {
+    map.once('moveend', function () { status('Map view updated') })
     map.flyTo({
       center: mapProperties.center || mapProperties.default_center,
       zoom: mapProperties.zoom || mapProperties.default_zoom,
@@ -251,4 +252,10 @@ export function setBackgroundMapLayer (mapName = mapProperties.base_map, force =
   } else {
     console.error('Base map ' + mapName + ' not available!')
   }
+}
+
+function mapAtCoords (coords) {
+  const center = [map.getCenter().lng.toFixed(6), map.getCenter().lat.toFixed(6)].toString()
+  coords = [coords[0]?.toFixed(6), coords[1]?.toFixed(6)].toString()
+  return center === coords
 }

@@ -25,7 +25,7 @@ describe 'Map' do
       expect(page).to have_text('Feature 1')
     end
 
-    it 'flies to feature' do
+    it 'flies to feature on click' do
       find("i[data-feature-id='#{feature.id}']").click
       # flyTo is finished when the feature details are shown
       expect(page).to have_text('F1 desc')
