@@ -70,12 +70,11 @@ describe 'Map' do
       expect(page.evaluate_script("map.getZoom()")).to eq(16)
     end
 
-    it 'client follows default zoom update if map did not move' do
-      # TOOO
-    end
-
     it 'map pitch update' do
-      # TODO
+      map.update(pitch: 33)
+      expect(page).to have_text('Map view updated')
+      sleep(2)
+      expect(page.evaluate_script("map.getPitch()")).to eq(33)
     end
 
     it 'map orientation update' do

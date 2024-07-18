@@ -39,9 +39,11 @@ export function initializeMaplibreProperties () {
     map.flyTo({
       center: mapProperties.center || mapProperties.default_center,
       zoom: mapProperties.zoom || mapProperties.default_zoom,
+      pitch: mapProperties.pitch,
+      bearing: mapProperties.bearing || 0,
       curve: 0.3,
       essential: true,
-      duration: 4000
+      duration: 2000
     })
   }
 }
