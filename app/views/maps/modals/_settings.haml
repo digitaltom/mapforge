@@ -8,12 +8,11 @@
   %br
   - Map::BASE_MAPS.each do |base_map|
     - active = (@map_properties[:base_map] == base_map)
-    = image_tag("base_maps/#{base_map}.jpg", data: { layer: base_map, action: "click->settings#update_basemap"},
-                class: "layer-preview #{"active" if active}")
+    = image_tag("base_maps/#{base_map}.jpg", data: { base_map: base_map, action: "click->settings#update_basemap"},
+                class: "layer-preview")
   - if ENV['MAPTILER_KEY']
     - Map::MAPTILER_MAPS.each do |base_map|
-      - active = (@map_properties[:base_map] == base_map)
-      = image_tag("base_maps/#{base_map}.jpg", data: { layer: base_map, action: "click->settings#update_basemap"}, class: "layer-preview #{"active" if active}")
+      = image_tag("base_maps/#{base_map}.jpg", data: { base_map: base_map, action: "click->settings#update_basemap"}, class: "layer-preview")
   %br
   Center:
   %span#map-center

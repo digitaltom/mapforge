@@ -37,6 +37,7 @@ export class MapSettingsControl {
         resetControls()
       } else {
         resetControls()
+        initSettingsModal()
         e.target.closest('button').classList.add('active')
         document.querySelector('#map-modal').style.display = 'block'
         document.querySelector('#map-name').value = mapProperties.name
@@ -111,6 +112,15 @@ export class MapLayersControl {
       this._container.parentNode.removeChild(this._container)
     }
   }
+}
+
+// create the list of layers + features
+export function initSettingsModal () {
+  document.querySelector('#map-name').value = mapProperties.name
+  console.log(document.querySelector('#map-terrain[data-base-map="' + mapProperties.base_map + '"]'))
+  document.querySelector('#map-terrain').checked = mapProperties.terrain
+  document.querySelectorAll('.layer-preview').forEach(layerPreview => { layerPreview.classList.remove('active') })
+  document.querySelector('img[data-base-map="' + mapProperties.base_map + '"]')?.classList.add('active')
 }
 
 // create the list of layers + features

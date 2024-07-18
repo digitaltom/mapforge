@@ -14,6 +14,7 @@ export let mapProperties
 export let lastMousePosition
 export let highlightedFeature
 let backgroundMapLayer
+let backgroundTerrain
 
 // workflow of event based map loading:
 //
@@ -238,7 +239,7 @@ export function destroy (featureId) {
 }
 
 export function setBackgroundMapLayer (mapName = mapProperties.base_map, force = false) {
-  if (backgroundMapLayer === mapName && !force) { return }
+  if (backgroundMapLayer === mapName && backgroundTerrain === mapProperties.terrain && !force) { return }
   if (basemaps[mapName]) {
     status('Loading base map ' + mapName)
     map.setStyle(basemaps[mapName],
@@ -246,6 +247,7 @@ export function setBackgroundMapLayer (mapName = mapProperties.base_map, force =
       // which will trigger loadGeoJsonData()
       { diff: false })
     backgroundMapLayer = mapName
+    backgroundTerrain = mapProperties.terrain
   } else {
     console.error('Base map ' + mapName + ' not available!')
   }
