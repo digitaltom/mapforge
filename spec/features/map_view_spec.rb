@@ -65,6 +65,8 @@ describe 'Map public view' do
 
   context 'with lost websocket' do
     it 'shows warning' do
+      # TODO: unclear why there is an update happening here, but it would hide the next status message
+      expect(page).to have_text('Map view updated')
       ActionCable.server.connections.each(&:close)
       expect(page).to have_text('Connection to server lost')
     end
