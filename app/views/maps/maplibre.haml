@@ -6,10 +6,11 @@
   = render 'shared/menu'
   %span#mapforge-logo.mapforge-font.white-shadow
     Mapforge
-  %span#map-title
+  %span#map-title.dark-shadow
 
-= render 'status'
-= render 'maps/modals/settings'
-= render 'maps/modals/layers'
-= render 'maps/modals/share'
-= render 'maps/modals/feature_details'
+- unless params["static"]
+  = render 'status'
+  = render 'maps/modals/settings'
+  = render 'maps/modals/layers'
+  = render 'maps/modals/share'
+  = render 'maps/modals/feature_details'

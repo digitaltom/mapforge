@@ -21,7 +21,14 @@ FactoryBot.define do
     trait :point do
       geometry do
         { 'type' => 'Point',
-          'coordinates' => [ 11.0557138, 49.4731983 ] }
+          'coordinates' => [ 11.055713800000035, 49.47319830000001 ] }
+      end
+    end
+
+    trait :point_with_elevation do
+      geometry do
+        { 'type' => 'Point',
+          'coordinates' => [ 11.0557138, 49.4731983, 333 ] }
       end
     end
 

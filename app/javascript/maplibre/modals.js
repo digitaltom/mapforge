@@ -57,8 +57,15 @@ export function showFeatureDetails (feature) {
   modal.style.display = 'block'
   modal.setAttribute('data-feature-id', feature.id)
 
-  const desc = marked(feature?.properties?.desc || '')
-  document.querySelector('#feature-details-header').innerHTML = featureTitle(feature)
+  document.querySelector('#feature-details-header').innerHTML = ''
+  if (feature.properties['marker-image-url']) {
+    const imageUrl = feature.properties['marker-image-url'].replace('/icon/', '/image/')
+    document.querySelector('#feature-details-header').innerHTML =
+      "<a href='" + imageUrl + "' target='_blank'>" +
+      "<img id='feature-details-icon' src='" + feature.properties['marker-image-url'] + "'></a>"
+  }
+  document.querySelector('#feature-details-header').innerHTML += featureTitle(feature)
   document.querySelector('#feature-details-meta').innerHTML = featureMeta(feature)
+  const desc = marked(feature?.properties?.desc || '')
   document.querySelector('#feature-details-body').innerHTML = desc
 }

@@ -32,6 +32,8 @@ class Map
   DEFAULT_TERRAIN = false
 
   after_save :broadcast_update
+  # broadcast updates when the layer changed because of default_center + default_zoom
+  after_touch :broadcast_update
   before_create :create_public_id, :create_layer
   validate :public_id_must_be_unique
 
@@ -39,9 +41,12 @@ class Map
     { name: name,
       description: description,
       public_id: public_id,
+      private: private,
       base_map: get_base_map,
-      center: center || default_center,
-      zoom: zoom || default_zoom,
+      center: center,
+      default_center: default_center,
+      zoom: zoom,
+      default_zoom: default_zoom,
       pitch: pitch || DEFAULT_PITCH,
       terrain: terrain || DEFAULT_TERRAIN
     }
@@ -90,11 +95,15 @@ class Map
 
   private
 
+  def all_points
+    coordinates = features.map { |feature| feature.coordinates(include_height: false) }
+    coordinates.flatten.each_slice(2).to_a
+  end
+
   def default_center
     if features.present?
       # setting center to average of all coordinates
-      coordinates = features.map { |feature| feature.geometry["coordinates"] }
-      coordinates = coordinates.flatten.each_slice(2).to_a
+      coordinates = all_points
       average_latitude = coordinates.map(&:first).reduce(:+) / coordinates.size.to_f
       average_longitude = coordinates.map(&:last).reduce(:+) / coordinates.size.to_f
       [ average_latitude, average_longitude ]
@@ -104,7 +113,26 @@ class Map
   end
 
   def default_zoom
-    DEFAULT_ZOOM
+    if features.present?
+      point1 = RGeo::Geographic.spherical_factory.point(all_points.map(&:first).max, all_points.map(&:last).max)
+      point2 = RGeo::Geographic.spherical_factory.point(all_points.map(&:first).min, all_points.map(&:last).min)
+      distance_km = point1.distance(point2) / 1000
+      Rails.logger.info("Map feature distance: #{distance_km} km")
+      case distance_km
+      when 0..0.1 then 18
+      when 0.1..1 then 16
+      when 1..4 then 14
+      when 4..10 then 12
+      when 10..50 then 10
+      when 50..100 then 9
+      when 100..200 then 8
+      when 200..1000 then 6
+      when 1000..2000 then 4
+      else 2
+      end
+    else
+     DEFAULT_ZOOM
+    end
   end
 
   def get_base_map

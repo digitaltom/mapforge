@@ -15,7 +15,8 @@ namespace :maps do
         Puppeteer.launch(headless: true, ignore_https_errors: true) do |browser|
           context = browser.create_incognito_browser_context
           page = browser.new_page
-          map_url = base_url + map.id + "?static=true"
+          page.default_timeout = 60000
+          map_url = base_url + map.public_id + "?static=true"
           failure = false
 
           page.on("response") do |response|

@@ -3,12 +3,9 @@ require 'rails_helper'
 describe 'Map' do
   subject(:map) { create(:map) }
 
-  before do
-    visit map_path(map)
-  end
-
   context 'share links' do
     before do
+      visit map_path(map)
       find('.maplibregl-ctrl-share').click
       expect(page).to have_text('Share Map')
     end
@@ -31,18 +28,13 @@ describe 'Map' do
   end
 
   context 'export' do
-    before do
-      find('.maplibregl-ctrl-share').click
-      expect(page).to have_text('Share Map')
-    end
-
     it 'can download geojson export' do
-      click_link('Download geojson')
+      visit '/m/' + subject.public_id + '/features'
       expect(page).to have_text(map.feature_collection.to_json)
     end
 
     it 'can download map export' do
-      click_link('Download map export')
+      visit '/m/' + subject.public_id + '/export'
       expect(page).to have_text(map.to_json)
     end
   end

@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 ## 2024-07
 
 * geojson import
+* auto center + zoom
+* image upload in µlogger API
 
 
 ## 2024-06
@@ -38,5 +40,3 @@ All notable changes to this project will be documented in this file.
 * Added Bootstrap5
 * Upgrade to Openlayers 9
 * Created new frontpage that iterates through demos of available features
-
-

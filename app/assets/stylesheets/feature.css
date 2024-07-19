@@ -16,6 +16,11 @@
   max-height: 95%;
 }
 
+#feature-details-icon {
+  height: 2.5em;
+  margin: 0.3em;
+}
+
 #feature-details-meta {
   float: right;
   font-size: 80%;

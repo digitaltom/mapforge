@@ -1,7 +1,7 @@
 import consumer from 'channels/consumer'
 import {
   upsert, destroy, setBackgroundMapLayer, mapProperties,
-  initializeMaplibreProperties, geojsonData, map
+  initializeMaplibreProperties, geojsonData, map, resetGeojsonData
 } from 'maplibre/map'
 import { status } from 'helpers/status'
 
@@ -28,7 +28,8 @@ export function initializeSocket () {
       mapChannel = this
       if (geojsonData) {
         status('Connection to server re-established')
-        initializeMaplibreProperties(true)
+        initializeMaplibreProperties()
+        resetGeojsonData()
         setBackgroundMapLayer(mapProperties.base_map, true)
       } else {
         status('Connection to server established')
@@ -55,7 +56,6 @@ export function initializeSocket () {
           destroy(data.feature.id)
           break
         case 'update_map':
-          // TODO re-center map if center changed
           window.gon.map_properties = data.map
           initializeMaplibreProperties()
           setBackgroundMapLayer()

@@ -14,6 +14,7 @@ export let mapProperties
 export let lastMousePosition
 export let highlightedFeature
 let backgroundMapLayer
+let backgroundTerrain
 
 // workflow of event based map loading:
 //
@@ -24,11 +25,31 @@ let backgroundMapLayer
 //      -> triggers callbacks for setting geojson/draw style layers,
 //         sets data-geojson-loaded attribute to true
 
-export function initializeMaplibreProperties (resetGeojsonData = false) {
+export function initializeMaplibreProperties () {
+  const last = mapProperties
   mapProperties = window.gon.map_properties
   console.log('map properties: ' + JSON.stringify(mapProperties))
   if (mapProperties.name) { document.title = 'mapforge.org - ' + mapProperties.name }
-  if (resetGeojsonData) { geojsonData = null }
+  functions.e('#map-title', e => { e.textContent = mapProperties.name })
+  // animate to new center if center or zoom changed, or view is on default_center and it changed
+  if ((last && (last.center?.toString() !== mapProperties?.center?.toString())) ||
+    (map && mapAtCoords(last?.default_center)) ||
+    (last && (last.zoom !== mapProperties.zoom))) {
+    map.once('moveend', function () { status('Map view updated') })
+    map.flyTo({
+      center: mapProperties.center || mapProperties.default_center,
+      zoom: mapProperties.zoom || mapProperties.default_zoom,
+      pitch: mapProperties.pitch,
+      bearing: mapProperties.bearing || 0,
+      curve: 0.3,
+      essential: true,
+      duration: 2000
+    })
+  }
+}
+
+export function resetGeojsonData () {
+  geojsonData = null
 }
 
 export function initializeMap (divId = 'maplibre-map') {
@@ -39,8 +60,8 @@ export function initializeMap (divId = 'maplibre-map') {
   initializeMaplibreProperties()
   map = new maplibregl.Map({
     container: divId,
-    center: mapProperties.center,
-    zoom: mapProperties.zoom,
+    center: (mapProperties.center || mapProperties.default_center),
+    zoom: (mapProperties.zoom || mapProperties.default_zoom),
     pitch: mapProperties.pitch,
     maxPitch: 72,
     interactive: (window.gon.map_mode !== 'static') // can move/zoom map
@@ -69,8 +90,6 @@ export function initializeMap (divId = 'maplibre-map') {
   })
 
   map.on('click', resetControls)
-
-  functions.e('#map-title', e => { e.textContent = mapProperties.name })
 }
 
 export function loadGeoJsonData () {
@@ -223,7 +242,7 @@ export function destroy (featureId) {
 }
 
 export function setBackgroundMapLayer (mapName = mapProperties.base_map, force = false) {
-  if (backgroundMapLayer === mapName && !force) { return }
+  if (backgroundMapLayer === mapName && backgroundTerrain === mapProperties.terrain && !force) { return }
   if (basemaps[mapName]) {
     status('Loading base map ' + mapName)
     map.setStyle(basemaps[mapName],
@@ -231,7 +250,14 @@ export function setBackgroundMapLayer (mapName = mapProperties.base_map, force =
       // which will trigger loadGeoJsonData()
       { diff: false })
     backgroundMapLayer = mapName
+    backgroundTerrain = mapProperties.terrain
   } else {
     console.error('Base map ' + mapName + ' not available!')
   }
+}
+
+function mapAtCoords (coords) {
+  const center = [map.getCenter().lng.toFixed(6), map.getCenter().lat.toFixed(6)].toString()
+  coords = [coords[0]?.toFixed(6), coords[1]?.toFixed(6)].toString()
+  return center === coords
 }

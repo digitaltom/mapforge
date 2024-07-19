@@ -3,9 +3,9 @@ import { mapChannel } from 'channels/map_channel'
 import { map, geojsonData, upsert } from 'maplibre/map'
 import { initLayersModal, resetControls } from 'maplibre/controls'
 import { highlightFeature } from 'maplibre/styles'
+import { status } from 'helpers/status'
 
 // eslint expects variables to get imported, but we load the full lib in header
-const toGeoJSON = window.toGeoJSON
 const turf = window.turf
 
 export default class extends Controller {
@@ -23,23 +23,26 @@ export default class extends Controller {
         // https://github.com/mapbox/togeojson?tab=readme-ov-file#api
         if (file.type === 'application/gpx+xml') {
           const xmlDoc = parser.parseFromString(content, 'application/xml')
-          geoJSON = toGeoJSON.gpx(xmlDoc)
+          geoJSON = window.toGeoJSON.gpx(xmlDoc)
         } else if (file.type === 'application/vnd.google-earth.kml+xml') {
           const xmlDoc = parser.parseFromString(content, 'application/xml')
-          geoJSON = toGeoJSON.kml(xmlDoc)
+          geoJSON = window.toGeoJSON.kml(xmlDoc)
         } else if (file.type === 'application/geo+json') {
           geoJSON = JSON.parse(content)
         } else if (file.type === 'application/json') {
-          // mapforge export file
-          geoJSON = JSON.parse(content).layers[0]
+          // mapforge or geojson export file
+          geoJSON = JSON.parse(content)
+          if (geoJSON.layers) { geoJSON = geoJSON.layers[0] }
         }
         console.log(geoJSON)
 
         geoJSON.features.forEach(feature => {
           feature.id = Math.random().toString(36).substring(2, 18)
+          feature.properties ||= {}
           upsert(feature)
           mapChannel.send_message('new_feature', feature)
         })
+        status('File imported')
         initLayersModal()
       }
 
@@ -61,11 +64,13 @@ export default class extends Controller {
     const centroid = turf.centroid(feature)
     console.log('Fly to: ' + feature.id + ' ' + centroid.geometry.coordinates)
     resetControls()
-    highlightFeature(feature)
+    map.once('moveend', function () {
+      highlightFeature(feature)
+    })
     map.flyTo({
       center: centroid.geometry.coordinates,
-      speed: 0.4,
-      curve: 3,
+      duration: 1000,
+      curve: 2,
       essential: true
     })
   }

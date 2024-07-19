@@ -44,14 +44,7 @@ module Ulogger
       uploaded = params.fetch(:image, nil)
 
       if uploaded.is_a?(ActionDispatch::Http::UploadedFile)
-        img = Image.create(img: uploaded.tempfile)
-        image_properties = {
-          "marker-color" => "transparent",
-          "stroke" => "#fff",
-          "marker-size" => 20,
-          "stroke-width" => 13,
-          "marker-image-url" => "/icon/" + img.public_id }
-
+        image_properties = image_properties(uploaded)
         properties.merge!(image_properties)
       end
 
@@ -66,6 +59,21 @@ module Ulogger
     def set_map
       @map =  Map.find_by(id: "%024d" % [ params[:trackid] ])
       render json: { error: true, message: "Invalid trackid" } unless @map
+    end
+
+    def image_properties(uploaded)
+      # original filename is 'upload', we need a name with file extension
+      # for Dragonfly mime_type detection:
+      ext = uploaded.content_type.split('/').last
+      filename = "#{SecureRandom.hex(4)}.#{ext}"
+      uid = Dragonfly.app.store(uploaded.tempfile, 'name' => filename)
+      img = Image.create(img_uid: uid)
+      { "marker-color" => "transparent",
+        "stroke" => "#fff",
+        "marker-size" => 20,
+        "stroke-width" => 8,
+        "marker-image-url" => "/icon/" + img.public_id,
+        "desc" => description + "[![image](/image/#{img.public_id})](/image/#{img.public_id})" }
     end
 
     def description

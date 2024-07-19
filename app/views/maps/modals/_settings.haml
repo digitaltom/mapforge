@@ -7,31 +7,30 @@
   %label{for: "map-baselayer"} Base Map:
   %br
   - Map::BASE_MAPS.each do |base_map|
-    - active = (@map.properties[:base_map] == base_map)
-    = image_tag("base_maps/#{base_map}.jpg", data: { layer: base_map, action: "click->settings#update_basemap"},
-                class: "layer-preview #{"active" if active}")
+    - active = (@map_properties[:base_map] == base_map)
+    = image_tag("base_maps/#{base_map}.jpg", data: { base_map: base_map, action: "click->settings#update_basemap"},
+                class: "layer-preview")
   - if ENV['MAPTILER_KEY']
     - Map::MAPTILER_MAPS.each do |base_map|
-      - active = (@map.properties[:base_map] == base_map)
-      = image_tag("base_maps/#{base_map}.jpg", data: { layer: base_map, action: "click->settings#update_basemap"}, class: "layer-preview #{"active" if active}")
+      = image_tag("base_maps/#{base_map}.jpg", data: { base_map: base_map, action: "click->settings#update_basemap"}, class: "layer-preview")
   %br
   Center:
   %span#map-center
-    = @map.properties[:center].join(', ')
+    = (@map_properties[:center] || @map_properties[:default_center]).join(', ')
     %i#map-center-current
   %br
   Zoom:
   %span#map-zoom
-    = @map.properties[:zoom]
+    = @map_properties[:zoom]
     %i#map-zoom-current
   %br
   Pitch:
   %span#map-pitch
-    = "#{@map.properties[:pitch]}°"
+    = "#{@map_properties[:pitch]}°"
     %i#map-pitch-current
   %br
   %span
     %label{ for: "map-terrain"} Terrain:
-    %input#map-terrain{type: "checkbox", checked: @map.properties[:terrain],      data: { action: "click->settings#update_terrain"} }
+    %input#map-terrain{type: "checkbox", checked: @map_properties[:terrain], data: { action: "click->settings#update_terrain"} }
   %br
   %a#set-map-center{href: '#', data: { action: "click->settings#update_mapdata" } } Set initial map view to current center/zoom/pitch

@@ -22,7 +22,7 @@ class Feature
     { id: _id.to_s,
       type:,
       geometry:,
-      properties: }
+      properties: properties || {} }
   end
 
   # input file formats are typically gps format EPSG:4326 (WGS 84) or
@@ -40,7 +40,16 @@ class Feature
     end
   end
 
+  def coordinates(include_height: true)
+    include_height ? geometry["coordinates"] : drop_elevation(geometry["coordinates"])
+  end
+
   private
+
+  # reduce all coordinates to 2, dropping elevation
+  def drop_elevation(coords)
+    coords.all? { |c| !c.is_a?(Array) } ? coords[0...2].map(&:to_f) : coords.map { |c| drop_elevation(c) }
+  end
 
   def broadcast_update
     # broadcast to private + public channel
