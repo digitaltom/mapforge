@@ -21,7 +21,7 @@ class Map
   delegate :features_count, to: :layer
 
   BASE_MAPS = [ "osmRasterTiles", "satelliteTiles",
-                "stamenTonerTiles", "openTopoTiles" ]
+                "stamenTonerTiles", "openTopoTiles", "empty" ]
   MAPTILER_MAPS = [ "maptilerBuildings", "maptilerHybrid", "maptilerDataviz",
                     "maptilerStreets", "maptilerNoStreets", "maptilerWinter",
                     "maptilerBike", "maptilerBasic" ]
