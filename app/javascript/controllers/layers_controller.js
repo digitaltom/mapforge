@@ -68,7 +68,7 @@ export default class extends Controller {
     map.flyTo({
       center: centroid.geometry.coordinates,
       duration: 1000,
-      curve: 2,
+      curve: 0.3,
       essential: true
     })
   }

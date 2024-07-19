@@ -20,7 +20,7 @@ describe 'Map' do
       find('.maplibregl-ctrl-map').click
       expect(page).to have_text('Configure Map')
       find(".layer-preview[data-base-map='stamenTonerTiles']").click
-      sleep(0.5) # make sure actioncable request is processed
+      expect(page).to have_text('Map style loaded')
       expect(map.reload.base_map).to eq 'stamenTonerTiles'
     end
 
@@ -28,7 +28,7 @@ describe 'Map' do
       find('.maplibregl-ctrl-map').click
       expect(page).to have_text('Configure Map')
       find('#map-terrain').click
-      sleep(0.5) # make sure actioncable request is processed
+      expect(page).to have_text('Map style loaded')
       expect(map.reload.terrain).to eq true
     end
   end
@@ -36,14 +36,14 @@ describe 'Map' do
   context 'when map settings change server side' do
     it 'basemap update' do
       map.update(base_map: 'stamenTonerTiles')
-      sleep(0.5) # make sure actioncable request is processed
+      expect(page).to have_text('Map style loaded')
       find('.maplibregl-ctrl-map').click
       expect(page).to have_css('.layer-preview[data-base-map="stamenTonerTiles"].active')
     end
 
     it 'terrain update' do
       map.update(terrain: true)
-      sleep(0.5) # make sure actioncable request is processed
+      expect(page).to have_text('Map style loaded')
       find('.maplibregl-ctrl-map').click
       expect(find('#map-terrain')).to be_checked
     end
@@ -51,13 +51,12 @@ describe 'Map' do
     it 'map center update' do
       map.update(center: [ 11, 49.5 ])
       expect(page).to have_text('Map view updated')
-      sleep(2)
       expect(page.evaluate_script("[map.getCenter().lng, map.getCenter().lat].toString()")).to eq('11,49.5')
     end
 
     it 'client follows default center update if map did not move' do
       feature = create(:feature, :point, layer: map.layer, coordinates: [ 11, 49.5 ])
-      sleep(4)
+      expect(page).to have_text('Map view updated')
       # new default center are the feature coordinates
       expect(page.evaluate_script("[map.getCenter().lng, map.getCenter().lat].toString()"))
         .to eq(feature.coordinates.join(','))
@@ -66,14 +65,12 @@ describe 'Map' do
     it 'map zoom update' do
       map.update(zoom: 16)
       expect(page).to have_text('Map view updated')
-      sleep(2)
       expect(page.evaluate_script("map.getZoom()")).to eq(16)
     end
 
     it 'map pitch update' do
       map.update(pitch: 33)
       expect(page).to have_text('Map view updated')
-      sleep(2)
       expect(page.evaluate_script("map.getPitch()")).to eq(33)
     end
 

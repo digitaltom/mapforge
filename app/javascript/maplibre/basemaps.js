@@ -13,7 +13,8 @@ const defaultRasterLayer = [
 const host = new URL(window.location.href).origin
 
 export const basemaps = {
-  empty: {
+  // static test tile
+  test: {
     version: 8,
     sources: {
       'raster-tiles': {

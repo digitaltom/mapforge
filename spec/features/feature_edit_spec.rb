@@ -6,7 +6,6 @@ describe 'Map' do
   context 'with empty map' do
     before do
       visit map_path(map)
-      expect(page).to have_css("#maplibre-map[data-loaded='true']")
     end
 
     it 'shows feature edit buttons' do
@@ -29,7 +28,7 @@ describe 'Map' do
         click_coord('#maplibre-map', 150, 50)
         click_coord('#maplibre-map', 50, 50)
 
-        sleep(0.5) # wait for websocket msg
+        expect(page).to have_text('Updated feature')
         expect(Feature.polygon.count).to eq(1)
       end
     end
@@ -58,6 +57,7 @@ describe 'Map' do
         find('#edit-button-raw').click
         fill_in 'properties', with: '{"title": "TEST"}'
         find('.feature-update').click
+        expect(page).to have_text('Updated feature')
         expect(polygon.reload.properties).to eq({ "title" => "TEST" })
       end
 
@@ -65,7 +65,7 @@ describe 'Map' do
         accept_alert do
           find('#edit-button-trash').click
         end
-        sleep(0.5) # wait for websocket msg
+        expect(page).to have_text('Deleting feature')
         expect(Feature.count).to eq(0)
       end
     end

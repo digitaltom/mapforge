@@ -21,7 +21,7 @@ class Map
   delegate :features_count, to: :layer
 
   BASE_MAPS = [ "osmRasterTiles", "satelliteTiles",
-                "stamenTonerTiles", "openTopoTiles", "empty" ]
+                "stamenTonerTiles", "openTopoTiles" ]
   MAPTILER_MAPS = [ "maptilerBuildings", "maptilerHybrid", "maptilerDataviz",
                     "maptilerStreets", "maptilerNoStreets", "maptilerWinter",
                     "maptilerBike", "maptilerBasic" ]
@@ -140,7 +140,7 @@ class Map
       return base_map if ENV["MAPTILER_KEY"].present?
       logger.warn("Cannot use maptiler map #{base_map} without MAPTILER_KEY")
       return default_base_map
-    elsif BASE_MAPS.include?(base_map)
+    elsif BASE_MAPS.include?(base_map) || base_map == "test"
       return base_map
     end
     logger.warn("Map '#{base_map}' not found, falling back to #{default_base_map}")
