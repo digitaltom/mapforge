@@ -118,6 +118,7 @@ const pointSizeActive = ['+', 2, pointSize]
 const pointOutlineSize = ['to-number', ['coalesce', ['get', 'user_stroke-width'], ['get', 'stroke-width'], 2]]
 export const pointOutlineSizeActive = ['+', 1, pointOutlineSize]
 const pointOutlineColor = ['coalesce', ['get', 'user_stroke'], ['get', 'stroke'], featureOutlineColor]
+const pointOutlineColorActive = 'lightgrey'
 const pointOpacity = 0.7
 const pointOpacityActive = 0.9
 
@@ -258,7 +259,7 @@ export const styles = {
       'circle-stroke-color': [
         'case',
         ['boolean', ['feature-state', 'active'], false],
-        featureColor,
+        pointOutlineColorActive,
         pointOutlineColor
       ],
       'circle-stroke-width': [
