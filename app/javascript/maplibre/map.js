@@ -68,6 +68,7 @@ export function initializeMap (divId = 'maplibre-map') {
     center: (mapProperties.center || mapProperties.default_center),
     zoom: (mapProperties.zoom || mapProperties.default_zoom),
     pitch: mapProperties.pitch,
+    bearing: mapProperties.bearing || 0,
     maxPitch: 72,
     interactive: (window.gon.map_mode !== 'static') // can move/zoom map
     // style: {} // style/map is getting loaded by 'setBackgroundMapLayer'

@@ -75,7 +75,9 @@ describe 'Map' do
     end
 
     it 'map orientation update' do
-      # TODO
+    map.update(bearing: 33)
+    expect(page).to have_text('Map view updated')
+    expect(page.evaluate_script("map.getBearing()")).to eq(33)
     end
   end
 end
