@@ -3,12 +3,12 @@ require 'rails_helper'
 describe 'Map public view' do
   let(:map) { create(:map) }
 
-  context 'with initial map rendering' do
-    before do
-      visit map_path(map.public_id)
-      expect(page).to have_css('.maplibregl-canvas')
-    end
+  before do
+    visit map_path(map.public_id)
+    expect(page).to have_css('.map[data-loaded="true"]')
+  end
 
+  context 'with initial map rendering' do
     it 'shows map view buttons' do
       expect(page).to have_css('.maplibregl-ctrl-zoom-in')
       expect(page).to have_css('.maplibregl-ctrl-zoom-out')
@@ -24,12 +24,6 @@ describe 'Map public view' do
     let!(:polygon) { create(:feature, :polygon_middle, layer: map.layer,
       title: 'Poly Title', desc: 'Poly Desc') }
     let!(:line) { create(:feature, :line_string, layer: map.layer) }
-
-    before do
-      visit map_path(map.public_id)
-      # make sure features are loaded
-      expect(page).to have_css('.map[data-loaded="true"]')
-    end
 
     it 'shows feature details on hover' do
       hover_coord('.map', 50, 50)
@@ -52,12 +46,6 @@ describe 'Map public view' do
     # this polygon is in the middle of nbg (default view)
     let!(:polygon) { create(:feature, :polygon_middle, layer: map.layer, properties: nil) }
 
-    before do
-      visit map_path(map.public_id)
-      # make sure features are loaded
-      expect(page).to have_css('.map[data-loaded="true"]')
-    end
-
     it 'shows feature details on hover' do
       hover_coord('.map', 50, 50)
       expect(page).to have_css('#feature-details-modal')
@@ -66,11 +54,6 @@ describe 'Map public view' do
   end
 
   context 'with features added server side' do
-    before do
-      visit map_path(map.public_id)
-      expect(page).to have_css('.map[data-loaded="true"]')
-    end
-
     # feature is created after loading the map, to make sure it's loaded via websocket
     it 'receives new features via websocket channel' do
       create(:feature, :polygon_middle, layer: map.layer, title: 'New Title')
@@ -81,11 +64,6 @@ describe 'Map public view' do
   end
 
   context 'with lost websocket' do
-    before do
-      visit map_path(map.public_id)
-      expect(page).to have_css('.map[data-loaded="true"]')
-    end
-
     it 'shows warning' do
       ActionCable.server.connections.each(&:close)
       expect(page).to have_text('Connection to server lost')
