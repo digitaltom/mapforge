@@ -25,6 +25,7 @@ export default class extends Controller {
     const center = [map.getCenter().lng, map.getCenter().lat]
     const zoom = map.getZoom()
     const pitch = map.getPitch()
+    const bearing = map.getBearing()
     const name = document.querySelector('#map-name').value
     document.querySelector('#map-center').innerHTML = center
     document.querySelector('#map-zoom').innerHTML = zoom
@@ -32,6 +33,7 @@ export default class extends Controller {
     mapProperties.center = center
     mapProperties.zoom = zoom
     mapProperties.pitch = pitch
-    mapChannel.send_message('update_map', { center, zoom, pitch, name })
+    mapProperties.bearing = bearing
+    mapChannel.send_message('update_map', { center, zoom, pitch, bearing, name })
   }
 }

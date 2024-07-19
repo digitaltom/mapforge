@@ -67,7 +67,6 @@ export function initializeEditMode () {
     if (!e.features?.length) { return }
     selectedFeature = e.features[0]
     if (selectedFeature) {
-      status('selected ' + selectedFeature.id)
       console.log('selected: ' + JSON.stringify(selectedFeature))
       showFeatureDetails(selectedFeature)
     }

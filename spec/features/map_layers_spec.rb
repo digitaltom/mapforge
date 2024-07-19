@@ -5,6 +5,7 @@ describe 'Map' do
 
   before do
     visit map_path(map)
+    expect(page).to have_css("#maplibre-map[data-loaded='true']")
   end
 
   context 'with initial map rendering' do
@@ -17,6 +18,8 @@ describe 'Map' do
   context 'feature listing' do
     before do
       feature
+      expect(page).to have_text('Added feature')
+      expect(page).to have_text('Map view updated')
       find('.maplibregl-ctrl-layers').click
     end
     let(:feature) { create(:feature, :point, title: 'Feature 1', desc: 'F1 desc', layer: map.layer) }

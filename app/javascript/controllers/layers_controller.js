@@ -64,13 +64,11 @@ export default class extends Controller {
     const centroid = turf.centroid(feature)
     console.log('Fly to: ' + feature.id + ' ' + centroid.geometry.coordinates)
     resetControls()
-    map.once('moveend', function () {
-      highlightFeature(feature)
-    })
+    map.once('moveend', function () { highlightFeature(feature) })
     map.flyTo({
       center: centroid.geometry.coordinates,
       duration: 1000,
-      curve: 2,
+      curve: 0.3,
       essential: true
     })
   }

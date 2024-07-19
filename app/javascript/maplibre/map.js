@@ -26,15 +26,20 @@ let backgroundTerrain
 //         sets data-geojson-loaded attribute to true
 
 export function initializeMaplibreProperties () {
-  const last = mapProperties
+  const lastProperties = mapProperties
   mapProperties = window.gon.map_properties
   console.log('map properties: ' + JSON.stringify(mapProperties))
   if (mapProperties.name) { document.title = 'mapforge.org - ' + mapProperties.name }
   functions.e('#map-title', e => { e.textContent = mapProperties.name })
-  // animate to new center if center or zoom changed, or view is on default_center and it changed
-  if ((last && (last.center?.toString() !== mapProperties?.center?.toString())) ||
-    (map && mapAtCoords(last?.default_center)) ||
-    (last && (last.zoom !== mapProperties.zoom))) {
+
+  if (!lastProperties || !mapProperties) { return }
+  // animate to new view in center/zoom/pitch/bearing changed,
+  // or view is on default_center and it changed
+  if (lastProperties.center?.toString() !== mapProperties.center?.toString() ||
+      lastProperties.zoom !== mapProperties.zoom || lastProperties.pitch !== mapProperties.pitch ||
+      lastProperties.bearing !== mapProperties.bearing ||
+      (mapAtCoords(lastProperties.default_center) &&
+        lastProperties.default_center?.toString() !== mapProperties.default_center?.toString())) {
     map.once('moveend', function () { status('Map view updated') })
     map.flyTo({
       center: mapProperties.center || mapProperties.default_center,
@@ -63,6 +68,7 @@ export function initializeMap (divId = 'maplibre-map') {
     center: (mapProperties.center || mapProperties.default_center),
     zoom: (mapProperties.zoom || mapProperties.default_zoom),
     pitch: mapProperties.pitch,
+    bearing: mapProperties.bearing || 0,
     maxPitch: 72,
     interactive: (window.gon.map_mode !== 'static') // can move/zoom map
     // style: {} // style/map is getting loaded by 'setBackgroundMapLayer'
