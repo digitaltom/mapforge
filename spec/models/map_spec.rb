@@ -40,9 +40,9 @@ describe Map do
     context 'when map has no zoom defined' do
       let(:map) { create(:map, zoom: nil) }
 
-      it 'sets default zoom to 18 on single point' do
+      it 'sets default zoom to 12 on single point' do
         map.features << create(:feature, :point)
-        expect(map.properties[:default_zoom]).to eq 18
+        expect(map.properties[:default_zoom]).to eq 12
       end
 
       it 'sets default zoom to 16' do

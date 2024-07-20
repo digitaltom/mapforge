@@ -122,6 +122,7 @@ class Map
       distance_km = point1.distance(point2) / 1000
       Rails.logger.info("Map feature distance: #{distance_km} km")
       case distance_km
+      when 0 then DEFAULT_ZOOM
       when 0..0.1 then 18
       when 0.1..1 then 16
       when 1..4 then 14

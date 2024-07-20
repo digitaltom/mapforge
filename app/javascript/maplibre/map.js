@@ -13,6 +13,7 @@ export let geojsonData //= { type: 'FeatureCollection', features: [] }
 export let mapProperties
 export let lastMousePosition
 export let highlightedFeature
+let mapInteracted
 let backgroundMapLayer
 let backgroundTerrain
 
@@ -38,7 +39,7 @@ export function initializeMaplibreProperties () {
   if (lastProperties.center?.toString() !== mapProperties.center?.toString() ||
       lastProperties.zoom !== mapProperties.zoom || lastProperties.pitch !== mapProperties.pitch ||
       lastProperties.bearing !== mapProperties.bearing ||
-      (mapAtCoords(lastProperties.default_center) &&
+      (!mapInteracted &&
         lastProperties.default_center?.toString() !== mapProperties.default_center?.toString())) {
     map.once('moveend', function () { status('Map view updated') })
     map.flyTo({
@@ -84,17 +85,13 @@ export function initializeMap (divId = 'maplibre-map') {
     if (mapProperties.terrain && window.gon.map_keys.maptiler) { addTerrain() }
   })
 
-  map.on('geojson.load', function (e) {
+  map.on('geojson.load', (e) => {
     functions.e('#maplibre-map', e => { e.setAttribute('data-geojson-loaded', true) })
   })
 
-  map.on('mousemove', (e) => {
-    lastMousePosition = e.lngLat
-  })
-  map.on('touchend', (e) => {
-    lastMousePosition = e.lngLat
-  })
-
+  map.on('mousemove', (e) => { lastMousePosition = e.lngLat })
+  map.on('touchend', (e) => { lastMousePosition = e.lngLat })
+  map.on('drag', () => { mapInteracted = true })
   map.on('click', resetControls)
 }
 
@@ -260,10 +257,4 @@ export function setBackgroundMapLayer (mapName = mapProperties.base_map, force =
   } else {
     console.error('Base map ' + mapName + ' not available!')
   }
-}
-
-function mapAtCoords (coords) {
-  const center = [map.getCenter().lng.toFixed(6), map.getCenter().lat.toFixed(6)].toString()
-  coords = [coords[0]?.toFixed(6), coords[1]?.toFixed(6)].toString()
-  return center === coords
 }
