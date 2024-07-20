@@ -1,5 +1,4 @@
-require "capybara"
-require "capybara/rails"
+
 require "selenium-webdriver"
 require_relative "../../spec/support/capybara.rb"
 
@@ -7,7 +6,6 @@ namespace :maps do
   desc "Take preview screenshots of maps (changed last 24h by default)"
   task :screenshots, %i[hours] => :environment do |_, args|
     base_url = ENV.fetch("MAPFORGE_HOST", "http://localhost:3000") + "/m/"
-    session = Capybara::Session.new(:headless_chrome)
     timeframe = args.hours ? args.hours.to_i.hours.ago : 5.years.ago
     Map.where(:updated_at.gte => timeframe).each do |map|
       begin
@@ -30,14 +28,20 @@ namespace :maps do
             end
           end
 
+          # page.on("console") { |response| puts "C: #{response.text}" }
+          page.on("error") { |response| puts "E: #{response.text}" }
+
           page.viewport = Puppeteer::Viewport.new(width: 800, height: 600)
-          puts "Loading " + map_url
+          puts "Loading #{map_url}"
           page.goto(map_url, wait_until: "networkidle0")
+          page.wait_for_selector("#maplibre-map[data-loaded='true']", timeout: 30000)
 
           unless failure
-            page.screenshot(path: Rails.root.join("public/previews/#{map.public_id}.png").to_s)
-            puts "Stored public/previews/#{map.public_id}.png"
+            path = "public/previews/#{map.public_id}.png"
+            page.screenshot(path: Rails.root.join(path).to_s)
+            puts "Stored #{path}"
           end
+         browser.close
         end
       rescue => e
         puts "Error creating map screenshot: #{e}, #{e.message}"

@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ## 2024-07
 
+* sync center/zoom/pitch/bearing to other clients
 * geojson import
 * auto center + zoom
 * image upload in µlogger API
