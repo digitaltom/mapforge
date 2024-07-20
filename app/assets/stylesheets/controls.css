@@ -1,7 +1,7 @@
 .maplibregl-ctrl {
   opacity: 0.85;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 1.25em;
 }
 
 .maplibregl-ctrl-map {
