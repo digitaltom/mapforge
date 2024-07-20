@@ -5,18 +5,18 @@ Extending the [Mapbox Simplestyle Spec](https://github.com/mapbox/simplestyle-sp
 #### *All* geometries:
 
 * `label`: Label to show on the map (no emoji support)
-* `label-size`: "small", "medium", "large"
+* `label-size`: font size (default 16)
 * `label-font`: font in format "Open Sans Regular,Arial Unicode MS Regular" (default)
 * `label-color`: font color in format "#000" or "black" (default)
 * `label-shadow`: font shadow in format "#fff" or "white" (default)
-* `title`: Title
-* `desc`: Detailed description
+* `title`: title
+* `desc`: detailed description (markdown supported)
 
 #### *Point* geometry:
 
 * `marker-color`: circle color (default "green", 'transparent' for none)
 * `marker-size`: radius of the marker (default: 6, with 'marker-symbol': 12 )
-* `marker-symbol`: Taken as text/emoji, emoji list: https://emojipedia.org/google/15.1
+* `marker-symbol`: taken as text/emoji, emoji list: https://emojipedia.org/google/15.1
 * `marker-image-url`: URL pointing to icon image. Can point to a Mapforge hosted image like /image/<id>
 * `stroke-width`: width of the circle border line (default: 2)
 * `stroke`: circle border color (default "white", 'transparent' for none)

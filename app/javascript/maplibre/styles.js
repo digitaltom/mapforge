@@ -128,6 +128,7 @@ const pointOpacityActive = 0.9
 const iconSizeFactor = ['/', pointSize, 6]
 const iconSize = ['*', 1 / 8, iconSizeFactor]
 // const iconSizeActive = ['*', 1.1, iconSize] // icon-size is not a paint property
+const labelSize = ['to-number', ['coalesce', ['get', 'user_label-size'], ['get', 'label-size'], 16]]
 
 export const styles = {
   'polygon-layer': {
@@ -315,7 +316,7 @@ export const styles = {
     filter: ['has', 'label'],
     layout: {
       'text-field': ['coalesce', ['get', 'label'], ['get', 'room']],
-      'text-size': 16,
+      'text-size': labelSize,
       // must be available via glyphs:
       // openmaptiles: https://github.com/openmaptiles/fonts/tree/gh-pages
       // maptiler: https://docs.maptiler.com/gl-style-specification/glyphs/
