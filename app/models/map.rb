@@ -35,7 +35,7 @@ class Map
 
   after_save :broadcast_update
   # broadcast updates when the layer changed because of default_center + default_zoom
-  after_touch :broadcast_update
+  after_touch :broadcast_update, unless: proc { |record| record.center && record.zoom }
   before_create :create_public_id, :create_layer
   validate :public_id_must_be_unique
 
@@ -123,8 +123,7 @@ class Map
       Rails.logger.info("Map feature distance: #{distance_km} km")
       case distance_km
       when 0 then DEFAULT_ZOOM
-      when 0..0.1 then 18
-      when 0.1..1 then 16
+      when 0..1 then 16
       when 1..4 then 14
       when 4..10 then 12
       when 10..50 then 10

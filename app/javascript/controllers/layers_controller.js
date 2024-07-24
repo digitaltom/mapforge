@@ -1,6 +1,6 @@
 import { Controller } from '@hotwired/stimulus'
 import { mapChannel } from 'channels/map_channel'
-import { map, geojsonData, upsert } from 'maplibre/map'
+import { map, geojsonData, upsert, mapProperties } from 'maplibre/map'
 import { initLayersModal, resetControls } from 'maplibre/controls'
 import { highlightFeature } from 'maplibre/styles'
 import { status } from 'helpers/status'
@@ -34,7 +34,6 @@ export default class extends Controller {
           geoJSON = JSON.parse(content)
           if (geoJSON.layers) { geoJSON = geoJSON.layers[0] }
         }
-        console.log(geoJSON)
 
         geoJSON.features.forEach(feature => {
           feature.id = Math.random().toString(36).substring(2, 18)
@@ -42,6 +41,18 @@ export default class extends Controller {
           upsert(feature)
           mapChannel.send_message('new_feature', feature)
         })
+
+        const props = JSON.parse(content).properties
+        if (props) {
+          mapProperties.base_map = props.base_map
+          mapProperties.center = props.center
+          mapProperties.zoom = props.zoom
+          mapProperties.pitch = props.pitch
+          mapProperties.bearing = props.bearing
+          mapProperties.name = props.name
+          mapChannel.send_message('update_map', mapProperties)
+        }
+
         status('File imported')
         initLayersModal()
       }

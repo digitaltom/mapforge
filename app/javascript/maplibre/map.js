@@ -29,7 +29,7 @@ let backgroundTerrain
 export function initializeMaplibreProperties () {
   const lastProperties = mapProperties
   mapProperties = window.gon.map_properties
-  console.log('map properties: ' + JSON.stringify(mapProperties))
+  console.log('init with map properties: ' + JSON.stringify(mapProperties))
   if (mapProperties.name) { document.title = 'mapforge.org - ' + mapProperties.name }
   functions.e('#map-title', e => { e.textContent = mapProperties.name })
 
@@ -233,7 +233,7 @@ export function upsert (updatedFeature) {
     status('Updated feature ' + updatedFeature.id)
   }
   if (draw) { draw.set(geojsonData) }
-  map.getSource('geojson-source').setData(geojsonData)
+  map.getSource('geojson-source')?.setData(geojsonData)
 }
 
 export function destroy (featureId) {
