@@ -1,6 +1,7 @@
 import { map, geojsonData } from 'maplibre/map'
 import * as f from 'helpers/functions'
 import { showFeatureDetails } from 'maplibre/modals'
+import { draw } from 'maplibre/edit'
 
 let highlightedFeatureId
 export const viewStyleNames = [
@@ -32,6 +33,7 @@ export function highlightFeature (feature, source = 'geojson-source') {
     // load feature from source, the style only returns the dimensions on screen
     const sourceFeature = geojsonData.features.find(f => f.id === feature.id)
     showFeatureDetails(sourceFeature)
+    if (draw) { draw.changeMode('simple_select', { featureIds: [feature.id] }) }
     // A feature's state is not part of the GeoJSON or vector tile data
     map.setFeatureState({ source, id: feature.id },
       { active: true })
