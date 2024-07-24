@@ -3,11 +3,12 @@ require 'rails_helper'
 describe 'Map' do
   let(:map) { create(:map) }
 
-  context 'with empty map' do
-    before do
-      visit map_path(map)
-    end
+  before do
+    visit map_path(map)
+    expect(page).to have_css("#maplibre-map[data-loaded='true']")
+  end
 
+  context 'with empty map' do
     it 'shows feature edit buttons' do
       expect(page).to have_css('.mapbox-gl-draw_line')
       expect(page).to have_css('.mapbox-gl-draw_polygon')
@@ -37,12 +38,6 @@ describe 'Map' do
   context 'with polygon on map' do
     let!(:polygon) { create(:feature, :polygon_middle, layer: map.layer, title: 'Poly Title') }
 
-    before do
-      visit map_path(map)
-      expect(page).to have_css('.maplibregl-canvas')
-      expect(page).to have_css("#maplibre-map[data-loaded='true']")
-    end
-
     context 'with selected feature' do
       before do
         click_coord('#maplibre-map', 50, 50)
@@ -68,6 +63,13 @@ describe 'Map' do
         expect(page).to have_text('Deleting feature')
         expect(Feature.count).to eq(0)
       end
+    end
+  end
+
+  context 'with lost websocket' do
+    it 'disables edit buttons' do
+      ActionCable.server.connections.each(&:close)
+      expect(page).to have_css('.mapbox-gl-draw_ctrl-draw-btn[disabled]')
     end
   end
 end

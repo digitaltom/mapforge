@@ -4,6 +4,7 @@ import { mapChannel } from 'channels/map_channel'
 import { ControlGroup, MapSettingsControl, MapShareControl, MapLayersControl, resetControls } from 'maplibre/controls'
 import { showFeatureDetails } from 'maplibre/modals'
 import { status } from 'helpers/status'
+import * as functions from 'helpers/functions'
 import MapboxDraw from '@mapbox/mapbox-gl-draw'
 import * as MapboxDrawWaypoint from 'mapbox-gl-draw-waypoint'
 import PaintMode from 'mapbox-gl-draw-paint-mode'
@@ -131,4 +132,14 @@ export function handleDelete (e) {
   if (editPopup) { editPopup.remove() }
   status('Feature ' + deletedFeature.id + ' deleted')
   mapChannel.send_message('delete_feature', deletedFeature)
+}
+
+export function disableEditControls () {
+  functions.e('.mapbox-gl-draw_ctrl-draw-btn', e => { e.disabled = true })
+  functions.e('.maplibregl-ctrl-map', e => { e.disabled = true })
+}
+
+export function enableEditControls () {
+  functions.e('.mapbox-gl-draw_ctrl-draw-btn', e => { e.disabled = false })
+  functions.e('.maplibregl-ctrl-map', e => { e.disabled = false })
 }

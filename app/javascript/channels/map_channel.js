@@ -3,6 +3,7 @@ import {
   upsert, destroy, setBackgroundMapLayer, mapProperties,
   initializeMaplibreProperties, geojsonData, map, resetGeojsonData
 } from 'maplibre/map'
+import { disableEditControls, enableEditControls } from 'maplibre/edit'
 import { status } from 'helpers/status'
 
 export let mapChannel
@@ -26,6 +27,7 @@ export function initializeSocket () {
       console.log('Connected to map_channel ' + window.gon.map_id)
       map.fire('online', { detail: { message: 'Connected to map_channel' } })
       mapChannel = this
+      enableEditControls()
       if (geojsonData) {
         status('Connection to server re-established')
         initializeMaplibreProperties()
@@ -40,6 +42,7 @@ export function initializeSocket () {
       // Called when the subscription has been terminated by the server
       console.log('Disconnected from map_channel ' + window.gon.map_id)
       map.fire('offline', { detail: { message: 'Disconnected from map_channel' } })
+      disableEditControls()
       mapChannel = null
       // show error with delay to avoid showing it on unload/refresh
       setTimeout(function () { status('Connection to server lost', 'error', 60 * 60 * 1000) }, 1000)
