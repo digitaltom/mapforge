@@ -4,6 +4,10 @@
   font-size: 1.25em;
 }
 
+.maplibregl-ctrl button:disabled {
+  opacity: 0.2;
+}
+
 .maplibregl-ctrl-map {
   color: #404040;
 }

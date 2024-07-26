@@ -23,11 +23,11 @@ describe 'Map' do
 
       it 'adding a polygon to the map' do
         find('.mapbox-gl-draw_polygon').click
+        click_coord('#maplibre-map', 10, 10)
+        click_coord('#maplibre-map', 10, 50)
         click_coord('#maplibre-map', 50, 50)
-        click_coord('#maplibre-map', 50, 150)
-        click_coord('#maplibre-map', 150, 150)
-        click_coord('#maplibre-map', 150, 50)
-        click_coord('#maplibre-map', 50, 50)
+        click_coord('#maplibre-map', 50, 10)
+        click_coord('#maplibre-map', 10, 10)
 
         expect(page).to have_text('Updated feature')
         expect(Feature.polygon.count).to eq(1)

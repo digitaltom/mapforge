@@ -26,11 +26,19 @@ describe 'Map public view' do
     let!(:line) { create(:feature, :line_string, layer: map.layer) }
 
     it 'shows feature details on hover' do
+      # coordinates are calculated from the center middle
       hover_coord('.map', 50, 50)
       expect(page).to have_css('#feature-details-modal')
       expect(page).to have_text('Poly Title')
       expect(page).to have_text('Poly Desc')
       expect(page).to have_text('27.70 km²')
+    end
+
+    it 'feature details are not sticky on hover' do
+      hover_coord('.map', 50, 50)
+      expect(page).to have_text('Poly Title')
+      hover_coord('.map', 400, 0)
+      expect(page).to_not have_text('Poly Desc')
     end
 
     it 'shows feature details on click' do
@@ -39,6 +47,15 @@ describe 'Map public view' do
       expect(page).to have_text('Poly Title')
       expect(page).to have_text('Poly Desc')
       expect(page).to have_text('27.70 km²')
+    end
+
+    it 'feature details are sticky on click' do
+      click_coord('.map', 50, 50)
+      expect(page).to have_text('Poly Desc')
+      hover_coord('.map', 400, 0)
+      expect(page).to have_text('Poly Desc')
+      click_coord('.map', 400, 0)
+      expect(page).to_not have_text('Poly Desc')
     end
   end
 

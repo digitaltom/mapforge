@@ -4,6 +4,7 @@ import { showFeatureDetails } from 'maplibre/modals'
 import { draw } from 'maplibre/edit'
 
 let highlightedFeatureId
+let stickyFeatureHighlight = false
 export const viewStyleNames = [
   'polygon-layer',
   'polygon-layer-extrusion',
@@ -26,15 +27,16 @@ export function resetHighlightedFeature (source = 'geojson-source') {
   f.e('.map-modal', e => { e.style.display = 'none' })
 }
 
-export function highlightFeature (feature, source = 'geojson-source') {
+export function highlightFeature (feature, sticky = false, source = 'geojson-source') {
   resetHighlightedFeature()
   if (feature.id) {
+    stickyFeatureHighlight = sticky
     highlightedFeatureId = feature.id
     // load feature from source, the style only returns the dimensions on screen
     const sourceFeature = geojsonData.features.find(f => f.id === feature.id)
     showFeatureDetails(sourceFeature)
     if (draw) { draw.changeMode('simple_select', { featureIds: [feature.id] }) }
-    // A feature's state is not part of the GeoJSON or vector tile data
+    // A feature's state is not part of the GeoJSON or vector tile data but can get used in styles
     map.setFeatureState({ source, id: feature.id },
       { active: true })
   }
@@ -43,22 +45,24 @@ export function highlightFeature (feature, source = 'geojson-source') {
 export function initializeViewStyles () {
   viewStyleNames.forEach(styleName => {
     map.addLayer(styles[styleName])
-
-    // click is only needed for mobile now
+    // click is needed to select on mobile and for sticky highlight
     map.on('click', styleName, function (e) {
+      // resetHighlightedFeature()
       if (!e.features?.length || window.gon.map_mode === 'static') { return }
-      highlightFeature(e.features[0])
+      highlightFeature(e.features[0], true)
     })
   })
 
   map.on('mousemove', (e) => {
-    resetHighlightedFeature()
-    const features = map.queryRenderedFeatures(e.point)
-    if (!features?.length || window.gon.map_mode === 'static') { return }
-    if (features[0].source === 'geojson-source') {
-      highlightFeature(features[0])
-    } else {
-      // console.log(features[0])
+    if (!(stickyFeatureHighlight && highlightedFeatureId)) {
+      resetHighlightedFeature()
+      const features = map.queryRenderedFeatures(e.point)
+      if (!features?.length || window.gon.map_mode === 'static') { return }
+      if (features[0].source === 'geojson-source') {
+        highlightFeature(features[0])
+      } else {
+        // console.log(features[0])
+      }
     }
   })
 

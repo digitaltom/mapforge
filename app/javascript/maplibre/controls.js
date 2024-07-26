@@ -1,6 +1,7 @@
 import { mapProperties, geojsonData } from 'maplibre/map'
 import * as functions from 'helpers/functions'
 import { editPopup } from 'maplibre/edit'
+import { resetHighlightedFeature } from 'maplibre/styles'
 
 export class ControlGroup {
   constructor (controls) {
@@ -149,6 +150,7 @@ export function initLayersModal () {
 }
 
 export function resetControls () {
+  resetHighlightedFeature()
   // reset ctrl buttons
   functions.e('.maplibregl-ctrl-btn', e => { e.classList.remove('active') })
   // reset active modals
