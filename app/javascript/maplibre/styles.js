@@ -116,11 +116,10 @@ export const pointSize = ['to-number', ['coalesce',
   ['case',
     ['any', ['has', 'user_marker-symbol'], ['has', 'marker-symbol']],
     16, 6]]]
-const pointSizeActive = ['+', 2, pointSize]
-const pointOutlineSize = ['to-number', ['coalesce', ['get', 'user_stroke-width'], ['get', 'stroke-width'], 2]]
+export const pointSizeActive = ['+', 1, pointSize]
+export const pointOutlineSize = ['to-number', ['coalesce', ['get', 'user_stroke-width'], ['get', 'stroke-width'], 2]]
 export const pointOutlineSizeActive = ['+', 1, pointOutlineSize]
 const pointOutlineColor = ['coalesce', ['get', 'user_stroke'], ['get', 'stroke'], featureOutlineColor]
-const pointOutlineColorActive = 'lightgrey'
 const pointOpacity = 0.7
 const pointOpacityActive = 0.9
 
@@ -238,7 +237,9 @@ export const styles = {
     source: 'geojson-source',
     filter: ['all',
       ['==', '$type', 'Point'],
-      ['!=', 'active', 'true']
+      ['!=', 'active', 'true'],
+      ['!=', 'meta', 'midpoint'],
+      ['!=', 'meta', 'vertex']
     ],
     paint: {
       'circle-pitch-scale': 'map', // points get bigger when camera is closer
@@ -259,12 +260,7 @@ export const styles = {
           pointOpacity
         ]],
       'circle-blur': 0.1,
-      'circle-stroke-color': [
-        'case',
-        ['boolean', ['feature-state', 'active'], false],
-        pointOutlineColorActive,
-        pointOutlineColor
-      ],
+      'circle-stroke-color': pointOutlineColor,
       'circle-stroke-width': [
         'case',
         ['boolean', ['feature-state', 'active'], false],

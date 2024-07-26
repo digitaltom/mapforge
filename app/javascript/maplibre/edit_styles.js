@@ -1,4 +1,4 @@
-import { styles, loadImage, pointSize, pointOutlineSizeActive } from 'maplibre/styles'
+import { styles, loadImage, pointSize, pointSizeActive, pointOutlineSize, pointOutlineSizeActive } from 'maplibre/styles'
 import { map } from 'maplibre/map'
 import * as f from 'helpers/functions'
 
@@ -31,18 +31,6 @@ export const editStyles = [
   removeSource(styles['line-layer-outline']),
   removeSource(styles['line-layer']), // 'gl-draw-line-inactive', 'gl-draw-polygon-stroke-inactive',
 
-  // midpoints to extend lines/polygons
-  {
-    id: 'gl-draw-polygon-midpoint',
-    type: 'circle',
-    filter: ['all',
-      ['==', '$type', 'Point'],
-      ['==', 'meta', 'midpoint']],
-    paint: {
-      'circle-radius': 6,
-      'circle-color': highlightColor
-    }
-  },
   // active polygon outline
   {
     id: 'gl-draw-polygon-stroke-active',
@@ -78,30 +66,19 @@ export const editStyles = [
       'line-width': 5
     }
   },
+  // midpoints to extend lines/polygons
   {
-    id: 'gl-draw-polygon-and-line-vertex-stroke-inactive',
+    id: 'gl-draw-polygon-midpoint',
     type: 'circle',
     filter: ['all',
-      ['==', 'meta', 'vertex'],
       ['==', '$type', 'Point'],
-      ['!=', 'mode', 'static']
-    ],
+      ['==', 'meta', 'midpoint']],
     paint: {
-      'circle-radius': 7,
-      'circle-color': '#fff'
-    }
-  },
-  {
-    id: 'gl-draw-polygon-and-line-vertex-inactive',
-    type: 'circle',
-    filter: ['all',
-      ['==', 'meta', 'vertex'],
-      ['==', '$type', 'Point'],
-      ['!=', 'mode', 'static']
-    ],
-    paint: {
-      'circle-radius': 5,
-      'circle-color': highlightColor
+      'circle-radius': ['-', pointSize, 1],
+      'circle-color': 'grey',
+      'circle-opacity': 0.8,
+      'circle-stroke-color': '#fff',
+      'circle-stroke-width': 1
     }
   },
   // default point behind symbols, transparent points etc.
@@ -120,7 +97,26 @@ export const editStyles = [
       'circle-color': '#fff'
     }
   },
-  removeSource(styles['points-layer']), // 'gl-draw-point-inactive'
+  // inactive single point features
+  removeSource(styles['points-layer']),
+  // inactive vertex points on lines + polygons
+  {
+    id: 'gl-draw-polygon-and-line-vertex-inactive',
+    type: 'circle',
+    filter: ['all',
+      ['==', 'meta', 'vertex'],
+      ['==', '$type', 'Point'],
+      ['!=', 'mode', 'static']
+    ],
+    paint: {
+      'circle-radius': pointSize,
+      'circle-color': highlightColor,
+      'circle-stroke-color': '#fff',
+      'circle-stroke-width': pointOutlineSize,
+      'circle-stroke-opacity': 1
+    }
+  },
+  // active point, either single or on a line / polygon
   {
     id: 'gl-draw-point-stroke-active',
     type: 'circle',
@@ -130,11 +126,11 @@ export const editStyles = [
       ['!=', 'meta', 'midpoint']
     ],
     paint: {
-      'circle-radius': pointSize,
+      'circle-radius': pointSizeActive,
       'circle-color': highlightColor,
+      'circle-opacity': 0.8,
       'circle-stroke-color': '#fff',
-      'circle-stroke-width': pointOutlineSizeActive,
-      'circle-stroke-opacity': 1
+      'circle-stroke-width': pointOutlineSizeActive
     }
   },
   {
