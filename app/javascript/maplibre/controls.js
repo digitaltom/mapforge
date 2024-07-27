@@ -34,13 +34,13 @@ export class MapSettingsControl {
     this._container = document.createElement('div')
     this._container.innerHTML = '<button class="maplibregl-ctrl-btn maplibregl-ctrl-map" type="button" title="Map settings" aria-label="Map settings" aria-pressed="false"><b><i class="bi bi-globe-americas"></i></b></button>'
     this._container.onclick = function (e) {
-      if (document.querySelector('#map-modal').style.display === 'block') {
+      if (document.querySelector('#settings-modal').style.display === 'block') {
         resetControls()
       } else {
         resetControls()
         initSettingsModal()
         e.target.closest('button').classList.add('active')
-        document.querySelector('#map-modal').style.display = 'block'
+        document.querySelector('#settings-modal').style.display = 'block'
         document.querySelector('#map-name').value = mapProperties.name
       }
     }
@@ -118,7 +118,6 @@ export class MapLayersControl {
 // create the list of layers + features
 export function initSettingsModal () {
   document.querySelector('#map-name').value = mapProperties.name
-  console.log(document.querySelector('#map-terrain[data-base-map="' + mapProperties.base_map + '"]'))
   document.querySelector('#map-terrain').checked = mapProperties.terrain
   document.querySelectorAll('.layer-preview').forEach(layerPreview => { layerPreview.classList.remove('active') })
   document.querySelector('img[data-base-map="' + mapProperties.base_map + '"]')?.classList.add('active')

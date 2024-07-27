@@ -1,4 +1,11 @@
-#map-modal.map-modal{'data-controller': "settings"}
+#settings-modal.map-modal{ data: { controller: 'settings',
+                             settings_default_pitch_value: @map_properties[:pitch].to_f.round(0),
+                             settings_current_pitch_value: @map_properties[:pitch].to_f.round(0),
+                             settings_default_zoom_value: @map_properties[:zoom].to_f.round(2),
+                             settings_current_zoom_value: @map_properties[:zoom].to_f.round(2),
+                             settings_default_bearing_value: @map_properties[:bearing].to_f.round(0),
+                             settings_current_bearing_value: @map_properties[:bearing].to_f.round(0)} }
+
   %h2 Configure Map
   %label{ for: "map-name"} Name:
   %br
@@ -14,6 +21,7 @@
     - Map::MAPTILER_MAPS.each do |base_map|
       = image_tag("base_maps/#{base_map}.jpg", data: { base_map: base_map, action: "click->settings#update_basemap"}, class: "layer-preview")
   %br
+  %h4 Default view
   Center:
   %span#map-center
     = (@map_properties[:center] || @map_properties[:default_center]).join(', ')
@@ -21,16 +29,23 @@
   %br
   Zoom:
   %span#map-zoom
-    = @map_properties[:zoom]
-    %i#map-zoom-current
-  %br
-  Pitch:
+  , Pitch:
   %span#map-pitch
-    = "#{@map_properties[:pitch]}°"
-    %i#map-pitch-current
+  °, Bearing:
+  %span#map-bearing
+  °
   %br
   %span
     %label{ for: "map-terrain"} Terrain:
     %input#map-terrain{type: "checkbox", checked: @map_properties[:terrain], data: { action: "click->settings#update_terrain"} }
   %br
-  %a#set-map-center{href: '#', data: { action: "click->settings#update_mapdata" } } Set initial map view to current center/zoom/pitch
+  %button{ data: { action: "click->settings#use_current_view" } }
+    Use current view as new default (center:
+    %span#map-center-current
+    , pitch:
+    %span#map-pitch-current
+    °, zoom:
+    %span#map-zoom-current
+    , bearing:
+    %span#map-bearing-current
+    °)

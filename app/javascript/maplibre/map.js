@@ -27,20 +27,21 @@ let backgroundTerrain
 //         sets data-geojson-loaded attribute to true
 
 export function initializeMaplibreProperties () {
-  const lastProperties = mapProperties
+  const lastProperties = JSON.parse(JSON.stringify(mapProperties || {}))
   mapProperties = window.gon.map_properties
+  // console.log('last properties: ' + JSON.stringify(lastProperties))
   console.log('init with map properties: ' + JSON.stringify(mapProperties))
   if (mapProperties.name) { document.title = 'mapforge.org - ' + mapProperties.name }
   functions.e('#map-title', e => { e.textContent = mapProperties.name })
+  functions.e('#settings-modal', e => {
+    e.dataset.settingsDefaultPitchValue = Math.round(mapProperties.pitch)
+    e.dataset.settingsDefaultZoomValue = parseFloat(mapProperties.zoom || mapProperties.default_zoom).toFixed(2)
+    e.dataset.settingsDefaultBearingValue = Math.round(mapProperties.bearing)
+  })
 
-  if (!lastProperties || !mapProperties) { return }
-  // animate to new view in center/zoom/pitch/bearing changed,
-  // or view is on default_center and it changed
-  if (lastProperties.center?.toString() !== mapProperties.center?.toString() ||
-      lastProperties.zoom !== mapProperties.zoom || lastProperties.pitch !== mapProperties.pitch ||
-      lastProperties.bearing !== mapProperties.bearing ||
-      (!mapInteracted &&
-        lastProperties.default_center?.toString() !== mapProperties.default_center?.toString())) {
+  if (Object.keys(lastProperties).length === 0 || !mapProperties) { return }
+  // animate to new view if map had no interaction yet
+  if (!mapInteracted && JSON.stringify(lastProperties) !== JSON.stringify(mapProperties)) {
     map.once('moveend', function () { status('Map view updated') })
     map.flyTo({
       center: mapProperties.center || mapProperties.default_center,
@@ -93,6 +94,21 @@ export function initializeMap (divId = 'maplibre-map') {
   map.on('touchend', (e) => { lastMousePosition = e.lngLat })
   map.on('drag', () => { mapInteracted = true })
   map.on('click', resetControls)
+  map.on('pitchend', function (e) {
+    functions.e('#settings-modal', e => {
+      e.dataset.settingsCurrentPitchValue = map.getPitch().toFixed(0)
+    })
+  })
+  map.on('zoomend', function (e) {
+    functions.e('#settings-modal', e => {
+      e.dataset.settingsCurrentZoomValue = map.getZoom().toFixed(2)
+    })
+  })
+  map.on('rotate', function (e) {
+    functions.e('#settings-modal', e => {
+      e.dataset.settingsCurrentBearingValue = map.getBearing().toFixed(0)
+    })
+  })
 }
 
 export function loadGeoJsonData () {
