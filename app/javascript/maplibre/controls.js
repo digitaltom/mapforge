@@ -127,6 +127,7 @@ export function initSettingsModal () {
     if (mapProperties.center) {
       e.dataset.settingsDefaultCenterValue = JSON.stringify(mapProperties.center)
     }
+    e.dataset.settingsDefaultAutoCenterValue = JSON.stringify(mapProperties.default_center)
   })
 }
 

@@ -12,6 +12,7 @@ export default class extends Controller {
     defaultBearing: String,
     currentBearing: String,
     defaultCenter: Array,
+    defaultAutoCenter: Array,
     currentCenter: Array
   }
 
@@ -47,12 +48,18 @@ export default class extends Controller {
 
   defaultCenterValueChanged (value, previousValue) {
     console.log('defaultCenterValueChanged(): "' + value + '"')
-    if (value.length === 0) {
-      value = window.gon.map_properties.default_center.map(coord => parseFloat(coord.toFixed(4))) + '(auto)'
-    } else {
+    if (value.length !== 0) {
       value = value.map(coord => parseFloat(coord.toFixed(4)))
     }
     document.querySelector('#map-center').innerHTML = value
+  }
+
+  defaultAutoCenterValueChanged (value, previousValue) {
+    console.log('defaultAutoCenterValueChanged(): "' + value + '"')
+    if (value.length !== 0 && !window.gon.map_properties.center) {
+      value = value.map(coord => parseFloat(coord.toFixed(4)))
+      document.querySelector('#map-center').innerHTML = `${value} (auto)`
+    }
   }
 
   currentCenterValueChanged (value, previousValue) {
