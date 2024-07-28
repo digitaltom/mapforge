@@ -33,10 +33,20 @@ export function initializeMaplibreProperties () {
   console.log('init with map properties: ' + JSON.stringify(mapProperties))
   if (mapProperties.name) { document.title = 'mapforge.org - ' + mapProperties.name }
   functions.e('#map-title', e => { e.textContent = mapProperties.name })
+  // initialize settings modal
   functions.e('#settings-modal', e => {
     e.dataset.settingsDefaultPitchValue = Math.round(mapProperties.pitch)
+    e.dataset.settingsCurrentPitchValue = Math.round(mapProperties.pitch)
     e.dataset.settingsDefaultZoomValue = parseFloat(mapProperties.zoom || mapProperties.default_zoom).toFixed(2)
+    e.dataset.settingsCurrentZoomValue = parseFloat(mapProperties.zoom || mapProperties.default_zoom).toFixed(2)
     e.dataset.settingsDefaultBearingValue = Math.round(mapProperties.bearing)
+    e.dataset.settingsCurrentBearingValue = Math.round(mapProperties.bearing)
+    if (mapProperties.center) {
+      e.dataset.settingsDefaultCenterValue = JSON.stringify(mapProperties.center)
+      e.dataset.settingsCurrentCenterValue = JSON.stringify(mapProperties.center)
+    } else {
+      e.dataset.settingsCurrentCenterValue = JSON.stringify(mapProperties.default_center)
+    }
   })
 
   if (Object.keys(lastProperties).length === 0 || !mapProperties) { return }
@@ -107,6 +117,11 @@ export function initializeMap (divId = 'maplibre-map') {
   map.on('rotate', function (e) {
     functions.e('#settings-modal', e => {
       e.dataset.settingsCurrentBearingValue = map.getBearing().toFixed(0)
+    })
+  })
+  map.on('moveend', function (e) {
+    functions.e('#settings-modal', e => {
+      e.dataset.settingsCurrentCenterValue = JSON.stringify([map.getCenter().lng, map.getCenter().lat])
     })
   })
 }

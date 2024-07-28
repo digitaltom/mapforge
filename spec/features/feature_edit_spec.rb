@@ -29,7 +29,7 @@ describe 'Map' do
         click_coord('#maplibre-map', 50, 10)
         click_coord('#maplibre-map', 10, 10)
 
-        expect(page).to have_text('Updated feature')
+        expect(page).to have_text('Map view updated')
         expect(Feature.polygon.count).to eq(1)
       end
     end

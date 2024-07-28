@@ -1,10 +1,6 @@
-#settings-modal.map-modal{ data: { controller: 'settings',
-                             settings_default_pitch_value: @map_properties[:pitch].to_f.round(0),
-                             settings_current_pitch_value: @map_properties[:pitch].to_f.round(0),
-                             settings_default_zoom_value: @map_properties[:zoom].to_f.round(2),
-                             settings_current_zoom_value: @map_properties[:zoom].to_f.round(2),
-                             settings_default_bearing_value: @map_properties[:bearing].to_f.round(0),
-                             settings_current_bearing_value: @map_properties[:bearing].to_f.round(0)} }
+
+- data = { controller: 'settings' }
+#settings-modal.map-modal{ data: data}
 
   %h2 Configure Map
   %label{ for: "map-name"} Name:
@@ -24,8 +20,6 @@
   %h4 Default view
   Center:
   %span#map-center
-    = (@map_properties[:center] || @map_properties[:default_center]).join(', ')
-    %i#map-center-current
   %br
   Zoom:
   %span#map-zoom

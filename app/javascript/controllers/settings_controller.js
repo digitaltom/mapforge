@@ -10,7 +10,9 @@ export default class extends Controller {
     defaultZoom: String,
     currentZoom: String,
     defaultBearing: String,
-    currentBearing: String
+    currentBearing: String,
+    defaultCenter: Array,
+    currentCenter: Array
   }
 
   defaultPitchValueChanged (value, previousValue) {
@@ -43,6 +45,17 @@ export default class extends Controller {
     document.querySelector('#map-bearing-current').innerHTML = value
   }
 
+  defaultCenterValueChanged (value, previousValue) {
+    console.log('defaultCenterValueChanged(): "' + value + '"')
+    if (value.length === 0) { value = window.gon.map_properties.default_center + '(auto)' }
+    document.querySelector('#map-center').innerHTML = value
+  }
+
+  currentCenterValueChanged (value, previousValue) {
+    console.log('currentCenterValueChanged(): ' + value)
+    document.querySelector('#map-center-current').innerHTML = value
+  }
+
   // alternative to https://maplibre.org/maplibre-gl-js/docs/API/classes/TerrainControl/
   update_terrain (event) {
     const terrain = document.querySelector('#map-terrain').checked
@@ -67,7 +80,7 @@ export default class extends Controller {
     const pitch = map.getPitch()
     const bearing = map.getBearing()
     const name = document.querySelector('#map-name').value
-    document.querySelector('#map-center').innerHTML = center
+    mapProperties.name = name
     mapProperties.center = center
     mapProperties.zoom = zoom
     mapProperties.pitch = pitch
