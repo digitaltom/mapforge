@@ -47,24 +47,29 @@ export default class extends Controller {
 
   defaultCenterValueChanged (value, previousValue) {
     console.log('defaultCenterValueChanged(): "' + value + '"')
-    if (value.length === 0) { value = window.gon.map_properties.default_center + '(auto)' }
+    if (value.length === 0) {
+      value = window.gon.map_properties.default_center.map(coord => parseFloat(coord.toFixed(4))) + '(auto)'
+    } else {
+      value = value.map(coord => parseFloat(coord.toFixed(4)))
+    }
     document.querySelector('#map-center').innerHTML = value
   }
 
   currentCenterValueChanged (value, previousValue) {
     console.log('currentCenterValueChanged(): ' + value)
+    value = value.map(coord => parseFloat(coord.toFixed(4)))
     document.querySelector('#map-center-current').innerHTML = value
   }
 
   // alternative to https://maplibre.org/maplibre-gl-js/docs/API/classes/TerrainControl/
-  update_terrain (event) {
+  updateTerrain (event) {
     const terrain = document.querySelector('#map-terrain').checked
     mapProperties.terrain = terrain
     setBackgroundMapLayer()
     mapChannel.send_message('update_map', { terrain })
   }
 
-  update_basemap (event) {
+  updateBasemap (event) {
     const layerPreviews = document.querySelectorAll('.layer-preview')
     mapProperties.base_map = event.target.dataset.baseMap
     setBackgroundMapLayer()
@@ -73,7 +78,7 @@ export default class extends Controller {
     event.target.classList.add('active')
   }
 
-  use_current_view (event) {
+  currentViewToDefault (event) {
     event.preventDefault()
     const center = [map.getCenter().lng, map.getCenter().lat]
     const zoom = map.getZoom()

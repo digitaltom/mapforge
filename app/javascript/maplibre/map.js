@@ -1,6 +1,6 @@
 import { basemaps } from 'maplibre/basemaps'
 import { draw } from 'maplibre/edit'
-import { resetControls } from 'maplibre/controls'
+import { resetControls, initSettingsModal } from 'maplibre/controls'
 import { initializeViewStyles, resetHighlightedFeature } from 'maplibre/styles'
 import { AnimatePointAnimation } from 'maplibre/animations'
 import * as functions from 'helpers/functions'
@@ -33,36 +33,25 @@ export function initializeMaplibreProperties () {
   console.log('init with map properties: ' + JSON.stringify(mapProperties))
   if (mapProperties.name) { document.title = 'mapforge.org - ' + mapProperties.name }
   functions.e('#map-title', e => { e.textContent = mapProperties.name })
-  // initialize settings modal
-  functions.e('#settings-modal', e => {
-    e.dataset.settingsDefaultPitchValue = Math.round(mapProperties.pitch)
-    e.dataset.settingsCurrentPitchValue = Math.round(mapProperties.pitch)
-    e.dataset.settingsDefaultZoomValue = parseFloat(mapProperties.zoom || mapProperties.default_zoom).toFixed(2)
-    e.dataset.settingsCurrentZoomValue = parseFloat(mapProperties.zoom || mapProperties.default_zoom).toFixed(2)
-    e.dataset.settingsDefaultBearingValue = Math.round(mapProperties.bearing)
-    e.dataset.settingsCurrentBearingValue = Math.round(mapProperties.bearing)
-    if (mapProperties.center) {
-      e.dataset.settingsDefaultCenterValue = JSON.stringify(mapProperties.center)
-      e.dataset.settingsCurrentCenterValue = JSON.stringify(mapProperties.center)
-    } else {
-      e.dataset.settingsCurrentCenterValue = JSON.stringify(mapProperties.default_center)
-    }
-  })
-
+  initSettingsModal()
   if (Object.keys(lastProperties).length === 0 || !mapProperties) { return }
   // animate to new view if map had no interaction yet
   if (!mapInteracted && JSON.stringify(lastProperties) !== JSON.stringify(mapProperties)) {
-    map.once('moveend', function () { status('Map view updated') })
-    map.flyTo({
-      center: mapProperties.center || mapProperties.default_center,
-      zoom: mapProperties.zoom || mapProperties.default_zoom,
-      pitch: mapProperties.pitch,
-      bearing: mapProperties.bearing || 0,
-      curve: 0.3,
-      essential: true,
-      duration: 2000
-    })
+    setViewFromProperties()
   }
+}
+
+function setViewFromProperties () {
+  map.once('moveend', function () { status('Map view updated') })
+  map.flyTo({
+    center: mapProperties.center || mapProperties.default_center,
+    zoom: mapProperties.zoom || mapProperties.default_zoom,
+    pitch: mapProperties.pitch,
+    bearing: mapProperties.bearing || 0,
+    curve: 0.3,
+    essential: true,
+    duration: 2000
+  })
 }
 
 export function resetGeojsonData () {

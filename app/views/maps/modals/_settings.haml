@@ -1,5 +1,12 @@
 
-- data = { controller: 'settings' }
+/ Initialize settings modal with 'current' values from @map_properties.
+/ Updates will get set from map event callbacks
+- data = { controller: 'settings',
+           settings_current_pitch_value: @map_properties[:pitch].to_f.round(0),
+           settings_current_zoom_value: @map_properties[:zoom].to_f.round(2),
+           settings_current_bearing_value: @map_properties[:bearing].to_f.round(0),
+           settings_current_center_value: (@map_properties[:center] || @map_properties[:default_center]) }
+
 #settings-modal.map-modal{ data: data}
 
   %h2 Configure Map
@@ -11,11 +18,11 @@
   %br
   - Map::BASE_MAPS.each do |base_map|
     - active = (@map_properties[:base_map] == base_map)
-    = image_tag("base_maps/#{base_map}.jpg", data: { base_map: base_map, action: "click->settings#update_basemap"},
+    = image_tag("base_maps/#{base_map}.jpg", data: { base_map: base_map, action: "click->settings#updateBasemap"},
                 class: "layer-preview")
   - if ENV['MAPTILER_KEY']
     - Map::MAPTILER_MAPS.each do |base_map|
-      = image_tag("base_maps/#{base_map}.jpg", data: { base_map: base_map, action: "click->settings#update_basemap"}, class: "layer-preview")
+      = image_tag("base_maps/#{base_map}.jpg", data: { base_map: base_map, action: "click->settings#updateBasemap"}, class: "layer-preview")
   %br
   %h4 Default view
   Center:
@@ -31,9 +38,9 @@
   %br
   %span
     %label{ for: "map-terrain"} Terrain:
-    %input#map-terrain{type: "checkbox", checked: @map_properties[:terrain], data: { action: "click->settings#update_terrain"} }
+    %input#map-terrain{type: "checkbox", checked: @map_properties[:terrain], data: { action: "click->settings#updateTerrain"} }
   %br
-  %button{ data: { action: "click->settings#use_current_view" } }
+  %button{ data: { action: "click->settings#currentViewToDefault" } }
     Use current view as new default (center:
     %span#map-center-current
     , pitch:

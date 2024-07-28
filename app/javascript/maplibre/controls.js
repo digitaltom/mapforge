@@ -41,7 +41,6 @@ export class MapSettingsControl {
         initSettingsModal()
         e.target.closest('button').classList.add('active')
         document.querySelector('#settings-modal').style.display = 'block'
-        document.querySelector('#map-name').value = mapProperties.name
       }
     }
   }
@@ -115,12 +114,20 @@ export class MapLayersControl {
   }
 }
 
-// create the list of layers + features
+// initialize settings modal with default map values from mapProperties
 export function initSettingsModal () {
-  document.querySelector('#map-name').value = mapProperties.name
-  document.querySelector('#map-terrain').checked = mapProperties.terrain
-  document.querySelectorAll('.layer-preview').forEach(layerPreview => { layerPreview.classList.remove('active') })
-  document.querySelector('img[data-base-map="' + mapProperties.base_map + '"]')?.classList.add('active')
+  functions.e('#map-name', e => { e.value = mapProperties.name })
+  functions.e('#map-terrain', e => { e.checked = mapProperties.terrain })
+  functions.e('.layer-preview', e => { e.classList.remove('active') })
+  functions.e('img[data-base-map="' + mapProperties.base_map + '"]', e => { e.classList.add('active') })
+  functions.e('#settings-modal', e => {
+    e.dataset.settingsDefaultPitchValue = Math.round(mapProperties.pitch)
+    e.dataset.settingsDefaultZoomValue = parseFloat(mapProperties.zoom || mapProperties.default_zoom).toFixed(2)
+    e.dataset.settingsDefaultBearingValue = Math.round(mapProperties.bearing)
+    if (mapProperties.center) {
+      e.dataset.settingsDefaultCenterValue = JSON.stringify(mapProperties.center)
+    }
+  })
 }
 
 // create the list of layers + features
