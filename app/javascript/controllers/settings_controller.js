@@ -6,7 +6,7 @@ export default class extends Controller {
   // https://stimulus.hotwired.dev/reference/values
   static values = {
     mapName: String,
-    terrain: Boolean,
+    mapTerrain: Boolean,
     defaultPitch: String,
     currentPitch: String,
     defaultZoom: String,
@@ -21,6 +21,11 @@ export default class extends Controller {
   mapNameValueChanged (value, previousValue) {
     console.log('mapNameValueChanged(): ' + value)
     document.querySelector('#map-name').value = value
+  }
+
+  mapTerrainValueChanged (value, previousValue) {
+    console.log('mapTerrainValueChanged(): ' + value)
+    document.querySelector('#map-terrain').checked = value
   }
 
   defaultPitchValueChanged (value, previousValue) {
