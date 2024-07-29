@@ -270,9 +270,9 @@ export function setBackgroundMapLayer (mapName = mapProperties.base_map, force =
   if (basemaps[mapName]) {
     status('Loading base map ' + mapName)
     map.setStyle(basemaps[mapName],
-      // adding this so that 'style.load' gets triggered (https://github.com/maplibre/maplibre-gl-js/issues/2587)
+      // adding 'diff: false' so that 'style.load' gets triggered (https://github.com/maplibre/maplibre-gl-js/issues/2587)
       // which will trigger loadGeoJsonData()
-      { diff: false })
+      { diff: false, strictMode: true })
     backgroundMapLayer = mapName
     backgroundTerrain = mapProperties.terrain
   } else {
