@@ -33,4 +33,4 @@ pin "mapbox-gl-draw-paint-mode", preload: false # @1.1.1
 pin "maplibre-gl", to: "https://ga.jspm.io/npm:maplibre-gl@4.5.0/dist/maplibre-gl.js"
 # https://github.com/maptiler/maptiler-geocoding-control
 pin "maptiler-geocoding-control", to: "https://ga.jspm.io/npm:@maptiler/geocoding-control@1.3.1/maplibregl.js"
-pin "marked", to: "https://ga.jspm.io/npm:marked@13.0.2/lib/marked.esm.js"
+pin "marked", to: "https://ga.jspm.io/npm:marked@13.0.3/lib/marked.esm.js"
