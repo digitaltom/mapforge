@@ -34,6 +34,7 @@ export function initializeMaplibreProperties () {
   if (mapProperties.name) { document.title = 'mapforge.org - ' + mapProperties.name }
   functions.e('#map-title', e => { e.textContent = mapProperties.name })
   initSettingsModal()
+  status('Map properties updated')
   if (Object.keys(lastProperties).length === 0 || !mapProperties) { return }
   // animate to new view if map had no interaction yet
   if (!mapInteracted && JSON.stringify(lastProperties) !== JSON.stringify(mapProperties)) {

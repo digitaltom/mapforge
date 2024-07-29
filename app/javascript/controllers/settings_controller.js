@@ -5,6 +5,8 @@ import { map, mapProperties, setBackgroundMapLayer } from 'maplibre/map'
 export default class extends Controller {
   // https://stimulus.hotwired.dev/reference/values
   static values = {
+    mapName: String,
+    terrain: Boolean,
     defaultPitch: String,
     currentPitch: String,
     defaultZoom: String,
@@ -14,6 +16,11 @@ export default class extends Controller {
     defaultCenter: Array,
     defaultAutoCenter: Array,
     currentCenter: Array
+  }
+
+  mapNameValueChanged (value, previousValue) {
+    console.log('mapNameValueChanged(): ' + value)
+    document.querySelector('#map-name').value = value
   }
 
   defaultPitchValueChanged (value, previousValue) {
@@ -85,18 +92,23 @@ export default class extends Controller {
     event.target.classList.add('active')
   }
 
-  currentViewToDefault (event) {
+  updateName (event) {
+    event.preventDefault()
+    const name = document.querySelector('#map-name').value
+    mapProperties.name = name
+    mapChannel.send_message('update_map', { name })
+  }
+
+  updateDefaultView (event) {
     event.preventDefault()
     const center = [map.getCenter().lng, map.getCenter().lat]
     const zoom = map.getZoom()
     const pitch = map.getPitch()
     const bearing = map.getBearing()
-    const name = document.querySelector('#map-name').value
-    mapProperties.name = name
     mapProperties.center = center
     mapProperties.zoom = zoom
     mapProperties.pitch = pitch
     mapProperties.bearing = bearing
-    mapChannel.send_message('update_map', { center, zoom, pitch, bearing, name })
+    mapChannel.send_message('update_map', { center, zoom, pitch, bearing })
   }
 }

@@ -137,9 +137,13 @@ export function handleDelete (e) {
 export function disableEditControls () {
   functions.e('.mapbox-gl-draw_ctrl-draw-btn', e => { e.disabled = true })
   functions.e('.maplibregl-ctrl-map', e => { e.disabled = true })
+  functions.e('#save-map-name', e => { e.disabled = true })
+  functions.e('#save-map-defaults', e => { e.disabled = true })
 }
 
 export function enableEditControls () {
   functions.e('.mapbox-gl-draw_ctrl-draw-btn', e => { e.disabled = false })
   functions.e('.maplibregl-ctrl-map', e => { e.disabled = false })
+  functions.e('#save-map-name', e => { e.disabled = false })
+  functions.e('#save-map-defaults', e => { e.disabled = false })
 }

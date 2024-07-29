@@ -3,7 +3,7 @@
 / Updates will get set from map event callbacks
 - data = { controller: 'settings',
            settings_current_pitch_value: @map_properties[:pitch].to_f.round(0),
-           settings_current_zoom_value: @map_properties[:zoom].to_f.round(2),
+           settings_current_zoom_value: (@map_properties[:zoom] || @map_properties[:default_zoom]).to_f.round(2),
            settings_current_bearing_value: @map_properties[:bearing].to_f.round(0),
            settings_current_center_value: (@map_properties[:center] || @map_properties[:default_center]) }
 
@@ -13,12 +13,13 @@
   %label{ for: "map-name"} Name:
   %br
   %input#map-name{type: "text", size: 27}
+  %button#save-map-name{ type: 'submit', data: { action: "click->settings#updateName" } } Update
   %br
   %label{for: "map-baselayer"} Base Map:
   %br
   - Map::BASE_MAPS.each do |base_map|
     - active = (@map_properties[:base_map] == base_map)
-    = image_tag("base_maps/#{base_map}.jpg", data: { base_map: base_map, action: "click->settings#updateBasemap"},
+    = image_tag("base_maps/#{base_map}.jpg", data: { base_map: base_map, action: "click->settings#updateBasemap" },
                 class: "layer-preview")
   - if ENV['MAPTILER_KEY']
     - Map::MAPTILER_MAPS.each do |base_map|
@@ -40,7 +41,7 @@
     %label{ for: "map-terrain"} Terrain:
     %input#map-terrain{type: "checkbox", checked: @map_properties[:terrain], data: { action: "click->settings#updateTerrain"} }
   %br
-  %button{ data: { action: "click->settings#currentViewToDefault" } }
+  %button#save-map-defaults{ data: { action: "click->settings#updateDefaultView" } }
     Use current view as new default (center:
     %span#map-center-current
     , pitch:
