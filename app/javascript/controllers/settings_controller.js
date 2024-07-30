@@ -1,10 +1,14 @@
 import { Controller } from '@hotwired/stimulus'
 import { mapChannel } from 'channels/map_channel'
+import * as functions from 'helpers/functions'
 import { map, mapProperties, setBackgroundMapLayer } from 'maplibre/map'
 
 export default class extends Controller {
   // https://stimulus.hotwired.dev/reference/values
   static values = {
+    mapName: String,
+    mapTerrain: Boolean,
+    baseMap: String,
     defaultPitch: String,
     currentPitch: String,
     defaultZoom: String,
@@ -14,6 +18,22 @@ export default class extends Controller {
     defaultCenter: Array,
     defaultAutoCenter: Array,
     currentCenter: Array
+  }
+
+  mapNameValueChanged (value, previousValue) {
+    console.log('mapNameValueChanged(): ' + value)
+    document.querySelector('#map-name').value = value
+  }
+
+  mapTerrainValueChanged (value, previousValue) {
+    console.log('mapTerrainValueChanged(): ' + value)
+    document.querySelector('#map-terrain').checked = value
+  }
+
+  baseMapValueChanged (value, previousValue) {
+    console.log('baseMapValueChanged(): ' + value)
+    functions.e('.layer-preview', e => { e.classList.remove('active') })
+    functions.e('img[data-base-map="' + value + '"]', e => { e.classList.add('active') })
   }
 
   defaultPitchValueChanged (value, previousValue) {
@@ -70,33 +90,36 @@ export default class extends Controller {
 
   // alternative to https://maplibre.org/maplibre-gl-js/docs/API/classes/TerrainControl/
   updateTerrain (event) {
-    const terrain = document.querySelector('#map-terrain').checked
-    mapProperties.terrain = terrain
+    this.mapTerrainValue = event.target.checked
+    mapProperties.terrain = this.mapTerrainValue
     setBackgroundMapLayer()
-    mapChannel.send_message('update_map', { terrain })
+    mapChannel.send_message('update_map', { terrain: mapProperties.terrain })
   }
 
-  updateBasemap (event) {
-    const layerPreviews = document.querySelectorAll('.layer-preview')
-    mapProperties.base_map = event.target.dataset.baseMap
+  updateBaseMap (event) {
+    this.baseMapValue = event.target.dataset.baseMap
+    mapProperties.base_map = this.baseMapValue
     setBackgroundMapLayer()
-    mapChannel.send_message('update_map', { base_map: mapProperties.base_map, terrain: mapProperties.terrain })
-    layerPreviews.forEach(layerPreview => { layerPreview.classList.remove('active') })
-    event.target.classList.add('active')
+    mapChannel.send_message('update_map', { base_map: mapProperties.base_map })
   }
 
-  currentViewToDefault (event) {
+  updateName (event) {
+    event.preventDefault()
+    const name = document.querySelector('#map-name').value
+    mapProperties.name = name
+    mapChannel.send_message('update_map', { name })
+  }
+
+  updateDefaultView (event) {
     event.preventDefault()
     const center = [map.getCenter().lng, map.getCenter().lat]
     const zoom = map.getZoom()
     const pitch = map.getPitch()
     const bearing = map.getBearing()
-    const name = document.querySelector('#map-name').value
-    mapProperties.name = name
     mapProperties.center = center
     mapProperties.zoom = zoom
     mapProperties.pitch = pitch
     mapProperties.bearing = bearing
-    mapChannel.send_message('update_map', { center, zoom, pitch, bearing, name })
+    mapChannel.send_message('update_map', { center, zoom, pitch, bearing })
   }
 }

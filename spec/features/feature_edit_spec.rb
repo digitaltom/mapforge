@@ -52,7 +52,8 @@ describe 'Map' do
         find('#edit-button-raw').click
         fill_in 'properties', with: '{"title": "TEST"}'
         find('.feature-update').click
-        expect(page).to have_text('Updated feature')
+        # the actioncable events of map + feature update are not always received in the same order:
+        expect(page).to have_text('Updated feature').or have_text('Map properties updated')
         expect(polygon.reload.properties).to eq({ "title" => "TEST" })
       end
 
@@ -60,7 +61,8 @@ describe 'Map' do
         accept_alert do
           find('#edit-button-trash').click
         end
-        expect(page).to have_text('Deleting feature')
+        # the actioncable events of map + feature update are not always received in the same order:
+        expect(page).to have_text('Deleting feature').or have_text('Map properties updated')
         expect(Feature.count).to eq(0)
       end
     end

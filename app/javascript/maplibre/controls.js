@@ -116,11 +116,10 @@ export class MapLayersControl {
 
 // initialize settings modal with default map values from mapProperties
 export function initSettingsModal () {
-  functions.e('#map-name', e => { e.value = mapProperties.name })
-  functions.e('#map-terrain', e => { e.checked = mapProperties.terrain })
-  functions.e('.layer-preview', e => { e.classList.remove('active') })
-  functions.e('img[data-base-map="' + mapProperties.base_map + '"]', e => { e.classList.add('active') })
   functions.e('#settings-modal', e => {
+    e.dataset.settingsMapNameValue = mapProperties.name
+    e.dataset.settingsBaseMapValue = mapProperties.base_map
+    e.dataset.settingsMapTerrainValue = mapProperties.terrain
     e.dataset.settingsDefaultPitchValue = Math.round(mapProperties.pitch)
     e.dataset.settingsDefaultZoomValue = parseFloat(mapProperties.zoom || mapProperties.default_zoom).toFixed(2)
     e.dataset.settingsDefaultBearingValue = Math.round(mapProperties.bearing)
