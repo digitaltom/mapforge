@@ -44,9 +44,7 @@ export function initializeEditMode () {
 
   map.once('style.load', () => {
     initializeDefaultControls()
-
     map.addControl(draw, 'top-left')
-
     const controlGroup = new ControlGroup(
       [new MapSettingsControl(),
         new MapLayersControl(),
@@ -57,13 +55,13 @@ export function initializeEditMode () {
   map.on('geojson.load', function (e) {
     // register callback to reload edit styles when source layer changed
     map.on('sourcedata', sourcedataHandler)
-
     // draw has its own style layers based on editStyles
     if (geojsonData.features.length > 0) {
       draw.set(geojsonData)
     }
   })
 
+  map.on('draw.modechange', () => { resetControls() })
   map.on('draw.selectionchange', function (e) {
     if (!e.features?.length) { return }
     selectedFeature = e.features[0]
@@ -91,8 +89,6 @@ export function initializeEditMode () {
       resetControls()
     }
   })
-
-  document.querySelector('#edit-buttons').classList.remove('hidden')
 }
 
 function sourcedataHandler (e) {

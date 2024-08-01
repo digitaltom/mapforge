@@ -1,6 +1,6 @@
 import { mapProperties, geojsonData } from 'maplibre/map'
 import * as functions from 'helpers/functions'
-import { editPopup } from 'maplibre/edit'
+import { editPopup, draw } from 'maplibre/edit'
 import { resetHighlightedFeature } from 'maplibre/styles'
 
 export class ControlGroup {
@@ -38,6 +38,7 @@ export class MapSettingsControl {
         resetControls()
       } else {
         resetControls()
+        if (draw) { resetEditControls() }
         initSettingsModal()
         e.target.closest('button').classList.add('active')
         document.querySelector('#settings-modal').style.display = 'block'
@@ -66,6 +67,7 @@ export class MapShareControl {
         resetControls()
       } else {
         resetControls()
+        if (draw) { resetEditControls() }
         e.target.closest('button').classList.add('active')
         document.querySelector('#share-modal').style.display = 'block'
       }
@@ -95,6 +97,7 @@ export class MapLayersControl {
         resetControls()
       } else {
         resetControls()
+        if (draw) { resetEditControls() }
         initLayersModal()
         e.target.closest('button').classList.add('active')
         document.querySelector('#layers-modal').style.display = 'block'
@@ -165,4 +168,8 @@ export function resetControls () {
   functions.e('#burger-menu-toggle', e => { e.checked = false })
   // reset edit buttons
   if (editPopup) { editPopup.remove() }
+}
+
+function resetEditControls () {
+  draw.changeMode('simple_select')
 }
