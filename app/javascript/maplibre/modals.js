@@ -54,7 +54,7 @@ export function showFeatureDetails (feature) {
   document.querySelector('#feature-details-body').classList.remove('hidden')
   const modal = document.querySelector('#feature-details-modal')
   modal.classList.remove('expanded')
-  modal.style.display = 'block'
+  modal.classList.add('show')
   modal.setAttribute('data-feature-id', feature.id)
 
   document.querySelector('#feature-details-header').innerHTML = ''

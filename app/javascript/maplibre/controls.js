@@ -34,14 +34,15 @@ export class MapSettingsControl {
     this._container = document.createElement('div')
     this._container.innerHTML = '<button class="maplibregl-ctrl-btn maplibregl-ctrl-map" type="button" title="Map settings" aria-label="Map settings" aria-pressed="false"><b><i class="bi bi-globe-americas"></i></b></button>'
     this._container.onclick = function (e) {
-      if (document.querySelector('#settings-modal').style.display === 'block') {
+      const modal = document.querySelector('#settings-modal')
+      if (modal.classList.contains('show')) {
         resetControls()
       } else {
         resetControls()
         if (draw) { resetEditControls() }
         initSettingsModal()
         e.target.closest('button').classList.add('active')
-        document.querySelector('#settings-modal').style.display = 'block'
+        modal.classList.add('show')
       }
     }
   }
@@ -63,13 +64,14 @@ export class MapShareControl {
     this._container = document.createElement('div')
     this._container.innerHTML = '<button class="maplibregl-ctrl-btn maplibregl-ctrl-share" type="button" title="Map settings" aria-label="Map settings" aria-pressed="false"><b><i class="bi bi-share-fill"></i></b></button>'
     this._container.onclick = function (e) {
-      if (document.querySelector('#share-modal').style.display === 'block') {
+      const modal = document.querySelector('#share-modal')
+      if (modal.classList.contains('show')) {
         resetControls()
       } else {
         resetControls()
         if (draw) { resetEditControls() }
         e.target.closest('button').classList.add('active')
-        document.querySelector('#share-modal').style.display = 'block'
+        modal.classList.add('show')
       }
     }
   }
@@ -93,14 +95,15 @@ export class MapLayersControl {
       'type="button" title="Map settings" aria-label="Map settings" aria-pressed="false">' +
       '<b><i class="bi bi-stack"></i></b></button>'
     this._container.onclick = function (e) {
-      if (document.querySelector('#layers-modal').style.display === 'block') {
+      const modal = document.querySelector('#layers-modal')
+      if (modal.classList.contains('show')) {
         resetControls()
       } else {
         resetControls()
         if (draw) { resetEditControls() }
         initLayersModal()
         e.target.closest('button').classList.add('active')
-        document.querySelector('#layers-modal').style.display = 'block'
+        modal.classList.add('show')
       }
     }
   }
@@ -163,7 +166,7 @@ export function resetControls () {
   // reset ctrl buttons
   functions.e('.maplibregl-ctrl-btn', e => { e.classList.remove('active') })
   // reset active modals
-  functions.e('.map-modal', e => { e.style.display = 'none' })
+  functions.e('.map-modal', e => { e.classList.remove('show') })
   // collapse menu
   functions.e('#burger-menu-toggle', e => { e.checked = false })
   // reset edit buttons

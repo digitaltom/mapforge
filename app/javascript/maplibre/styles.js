@@ -24,7 +24,7 @@ export function resetHighlightedFeature (source = 'geojson-source') {
     highlightedFeatureId = null
   }
   // reset active modals
-  f.e('.map-modal', e => { e.style.display = 'none' })
+  f.e('#feature-details-modal', e => { e.classList.remove('show') })
 }
 
 export function highlightFeature (feature, sticky = false, source = 'geojson-source') {
@@ -47,7 +47,6 @@ export function initializeViewStyles () {
     map.addLayer(styles[styleName])
     // click is needed to select on mobile and for sticky highlight
     map.on('click', styleName, function (e) {
-      // resetHighlightedFeature()
       if (!e.features?.length || window.gon.map_mode === 'static') { return }
       highlightFeature(e.features[0], true)
     })

@@ -1,5 +1,4 @@
 .map-modal {
-  display: none;
   position: absolute;
   overflow-y: auto;
   max-height: calc(100vh - 4em);
@@ -12,13 +11,9 @@
   background: white;
   z-index: 1000;
   padding: 0.5em;
-  opacity: 0.95;
   border-radius: 3px;
   border: 1px solid #ccc;
   box-shadow: 0 0 6px 2px rgb(0 0 0 / 8%);
-  transition:
-    opacity 0.7s linear,
-    right 0.7s ease-in-out;
 }
 
 .layer-preview {

@@ -89,6 +89,8 @@ export function initializeEditMode () {
       resetControls()
     }
   })
+
+  document.querySelector('#edit-buttons').classList.remove('hidden')
 }
 
 function sourcedataHandler (e) {

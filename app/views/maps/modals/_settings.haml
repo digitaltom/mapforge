@@ -1,4 +1,3 @@
-
 / Initialize settings modal with 'current' values from @map_properties.
 / Updates will get set from map event callbacks
 - data = { controller: 'settings',
@@ -7,7 +6,7 @@
            settings_current_bearing_value: @map_properties[:bearing].to_f.round(0),
            settings_current_center_value: (@map_properties[:center] || @map_properties[:default_center]) }
 
-#settings-modal.map-modal{ data: data}
+#settings-modal.map-modal.fade{ data: data}
 
   %h2 Configure Map
   %label{ for: "map-name"} Name:
