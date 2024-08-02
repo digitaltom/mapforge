@@ -1,12 +1,15 @@
 import { basemaps } from 'maplibre/basemaps'
 import { draw } from 'maplibre/edit'
 import { resetControls, initSettingsModal } from 'maplibre/controls'
-import { initializeViewStyles, resetHighlightedFeature } from 'maplibre/styles'
+import { initializeViewStyles, highlightFeature, resetHighlightedFeature } from 'maplibre/styles'
 import { AnimatePointAnimation } from 'maplibre/animations'
 import * as functions from 'helpers/functions'
 import { status } from 'helpers/status'
 import maplibregl from 'maplibre-gl'
 import { GeocodingControl } from 'maptiler-geocoding-control'
+
+// eslint expects variables to get imported, but we load the full lib in header
+const turf = window.turf
 
 export let map
 export let geojsonData //= { type: 'FeatureCollection', features: [] }
@@ -88,6 +91,14 @@ export function initializeMap (divId = 'maplibre-map') {
 
   map.on('geojson.load', (e) => {
     functions.e('#maplibre-map', e => { e.setAttribute('data-geojson-loaded', true) })
+    const urlFeatureId = new URLSearchParams(window.location.search).get('f')
+    const feature = geojsonData.features.find(f => f.id === urlFeatureId)
+    if (feature) {
+      highlightFeature(feature, true)
+      const centroid = turf.center(feature)
+      map.setCenter(centroid.geometry.coordinates)
+      if (draw) { draw.changeMode('simple_select', { featureIds: [urlFeatureId] }) }
+    }
   })
 
   map.on('mousemove', (e) => { lastMousePosition = e.lngLat })

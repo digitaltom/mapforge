@@ -1,8 +1,8 @@
 import { map, geojsonData, initializeDefaultControls } from 'maplibre/map'
 import { editStyles, initializeEditStyles } from 'maplibre/edit_styles'
+import { highlightFeature } from 'maplibre/styles'
 import { mapChannel } from 'channels/map_channel'
 import { ControlGroup, MapSettingsControl, MapShareControl, MapLayersControl, resetControls } from 'maplibre/controls'
-import { showFeatureDetails } from 'maplibre/modals'
 import { status } from 'helpers/status'
 import * as functions from 'helpers/functions'
 import MapboxDraw from '@mapbox/mapbox-gl-draw'
@@ -67,7 +67,7 @@ export function initializeEditMode () {
     selectedFeature = e.features[0]
     if (selectedFeature) {
       console.log('selected: ' + JSON.stringify(selectedFeature))
-      showFeatureDetails(selectedFeature)
+      highlightFeature(selectedFeature, true)
     }
   })
 

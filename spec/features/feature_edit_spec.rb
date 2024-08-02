@@ -48,6 +48,10 @@ describe 'Map' do
         expect(page).to have_text('Poly Title')
       end
 
+      it 'adds feature id to url' do
+        expect(page).to have_current_path("/m/#{map.id}?f=#{polygon.id}")
+      end
+
       it 'can update feature' do
         find('#edit-button-raw').click
         fill_in 'properties', with: '{"title": "TEST"}'

@@ -2,9 +2,10 @@ require 'rails_helper'
 
 describe 'Map public view' do
   let(:map) { create(:map) }
+  let(:path) { map_path(map.public_id) }
 
   before do
-    visit map_path(map.public_id)
+    visit path
     expect(page).to have_css('.map[data-loaded="true"]')
   end
 
@@ -49,6 +50,11 @@ describe 'Map public view' do
       expect(page).to have_text('27.70 km²')
     end
 
+    it 'updates url on feature select' do
+      click_coord('.map', 50, 50)
+      expect(page).to have_current_path("/m/#{map.public_id}?f=#{polygon.id}")
+    end
+
     it 'feature details are sticky on click' do
       click_coord('.map', 50, 50)
       expect(page).to have_text('Poly Desc')
@@ -56,6 +62,18 @@ describe 'Map public view' do
       expect(page).to have_text('Poly Desc')
       click_coord('.map', 400, 0)
       expect(page).to_not have_text('Poly Desc')
+    end
+  end
+
+  context 'with feature id in url' do
+    # this polygon is in the middle of nbg (default view)
+    let!(:polygon) { create(:feature, :polygon_middle, layer: map.layer,
+      properties: { title: 'F title' })}
+    let(:path) { map_path(map, f: polygon.id) }
+
+    it 'shows feature' do
+      expect(page).to have_css('#feature-details-modal')
+      expect(page).to have_text('F title')
     end
   end
 

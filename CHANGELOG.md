@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## 2024-09
+
+* Direct link to map features
+
 
 ## 2024-07
 
