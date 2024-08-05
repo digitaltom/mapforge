@@ -5,6 +5,7 @@ import { mapChannel } from 'channels/map_channel'
 import { ControlGroup, MapSettingsControl, MapShareControl, MapLayersControl, resetControls } from 'maplibre/controls'
 import { status } from 'helpers/status'
 import * as functions from 'helpers/functions'
+
 import MapboxDraw from '@mapbox/mapbox-gl-draw'
 import * as MapboxDrawWaypoint from 'mapbox-gl-draw-waypoint'
 import PaintMode from 'mapbox-gl-draw-paint-mode'
@@ -104,7 +105,6 @@ function sourcedataHandler (e) {
 
 function handleCreate (e) {
   const feature = e.features[0] // Assuming one feature is created at a time
-
   status('Feature ' + feature.id + ' created')
   geojsonData.features.push(feature)
   mapChannel.send_message('new_feature', feature)

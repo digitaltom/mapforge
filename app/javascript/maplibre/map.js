@@ -5,8 +5,13 @@ import { initializeViewStyles, highlightFeature, resetHighlightedFeature } from 
 import { AnimatePointAnimation } from 'maplibre/animations'
 import * as functions from 'helpers/functions'
 import { status } from 'helpers/status'
-import maplibregl from 'maplibre-gl'
+//import maplibregl from 'maplibre-gl'
 import { GeocodingControl } from 'maptiler-geocoding-control'
+
+import { config, Map, helpers, Marker, MapStyle } from '@maptiler/sdk'
+import maplibregl from '@maptiler/sdk'
+import { ElevationProfileControl } from '@maptiler/elevation-profile-control'
+
 
 // eslint expects variables to get imported, but we load the full lib in header
 const turf = window.turf
