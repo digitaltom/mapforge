@@ -23,7 +23,7 @@ Extending the [Mapbox Simplestyle Spec](https://github.com/mapbox/simplestyle-sp
 
 #### *LineString* geometry:
 
-* `stroke-width`: width of the line (default: 3)
+* `stroke-width`: width of the line (default: 2)
 * `stroke`: line color (default: 'darkgreen')
 * `stroke-opacity`: opacity of the line (default: 0.8)
 

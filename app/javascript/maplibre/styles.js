@@ -107,7 +107,7 @@ const fillOpacityActive = ['*', 0.7, fillOpacity]
 
 const lineColor = ['coalesce', ['get', 'stroke'], ['get', 'user_stroke'], featureColor]
 const lineWidth = ['to-number', ['coalesce',
-  ['get', 'stroke-width'], ['get', 'user_stroke-width'], 3]]
+  ['get', 'stroke-width'], ['get', 'user_stroke-width'], 2]]
 const lineWidthActive = ['+', 2, lineWidth]
 const lineOpacity = ['to-number', ['coalesce',
   ['get', 'stroke-opacity'], ['get', 'user_stroke-opacity'], 0.8]]

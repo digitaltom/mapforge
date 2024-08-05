@@ -99,6 +99,25 @@ export const editStyles = [
   },
   // inactive single point features
   removeSource(styles['points-layer']),
+
+  // inactive vertex points on lines + polygons, outline
+  // renderingoutline seperately to generate nicer overlay effect
+  {
+    id: 'gl-draw-polygon-and-line-vertex-outline-inactive',
+    type: 'circle',
+    filter: ['all',
+      ['==', 'meta', 'vertex'],
+      ['==', '$type', 'Point'],
+      ['!=', 'mode', 'static']
+    ],
+    paint: {
+      'circle-radius': pointSize,
+      'circle-opacity': 0,
+      'circle-stroke-color': '#444',
+      'circle-stroke-width': pointOutlineSize,
+      'circle-stroke-opacity': 1
+    }
+  },
   // inactive vertex points on lines + polygons
   {
     id: 'gl-draw-polygon-and-line-vertex-inactive',
@@ -110,10 +129,7 @@ export const editStyles = [
     ],
     paint: {
       'circle-radius': pointSize,
-      'circle-color': highlightColor,
-      'circle-stroke-color': '#fff',
-      'circle-stroke-width': pointOutlineSize,
-      'circle-stroke-opacity': 1
+      'circle-color': highlightColor
     }
   },
   // active point, either single or on a line / polygon
@@ -129,7 +145,7 @@ export const editStyles = [
       'circle-radius': pointSizeActive,
       'circle-color': highlightColor,
       'circle-opacity': 0.8,
-      'circle-stroke-color': '#fff',
+      'circle-stroke-color': '#222',
       'circle-stroke-width': pointOutlineSizeActive
     }
   },
