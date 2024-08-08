@@ -3,12 +3,12 @@ require 'rails_helper'
 describe 'Map' do
   let(:map) { create(:map) }
 
-  context 'with empty map' do
-    before do
-      visit map_path(map)
-      expect(page).to have_css("#maplibre-map[data-loaded='true']")
-    end
+  before do
+    visit map_path(map)
+    expect(page).to have_css("#maplibre-map[data-loaded='true']")
+  end
 
+  context 'with empty map' do
     it 'shows feature edit buttons' do
       expect(page).to have_css('.mapbox-gl-draw_line')
       expect(page).to have_css('.mapbox-gl-draw_polygon')
@@ -23,13 +23,13 @@ describe 'Map' do
 
       it 'adding a polygon to the map' do
         find('.mapbox-gl-draw_polygon').click
+        click_coord('#maplibre-map', 10, 10)
+        click_coord('#maplibre-map', 10, 50)
         click_coord('#maplibre-map', 50, 50)
-        click_coord('#maplibre-map', 50, 150)
-        click_coord('#maplibre-map', 150, 150)
-        click_coord('#maplibre-map', 150, 50)
-        click_coord('#maplibre-map', 50, 50)
+        click_coord('#maplibre-map', 50, 10)
+        click_coord('#maplibre-map', 10, 10)
 
-        sleep(0.5) # wait for websocket msg
+        expect(page).to have_text('Map view updated')
         expect(Feature.polygon.count).to eq(1)
       end
     end
@@ -37,12 +37,6 @@ describe 'Map' do
 
   context 'with polygon on map' do
     let!(:polygon) { create(:feature, :polygon_middle, layer: map.layer, title: 'Poly Title') }
-
-    before do
-      visit map_path(map)
-      expect(page).to have_css('.maplibregl-canvas')
-      expect(page).to have_css("#maplibre-map[data-loaded='true']")
-    end
 
     context 'with selected feature' do
       before do
@@ -54,10 +48,16 @@ describe 'Map' do
         expect(page).to have_text('Poly Title')
       end
 
+      it 'adds feature id to url' do
+        expect(page).to have_current_path("/m/#{map.id}?f=#{polygon.id}")
+      end
+
       it 'can update feature' do
         find('#edit-button-raw').click
         fill_in 'properties', with: '{"title": "TEST"}'
         find('.feature-update').click
+        # the actioncable events of map + feature update are not always received in the same order:
+        expect(page).to have_text('Updated feature').or have_text('Map properties updated')
         expect(polygon.reload.properties).to eq({ "title" => "TEST" })
       end
 
@@ -65,9 +65,17 @@ describe 'Map' do
         accept_alert do
           find('#edit-button-trash').click
         end
-        sleep(0.5) # wait for websocket msg
+        # the actioncable events of map + feature update are not always received in the same order:
+        expect(page).to have_text('Deleting feature').or have_text('Map properties updated')
         expect(Feature.count).to eq(0)
       end
+    end
+  end
+
+  context 'with lost websocket' do
+    it 'disables edit buttons' do
+      ActionCable.server.connections.each(&:close)
+      expect(page).to have_css('.mapbox-gl-draw_ctrl-draw-btn[disabled]')
     end
   end
 end

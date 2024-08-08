@@ -47,3 +47,19 @@ body {
 .hidden {
   display: none !important;
 }
+
+/* re-using bootstrap transition class */
+.fade {
+  transition: opacity 0.2s linear, visibility 0.2s linear;
+}
+
+.fade:not(.show) {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.fade.show {
+  visibility: visible;
+  opacity: 1;
+}
+

@@ -1,9 +1,10 @@
 import { map, geojsonData, initializeDefaultControls } from 'maplibre/map'
 import { editStyles, initializeEditStyles } from 'maplibre/edit_styles'
+import { highlightFeature } from 'maplibre/styles'
 import { mapChannel } from 'channels/map_channel'
 import { ControlGroup, MapSettingsControl, MapShareControl, MapLayersControl, resetControls } from 'maplibre/controls'
-import { showFeatureDetails } from 'maplibre/modals'
 import { status } from 'helpers/status'
+import * as functions from 'helpers/functions'
 import MapboxDraw from '@mapbox/mapbox-gl-draw'
 import * as MapboxDrawWaypoint from 'mapbox-gl-draw-waypoint'
 import PaintMode from 'mapbox-gl-draw-paint-mode'
@@ -43,9 +44,7 @@ export function initializeEditMode () {
 
   map.once('style.load', () => {
     initializeDefaultControls()
-
     map.addControl(draw, 'top-left')
-
     const controlGroup = new ControlGroup(
       [new MapSettingsControl(),
         new MapLayersControl(),
@@ -56,20 +55,19 @@ export function initializeEditMode () {
   map.on('geojson.load', function (e) {
     // register callback to reload edit styles when source layer changed
     map.on('sourcedata', sourcedataHandler)
-
     // draw has its own style layers based on editStyles
     if (geojsonData.features.length > 0) {
       draw.set(geojsonData)
     }
   })
 
+  map.on('draw.modechange', () => { resetControls() })
   map.on('draw.selectionchange', function (e) {
     if (!e.features?.length) { return }
     selectedFeature = e.features[0]
     if (selectedFeature) {
-      status('selected ' + selectedFeature.id)
       console.log('selected: ' + JSON.stringify(selectedFeature))
-      showFeatureDetails(selectedFeature)
+      highlightFeature(selectedFeature, true)
     }
   })
 
@@ -132,4 +130,18 @@ export function handleDelete (e) {
   if (editPopup) { editPopup.remove() }
   status('Feature ' + deletedFeature.id + ' deleted')
   mapChannel.send_message('delete_feature', deletedFeature)
+}
+
+export function disableEditControls () {
+  functions.e('.mapbox-gl-draw_ctrl-draw-btn', e => { e.disabled = true })
+  functions.e('.maplibregl-ctrl-map', e => { e.disabled = true })
+  functions.e('#save-map-name', e => { e.disabled = true })
+  functions.e('#save-map-defaults', e => { e.disabled = true })
+}
+
+export function enableEditControls () {
+  functions.e('.mapbox-gl-draw_ctrl-draw-btn', e => { e.disabled = false })
+  functions.e('.maplibregl-ctrl-map', e => { e.disabled = false })
+  functions.e('#save-map-name', e => { e.disabled = false })
+  functions.e('#save-map-defaults', e => { e.disabled = false })
 }

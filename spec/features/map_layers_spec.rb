@@ -5,6 +5,7 @@ describe 'Map' do
 
   before do
     visit map_path(map)
+    expect(page).to have_css("#maplibre-map[data-loaded='true']")
   end
 
   context 'with initial map rendering' do
@@ -17,6 +18,7 @@ describe 'Map' do
   context 'feature listing' do
     before do
       feature
+      expect(page).to have_text('Map view updated')
       find('.maplibregl-ctrl-layers').click
     end
     let(:feature) { create(:feature, :point, title: 'Feature 1', desc: 'F1 desc', layer: map.layer) }
@@ -39,6 +41,17 @@ describe 'Map' do
         click_button "Import gpx/kml"
         expect(page).to have_text('Import1')
         expect(map.reload.features.count).to eq 4
+      end
+
+      it 'import mapforge json' do
+        attach_file("fileInput", Rails.root.join("spec", "fixtures", "files", "mapforge.json"))
+        click_button "Import gpx/kml"
+        expect(page).to have_text('f1')
+        expect(map.reload.features.count).to eq 4
+        expect(map.reload.center).to eq [ 11.07338990801668, 49.44765470337188 ]
+        expect(map.reload.zoom).to eq "14.6"
+        expect(map.reload.bearing).to eq "50.4"
+        expect(page).to have_text('TestMap')
       end
     end
   end

@@ -2,9 +2,10 @@ require 'rails_helper'
 
 describe 'Map public view' do
   let(:map) { create(:map) }
+  let(:path) { map_path(map.public_id) }
 
   before do
-    visit map_path(map.public_id)
+    visit path
     expect(page).to have_css('.map[data-loaded="true"]')
   end
 
@@ -26,11 +27,19 @@ describe 'Map public view' do
     let!(:line) { create(:feature, :line_string, layer: map.layer) }
 
     it 'shows feature details on hover' do
+      # coordinates are calculated from the center middle
       hover_coord('.map', 50, 50)
       expect(page).to have_css('#feature-details-modal')
       expect(page).to have_text('Poly Title')
       expect(page).to have_text('Poly Desc')
       expect(page).to have_text('27.70 km²')
+    end
+
+    it 'feature details are not sticky on hover' do
+      hover_coord('.map', 50, 50)
+      expect(page).to have_text('Poly Title')
+      hover_coord('.map', 400, 0)
+      expect(page).to_not have_text('Poly Desc')
     end
 
     it 'shows feature details on click' do
@@ -39,6 +48,32 @@ describe 'Map public view' do
       expect(page).to have_text('Poly Title')
       expect(page).to have_text('Poly Desc')
       expect(page).to have_text('27.70 km²')
+    end
+
+    it 'updates url on feature select' do
+      click_coord('.map', 50, 50)
+      expect(page).to have_current_path("/m/#{map.public_id}?f=#{polygon.id}")
+    end
+
+    it 'feature details are sticky on click' do
+      click_coord('.map', 50, 50)
+      expect(page).to have_text('Poly Desc')
+      hover_coord('.map', 400, 0)
+      expect(page).to have_text('Poly Desc')
+      click_coord('.map', 400, 0)
+      expect(page).to_not have_text('Poly Desc')
+    end
+  end
+
+  context 'with feature id in url' do
+    # this polygon is in the middle of nbg (default view)
+    let!(:polygon) { create(:feature, :polygon_middle, layer: map.layer,
+      properties: { title: 'F title' })}
+    let(:path) { map_path(map, f: polygon.id) }
+
+    it 'shows feature' do
+      expect(page).to have_css('#feature-details-modal')
+      expect(page).to have_text('F title')
     end
   end
 
@@ -65,8 +100,6 @@ describe 'Map public view' do
 
   context 'with lost websocket' do
     it 'shows warning' do
-      # TODO: unclear why there is an update happening here, but it would hide the next status message
-      expect(page).to have_text('Map view updated')
       ActionCable.server.connections.each(&:close)
       expect(page).to have_text('Connection to server lost')
     end

@@ -1,6 +1,7 @@
 import { mapProperties, geojsonData } from 'maplibre/map'
 import * as functions from 'helpers/functions'
-import { editPopup } from 'maplibre/edit'
+import { editPopup, draw } from 'maplibre/edit'
+import { resetHighlightedFeature } from 'maplibre/styles'
 
 export class ControlGroup {
   constructor (controls) {
@@ -33,14 +34,15 @@ export class MapSettingsControl {
     this._container = document.createElement('div')
     this._container.innerHTML = '<button class="maplibregl-ctrl-btn maplibregl-ctrl-map" type="button" title="Map settings" aria-label="Map settings" aria-pressed="false"><b><i class="bi bi-globe-americas"></i></b></button>'
     this._container.onclick = function (e) {
-      if (document.querySelector('#map-modal').style.display === 'block') {
+      const modal = document.querySelector('#settings-modal')
+      if (modal.classList.contains('show')) {
         resetControls()
       } else {
         resetControls()
+        if (draw) { resetEditControls() }
         initSettingsModal()
         e.target.closest('button').classList.add('active')
-        document.querySelector('#map-modal').style.display = 'block'
-        document.querySelector('#map-name').value = mapProperties.name
+        modal.classList.add('show')
       }
     }
   }
@@ -62,12 +64,14 @@ export class MapShareControl {
     this._container = document.createElement('div')
     this._container.innerHTML = '<button class="maplibregl-ctrl-btn maplibregl-ctrl-share" type="button" title="Map settings" aria-label="Map settings" aria-pressed="false"><b><i class="bi bi-share-fill"></i></b></button>'
     this._container.onclick = function (e) {
-      if (document.querySelector('#share-modal').style.display === 'block') {
+      const modal = document.querySelector('#share-modal')
+      if (modal.classList.contains('show')) {
         resetControls()
       } else {
         resetControls()
+        if (draw) { resetEditControls() }
         e.target.closest('button').classList.add('active')
-        document.querySelector('#share-modal').style.display = 'block'
+        modal.classList.add('show')
       }
     }
   }
@@ -91,13 +95,15 @@ export class MapLayersControl {
       'type="button" title="Map settings" aria-label="Map settings" aria-pressed="false">' +
       '<b><i class="bi bi-stack"></i></b></button>'
     this._container.onclick = function (e) {
-      if (document.querySelector('#layers-modal').style.display === 'block') {
+      const modal = document.querySelector('#layers-modal')
+      if (modal.classList.contains('show')) {
         resetControls()
       } else {
         resetControls()
+        if (draw) { resetEditControls() }
         initLayersModal()
         e.target.closest('button').classList.add('active')
-        document.querySelector('#layers-modal').style.display = 'block'
+        modal.classList.add('show')
       }
     }
   }
@@ -114,13 +120,20 @@ export class MapLayersControl {
   }
 }
 
-// create the list of layers + features
+// initialize settings modal with default map values from mapProperties
 export function initSettingsModal () {
-  document.querySelector('#map-name').value = mapProperties.name
-  console.log(document.querySelector('#map-terrain[data-base-map="' + mapProperties.base_map + '"]'))
-  document.querySelector('#map-terrain').checked = mapProperties.terrain
-  document.querySelectorAll('.layer-preview').forEach(layerPreview => { layerPreview.classList.remove('active') })
-  document.querySelector('img[data-base-map="' + mapProperties.base_map + '"]')?.classList.add('active')
+  functions.e('#settings-modal', e => {
+    e.dataset.settingsMapNameValue = mapProperties.name
+    e.dataset.settingsBaseMapValue = mapProperties.base_map
+    e.dataset.settingsMapTerrainValue = mapProperties.terrain
+    e.dataset.settingsDefaultPitchValue = Math.round(mapProperties.pitch)
+    e.dataset.settingsDefaultZoomValue = parseFloat(mapProperties.zoom || mapProperties.default_zoom).toFixed(2)
+    e.dataset.settingsDefaultBearingValue = Math.round(mapProperties.bearing)
+    if (mapProperties.center) {
+      e.dataset.settingsDefaultCenterValue = JSON.stringify(mapProperties.center)
+    }
+    e.dataset.settingsDefaultAutoCenterValue = JSON.stringify(mapProperties.default_center)
+  })
 }
 
 // create the list of layers + features
@@ -149,12 +162,17 @@ export function initLayersModal () {
 }
 
 export function resetControls () {
+  resetHighlightedFeature()
   // reset ctrl buttons
   functions.e('.maplibregl-ctrl-btn', e => { e.classList.remove('active') })
   // reset active modals
-  functions.e('.map-modal', e => { e.style.display = 'none' })
+  functions.e('.map-modal', e => { e.classList.remove('show') })
   // collapse menu
   functions.e('#burger-menu-toggle', e => { e.checked = false })
   // reset edit buttons
   if (editPopup) { editPopup.remove() }
+}
+
+function resetEditControls () {
+  draw.changeMode('simple_select')
 }

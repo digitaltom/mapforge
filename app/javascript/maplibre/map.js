@@ -1,18 +1,22 @@
 import { basemaps } from 'maplibre/basemaps'
 import { draw } from 'maplibre/edit'
-import { resetControls } from 'maplibre/controls'
-import { initializeViewStyles, resetHighlightedFeature } from 'maplibre/styles'
+import { resetControls, initSettingsModal } from 'maplibre/controls'
+import { initializeViewStyles, highlightFeature, resetHighlightedFeature } from 'maplibre/styles'
 import { AnimatePointAnimation } from 'maplibre/animations'
 import * as functions from 'helpers/functions'
 import { status } from 'helpers/status'
 import maplibregl from 'maplibre-gl'
 import { GeocodingControl } from 'maptiler-geocoding-control'
 
+// eslint expects variables to get imported, but we load the full lib in header
+const turf = window.turf
+
 export let map
 export let geojsonData //= { type: 'FeatureCollection', features: [] }
 export let mapProperties
 export let lastMousePosition
 export let highlightedFeature
+let mapInteracted
 let backgroundMapLayer
 let backgroundTerrain
 
@@ -26,26 +30,32 @@ let backgroundTerrain
 //         sets data-geojson-loaded attribute to true
 
 export function initializeMaplibreProperties () {
-  const last = mapProperties
+  const lastProperties = JSON.parse(JSON.stringify(mapProperties || {}))
   mapProperties = window.gon.map_properties
-  console.log('map properties: ' + JSON.stringify(mapProperties))
+  // console.log('last properties: ' + JSON.stringify(lastProperties))
+  console.log('init with map properties: ' + JSON.stringify(mapProperties))
   if (mapProperties.name) { document.title = 'mapforge.org - ' + mapProperties.name }
   functions.e('#map-title', e => { e.textContent = mapProperties.name })
-  // animate to new center if center or zoom changed, or view is on default_center and it changed
-  if ((last && (last.center?.toString() !== mapProperties?.center?.toString())) ||
-    (map && mapAtCoords(last?.default_center)) ||
-    (last && (last.zoom !== mapProperties.zoom))) {
-    map.once('moveend', function () { status('Map view updated') })
-    map.flyTo({
-      center: mapProperties.center || mapProperties.default_center,
-      zoom: mapProperties.zoom || mapProperties.default_zoom,
-      pitch: mapProperties.pitch,
-      bearing: mapProperties.bearing || 0,
-      curve: 0.3,
-      essential: true,
-      duration: 2000
-    })
+  initSettingsModal()
+  status('Map properties updated')
+  if (Object.keys(lastProperties).length === 0 || !mapProperties) { return }
+  // animate to new view if map had no interaction yet
+  if (!mapInteracted && JSON.stringify(lastProperties) !== JSON.stringify(mapProperties)) {
+    setViewFromProperties()
   }
+}
+
+function setViewFromProperties () {
+  map.once('moveend', function () { status('Map view updated') })
+  map.flyTo({
+    center: mapProperties.center || mapProperties.default_center,
+    zoom: mapProperties.zoom || mapProperties.default_zoom,
+    pitch: mapProperties.pitch,
+    bearing: mapProperties.bearing || 0,
+    curve: 0.3,
+    essential: true,
+    duration: 2000
+  })
 }
 
 export function resetGeojsonData () {
@@ -63,6 +73,7 @@ export function initializeMap (divId = 'maplibre-map') {
     center: (mapProperties.center || mapProperties.default_center),
     zoom: (mapProperties.zoom || mapProperties.default_zoom),
     pitch: mapProperties.pitch,
+    bearing: mapProperties.bearing || 0,
     maxPitch: 72,
     interactive: (window.gon.map_mode !== 'static') // can move/zoom map
     // style: {} // style/map is getting loaded by 'setBackgroundMapLayer'
@@ -78,18 +89,42 @@ export function initializeMap (divId = 'maplibre-map') {
     if (mapProperties.terrain && window.gon.map_keys.maptiler) { addTerrain() }
   })
 
-  map.on('geojson.load', function (e) {
+  map.on('geojson.load', (e) => {
     functions.e('#maplibre-map', e => { e.setAttribute('data-geojson-loaded', true) })
+    const urlFeatureId = new URLSearchParams(window.location.search).get('f')
+    const feature = geojsonData.features.find(f => f.id === urlFeatureId)
+    if (feature) {
+      highlightFeature(feature, true)
+      const centroid = turf.center(feature)
+      map.setCenter(centroid.geometry.coordinates)
+      if (draw) { draw.changeMode('simple_select', { featureIds: [urlFeatureId] }) }
+    }
   })
 
-  map.on('mousemove', (e) => {
-    lastMousePosition = e.lngLat
-  })
-  map.on('touchend', (e) => {
-    lastMousePosition = e.lngLat
-  })
-
+  map.on('mousemove', (e) => { lastMousePosition = e.lngLat })
+  map.on('touchend', (e) => { lastMousePosition = e.lngLat })
+  map.on('drag', () => { mapInteracted = true })
   map.on('click', resetControls)
+  map.on('pitchend', function (e) {
+    functions.e('#settings-modal', e => {
+      e.dataset.settingsCurrentPitchValue = map.getPitch().toFixed(0)
+    })
+  })
+  map.on('zoomend', function (e) {
+    functions.e('#settings-modal', e => {
+      e.dataset.settingsCurrentZoomValue = map.getZoom().toFixed(2)
+    })
+  })
+  map.on('rotate', function (e) {
+    functions.e('#settings-modal', e => {
+      e.dataset.settingsCurrentBearingValue = map.getBearing().toFixed(0)
+    })
+  })
+  map.on('moveend', function (e) {
+    functions.e('#settings-modal', e => {
+      e.dataset.settingsCurrentCenterValue = JSON.stringify([map.getCenter().lng, map.getCenter().lat])
+    })
+  })
 }
 
 export function loadGeoJsonData () {
@@ -230,7 +265,7 @@ export function upsert (updatedFeature) {
     status('Updated feature ' + updatedFeature.id)
   }
   if (draw) { draw.set(geojsonData) }
-  map.getSource('geojson-source').setData(geojsonData)
+  map.getSource('geojson-source')?.setData(geojsonData)
 }
 
 export function destroy (featureId) {
@@ -246,18 +281,12 @@ export function setBackgroundMapLayer (mapName = mapProperties.base_map, force =
   if (basemaps[mapName]) {
     status('Loading base map ' + mapName)
     map.setStyle(basemaps[mapName],
-      // adding this so that 'style.load' gets triggered (https://github.com/maplibre/maplibre-gl-js/issues/2587)
+      // adding 'diff: false' so that 'style.load' gets triggered (https://github.com/maplibre/maplibre-gl-js/issues/2587)
       // which will trigger loadGeoJsonData()
-      { diff: false })
+      { diff: false, strictMode: true })
     backgroundMapLayer = mapName
     backgroundTerrain = mapProperties.terrain
   } else {
     console.error('Base map ' + mapName + ' not available!')
   }
-}
-
-function mapAtCoords (coords) {
-  const center = [map.getCenter().lng.toFixed(6), map.getCenter().lat.toFixed(6)].toString()
-  coords = [coords[0]?.toFixed(6), coords[1]?.toFixed(6)].toString()
-  return center === coords
 }

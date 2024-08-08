@@ -8,7 +8,9 @@
   margin: unset;
   margin-bottom: 1.5em;
   transition:
-    height 0.3s linear
+    height 0.3s linear,
+    opacity 0.3s linear,
+    visibility 0.3s linear;
 }
 
 #feature-details-modal.expanded {
@@ -42,7 +44,6 @@
 
 .edit-button {
   cursor: pointer;
-  font-size: 1.2em;
   opacity: 0.75;
 }
 

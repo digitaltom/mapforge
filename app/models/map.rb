@@ -11,6 +11,7 @@ class Map
   field :zoom, type: String
   field :terrain, type: Boolean
   field :pitch, type: String
+  field :bearing, type: String
   field :name, type: String
   field :description, type: String
   field :public_id, type: String
@@ -29,11 +30,12 @@ class Map
   DEFAULT_CENTER = [ 11.077, 49.447 ].freeze
   DEFAULT_ZOOM = 12
   DEFAULT_PITCH = 30
+  DEFAULT_BEARING = 0
   DEFAULT_TERRAIN = false
 
   after_save :broadcast_update
   # broadcast updates when the layer changed because of default_center + default_zoom
-  after_touch :broadcast_update
+  after_touch :broadcast_update, unless: proc { |record| record.center && record.zoom }
   before_create :create_public_id, :create_layer
   validate :public_id_must_be_unique
 
@@ -48,6 +50,7 @@ class Map
       zoom: zoom,
       default_zoom: default_zoom,
       pitch: pitch || DEFAULT_PITCH,
+      bearing: bearing || DEFAULT_BEARING,
       terrain: terrain || DEFAULT_TERRAIN
     }
   end
@@ -119,8 +122,8 @@ class Map
       distance_km = point1.distance(point2) / 1000
       Rails.logger.info("Map feature distance: #{distance_km} km")
       case distance_km
-      when 0..0.1 then 18
-      when 0.1..1 then 16
+      when 0 then DEFAULT_ZOOM
+      when 0..1 then 16
       when 1..4 then 14
       when 4..10 then 12
       when 10..50 then 10
@@ -140,7 +143,7 @@ class Map
       return base_map if ENV["MAPTILER_KEY"].present?
       logger.warn("Cannot use maptiler map #{base_map} without MAPTILER_KEY")
       return default_base_map
-    elsif BASE_MAPS.include?(base_map)
+    elsif BASE_MAPS.include?(base_map) || base_map == "test"
       return base_map
     end
     logger.warn("Map '#{base_map}' not found, falling back to #{default_base_map}")

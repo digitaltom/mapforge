@@ -13,6 +13,19 @@ const defaultRasterLayer = [
 const host = new URL(window.location.href).origin
 
 export const basemaps = {
+  // static test tile
+  test: {
+    version: 8,
+    sources: {
+      'raster-tiles': {
+        type: 'raster',
+        tiles: ['/layers/test_tile.png'],
+        tileSize: 1024
+      }
+    },
+    layers: defaultRasterLayer,
+    glyphs: openmaptilesGlyphs
+  },
   stamenWatercolorTiles: {
     version: 8,
     sources: {
