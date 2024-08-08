@@ -1,6 +1,11 @@
 #edit-feature
   %p#feature-edit-ui.hidden
     %span#pell-editor
+
+    %label{ for: "point-size"} Size:
+    %input.slider#point-size{ type: "range", min: "1", max: "50", value: "1", 'data-action': "change->feature#updatePointSize"}
+
+
     %button.feature-update{ 'data-action': "click->feature#update_feature_ui"} Update
   %p#feature-edit-raw.hidden
     %textarea{name: "properties", rows: "6", cols: "50", "data-feature-target": "properties" }

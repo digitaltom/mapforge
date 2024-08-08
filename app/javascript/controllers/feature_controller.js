@@ -1,7 +1,7 @@
 import { Controller } from '@hotwired/stimulus'
 import { mapChannel } from 'channels/map_channel'
 import { map, geojsonData } from 'maplibre/map'
-import { handleDelete } from 'maplibre/edit'
+import { handleDelete, draw } from 'maplibre/edit'
 import { status } from 'helpers/status'
 import { showFeatureDetails } from 'maplibre/modals'
 import Pell from 'pell'
@@ -44,7 +44,7 @@ export default class extends Controller {
       element: document.getElementById('pell-editor'),
       onChange: html => console.log(html)
     })
-    pellEditor.content.innerHTML = marked(feature.properties.desc)
+    pellEditor.content.innerHTML = marked(feature.properties.desc || '')
   }
 
   show_feature_edit_raw () {
@@ -78,6 +78,18 @@ export default class extends Controller {
     } catch (error) {
       console.error('Error updating feature:', error.message)
       status('Error updating feature', 'error')
+    }
+  }
+
+  updatePointSize () {
+    const feature = this.getFeature()
+    const size = document.querySelector('#point-size').value
+    feature.properties['marker-size'] = size
+    map.getSource('geojson-source').setData(geojsonData)
+    mapChannel.send_message('update_feature', feature)
+    if (draw) {
+      draw.changeMode('simple_select', { featureIds: [] })
+      draw.changeMode('simple_select', { featureIds: [feature.id] })
     }
   }
 
