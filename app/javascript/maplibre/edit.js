@@ -11,7 +11,6 @@ import PaintMode from 'mapbox-gl-draw-paint-mode'
 
 export let draw
 let selectedFeature
-export let editPopup
 
 MapboxDraw.constants.classes.CONTROL_BASE = 'maplibregl-ctrl'
 MapboxDraw.constants.classes.CONTROL_PREFIX = 'maplibregl-ctrl-'
@@ -117,17 +116,17 @@ function handleUpdate (e) {
   const geojsonFeature = geojsonData.features.find(f => f.id === feature.id)
   geojsonFeature.geometry = feature.geometry
 
-  if (editPopup) { editPopup.remove() }
   // update local geojson-source (feature rendered via initializeEditStyles)
   // to avoid update/animation via hotwire callback
   map.getSource('geojson-source').setData(geojsonData)
   mapChannel.send_message('update_feature', feature)
+  // trigger highlight, to update eg. coordinates
+  highlightFeature(feature, true)
 }
 
 export function handleDelete (e) {
   const deletedFeature = e.features[0] // Assuming one feature is deleted at a time
 
-  if (editPopup) { editPopup.remove() }
   status('Feature ' + deletedFeature.id + ' deleted')
   mapChannel.send_message('delete_feature', deletedFeature)
 }
