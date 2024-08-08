@@ -140,6 +140,12 @@ const iconSize = ['*', 1 / 8, iconSizeFactor]
 // const iconSizeActive = ['*', 1.1, iconSize] // icon-size is not a paint property
 const labelSize = ['to-number', ['coalesce', ['get', 'user_label-size'], ['get', 'label-size'], 16]]
 
+// font must be available via glyphs:
+// openmaptiles: https://github.com/openmaptiles/fonts/tree/gh-pages
+// maptiler: https://docs.maptiler.com/gl-style-specification/glyphs/
+// Emojis are not in the character range: https://github.com/maplibre/maplibre-gl-js/issues/2307
+const labelFont = ['Klokantech Noto Sans Bold']
+
 export const styles = {
   'polygon-layer': {
     id: 'polygon-layer',
@@ -324,11 +330,7 @@ export const styles = {
     layout: {
       'text-field': ['coalesce', ['get', 'label'], ['get', 'room']],
       'text-size': labelSize,
-      // must be available via glyphs:
-      // openmaptiles: https://github.com/openmaptiles/fonts/tree/gh-pages
-      // maptiler: https://docs.maptiler.com/gl-style-specification/glyphs/
-      // Emojis are not in the character range: https://github.com/maplibre/maplibre-gl-js/issues/2307
-      'text-font': ['Klokantech Noto Sans Regular'],
+      'text-font': labelFont,
       // arrange text to avoid collision
       'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
       // distance the text from the element depending on the type
@@ -342,8 +344,8 @@ export const styles = {
       'text-ignore-placement': false // hide on collision
     },
     paint: {
-      'text-color': ['coalesce', ['get', 'label-color'], '#000'],
-      'text-halo-color': ['coalesce', ['get', 'label-shadow'], '#fff'],
+      'text-color': ['coalesce', ['get', 'user_label-color'], ['get', 'label-color'], '#000'],
+      'text-halo-color': ['coalesce', ['get', 'user_label-shadow'], ['get', 'label-shadow'], '#fff'],
       'text-halo-width': 1
     }
   }

@@ -6,7 +6,6 @@ Extending the [Mapbox Simplestyle Spec](https://github.com/mapbox/simplestyle-sp
 
 * `label`: Label to show on the map (no emoji support)
 * `label-size`: font size (default 16)
-* `label-font`: font in format "Open Sans Regular,Arial Unicode MS Regular" (default)
 * `label-color`: font color in format "#000" or "black" (default)
 * `label-shadow`: font shadow in format "#fff" or "white" (default)
 * `title`: title
