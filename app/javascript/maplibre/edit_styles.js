@@ -94,7 +94,9 @@ export const editStyles = [
     paint: {
       'circle-radius': pointSize,
       'circle-opacity': 0.2,
-      'circle-color': '#fff'
+      'circle-color': '#fff',
+      'circle-stroke-color': '#c0c0c0',
+      'circle-stroke-width': 1
     }
   },
   // inactive single point features

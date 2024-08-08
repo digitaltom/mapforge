@@ -1,9 +1,15 @@
 import { Controller } from '@hotwired/stimulus'
 import { mapChannel } from 'channels/map_channel'
 import { map, geojsonData } from 'maplibre/map'
-import { handleDelete } from 'maplibre/edit'
+import { handleDelete, draw } from 'maplibre/edit'
 import { status } from 'helpers/status'
 import { showFeatureDetails } from 'maplibre/modals'
+import Pell from 'pell'
+import Turndown from 'turndown'
+import { marked } from 'marked'
+
+let pellEditor
+const turndownService = new Turndown({ headingStyle: 'atx' })
 
 export default class extends Controller {
   delete_feature () {
@@ -31,8 +37,14 @@ export default class extends Controller {
   }
 
   show_feature_edit_ui () {
+    const feature = this.getFeature()
     document.querySelector('#feature-edit-ui').classList.remove('hidden')
     document.querySelector('#feature-edit-raw').classList.add('hidden')
+    pellEditor ||= Pell.init({
+      element: document.getElementById('pell-editor'),
+      onChange: html => console.log(html)
+    })
+    pellEditor.content.innerHTML = marked(feature.properties.desc || '')
   }
 
   show_feature_edit_raw () {
@@ -43,7 +55,7 @@ export default class extends Controller {
       .value = JSON.stringify(feature.properties, undefined, 2)
   }
 
-  update_feature () {
+  update_feature_raw () {
     const feature = this.getFeature()
     document.querySelector('#edit-feature .error').innerHTML = ''
     try {
@@ -54,6 +66,30 @@ export default class extends Controller {
       console.error('Error updating feature:', error.message)
       status('Error updating feature', 'error')
       document.querySelector('#edit-feature .error').innerHTML = error.message
+    }
+  }
+
+  update_feature_ui () {
+    const feature = this.getFeature()
+    try {
+      feature.properties.desc = turndownService.turndown(pellEditor.content.innerHTML)
+      map.getSource('geojson-source').setData(geojsonData)
+      mapChannel.send_message('update_feature', feature)
+    } catch (error) {
+      console.error('Error updating feature:', error.message)
+      status('Error updating feature', 'error')
+    }
+  }
+
+  updatePointSize () {
+    const feature = this.getFeature()
+    const size = document.querySelector('#point-size').value
+    feature.properties['marker-size'] = size
+    map.getSource('geojson-source').setData(geojsonData)
+    mapChannel.send_message('update_feature', feature)
+    if (draw) {
+      draw.changeMode('simple_select', { featureIds: [] })
+      draw.changeMode('simple_select', { featureIds: [feature.id] })
     }
   }
 

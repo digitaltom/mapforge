@@ -97,7 +97,6 @@ export function initializeMap (divId = 'maplibre-map') {
       highlightFeature(feature, true)
       const centroid = turf.center(feature)
       map.setCenter(centroid.geometry.coordinates)
-      if (draw) { draw.changeMode('simple_select', { featureIds: [urlFeatureId] }) }
     }
   })
 
