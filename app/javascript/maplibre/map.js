@@ -244,13 +244,18 @@ export function initializeViewMode () {
   })
 }
 
-export function redrawGeojson () {
-  if (draw) { draw.set(geojsonData) }
+export function redrawGeojson (feature = null) {
+  if (draw) {
+    // TODO: draw doesn't update view on property changes
+    // draw.deleteAll()
+    // draw.add(geojsonData)
+    draw.set(geojsonData)
+  }
   map.getSource('geojson-source')?.setData(geojsonData)
 }
 
 export function upsert (updatedFeature) {
-  const feature = geojsonData.features.find(feature => feature.id === updatedFeature.id)
+  const feature = geojsonData.features.find(f => f.id === updatedFeature.id)
   if (!feature) {
     addFeature(updatedFeature)
   } else if (JSON.stringify(updatedFeature) !== JSON.stringify(feature)) {
@@ -276,12 +281,12 @@ function updateFeature (feature, updatedFeature) {
   feature.geometry = updatedFeature.geometry
   feature.properties = updatedFeature.properties
   status('Updated feature ' + updatedFeature.id)
-  redrawGeojson()
+  redrawGeojson(feature)
 }
 
 export function destroy (featureId) {
   status('Deleting feature ' + featureId)
-  geojsonData.features = geojsonData.features.filter(feature => feature.id !== featureId)
+  geojsonData.features = geojsonData.features.filter(f => f.id !== featureId)
   redrawGeojson()
   resetHighlightedFeature()
 }

@@ -55,7 +55,7 @@ export function showFeatureDetails (feature) {
   const modal = document.querySelector('#feature-details-modal')
   modal.classList.remove('expanded')
   modal.classList.add('show')
-  modal.setAttribute('data-feature-id', feature.id)
+  modal.dataset.featureFeatureIdValue = feature.id
 
   document.querySelector('#feature-details-header').innerHTML = ''
   if (feature.properties['marker-image-url']) {

@@ -1,4 +1,4 @@
-import { map, geojsonData, redrawGeojson, initializeDefaultControls } from 'maplibre/map'
+import { map, geojsonData, initializeDefaultControls } from 'maplibre/map'
 import { editStyles, initializeEditStyles } from 'maplibre/edit_styles'
 import { highlightFeature } from 'maplibre/styles'
 import { mapChannel } from 'channels/map_channel'
@@ -112,15 +112,11 @@ function handleCreate (e) {
 }
 
 function handleUpdate (e) {
-  const feature = e.features[0] // Assuming one feature is created at a time
+  const feature = e.features[0] // Assuming one feature is updated at a time
 
   status('Feature ' + feature.id + ' changed')
   const geojsonFeature = geojsonData.features.find(f => f.id === feature.id)
   geojsonFeature.geometry = feature.geometry
-
-  // update local geojson-source (feature rendered via initializeEditStyles)
-  // to avoid update/animation via hotwire callback
-  redrawGeojson()
   mapChannel.send_message('update_feature', feature)
   // trigger highlight, to update eg. coordinates
   highlightFeature(feature, true)

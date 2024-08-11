@@ -12,6 +12,11 @@ let pellEditor
 const turndownService = new Turndown({ headingStyle: 'atx' })
 
 export default class extends Controller {
+  // https://stimulus.hotwired.dev/reference/values
+  static values = {
+    featureId: String
+  }
+
   delete_feature () {
     const feature = this.getFeature()
     if (confirm('Really delete this element?')) {
@@ -85,16 +90,16 @@ export default class extends Controller {
     const feature = this.getFeature()
     const size = document.querySelector('#point-size').value
     feature.properties['marker-size'] = size
+    // update draw layer
+    draw.setFeatureProperty(this.featureIdValue, 'marker-size', size)
+
     redrawGeojson()
-    mapChannel.send_message('update_feature', feature)
-    if (draw) {
-      draw.changeMode('simple_select', { featureIds: [] })
-      draw.changeMode('simple_select', { featureIds: [feature.id] })
-    }
+    // send shallow copy of feature to avoid changes
+    mapChannel.send_message('update_feature', { ...feature })
   }
 
   getFeature () {
-    const id = document.querySelector('#feature-details-modal').getAttribute('data-feature-id')
+    const id = this.featureIdValue
     return geojsonData.features.find(f => f.id === id)
   }
 }
