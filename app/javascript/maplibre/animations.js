@@ -1,6 +1,5 @@
-import { map, geojsonData } from 'maplibre/map'
+import { map, redrawGeojson } from 'maplibre/map'
 import * as functions from 'helpers/functions'
-import { draw } from 'maplibre/edit'
 
 // eslint expects variables to get imported, but we load the full lib in header
 const turf = window.turf
@@ -45,9 +44,7 @@ export class AnimatePointAnimation extends AnimationManager {
         start[1] + (end[1] - start[1]) * progress
       ]
       feature.geometry.coordinates = newCoordinates
-      map.getSource('geojson-source').setData(geojsonData)
-      if (draw) { draw.set(geojsonData) }
-
+      redrawGeojson()
       if (progress < 1) { this.animationId = requestAnimationFrame(animate) }
     }
     this.animationId = requestAnimationFrame(animate)

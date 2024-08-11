@@ -1,4 +1,4 @@
-import { map, geojsonData, initializeDefaultControls } from 'maplibre/map'
+import { map, geojsonData, redrawGeojson, initializeDefaultControls } from 'maplibre/map'
 import { editStyles, initializeEditStyles } from 'maplibre/edit_styles'
 import { highlightFeature } from 'maplibre/styles'
 import { mapChannel } from 'channels/map_channel'
@@ -31,6 +31,8 @@ export function initializeEditMode () {
       // uncombine_features
     },
     styles: editStyles,
+    clickBuffer: 10,
+    touchBuffer: 35, // default 25
     // user properties are available, prefixed with 'user_'
     userProperties: true,
     // MapboxDrawWaypoint disables dragging polygons + lines,
@@ -118,7 +120,7 @@ function handleUpdate (e) {
 
   // update local geojson-source (feature rendered via initializeEditStyles)
   // to avoid update/animation via hotwire callback
-  map.getSource('geojson-source').setData(geojsonData)
+  redrawGeojson()
   mapChannel.send_message('update_feature', feature)
   // trigger highlight, to update eg. coordinates
   highlightFeature(feature, true)

@@ -1,6 +1,6 @@
 import { Controller } from '@hotwired/stimulus'
 import { mapChannel } from 'channels/map_channel'
-import { map, geojsonData } from 'maplibre/map'
+import { geojsonData, redrawGeojson } from 'maplibre/map'
 import { handleDelete, draw } from 'maplibre/edit'
 import { status } from 'helpers/status'
 import { showFeatureDetails } from 'maplibre/modals'
@@ -60,7 +60,7 @@ export default class extends Controller {
     document.querySelector('#edit-feature .error').innerHTML = ''
     try {
       feature.properties = JSON.parse(document.querySelector('#feature-edit-raw textarea').value)
-      map.getSource('geojson-source').setData(geojsonData)
+      redrawGeojson()
       mapChannel.send_message('update_feature', feature)
     } catch (error) {
       console.error('Error updating feature:', error.message)
@@ -73,7 +73,7 @@ export default class extends Controller {
     const feature = this.getFeature()
     try {
       feature.properties.desc = turndownService.turndown(pellEditor.content.innerHTML)
-      map.getSource('geojson-source').setData(geojsonData)
+      redrawGeojson()
       mapChannel.send_message('update_feature', feature)
     } catch (error) {
       console.error('Error updating feature:', error.message)
@@ -85,7 +85,7 @@ export default class extends Controller {
     const feature = this.getFeature()
     const size = document.querySelector('#point-size').value
     feature.properties['marker-size'] = size
-    map.getSource('geojson-source').setData(geojsonData)
+    redrawGeojson()
     mapChannel.send_message('update_feature', feature)
     if (draw) {
       draw.changeMode('simple_select', { featureIds: [] })
