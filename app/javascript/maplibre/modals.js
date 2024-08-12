@@ -63,6 +63,9 @@ export function showFeatureDetails (feature) {
     document.querySelector('#feature-details-header').innerHTML =
       "<a href='" + imageUrl + "' target='_blank'>" +
       "<img id='feature-details-icon' src='" + feature.properties['marker-image-url'] + "'></a>"
+  } else if (feature.properties['marker-symbol']) {
+    document.querySelector('#feature-details-header').innerHTML =
+      "<img id='feature-details-icon' src='/emojis/noto/" + feature.properties['marker-symbol'] + ".png'>"
   }
   document.querySelector('#feature-details-header').innerHTML += featureTitle(feature)
   document.querySelector('#feature-details-meta').innerHTML = featureMeta(feature)
