@@ -45,9 +45,13 @@ export default class extends Controller {
     const feature = this.getFeature()
     document.querySelector('#feature-edit-ui').classList.remove('hidden')
     document.querySelector('#feature-edit-raw').classList.add('hidden')
+    // https://github.com/jaredreich/pell
     pellEditor ||= Pell.init({
       element: document.getElementById('pell-editor'),
-      onChange: html => console.log(html)
+      onChange: html => console.log(html),
+      actions: ['bold', 'italic', 'underline', 'strikethrough',
+        'heading1', 'heading2', 'paragraph', 'quote', 'olist', 'ulist',
+        'code', 'line', 'link']
     })
     pellEditor.content.innerHTML = marked(feature.properties.desc || '')
   }
