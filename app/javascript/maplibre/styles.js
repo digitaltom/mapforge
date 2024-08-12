@@ -1,5 +1,4 @@
 import { map, geojsonData } from 'maplibre/map'
-import { draw } from 'maplibre/edit'
 import * as f from 'helpers/functions'
 import { showFeatureDetails } from 'maplibre/modals'
 
@@ -40,7 +39,6 @@ export function highlightFeature (feature, sticky = false, source = 'geojson-sou
     showFeatureDetails(sourceFeature)
     // A feature's state is not part of the GeoJSON or vector tile data but can get used in styles
     map.setFeatureState({ source, id: feature.id }, { active: true })
-    if (draw) { draw.changeMode('simple_select', { featureIds: [feature.id] }) }
     // set url to feature
     if (sticky) {
       const newPath = `${window.location.pathname}?f=${feature.id}`

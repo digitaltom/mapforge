@@ -94,7 +94,7 @@ export default class extends Controller {
     draw.setFeatureProperty(this.featureIdValue, 'marker-size', size)
 
     redrawGeojson()
-    // send shallow copy of feature to avoid changes
+    // send shallow copy of feature to avoid changes during send
     mapChannel.send_message('update_feature', { ...feature })
   }
 

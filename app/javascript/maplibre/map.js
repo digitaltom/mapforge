@@ -1,5 +1,5 @@
 import { basemaps } from 'maplibre/basemaps'
-import { draw } from 'maplibre/edit'
+import { draw, selectedFeature } from 'maplibre/edit'
 import { resetControls, initSettingsModal } from 'maplibre/controls'
 import { initializeViewStyles, highlightFeature, resetHighlightedFeature } from 'maplibre/styles'
 import { AnimatePointAnimation } from 'maplibre/animations'
@@ -244,12 +244,11 @@ export function initializeViewMode () {
   })
 }
 
-export function redrawGeojson (feature = null) {
+export function redrawGeojson () {
   if (draw) {
-    // TODO: draw doesn't update view on property changes
-    // draw.deleteAll()
-    // draw.add(geojsonData)
     draw.set(geojsonData)
+    // force re-draw of selected feature
+    draw.changeMode('simple_select', { featureIds: [selectedFeature?.id] })
   }
   map.getSource('geojson-source')?.setData(geojsonData)
 }
@@ -281,7 +280,7 @@ function updateFeature (feature, updatedFeature) {
   feature.geometry = updatedFeature.geometry
   feature.properties = updatedFeature.properties
   status('Updated feature ' + updatedFeature.id)
-  redrawGeojson(feature)
+  redrawGeojson()
 }
 
 export function destroy (featureId) {

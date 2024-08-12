@@ -10,7 +10,7 @@ import * as MapboxDrawWaypoint from 'mapbox-gl-draw-waypoint'
 import PaintMode from 'mapbox-gl-draw-paint-mode'
 
 export let draw
-let selectedFeature
+export let selectedFeature
 
 MapboxDraw.constants.classes.CONTROL_BASE = 'maplibregl-ctrl'
 MapboxDraw.constants.classes.CONTROL_PREFIX = 'maplibregl-ctrl-'
@@ -59,6 +59,12 @@ export function initializeEditMode () {
     // draw has its own style layers based on editStyles
     if (geojsonData.features.length > 0) {
       draw.set(geojsonData)
+    }
+    const urlFeatureId = new URLSearchParams(window.location.search).get('f')
+    const feature = geojsonData.features.find(f => f.id === urlFeatureId)
+    if (feature) {
+      selectedFeature = feature
+      draw.changeMode('simple_select', { featureIds: [feature.id] })
     }
   })
 
@@ -123,6 +129,7 @@ function handleUpdate (e) {
 }
 
 export function handleDelete (e) {
+  selectedFeature = null
   const deletedFeature = e.features[0] // Assuming one feature is deleted at a time
 
   status('Feature ' + deletedFeature.id + ' deleted')
