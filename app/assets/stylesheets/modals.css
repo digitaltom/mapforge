@@ -33,3 +33,12 @@
   border-color: #000;
   opacity: 1;
 }
+
+.modal-pull-button {
+  width: 30px;
+  height: 6px;
+  margin: auto;
+  margin-bottom: 1em;
+  background-color: rgb(224 224 224);
+  border-radius: 3px;
+}

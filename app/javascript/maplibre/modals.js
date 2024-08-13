@@ -1,8 +1,15 @@
+import * as functions from 'helpers/functions'
 import { marked } from 'marked'
 
 // eslint expects variables to get imported, but we load the full lib in header
 const turf = window.turf
 window.marked = marked
+
+functions.e('.modal-pull-button', e => {
+  e.addEventListener('click', () => {
+    functions.e('.map-modal', e => { e.style.height = '100%' })
+  }, false)
+})
 
 function featureTitle (feature) {
   const title = feature?.properties?.title || feature?.properties?.user_title ||
