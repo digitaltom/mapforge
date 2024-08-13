@@ -54,6 +54,7 @@ export default class extends Controller {
         'code', 'line', 'link']
     })
     pellEditor.content.innerHTML = marked(feature.properties.desc || '')
+    document.querySelector('#point-size').value = feature.properties['marker-size'] || 6
   }
 
   show_feature_edit_raw () {
@@ -94,9 +95,8 @@ export default class extends Controller {
     const feature = this.getFeature()
     const size = document.querySelector('#point-size').value
     feature.properties['marker-size'] = size
-    // update draw layer
+    // draw layer feature properties aren't getting updated by draw.set()
     draw.setFeatureProperty(this.featureIdValue, 'marker-size', size)
-
     redrawGeojson()
     // send shallow copy of feature to avoid changes during send
     mapChannel.send_message('update_feature', { ...feature })
