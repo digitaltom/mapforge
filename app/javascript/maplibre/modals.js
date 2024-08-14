@@ -1,8 +1,18 @@
+import * as functions from 'helpers/functions'
 import { marked } from 'marked'
 
 // eslint expects variables to get imported, but we load the full lib in header
 const turf = window.turf
 window.marked = marked
+
+functions.e('.modal-pull-button', e => {
+  e.addEventListener('click', (event) => {
+    event.preventDefault()
+    const modal = e.closest('.map-modal')
+    modal.classList.toggle('modal-pull-down')
+    modal.classList.toggle('modal-pull-up')
+  }, false)
+})
 
 function featureTitle (feature) {
   const title = feature?.properties?.title || feature?.properties?.user_title ||
@@ -55,7 +65,7 @@ export function showFeatureDetails (feature) {
   const modal = document.querySelector('#feature-details-modal')
   modal.classList.remove('expanded')
   modal.classList.add('show')
-  modal.setAttribute('data-feature-id', feature.id)
+  modal.dataset.featureFeatureIdValue = feature.id
 
   document.querySelector('#feature-details-header').innerHTML = ''
   if (feature.properties['marker-image-url']) {
@@ -63,6 +73,9 @@ export function showFeatureDetails (feature) {
     document.querySelector('#feature-details-header').innerHTML =
       "<a href='" + imageUrl + "' target='_blank'>" +
       "<img id='feature-details-icon' src='" + feature.properties['marker-image-url'] + "'></a>"
+  } else if (feature.properties['marker-symbol']) {
+    document.querySelector('#feature-details-header').innerHTML =
+      "<img id='feature-details-icon' src='/emojis/noto/" + feature.properties['marker-symbol'] + ".png'>"
   }
   document.querySelector('#feature-details-header').innerHTML += featureTitle(feature)
   document.querySelector('#feature-details-meta').innerHTML = featureMeta(feature)

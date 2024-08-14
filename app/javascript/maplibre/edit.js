@@ -10,8 +10,7 @@ import * as MapboxDrawWaypoint from 'mapbox-gl-draw-waypoint'
 import PaintMode from 'mapbox-gl-draw-paint-mode'
 
 export let draw
-let selectedFeature
-export let editPopup
+export let selectedFeature
 
 MapboxDraw.constants.classes.CONTROL_BASE = 'maplibregl-ctrl'
 MapboxDraw.constants.classes.CONTROL_PREFIX = 'maplibregl-ctrl-'
@@ -32,6 +31,8 @@ export function initializeEditMode () {
       // uncombine_features
     },
     styles: editStyles,
+    clickBuffer: 10,
+    touchBuffer: 35, // default 25
     // user properties are available, prefixed with 'user_'
     userProperties: true,
     // MapboxDrawWaypoint disables dragging polygons + lines,
@@ -58,6 +59,12 @@ export function initializeEditMode () {
     // draw has its own style layers based on editStyles
     if (geojsonData.features.length > 0) {
       draw.set(geojsonData)
+    }
+    const urlFeatureId = new URLSearchParams(window.location.search).get('f')
+    const feature = geojsonData.features.find(f => f.id === urlFeatureId)
+    if (feature) {
+      selectedFeature = feature
+      draw.changeMode('simple_select', { featureIds: [feature.id] })
     }
   })
 
@@ -111,23 +118,20 @@ function handleCreate (e) {
 }
 
 function handleUpdate (e) {
-  const feature = e.features[0] // Assuming one feature is created at a time
+  const feature = e.features[0] // Assuming one feature is updated at a time
 
   status('Feature ' + feature.id + ' changed')
   const geojsonFeature = geojsonData.features.find(f => f.id === feature.id)
   geojsonFeature.geometry = feature.geometry
-
-  if (editPopup) { editPopup.remove() }
-  // update local geojson-source (feature rendered via initializeEditStyles)
-  // to avoid update/animation via hotwire callback
-  map.getSource('geojson-source').setData(geojsonData)
   mapChannel.send_message('update_feature', feature)
+  // trigger highlight, to update eg. coordinates
+  highlightFeature(feature, true)
 }
 
 export function handleDelete (e) {
+  selectedFeature = null
   const deletedFeature = e.features[0] // Assuming one feature is deleted at a time
 
-  if (editPopup) { editPopup.remove() }
   status('Feature ' + deletedFeature.id + ' deleted')
   mapChannel.send_message('delete_feature', deletedFeature)
 }

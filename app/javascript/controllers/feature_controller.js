@@ -1,11 +1,22 @@
 import { Controller } from '@hotwired/stimulus'
 import { mapChannel } from 'channels/map_channel'
-import { map, geojsonData } from 'maplibre/map'
-import { handleDelete } from 'maplibre/edit'
+import { geojsonData, redrawGeojson } from 'maplibre/map'
+import { handleDelete, draw } from 'maplibre/edit'
 import { status } from 'helpers/status'
 import { showFeatureDetails } from 'maplibre/modals'
+import Pell from 'pell'
+import Turndown from 'turndown'
+import { marked } from 'marked'
+
+let pellEditor
+const turndownService = new Turndown({ headingStyle: 'atx' })
 
 export default class extends Controller {
+  // https://stimulus.hotwired.dev/reference/values
+  static values = {
+    featureId: String
+  }
+
   delete_feature () {
     const feature = this.getFeature()
     if (confirm('Really delete this element?')) {
@@ -31,8 +42,19 @@ export default class extends Controller {
   }
 
   show_feature_edit_ui () {
+    const feature = this.getFeature()
     document.querySelector('#feature-edit-ui').classList.remove('hidden')
     document.querySelector('#feature-edit-raw').classList.add('hidden')
+    // https://github.com/jaredreich/pell
+    pellEditor ||= Pell.init({
+      element: document.getElementById('pell-editor'),
+      onChange: html => console.log(html),
+      actions: ['bold', 'italic', 'underline', 'strikethrough',
+        'heading1', 'heading2', 'paragraph', 'quote', 'olist', 'ulist',
+        'code', 'line', 'link']
+    })
+    pellEditor.content.innerHTML = marked(feature.properties.desc || '')
+    document.querySelector('#point-size').value = feature.properties['marker-size'] || 6
   }
 
   show_feature_edit_raw () {
@@ -43,12 +65,12 @@ export default class extends Controller {
       .value = JSON.stringify(feature.properties, undefined, 2)
   }
 
-  update_feature () {
+  update_feature_raw () {
     const feature = this.getFeature()
     document.querySelector('#edit-feature .error').innerHTML = ''
     try {
       feature.properties = JSON.parse(document.querySelector('#feature-edit-raw textarea').value)
-      map.getSource('geojson-source').setData(geojsonData)
+      redrawGeojson()
       mapChannel.send_message('update_feature', feature)
     } catch (error) {
       console.error('Error updating feature:', error.message)
@@ -57,8 +79,31 @@ export default class extends Controller {
     }
   }
 
+  update_feature_ui () {
+    const feature = this.getFeature()
+    try {
+      feature.properties.desc = turndownService.turndown(pellEditor.content.innerHTML)
+      redrawGeojson()
+      mapChannel.send_message('update_feature', feature)
+    } catch (error) {
+      console.error('Error updating feature:', error.message)
+      status('Error updating feature', 'error')
+    }
+  }
+
+  updatePointSize () {
+    const feature = this.getFeature()
+    const size = document.querySelector('#point-size').value
+    feature.properties['marker-size'] = size
+    // draw layer feature properties aren't getting updated by draw.set()
+    draw.setFeatureProperty(this.featureIdValue, 'marker-size', size)
+    redrawGeojson()
+    // send shallow copy of feature to avoid changes during send
+    mapChannel.send_message('update_feature', { ...feature })
+  }
+
   getFeature () {
-    const id = document.querySelector('#feature-details-modal').getAttribute('data-feature-id')
+    const id = this.featureIdValue
     return geojsonData.features.find(f => f.id === id)
   }
 }

@@ -1,6 +1,6 @@
 import { mapProperties, geojsonData } from 'maplibre/map'
 import * as functions from 'helpers/functions'
-import { editPopup, draw } from 'maplibre/edit'
+import { draw } from 'maplibre/edit'
 import { resetHighlightedFeature } from 'maplibre/styles'
 
 export class ControlGroup {
@@ -169,8 +169,6 @@ export function resetControls () {
   functions.e('.map-modal', e => { e.classList.remove('show') })
   // collapse menu
   functions.e('#burger-menu-toggle', e => { e.checked = false })
-  // reset edit buttons
-  if (editPopup) { editPopup.remove() }
 }
 
 function resetEditControls () {

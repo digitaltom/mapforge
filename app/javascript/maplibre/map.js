@@ -1,5 +1,5 @@
 import { basemaps } from 'maplibre/basemaps'
-import { draw } from 'maplibre/edit'
+import { draw, selectedFeature } from 'maplibre/edit'
 import { resetControls, initSettingsModal } from 'maplibre/controls'
 import { initializeViewStyles, highlightFeature, resetHighlightedFeature } from 'maplibre/styles'
 import { AnimatePointAnimation } from 'maplibre/animations'
@@ -97,7 +97,6 @@ export function initializeMap (divId = 'maplibre-map') {
       highlightFeature(feature, true)
       const centroid = turf.center(feature)
       map.setCenter(centroid.geometry.coordinates)
-      if (draw) { draw.changeMode('simple_select', { featureIds: [urlFeatureId] }) }
     }
   })
 
@@ -138,8 +137,8 @@ export function loadGeoJsonData () {
 
   if (geojsonData) {
     // data is already loaded
-    map.getSource('geojson-source').setData(geojsonData)
-    map.fire('geojson.load', { detail: { message: 'geojson-source cached' } })
+    redrawGeojson()
+    map.fire('geojson.load', { detail: { message: 'redraw cached geojson-source' } })
     return
   }
 
@@ -162,7 +161,7 @@ export function loadGeoJsonData () {
         // because to highlight a feature we need the id,
         // and in the style layers it only accepts mumeric ids in the id field initially
         geojsonData.features.forEach(feature => { feature.properties.id = feature.id })
-        map.getSource('geojson-source').setData(geojsonData)
+        redrawGeojson()
         // drop the properties.id after sending to the map
         geojsonData.features.forEach(feature => { delete feature.properties.id })
       }
@@ -245,34 +244,49 @@ export function initializeViewMode () {
   })
 }
 
-export function upsert (updatedFeature) {
-  const feature = geojsonData.features.find(feature => feature.id === updatedFeature.id)
-  if (!feature) {
-    updatedFeature.properties.id = updatedFeature.id
-    geojsonData.features.push(updatedFeature)
-    status('Added feature ' + updatedFeature.id)
-  } else {
-    if (feature.geometry.type === 'Point') {
-      const newCoords = updatedFeature.geometry.coordinates
-      if (!functions.arraysEqual(feature.geometry.coordinates, newCoords)) {
-        const animation = new AnimatePointAnimation()
-        animation.animatePoint(feature, newCoords)
-      }
-    } else {
-      feature.geometry = updatedFeature.geometry
-    }
-    feature.properties = updatedFeature.properties
-    status('Updated feature ' + updatedFeature.id)
+export function redrawGeojson () {
+  if (draw) {
+    draw.set(geojsonData)
+    // force re-draw of selected feature
+    draw.changeMode('simple_select', { featureIds: [selectedFeature?.id] })
   }
-  if (draw) { draw.set(geojsonData) }
   map.getSource('geojson-source')?.setData(geojsonData)
+}
+
+export function upsert (updatedFeature) {
+  const feature = geojsonData.features.find(f => f.id === updatedFeature.id)
+  if (!feature) {
+    addFeature(updatedFeature)
+  } else if (JSON.stringify(updatedFeature) !== JSON.stringify(feature)) {
+    updateFeature(feature, updatedFeature)
+  }
+}
+
+function addFeature (feature) {
+  feature.properties.id = feature.id
+  geojsonData.features.push(feature)
+  status('Added feature ' + feature.id)
+  redrawGeojson()
+}
+
+function updateFeature (feature, updatedFeature) {
+  if (feature.geometry.type === 'Point') {
+    const newCoords = updatedFeature.geometry.coordinates
+    if (!functions.arraysEqual(feature.geometry.coordinates, newCoords)) {
+      const animation = new AnimatePointAnimation()
+      animation.animatePoint(feature, newCoords)
+    }
+  }
+  feature.geometry = updatedFeature.geometry
+  feature.properties = updatedFeature.properties
+  status('Updated feature ' + updatedFeature.id)
+  redrawGeojson()
 }
 
 export function destroy (featureId) {
   status('Deleting feature ' + featureId)
-  geojsonData.features = geojsonData.features.filter(feature => feature.id !== featureId)
-  if (draw) { draw.set(geojsonData) }
-  map.getSource('geojson-source').setData(geojsonData)
+  geojsonData.features = geojsonData.features.filter(f => f.id !== featureId)
+  redrawGeojson()
   resetHighlightedFeature()
 }
 
