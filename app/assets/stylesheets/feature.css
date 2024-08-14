@@ -13,11 +13,6 @@
     visibility 0.3s linear;
 }
 
-#feature-details-modal.expanded {
-  min-height: 300px;
-  max-height: 95%;
-}
-
 #feature-details-icon {
   height: 2.5em;
   margin: 0.3em;
@@ -40,6 +35,7 @@
 #edit-buttons {
   position: absolute;
   right: 10px;
+  top: 20px;
 }
 
 .edit-button {

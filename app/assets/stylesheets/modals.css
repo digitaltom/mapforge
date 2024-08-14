@@ -35,10 +35,23 @@
 }
 
 .modal-pull-button {
-  width: 30px;
-  height: 6px;
+  display: block;
+  width: 35px;
+  height: 8px;
   margin: auto;
   margin-bottom: 1em;
   background-color: rgb(224 224 224);
   border-radius: 3px;
+}
+
+.modal-pull-button:hover {
+  background-color: rgb(124 124 124);
+}
+
+.modal-pull-up {
+  height: 100%;
+}
+
+.modal-pull-down {
+  height: 25%;
 }
