@@ -1,18 +1,8 @@
-import * as functions from 'helpers/functions'
 import { marked } from 'marked'
 
 // eslint expects variables to get imported, but we load the full lib in header
 const turf = window.turf
 window.marked = marked
-
-functions.e('.modal-pull-button', e => {
-  e.addEventListener('click', (event) => {
-    event.preventDefault()
-    const modal = e.closest('.map-modal')
-    modal.classList.toggle('modal-pull-down')
-    modal.classList.toggle('modal-pull-up')
-  }, false)
-})
 
 function featureTitle (feature) {
   const title = feature?.properties?.title || feature?.properties?.user_title ||
@@ -24,35 +14,35 @@ function featureTitle (feature) {
 }
 
 function featureMeta (feature) {
-  let meta = feature.id
+  let meta
   if (feature.geometry.type === 'Point') {
-    meta += '<br>' + parseFloat(feature.geometry.coordinates[0]).toFixed(6) +
-      ', ' + parseFloat(feature.geometry.coordinates[1]).toFixed(6)
+    meta = parseFloat(feature.geometry.coordinates[0]).toFixed(5) +
+      ', ' + parseFloat(feature.geometry.coordinates[1]).toFixed(5)
   } else if (feature.geometry.type === 'LineString') {
     const turfLineString = turf.lineString(feature.geometry.coordinates)
     const length = turf.length(turfLineString)
     if (length <= 2) {
-      meta += '<br>' + Math.round(length * 1000) + ' m'
+      meta = Math.round(length * 1000) + ' m'
     } else {
       // 2 decimals
-      meta += '<br>' + Math.round(length * 100) / 100 + ' km'
+      meta = Math.round(length * 100) / 100 + ' km'
     }
   } else if (feature.geometry.type === 'MultiLineString') {
     const turfLineString = turf.multiLineString(feature.geometry.coordinates)
     const length = turf.length(turfLineString)
     if (length <= 2) {
-      meta += '<br>' + Math.round(length * 1000) + ' m'
+      meta = Math.round(length * 1000) + ' m'
     } else {
       // 2 decimals
-      meta += '<br>' + Math.round(length * 100) / 100 + ' km'
+      meta = Math.round(length * 100) / 100 + ' km'
     }
   } else if (feature.geometry.type === 'Polygon') {
     const turfPolygon = turf.polygon(feature.geometry.coordinates)
     const area = turf.area(turfPolygon)
     if (area < 1000000) {
-      meta += '<br>' + (area / 100).toFixed(2) + ' m²'
+      meta = (area / 100).toFixed(2) + ' m²'
     } else {
-      meta += '<br>' + (area / 1000000).toFixed(2) + ' km²'
+      meta = (area / 1000000).toFixed(2) + ' km²'
     }
   }
   return meta

@@ -102,6 +102,12 @@ export default class extends Controller {
     mapChannel.send_message('update_feature', { ...feature })
   }
 
+  toggleModalSize (e) {
+    const modal = e.target.closest('.map-modal')
+    modal.classList.toggle('modal-pull-down')
+    modal.classList.toggle('modal-pull-up')
+  }
+
   getFeature () {
     const id = this.featureIdValue
     return geojsonData.features.find(f => f.id === id)
