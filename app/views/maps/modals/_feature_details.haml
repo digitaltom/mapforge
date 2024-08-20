@@ -1,5 +1,5 @@
 #feature-details-modal.map-modal.modal-pull-down.fade{'data-controller': "feature"}
-  %a.modal-pull-button{href: '#'}
+  %a.modal-pull-button{ 'data-action': "click->feature#toggleModalSize"}
   = render 'edit_buttons'
   #feature-details-meta
   %h4#feature-details-header
