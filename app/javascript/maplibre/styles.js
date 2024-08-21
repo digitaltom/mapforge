@@ -10,6 +10,7 @@ export const viewStyleNames = [
   'line-layer-outline',
   'line-layer',
   'line-layer-hit',
+  'points-border-layer',
   'points-layer',
   'points-hit-layer',
   'symbols-layer',
@@ -258,6 +259,31 @@ export const styles = {
       'line-opacity': 0
     }
   },
+  'points-border-layer': {
+    id: 'points-border-layer',
+    type: 'circle',
+    source: 'geojson-source',
+    filter: ['all',
+      ['==', '$type', 'Point'],
+      ['!=', 'active', 'true'],
+      ['!=', 'meta', 'midpoint'],
+      ['!=', 'meta', 'vertex']
+    ],
+    paint: {
+      'circle-pitch-scale': 'map', // points get bigger when camera is closer
+      'circle-radius': pointSize,
+      'circle-opacity': 0,
+      'circle-stroke-color': pointOutlineColor,
+      'circle-blur': 0.1,
+      'circle-stroke-width': [
+        'case',
+        ['boolean', ['feature-state', 'active'], false],
+        pointOutlineSizeActive,
+        pointOutlineSize
+      ],
+      'circle-stroke-opacity': pointOpacity + 0.2
+    }
+  },
   'points-layer': {
     id: 'points-layer',
     type: 'circle',
@@ -282,15 +308,7 @@ export const styles = {
           pointOpacityActive,
           pointOpacity
         ]],
-      'circle-blur': 0.1,
-      'circle-stroke-color': pointOutlineColor,
-      'circle-stroke-width': [
-        'case',
-        ['boolean', ['feature-state', 'active'], false],
-        pointOutlineSizeActive,
-        pointOutlineSize
-      ],
-      'circle-stroke-opacity': pointOpacity + 0.2
+      'circle-blur': 0.1
     }
   },
   'points-hit-layer': {
@@ -322,7 +340,7 @@ export const styles = {
           ['concat', '/emojis/noto/', ['get', 'marker-symbol'], '.png'],
           '']
       ],
-      'icon-size': iconSize, // cannot scale on hover because it's not a paint property
+      'icon-size': iconSize, // cannot scale on hover/zoom because it's not a paint property
       'icon-overlap': 'always', // https://maplibre.org/maplibre-style-spec/layers/#icon-overlap
       'icon-ignore-placement': true // other symbols can be visible even if they collide with the icon
     },

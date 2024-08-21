@@ -100,6 +100,7 @@ export const editStyles = [
     }
   },
   // inactive single point features
+  removeSource(styles['points-border-layer']),
   removeSource(styles['points-layer']),
 
   // inactive vertex points on lines + polygons, outline

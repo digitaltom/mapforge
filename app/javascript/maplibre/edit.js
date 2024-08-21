@@ -31,8 +31,8 @@ export function initializeEditMode () {
       // uncombine_features
     },
     styles: editStyles,
-    clickBuffer: 10,
-    touchBuffer: 35, // default 25
+    clickBuffer: 5,
+    touchBuffer: 25, // default 25
     // user properties are available, prefixed with 'user_'
     userProperties: true,
     // MapboxDrawWaypoint disables dragging polygons + lines,
