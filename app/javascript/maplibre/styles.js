@@ -120,12 +120,24 @@ const pointColor = ['coalesce', ['get', 'user_marker-color'], ['get', 'marker-co
   ['case',
     ['any', ['has', 'user_marker-symbol'], ['has', 'marker-symbol']],
     'white', featureColor]]
-export const pointSize = ['to-number', ['coalesce',
+const pointSizeMin = ['to-number', ['coalesce',
+  ['get', 'user_marker-size'], ['get', 'marker-size'],
+  ['case',
+    ['any', ['has', 'user_marker-symbol'], ['has', 'marker-symbol']],
+    6, 2]]]
+export const pointSizeMax = ['to-number', ['coalesce',
   ['get', 'user_marker-size'], ['get', 'marker-size'],
   ['case',
     ['any', ['has', 'user_marker-symbol'], ['has', 'marker-symbol']],
     16, 6]]]
-export const pointSizeActive = ['+', 1, pointSize]
+export const pointSize = [
+  'interpolate',
+  ['linear'],
+  ['zoom'],
+  8, pointSizeMin, // At zoom level 8, the point size is min
+  13, pointSizeMax // At zoom level 13, the point size is max
+]
+
 export const pointOutlineSize = ['to-number', ['coalesce', ['get', 'user_stroke-width'], ['get', 'stroke-width'], 2]]
 export const pointOutlineSizeActive = ['+', 1, pointOutlineSize]
 const pointOutlineColor = ['coalesce', ['get', 'user_stroke'], ['get', 'stroke'], featureOutlineColor]
@@ -134,8 +146,8 @@ const pointOpacityActive = 0.9
 
 // factor of the original icon size (72x72)
 // in case of icon url, we don't know the size
-// default: 1/6 = 12px (2 * default radius pointSize)
-const iconSizeFactor = ['/', pointSize, 6]
+// default: 1/6 = 12px (2 * default radius pointSizeMax)
+const iconSizeFactor = ['/', pointSizeMax, 6]
 const iconSize = ['*', 1 / 8, iconSizeFactor]
 // const iconSizeActive = ['*', 1.1, iconSize] // icon-size is not a paint property
 const labelSize = ['to-number', ['coalesce', ['get', 'user_label-size'], ['get', 'label-size'], 16]]
@@ -258,11 +270,7 @@ export const styles = {
     ],
     paint: {
       'circle-pitch-scale': 'map', // points get bigger when camera is closer
-      'circle-radius': ['case',
-        ['boolean', ['feature-state', 'active'], false],
-        pointSizeActive,
-        pointSize
-      ],
+      'circle-radius': pointSize,
       'circle-color': pointColor,
       'circle-opacity': [
         'match',
@@ -294,7 +302,7 @@ export const styles = {
       ['!=', 'active', 'true']
     ],
     paint: {
-      'circle-radius': ['+', 5, pointSize],
+      'circle-radius': ['+', 5, pointSizeMax],
       'circle-opacity': 0
     }
   },

@@ -1,4 +1,4 @@
-import { styles, loadImage, pointSize, pointSizeActive, pointOutlineSize, pointOutlineSizeActive } from 'maplibre/styles'
+import { styles, loadImage, pointSize, pointOutlineSize, pointOutlineSizeActive } from 'maplibre/styles'
 import { map } from 'maplibre/map'
 import * as f from 'helpers/functions'
 
@@ -74,7 +74,7 @@ export const editStyles = [
       ['==', '$type', 'Point'],
       ['==', 'meta', 'midpoint']],
     paint: {
-      'circle-radius': ['-', pointSize, 1],
+      'circle-radius': pointSize,
       'circle-color': 'grey',
       'circle-opacity': 0.8,
       'circle-stroke-color': '#fff',
@@ -144,7 +144,7 @@ export const editStyles = [
       ['!=', 'meta', 'midpoint']
     ],
     paint: {
-      'circle-radius': pointSizeActive,
+      'circle-radius': pointSize,
       'circle-color': highlightColor,
       'circle-opacity': 0.8,
       'circle-stroke-color': '#222',
