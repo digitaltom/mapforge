@@ -8,10 +8,12 @@
   width: calc(100% - 3em); /* make sure left controls stay visible */
   max-width: 35em;
   margin: 0.5em 0.5em 0.5em 3em;
-  background: white;
+  border-radius: 10px;
+  background-color: hsl(0deg 0% 100% / 80%);
+  backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
   z-index: 1000;
   padding: 0.5em;
-  border-radius: 3px;
   border: 1px solid #ccc;
   box-shadow: 0 0 6px 2px rgb(0 0 0 / 8%);
 }
