@@ -135,8 +135,18 @@ export const pointSize = [
   'interpolate',
   ['linear'],
   ['zoom'],
-  8, pointSizeMin, // At zoom level 8, the point size is min
-  13, pointSizeMax // At zoom level 13, the point size is max
+  8, [
+    'case',
+    ['boolean', ['feature-state', 'active'], false],
+    ['+', 1, pointSizeMin],
+    pointSizeMin
+  ], // At zoom level 8, the point size is min
+  13, [
+    'case',
+    ['boolean', ['feature-state', 'active'], false],
+    ['+', 1, pointSizeMax],
+    pointSizeMax
+  ] // At zoom level 13, the point size is max
 ]
 
 export const pointOutlineSize = ['to-number', ['coalesce', ['get', 'user_stroke-width'], ['get', 'stroke-width'], 2]]
