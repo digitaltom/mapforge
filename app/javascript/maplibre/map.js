@@ -212,7 +212,7 @@ export function initializeDefaultControls () {
     positionOptions: {
       enableHighAccuracy: true
     },
-    trackUserLocation: true
+    trackUserLocation: functions.isMobileDevice()
   })
   geolocate.on('error', () => {
     status('Error detecting location', 'warning')
