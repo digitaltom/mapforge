@@ -2,9 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
-## 2024-09
+## 2024-08
 
 * Direct link to map features
+* Make feature details modal expandable
+* First version of UI editor for description and point size
 
 
 ## 2024-07
