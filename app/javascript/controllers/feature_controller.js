@@ -55,6 +55,7 @@ export default class extends Controller {
     })
     pellEditor.content.innerHTML = marked(feature.properties.desc || '')
     document.querySelector('#point-size').value = feature.properties['marker-size'] || 6
+    document.querySelector('#line-width').value = feature.properties['stroke-width'] || 2
   }
 
   show_feature_edit_raw () {
@@ -97,6 +98,17 @@ export default class extends Controller {
     feature.properties['marker-size'] = size
     // draw layer feature properties aren't getting updated by draw.set()
     draw.setFeatureProperty(this.featureIdValue, 'marker-size', size)
+    redrawGeojson()
+    // send shallow copy of feature to avoid changes during send
+    mapChannel.send_message('update_feature', { ...feature })
+  }
+
+  updateLineWidth () {
+    const feature = this.getFeature()
+    const size = document.querySelector('#line-width').value
+    feature.properties['stroke-width'] = size
+    // draw layer feature properties aren't getting updated by draw.set()
+    draw.setFeatureProperty(this.featureIdValue, 'stroke-width', size)
     redrawGeojson()
     // send shallow copy of feature to avoid changes during send
     mapChannel.send_message('update_feature', { ...feature })

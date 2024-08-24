@@ -32,16 +32,17 @@ let backgroundTerrain
 export function initializeMaplibreProperties () {
   const lastProperties = JSON.parse(JSON.stringify(mapProperties || {}))
   mapProperties = window.gon.map_properties
-  // console.log('last properties: ' + JSON.stringify(lastProperties))
-  console.log('init with map properties: ' + JSON.stringify(mapProperties))
-  if (mapProperties.name) { document.title = 'mapforge.org - ' + mapProperties.name }
-  functions.e('#map-title', e => { e.textContent = mapProperties.name })
-  initSettingsModal()
-  status('Map properties updated')
-  if (Object.keys(lastProperties).length === 0 || !mapProperties) { return }
-  // animate to new view if map had no interaction yet
-  if (!mapInteracted && JSON.stringify(lastProperties) !== JSON.stringify(mapProperties)) {
-    setViewFromProperties()
+  if (JSON.stringify(lastProperties) !== JSON.stringify(mapProperties)) {
+    console.log('init with map properties: ' + JSON.stringify(mapProperties))
+    if (mapProperties.name) { document.title = 'mapforge.org - ' + mapProperties.name }
+    functions.e('#map-title', e => { e.textContent = mapProperties.name })
+    initSettingsModal()
+    status('Map properties updated')
+    if (Object.keys(lastProperties).length === 0 || !mapProperties) { return }
+    // animate to new view if map had no interaction yet
+    if (!mapInteracted && JSON.stringify(lastProperties) !== JSON.stringify(mapProperties)) {
+      setViewFromProperties()
+    }
   }
 }
 
