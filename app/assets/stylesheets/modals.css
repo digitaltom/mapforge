@@ -6,7 +6,7 @@
   transform: translate(-50%);
   width: calc(100% - 1em);
   max-width: 35em;
-  margin: 1em;
+  margin: 0.5em 1em 1.5em;
   border-radius: 10px;
   background-color: hsl(0deg 0% 100% / 80%);
   backdrop-filter: blur(3px);

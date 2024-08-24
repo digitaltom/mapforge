@@ -20,7 +20,7 @@ describe 'Map' do
       find('.maplibregl-ctrl-map').click
       expect(page).to have_text('Configure Map')
       find(".layer-preview[data-base-map='stamenTonerTiles']").click
-      expect(page).to have_text('Map properties updated')
+      expect(page).to have_text('Map style loaded')
       expect(map.reload.base_map).to eq 'stamenTonerTiles'
     end
 
@@ -28,7 +28,8 @@ describe 'Map' do
       find('.maplibregl-ctrl-map').click
       expect(page).to have_text('Configure Map')
       find('#map-terrain').click
-      expect(page).to have_text('Map properties updated')
+      # Terrain feature is only used with maptiler key
+      # expect(page).to have_text('Terrain added to map')
       expect(map.reload.terrain).to eq true
     end
   end

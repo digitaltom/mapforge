@@ -71,6 +71,8 @@ export default class extends Controller {
     console.log('defaultCenterValueChanged(): "' + value + '"')
     if (value.length !== 0) {
       value = value.map(coord => parseFloat(coord.toFixed(4)))
+    } else {
+      value = 'auto'
     }
     document.querySelector('#map-center').innerHTML = value
   }
