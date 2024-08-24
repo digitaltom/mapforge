@@ -1,5 +1,6 @@
 import { Controller } from '@hotwired/stimulus'
 import { mapChannel } from 'channels/map_channel'
+import { resetControls } from 'maplibre/controls'
 import * as functions from 'helpers/functions'
 import { map, mapProperties, setBackgroundMapLayer } from 'maplibre/map'
 
@@ -121,5 +122,9 @@ export default class extends Controller {
     mapProperties.pitch = pitch
     mapProperties.bearing = bearing
     mapChannel.send_message('update_map', { center, zoom, pitch, bearing })
+  }
+
+  close () {
+    resetControls()
   }
 }

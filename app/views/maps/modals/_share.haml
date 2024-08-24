@@ -1,5 +1,7 @@
-#share-modal.map-modal.fade
-  %h2 Share Map
+#share-modal.map-modal.fade{'data-controller': "layers"}
+  %h2
+    %i.bi.bi-arrow-left-square.link{ data: { action: "click->layers#close" } }
+    Share Map
 
   %ul
     %li= link_to 'Viewer link', map_path(id: @map.public_id)

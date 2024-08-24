@@ -1,5 +1,7 @@
 #layers-modal.map-modal.fade{'data-controller': "layers"}
-  %h2 Layers
+  %h2
+    %i.bi.bi-arrow-left-square.link{ data: { action: "click->layers#close" } }
+    Layers
 
   #default-layer
     %h4.layer-name Default Layer

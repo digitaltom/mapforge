@@ -1,18 +1,17 @@
 .map-modal {
   position: absolute;
   overflow-y: auto;
-  max-height: calc(100vh - 4em);
-  top: 0;
-  left: 45%;
+  max-height: calc(100vh - 2em);
+  left: calc(50% - 1em);
   transform: translate(-50%);
-  width: calc(100% - 3em); /* make sure left controls stay visible */
+  width: calc(100% - 1em);
   max-width: 35em;
-  margin: 0.5em 0.5em 0.5em 3em;
+  margin: 1em;
   border-radius: 10px;
   background-color: hsl(0deg 0% 100% / 80%);
   backdrop-filter: blur(3px);
   z-index: 1000;
-  padding: 0.5em;
+  padding: 1.5em;
   border: 1px solid #ccc;
   box-shadow: 0 0 6px 2px rgb(0 0 0 / 8%);
 }

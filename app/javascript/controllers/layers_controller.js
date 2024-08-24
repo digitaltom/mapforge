@@ -83,4 +83,8 @@ export default class extends Controller {
       essential: true
     })
   }
+
+  close () {
+    resetControls()
+  }
 }
