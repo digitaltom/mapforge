@@ -123,7 +123,7 @@ export class MapLayersControl {
 // initialize settings modal with default map values from mapProperties
 export function initSettingsModal () {
   functions.e('#settings-modal', e => {
-    e.dataset.settingsMapNameValue = mapProperties.name
+    if (mapProperties.name) { e.dataset.settingsMapNameValue = mapProperties.name }
     e.dataset.settingsBaseMapValue = mapProperties.base_map
     e.dataset.settingsMapTerrainValue = mapProperties.terrain
     e.dataset.settingsDefaultPitchValue = Math.round(mapProperties.pitch)
