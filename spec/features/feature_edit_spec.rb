@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'Map' do
+describe 'Feature edit' do
   let(:map) { create(:map) }
 
   before do
