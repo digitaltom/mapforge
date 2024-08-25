@@ -1,14 +1,14 @@
 .map-modal {
   position: absolute;
   overflow-y: auto;
-  max-height: calc(100vh - 2em);
+  max-height: calc(100% - 2em);
   left: calc(50% - 1em);
   transform: translate(-50%);
   width: calc(100% - 1em);
   max-width: 35em;
   margin: 0.5em 1em 1.5em;
   border-radius: 10px;
-  background-color: hsl(0deg 0% 100% / 80%);
+  background-color: hsl(0deg 0% 100% / 85%);
   backdrop-filter: blur(3px);
   z-index: 1000;
   padding: 1.5em;
@@ -36,11 +36,11 @@
 
 .modal-pull-button {
   display: block;
-  width: 35px;
-  height: 8px;
+  width: 45px;
+  height: 10px;
   margin: auto;
   margin-bottom: 1em;
-  background-color: rgb(224 224 224);
+  background-color: rgb(200 200 200);
   border-radius: 3px;
 }
 

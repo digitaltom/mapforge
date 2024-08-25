@@ -80,7 +80,7 @@ export default class extends Controller {
     }
   }
 
-  update_feature_ui () {
+  updateDesc () {
     const feature = this.getFeature()
     try {
       feature.properties.desc = turndownService.turndown(pellEditor.content.innerHTML)

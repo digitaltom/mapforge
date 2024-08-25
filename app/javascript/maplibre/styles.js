@@ -31,6 +31,7 @@ export function resetHighlightedFeature (source = 'geojson-source') {
 }
 
 export function highlightFeature (feature, sticky = false, source = 'geojson-source') {
+  if (highlightedFeatureId === feature.id) { return false }
   resetHighlightedFeature()
   if (feature.id) {
     stickyFeatureHighlight = sticky
