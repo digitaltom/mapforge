@@ -16,10 +16,25 @@
 
 /* General styles used throughout the whole app */
 
+:root {
+  --text-color: #000;
+  --hover-color: #2091b0;
+}
+
 html,
 body {
   font-family: system-ui, sans-serif;
   font-weight: 300;
+  color: var(--text-color);
+}
+
+a, .link {
+  color: var(--text-color);
+  cursor: pointer;
+}
+
+a:hover, .link:hover {
+  color: var(--hover-color);
 }
 
 .flex-container {
@@ -34,14 +49,6 @@ body {
 
 .flex-no-wrap {
   flex-wrap: nowrap;
-}
-
-.banner-overlay a {
-  color: #404040;
-}
-
-.banner-overlay a:hover {
-  color: #606060;
 }
 
 .hidden {
@@ -62,8 +69,3 @@ body {
   visibility: visible;
   opacity: 1;
 }
-
-.link {
-  cursor: pointer;
-}
-

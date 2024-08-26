@@ -25,17 +25,22 @@ export default class extends Controller {
   }
 
   toggle_edit_feature (event) {
+    document.querySelector('#edit-button-edit').classList.remove('active')
+    document.querySelector('#edit-button-raw').classList.remove('active')
     if (document.querySelector('#feature-edit-raw').classList.contains('hidden') && event.currentTarget.dataset.raw) {
       console.log('show_feature_edit_raw')
-      document.querySelector('#feature-details-modal').classList.add('expanded')
+      document.querySelector('#edit-button-raw').classList.add('active')
+      document.querySelector('#feature-details-modal').classList.add('modal-pull-up')
       document.querySelector('#feature-details-body').classList.add('hidden')
       this.show_feature_edit_raw()
     } else if (document.querySelector('#feature-edit-ui').classList.contains('hidden') && event.currentTarget.dataset.ui) {
       console.log('show_feature_edit_ui')
-      document.querySelector('#feature-details-modal').classList.add('expanded')
+      document.querySelector('#edit-button-raw').classList.remove('hidden')
+      document.querySelector('#edit-button-edit').classList.add('active')
       document.querySelector('#feature-details-body').classList.add('hidden')
       this.show_feature_edit_ui()
     } else {
+      document.querySelector('#edit-button-raw').classList.add('hidden')
       showFeatureDetails(this.getFeature())
     }
     document.querySelector('#edit-feature .error').innerHTML = ''
