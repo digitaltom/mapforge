@@ -115,7 +115,7 @@ export const basemaps = {
   // 3D Houses
   maptilerBasic: 'https://api.maptiler.com/maps/basic-v2/style.json?key=' + window.gon.map_keys.maptiler,
   maptilerOpenStreetmap: 'https://api.maptiler.com/maps/openstreetmap/style.json?key=' + window.gon.map_keys.maptiler,
-  maptilerBuildings: 'https://api.maptiler.com/maps/streets/style.json?key=' + window.gon.map_keys.maptiler,
+  maptilerBuildings: 'https://api.maptiler.com/maps/streets-v2/style.json?key=' + window.gon.map_keys.maptiler,
   maptilerDataviz: 'https://api.maptiler.com/maps/dataviz/style.json?key=' + window.gon.map_keys.maptiler,
   maptilerStreets: host + '/layers/streets.json?key=' + window.gon.map_keys.maptiler,
   maptilerNoStreets: host + '/layers/nostreets.json?key=' + window.gon.map_keys.maptiler,
