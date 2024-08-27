@@ -4,6 +4,7 @@ import { geojsonData, redrawGeojson } from 'maplibre/map'
 import { handleDelete, draw } from 'maplibre/edit'
 import { status } from 'helpers/status'
 import { showFeatureDetails } from 'maplibre/modals'
+import * as functions from 'helpers/functions'
 import Pell from 'pell'
 import Turndown from 'turndown'
 import { marked } from 'marked'
@@ -59,8 +60,18 @@ export default class extends Controller {
         'code', 'line', 'link']
     })
     pellEditor.content.innerHTML = marked(feature.properties.desc || '')
-    document.querySelector('#point-size').value = feature.properties['marker-size'] || 6
-    document.querySelector('#line-width').value = feature.properties['stroke-width'] || 2
+
+    functions.e('#feature-edit-ui .edit-ui', e => { e.classList.add('hidden') })
+    if (feature.geometry.type === 'Point') {
+      functions.e('#feature-edit-ui .edit-point', e => { e.classList.remove('hidden') })
+      document.querySelector('#point-size').value = feature.properties['marker-size'] || 6
+    } else if (feature.geometry.type === 'LineString') {
+      functions.e('#feature-edit-ui .edit-line', e => { e.classList.remove('hidden') })
+      document.querySelector('#line-width').value = feature.properties['stroke-width'] || 2
+    } else if (feature.geometry.type === 'Polygon') {
+      functions.e('#feature-edit-ui .edit-polygon', e => { e.classList.remove('hidden') })
+      document.querySelector('#line-width').value = feature.properties['stroke-width'] || 2
+    }
   }
 
   show_feature_edit_raw () {
@@ -104,8 +115,6 @@ export default class extends Controller {
     // draw layer feature properties aren't getting updated by draw.set()
     draw.setFeatureProperty(this.featureIdValue, 'marker-size', size)
     redrawGeojson()
-    // send shallow copy of feature to avoid changes during send
-    mapChannel.send_message('update_feature', { ...feature })
   }
 
   updateLineWidth () {
@@ -115,6 +124,10 @@ export default class extends Controller {
     // draw layer feature properties aren't getting updated by draw.set()
     draw.setFeatureProperty(this.featureIdValue, 'stroke-width', size)
     redrawGeojson()
+  }
+
+  saveFeature () {
+    const feature = this.getFeature()
     // send shallow copy of feature to avoid changes during send
     mapChannel.send_message('update_feature', { ...feature })
   }
