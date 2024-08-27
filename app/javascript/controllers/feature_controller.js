@@ -43,7 +43,7 @@ export default class extends Controller {
       document.querySelector('#edit-button-raw').classList.add('hidden')
       showFeatureDetails(this.getFeature())
     }
-    document.querySelector('#edit-feature .error').innerHTML = ''
+    document.querySelector('#feature-edit-raw .error').innerHTML = ''
   }
 
   show_feature_edit_ui () {
@@ -73,7 +73,7 @@ export default class extends Controller {
 
   update_feature_raw () {
     const feature = this.getFeature()
-    document.querySelector('#edit-feature .error').innerHTML = ''
+    document.querySelector('#feature-edit-raw .error').innerHTML = ''
     try {
       feature.properties = JSON.parse(document.querySelector('#feature-edit-raw textarea').value)
       redrawGeojson()
@@ -81,7 +81,7 @@ export default class extends Controller {
     } catch (error) {
       console.error('Error updating feature:', error.message)
       status('Error updating feature', 'error')
-      document.querySelector('#edit-feature .error').innerHTML = error.message
+      document.querySelector('#feature-edit-raw .error').innerHTML = error.message
     }
   }
 

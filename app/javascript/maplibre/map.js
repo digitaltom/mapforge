@@ -247,6 +247,7 @@ export function initializeViewMode () {
 
 export function redrawGeojson () {
   if (draw) {
+    // draw has its own style layers based on editStyles
     draw.set(geojsonData)
     // force re-draw of selected feature
     draw.changeMode('simple_select', { featureIds: [selectedFeature?.id] })

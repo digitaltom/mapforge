@@ -38,12 +38,12 @@
   height: 30px !important;
 }
 
-#edit-feature textarea {
+#feature-edit-raw textarea {
     width: 100%;
     height: 100%;
     box-sizing: border-box;
 }
 
-#edit-feature .error {
+#feature-edit-raw .error {
   color: red;
 }

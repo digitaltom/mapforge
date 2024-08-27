@@ -1,4 +1,4 @@
-import { map, geojsonData, initializeDefaultControls } from 'maplibre/map'
+import { map, geojsonData, initializeDefaultControls, redrawGeojson } from 'maplibre/map'
 import { editStyles, initializeEditStyles } from 'maplibre/edit_styles'
 import { highlightFeature } from 'maplibre/styles'
 import { mapChannel } from 'channels/map_channel'
@@ -56,10 +56,6 @@ export function initializeEditMode () {
   map.on('geojson.load', function (e) {
     // register callback to reload edit styles when source layer changed
     map.on('sourcedata', sourcedataHandler)
-    // draw has its own style layers based on editStyles
-    if (geojsonData.features.length > 0) {
-      draw.set(geojsonData)
-    }
     const urlFeatureId = new URLSearchParams(window.location.search).get('f')
     const feature = geojsonData.features.find(f => f.id === urlFeatureId)
     if (feature) {
@@ -124,6 +120,7 @@ function handleUpdate (e) {
   const geojsonFeature = geojsonData.features.find(f => f.id === feature.id)
   geojsonFeature.geometry = feature.geometry
   mapChannel.send_message('update_feature', feature)
+  redrawGeojson()
   // trigger highlight, to update eg. coordinates
   highlightFeature(feature, true)
 }

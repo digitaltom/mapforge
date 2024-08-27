@@ -1,4 +1,5 @@
 import { marked } from 'marked'
+import * as functions from 'helpers/functions'
 
 // eslint expects variables to get imported, but we load the full lib in header
 const turf = window.turf
@@ -51,6 +52,8 @@ function featureMeta (feature) {
 export function showFeatureDetails (feature) {
   document.querySelector('#feature-edit-raw').classList.add('hidden')
   document.querySelector('#feature-edit-ui').classList.add('hidden')
+  functions.e('#edit-buttons button', (e) => { e.classList.remove('active') })
+  document.querySelector('#edit-button-raw').classList.add('hidden')
   document.querySelector('#feature-details-body').classList.remove('hidden')
   const modal = document.querySelector('#feature-details-modal')
   modal.classList.remove('expanded')
