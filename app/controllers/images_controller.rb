@@ -14,6 +14,8 @@ class ImagesController < ApplicationController
     redirect_to image_url
   end
 
+  private
+
   def set_image
     @image = Image.find_by(public_id: params[:public_id])
     head :not_found unless @image
