@@ -2,7 +2,7 @@ import { Controller } from '@hotwired/stimulus'
 import { mapChannel } from 'channels/map_channel'
 import { resetControls } from 'maplibre/controls'
 import * as functions from 'helpers/functions'
-import { map, mapProperties, setBackgroundMapLayer } from 'maplibre/map'
+import { map, mapProperties, setBackgroundMapLayer, updateMapName } from 'maplibre/map'
 
 export default class extends Controller {
   // https://stimulus.hotwired.dev/reference/values
@@ -109,7 +109,7 @@ export default class extends Controller {
   updateName (event) {
     event.preventDefault()
     const name = document.querySelector('#map-name').value
-    mapProperties.name = name
+    updateMapName(name)
     mapChannel.send_message('update_map', { name })
   }
 

@@ -58,6 +58,7 @@ export function showFeatureDetails (feature) {
   const modal = document.querySelector('#feature-details-modal')
   modal.classList.remove('expanded')
   modal.classList.add('show')
+  modal.scrollTo(0, 0)
   modal.dataset.featureFeatureIdValue = feature.id
 
   document.querySelector('#feature-details-header').innerHTML = ''

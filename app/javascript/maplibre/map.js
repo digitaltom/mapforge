@@ -1,5 +1,5 @@
 import { basemaps } from 'maplibre/basemaps'
-import { draw, selectedFeature } from 'maplibre/edit'
+import { draw } from 'maplibre/edit'
 import { resetControls, initSettingsModal } from 'maplibre/controls'
 import { initializeViewStyles, highlightFeature, resetHighlightedFeature } from 'maplibre/styles'
 import { AnimatePointAnimation } from 'maplibre/animations'
@@ -34,8 +34,7 @@ export function initializeMaplibreProperties () {
   mapProperties = window.gon.map_properties
   if (JSON.stringify(lastProperties) !== JSON.stringify(mapProperties)) {
     console.log('init with map properties: ' + JSON.stringify(mapProperties))
-    if (mapProperties.name) { document.title = 'mapforge.org - ' + mapProperties.name }
-    functions.e('#map-title', e => { e.textContent = mapProperties.name })
+    updateMapName(mapProperties.name)
     initSettingsModal()
     status('Map properties updated')
     if (Object.keys(lastProperties).length === 0 || !mapProperties) { return }
@@ -246,12 +245,8 @@ export function initializeViewMode () {
 }
 
 export function redrawGeojson () {
-  if (draw) {
-    // draw has its own style layers based on editStyles
-    draw.set(geojsonData)
-    // force re-draw of selected feature
-    draw.changeMode('simple_select', { featureIds: [selectedFeature?.id] })
-  }
+  // draw has its own style layers based on editStyles
+  if (draw) { draw.set(geojsonData) }
   map.getSource('geojson-source')?.setData(geojsonData)
 }
 
@@ -305,4 +300,10 @@ export function setBackgroundMapLayer (mapName = mapProperties.base_map, force =
   } else {
     console.error('Base map ' + mapName + ' not available!')
   }
+}
+
+export function updateMapName (name) {
+  mapProperties.name = name
+  if (mapProperties.name) { document.title = 'mapforge.org - ' + mapProperties.name }
+  functions.e('#map-title', e => { e.textContent = mapProperties.name })
 }

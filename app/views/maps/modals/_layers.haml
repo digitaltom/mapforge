@@ -1,14 +1,14 @@
 #layers-modal.map-modal.fade{'data-controller': "layers"}
   %h2
-    %i.bi.bi-arrow-left-square.link{ data: { action: "click->layers#close" } }
+    %i.bi.bi-arrow-left.link.mr-2{ data: { action: "click->layers#close" } }
     Layers
+
+  %input#fileInput{ type: "file" }
+  %button.btn.btn-secondary{ data: { action: "click->layers#upload" } }
+    Import gpx/kml
 
   #default-layer
     %h4.layer-name Default Layer
-    %input#fileInput{ type: "file" }
-    %button{ data: { action: "click->layers#upload" } }
-      Import gpx/kml
     %ul.layer-elements
-
 
 
