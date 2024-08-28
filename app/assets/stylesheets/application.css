@@ -24,7 +24,7 @@
 html,
 body {
   overscroll-behavior: none; /* disable pull-to-refresh on mobile */
-  overflow: hidden;
+  overflow-x: hidden;
   font-family: system-ui, sans-serif;
   font-weight: 300;
   color: var(--text-color);
