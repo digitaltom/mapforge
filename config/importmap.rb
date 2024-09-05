@@ -36,6 +36,6 @@ pin "maplibre-gl", to: "https://ga.jspm.io/npm:maplibre-gl@4.6.0/dist/maplibre-g
 # https://github.com/maptiler/maptiler-geocoding-control
 pin "maptiler-geocoding-control", to: "https://ga.jspm.io/npm:@maptiler/geocoding-control@1.3.1/maplibregl.js"
 # render markdown
-pin "marked", to: "https://ga.jspm.io/npm:marked@14.1.0/lib/marked.esm.js"
+pin "marked", to: "https://ga.jspm.io/npm:marked@14.1.1/lib/marked.esm.js"
 # html to markdown: https://github.com/mixmark-io/turndown
 pin "turndown", to: "https://ga.jspm.io/npm:turndown@7.2.0/lib/turndown.browser.es.js"
