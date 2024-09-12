@@ -13,6 +13,7 @@ gem "turbo-rails"
 gem "jbuilder"
 gem "bootsnap", require: false
 gem "rack-cache", require: "rack/cache"
+gem "net-pop", github: "ruby/net-pop"
 
 # Javascript
 gem "gon"
