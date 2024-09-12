@@ -1,6 +1,8 @@
 require "mongo"
 
 begin
+  Mongoid.load!(File.join(Rails.root, "config", "mongoid.yml"))
+
   # skip test in asset precompilation
   return if ENV["SECRET_KEY_BASE_DUMMY"]
 
