@@ -51,11 +51,11 @@ export function highlightFeature (feature, sticky = false, source = 'geojson-sou
 export function initializeViewStyles () {
   viewStyleNames.forEach(styleName => {
     map.addLayer(styles[styleName])
-    // click is needed to select on mobile and for sticky highlight
-    map.on('click', styleName, function (e) {
-      if (!e.features?.length || window.gon.map_mode === 'static') { return }
-      highlightFeature(e.features[0], true)
-    })
+  })
+  // click is needed to select on mobile and for sticky highlight
+  map.on('click', viewStyleNames, function (e) {
+    if (!e.features?.length || window.gon.map_mode === 'static') { return }
+    highlightFeature(e.features[0], true)
   })
 
   // highlight features on hover
