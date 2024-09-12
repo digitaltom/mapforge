@@ -20,13 +20,14 @@ gem "stimulus-rails"
 
 # Databases
 gem "redis", ">= 4.0.1"
-gem "mongoid"
+gem "mongoid", github: "mongodb/mongoid"
 gem "mongoid_rails_migrations"
 
 # image uploads
 # https://github.com/markevans/dragonfly (rdoc: https://rubydoc.info/github/markevans/dragonfly/)
 # https://github.com/demersus/dragonfly-mongoid_data_store
 gem "dragonfly-mongoid_data_store"
+gem "mongoid-grid_fs", github: "Nilpointer/mongoid-grid_fs" # for mongoid 9 compat
 
 gem "amazing_print"
 gem "haml"
@@ -76,5 +77,5 @@ group :test do
   gem "selenium-webdriver"
   gem "simplecov"
   gem "database_cleaner-mongoid"
-  gem "mongoid-rspec", github: "mongoid-rspec/mongoid-rspec"
+  gem "mongoid-rspec"
 end

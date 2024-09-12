@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## 2024-09
+
+* Rails 7.2, Maplibre 7.4.0
+
 ## 2024-08
 
 * Direct link to map features

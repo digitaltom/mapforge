@@ -43,6 +43,9 @@ module Mapforge
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
 
+    # Don't generate system test files.
+    config.generators.system_tests = nil
+
     # https://snippets.aktagon.com/snippets/302-how-to-setup-and-use-rack-cache-with-rails
     # rails sets "cache-control", "private" by default
     config.action_dispatch.rack_cache = {
