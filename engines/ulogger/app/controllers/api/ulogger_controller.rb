@@ -68,12 +68,14 @@ module Ulogger
       filename = "#{SecureRandom.hex(4)}.#{ext}"
       uid = Dragonfly.app.store(uploaded.tempfile, 'name' => filename)
       img = Image.create(img_uid: uid)
+      desc = "[![image](/image/#{img.public_id})](/image/#{img.public_id})\n" +
+        description
       { "marker-color" => "transparent",
         "stroke" => "#fff",
         "marker-size" => 20,
         "stroke-width" => 8,
         "marker-image-url" => "/icon/" + img.public_id,
-        "desc" => description + "[![image](/image/#{img.public_id})](/image/#{img.public_id})" }
+        "desc" => desc }
     end
 
     def description

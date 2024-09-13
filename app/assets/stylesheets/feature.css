@@ -10,13 +10,32 @@
 }
 
 #feature-details-icon {
-  height: 2.5em;
+  height: 2em;
   margin: 0.3em;
 }
 
 #feature-details-meta {
   font-size: 80%;
   color: #999;
+}
+
+#feature-details-header {
+  max-height: 2em;
+}
+
+#feature-details-body {
+  overflow-y: hidden;
+  max-height: 1.3em;
+}
+
+.modal-pull-up #feature-details-body {
+  overflow-y: scroll;
+  max-height: calc(100vh - 10em);
+}
+
+#feature-details-body img {
+    max-width: 100%;
+    height: auto;
 }
 
 .edit-button-group {
