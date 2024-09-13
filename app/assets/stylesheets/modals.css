@@ -1,11 +1,10 @@
 .map-modal {
   position: absolute;
-  overflow-y: auto;
-  max-height: calc(100% - 2em);
   left: calc(50% - 1em);
   transform: translate(-50%);
   width: calc(100% - 1em);
   max-width: 35em;
+  max-height: calc(100% - 2em);
   margin: 0.5em 1em 1.5em;
   border-radius: 10px;
   background-color: hsl(0deg 0% 100% / 85%);
@@ -14,6 +13,16 @@
   padding: 1.5em;
   border: 1px solid #ccc;
   box-shadow: 0 0 6px 2px rgb(0 0 0 / 8%);
+}
+
+.map-modal-header {
+  border-bottom: 3px solid gray;
+}
+
+.map-modal-content {
+  margin-top: 1em;
+  overflow-y: auto;
+  max-height: calc(100vh - 8em);
 }
 
 .layer-preview {

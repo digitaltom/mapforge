@@ -1,14 +1,17 @@
 #layers-modal.map-modal.fade{'data-controller': "layers"}
-  %h2
-    %i.bi.bi-arrow-left.link.mr-2{ data: { action: "click->layers#close" } }
-    Layers
 
-  %input#fileInput{ type: "file" }
-  %button.btn.btn-secondary{ data: { action: "click->layers#upload" } }
-    Import gpx/kml
+  .map-modal-header
+    %h2
+      %i.bi.bi-arrow-left.link.mr-2{ data: { action: "click->layers#close" } }
+      Layers
 
-  #default-layer
-    %h4.layer-name Default Layer
-    %ul.layer-elements
+  .map-modal-content
+    %input#fileInput{ type: "file" }
+    %button.btn.btn-secondary{ data: { action: "click->layers#upload" } }
+      Import gpx/kml
+
+    #default-layer
+      %h4.layer-name Default Layer
+      %ul.layer-elements
 
 
