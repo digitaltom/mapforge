@@ -35,6 +35,10 @@
 
     = yield(:head)
 
+    %link{ rel: "manifest", href: "/manifest.json" }
+    %link{ rel: "icon", href: "/icons/mapforge-logo.png", type: "image/png" }
+    %link{ rel: "apple-touch-icon", href: "/icons/mapforge-logo.png", sizes: "512x512" }
+
   %body
     = Gon::Base.render_data
 

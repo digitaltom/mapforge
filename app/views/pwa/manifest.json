@@ -1,0 +1,22 @@
+{
+  "name": "Mapforge",
+  "icons": [
+    {
+      "src": "/icons/mapforge-logo.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    },
+    {
+      "src": "/icons/mapforge-logo.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "scope": "/",
+  "description": "Mapforge is an open source (Ruby on Rails) web application that lets you create and share geojson layers on top of different base maps.",
+  "theme_color": "red",
+  "background_color": "red"
+}
