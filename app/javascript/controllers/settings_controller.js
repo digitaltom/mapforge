@@ -43,7 +43,7 @@ export default class extends Controller {
   }
 
   currentPitchValueChanged (value, previousValue) {
-    console.log('currentPitchValueChanged(): ' + value)
+    // console.log('currentPitchValueChanged(): ' + value)
     document.querySelector('#map-pitch-current').innerHTML = value
   }
 
@@ -53,7 +53,7 @@ export default class extends Controller {
   }
 
   currentZoomValueChanged (value, previousValue) {
-    console.log('currentZoomValueChanged(): ' + value)
+    // console.log('currentZoomValueChanged(): ' + value)
     document.querySelector('#map-zoom-current').innerHTML = value
   }
 
@@ -63,7 +63,7 @@ export default class extends Controller {
   }
 
   currentBearingValueChanged (value, previousValue) {
-    console.log('currentBearingValueChanged(): ' + value)
+    // console.log('currentBearingValueChanged(): ' + value)
     document.querySelector('#map-bearing-current').innerHTML = value
   }
 
@@ -86,7 +86,7 @@ export default class extends Controller {
   }
 
   currentCenterValueChanged (value, previousValue) {
-    console.log('currentCenterValueChanged(): ' + value)
+    // console.log('currentCenterValueChanged(): ' + value)
     value = value.map(coord => parseFloat(coord.toFixed(4)))
     document.querySelector('#map-center-current').innerHTML = value
   }

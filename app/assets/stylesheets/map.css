@@ -13,7 +13,7 @@
 
 #map-title {
   color: white;
-  font-weight: 400;
+  font-weight: 500;
   float: left;
   margin-top: 0.9em;
   overflow: hidden;
@@ -24,6 +24,7 @@
 .map {
   height: 100%;
   width: 100%;
+  overflow: hidden;
   margin: 0;
   padding: 0;
   text-align: center;

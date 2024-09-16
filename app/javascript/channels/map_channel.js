@@ -7,6 +7,7 @@ import { disableEditControls, enableEditControls } from 'maplibre/edit'
 import { status } from 'helpers/status'
 
 export let mapChannel
+let reconnectTimer
 
 ['turbo:load'].forEach(function (e) {
   window.addEventListener(e, function () {
@@ -15,7 +16,7 @@ export let mapChannel
 })
 
 function unload () {
-  if (mapChannel) { mapChannel.unsubscribe() }
+  if (mapChannel) { mapChannel.unsubscribe(); mapChannel = null }
 }
 
 export function initializeSocket () {
@@ -24,6 +25,7 @@ export function initializeSocket () {
   consumer.subscriptions.create({ channel: 'MapChannel', map_id: window.gon.map_id }, {
     connected () {
       // Called when the subscription is ready for use on the server
+      clearInterval(reconnectTimer)
       console.log('Connected to map_channel ' + window.gon.map_id)
       map.fire('online', { detail: { message: 'Connected to map_channel' } })
       mapChannel = this
@@ -46,6 +48,7 @@ export function initializeSocket () {
       mapChannel = null
       // show error with delay to avoid showing it on unload/refresh
       setTimeout(function () { status('Connection to server lost', 'error', 60 * 60 * 1000) }, 1000)
+      reconnectTimer = setInterval(() => { console.log('Trying to re-connect websocket..'); initializeSocket() }, 10000)
     },
 
     received (data) {
