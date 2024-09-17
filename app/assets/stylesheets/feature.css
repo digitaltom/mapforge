@@ -12,25 +12,29 @@
 #feature-details-icon {
   height: 2em;
   margin: 0.3em;
+  margin-right: 0.6em;
 }
 
 #feature-details-meta {
   font-size: 80%;
   color: #999;
+  position: absolute;
+  right: 1em;
+  top: 4em;
 }
 
 #feature-details-header {
   max-height: 2em;
 }
 
-#feature-details-body {
+#feature-details-body, #feature-edit-ui, #feature-edit-raw {
   overflow-y: hidden;
   max-height: 1.3em;
 }
 
-.modal-pull-up #feature-details-body {
+.modal-pull-up #feature-details-body, .modal-pull-up #feature-edit-ui, .modal-pull-up #feature-edit-raw {
   overflow-y: scroll;
-  max-height: calc(100vh - 10em);
+  max-height: calc(100vh - 8em);
 }
 
 #feature-details-body img {

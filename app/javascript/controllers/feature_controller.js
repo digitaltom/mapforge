@@ -5,12 +5,11 @@ import { handleDelete, draw } from 'maplibre/edit'
 import { status } from 'helpers/status'
 import { showFeatureDetails } from 'maplibre/modals'
 import * as functions from 'helpers/functions'
-import Pell from 'pell'
-import Turndown from 'turndown'
-import { marked } from 'marked'
 
-let pellEditor
-const turndownService = new Turndown({ headingStyle: 'atx' })
+// eslint expects variables to get imported, but we load the full lib in header
+const EasyMDE = window.EasyMDE
+
+let easyMDE
 
 export default class extends Controller {
   // https://stimulus.hotwired.dev/reference/values
@@ -31,7 +30,6 @@ export default class extends Controller {
     if (document.querySelector('#feature-edit-raw').classList.contains('hidden') && event.currentTarget.dataset.raw) {
       console.log('show_feature_edit_raw')
       document.querySelector('#edit-button-raw').classList.add('active')
-      document.querySelector('#feature-details-modal').classList.add('modal-pull-up')
       document.querySelector('#feature-details-body').classList.add('hidden')
       this.show_feature_edit_raw()
     } else if (document.querySelector('#feature-edit-ui').classList.contains('hidden') && event.currentTarget.dataset.ui) {
@@ -51,15 +49,20 @@ export default class extends Controller {
     const feature = this.getFeature()
     document.querySelector('#feature-edit-ui').classList.remove('hidden')
     document.querySelector('#feature-edit-raw').classList.add('hidden')
-    // https://github.com/jaredreich/pell
-    pellEditor ||= Pell.init({
-      element: document.getElementById('pell-editor'),
-      onChange: html => console.log(html),
-      actions: ['bold', 'italic', 'underline', 'strikethrough',
-        'heading1', 'heading2', 'paragraph', 'quote', 'olist', 'ulist',
-        'code', 'line', 'link']
+
+    if (easyMDE) { easyMDE.toTextArea() }
+    document.querySelector('#feature-desc').value = feature.properties.desc || ''
+    easyMDE = new EasyMDE({
+      element: document.getElementById('feature-desc'),
+      hideIcons: ['fullscreen', 'side-by-side'],
+      maxHeight: '6em',
+      spellChecker: false,
+      // status: true,
+      autosave: {
+        enabled: true,
+        uniqueId: feature.id
+      }
     })
-    pellEditor.content.innerHTML = marked(feature.properties.desc || '')
 
     functions.e('#feature-edit-ui .edit-ui', e => { e.classList.add('hidden') })
     if (feature.geometry.type === 'Point') {
@@ -99,7 +102,7 @@ export default class extends Controller {
   updateDesc () {
     const feature = this.getFeature()
     try {
-      feature.properties.desc = turndownService.turndown(pellEditor.content.innerHTML)
+      feature.properties.desc = easyMDE.value()
       redrawGeojson()
       mapChannel.send_message('update_feature', feature)
     } catch (error) {

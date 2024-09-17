@@ -22,7 +22,7 @@
     = stylesheet_link_tag "https://cdn.maptiler.com/maptiler-sdk-js/v2.1.0/maptiler-sdk.css"
     = stylesheet_link_tag "https://unpkg.com/@mapbox/mapbox-gl-draw@1.4.3/dist/mapbox-gl-draw.css"
     = stylesheet_link_tag "https://cdn.maptiler.com/maptiler-geocoding-control/v1.3.1/style.css"
-    = stylesheet_link_tag "https://unpkg.com/pell/dist/pell.min.css"
+    = stylesheet_link_tag "https://unpkg.com/easymde/dist/easymde.min.css"
 
     = stylesheet_link_tag "application", "data-turbo-track": "reload"
 
@@ -32,6 +32,9 @@
 
     / https://turfjs.org/
     = javascript_include_tag "https://unpkg.com/@turf/turf@6/turf.min.js"
+
+    / https://github.com/Ionaru/easy-markdown-editor
+    = javascript_include_tag "https://unpkg.com/easymde/dist/easymde.min.js"
 
     = yield(:head)
 
