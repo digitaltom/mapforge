@@ -46,6 +46,7 @@ export default class extends Controller {
   }
 
   show_feature_edit_ui () {
+    this.pullUpModal()
     const feature = this.getFeature()
     document.querySelector('#feature-edit-ui').classList.remove('hidden')
     document.querySelector('#feature-edit-raw').classList.add('hidden')
@@ -78,6 +79,7 @@ export default class extends Controller {
   }
 
   show_feature_edit_raw () {
+    this.pullUpModal()
     const feature = this.getFeature()
     document.querySelector('#feature-edit-ui').classList.add('hidden')
     document.querySelector('#feature-edit-raw').classList.remove('hidden')
@@ -139,6 +141,12 @@ export default class extends Controller {
     const modal = e.target.closest('.map-modal')
     modal.classList.toggle('modal-pull-down')
     modal.classList.toggle('modal-pull-up')
+  }
+
+  pullUpModal () {
+    const modal = document.querySelector('#feature-details-modal')
+    modal.classList.remove('modal-pull-down')
+    modal.classList.add('modal-pull-up')
   }
 
   getFeature () {

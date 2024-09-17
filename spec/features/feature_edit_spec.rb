@@ -53,7 +53,6 @@ describe 'Feature edit' do
       end
 
       it 'can raw update feature' do
-        find('.modal-pull-button').click
         find('#edit-button-edit').click
         find('#edit-button-raw').click
         fill_in 'properties', with: '{"title": "TEST"}'
