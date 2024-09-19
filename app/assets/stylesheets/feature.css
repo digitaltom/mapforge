@@ -70,3 +70,25 @@
 #feature-edit-raw .error {
   color: red;
 }
+
+.editor-statusbar {
+  display: none;
+}
+
+.edit-ui {
+  padding-top: 0.5em;
+  display: flex;
+  align-items: center;
+  gap: 1em;
+}
+
+.edit-ui label,
+.edit-ui .slider {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+
+.edit-ui span {
+  flex-grow: 0;
+  flex-shrink: 0;
+}

@@ -16,7 +16,7 @@ describe 'Feature edit' do
     end
 
     context 'when adding features' do
-      it 'adding a marker to the map' do
+      it 'adding a point to the map' do
         find('.mapbox-gl-draw_point').click
         expect { click_coord('#maplibre-map', 50, 50) }.to change { Feature.point.count }.by(1)
       end
@@ -69,6 +69,22 @@ describe 'Feature edit' do
         # the actioncable events of map + feature update are not always received in the same order:
         expect(page).to have_text('Deleting feature').or have_text('Map properties updated')
         expect(Feature.count).to eq(0)
+      end
+    end
+  end
+
+  context 'with point on map' do
+    let!(:point) { create(:feature, :point_middle, layer: map.layer, title: 'Point Title') }
+
+    context 'with selected feature' do
+      before do
+        click_coord('#maplibre-map', 50, 50)
+        find('#edit-button-edit').click
+      end
+
+      it 'can update point size' do
+        find('#point-size').set(15)
+        expect(point.reload.properties['marker-size']).to eq('15')
       end
     end
   end

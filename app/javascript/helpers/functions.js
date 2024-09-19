@@ -13,6 +13,15 @@ export function hexToRgb (hex) {
   return [r, g, b]
 }
 
+export function debounce (callback, delay) {
+  console.log('debounce ')
+  let timeoutId
+  return () => {
+    clearTimeout(timeoutId)
+    timeoutId = setTimeout(() => callback(), delay)
+  }
+}
+
 export function sleep (ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
 }

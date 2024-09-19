@@ -51,27 +51,32 @@ export default class extends Controller {
     document.querySelector('#feature-edit-ui').classList.remove('hidden')
     document.querySelector('#feature-edit-raw').classList.add('hidden')
 
+    // https://github.com/Ionaru/easy-markdown-editor
     if (easyMDE) { easyMDE.toTextArea() }
     document.querySelector('#feature-desc').value = feature.properties.desc || ''
     easyMDE = new EasyMDE({
       element: document.getElementById('feature-desc'),
-      hideIcons: ['fullscreen', 'side-by-side'],
+      placeholder: 'Add a description',
+      hideIcons: ['quote', 'ordered-list', 'fullscreen', 'side-by-side'],
       maxHeight: '6em',
       spellChecker: false,
-      // status: true,
-      autosave: {
-        enabled: true,
-        uniqueId: feature.id
-      }
+      status: [{
+        className: 'autosave',
+        onUpdate: functions.debounce(() => { this.updateDesc() }, 2000)
+      }]
     })
 
     functions.e('#feature-edit-ui .edit-ui', e => { e.classList.add('hidden') })
     if (feature.geometry.type === 'Point') {
       functions.e('#feature-edit-ui .edit-point', e => { e.classList.remove('hidden') })
-      document.querySelector('#point-size').value = feature.properties['marker-size'] || 6
+      const size = feature.properties['marker-size'] || 6
+      document.querySelector('#point-size').value = size
+      document.querySelector('#point-size-val').innerHTML = '(' + size + ')'
     } else if (feature.geometry.type === 'LineString') {
       functions.e('#feature-edit-ui .edit-line', e => { e.classList.remove('hidden') })
-      document.querySelector('#line-width').value = feature.properties['stroke-width'] || 2
+      const size = feature.properties['stroke-width'] || 2
+      document.querySelector('#line-width').value = size
+      document.querySelector('#line-width-val').innerHTML = '(' + size + ')'
     } else if (feature.geometry.type === 'Polygon') {
       functions.e('#feature-edit-ui .edit-polygon', e => { e.classList.remove('hidden') })
       document.querySelector('#line-width').value = feature.properties['stroke-width'] || 2
@@ -104,9 +109,11 @@ export default class extends Controller {
   updateDesc () {
     const feature = this.getFeature()
     try {
-      feature.properties.desc = easyMDE.value()
-      redrawGeojson()
-      mapChannel.send_message('update_feature', feature)
+      if (feature.properties.desc !== easyMDE.value()) {
+        feature.properties.desc = easyMDE.value()
+        // redrawGeojson()
+        mapChannel.send_message('update_feature', feature)
+      }
     } catch (error) {
       console.error('Error updating feature:', error.message)
       status('Error updating feature', 'error')
@@ -116,6 +123,7 @@ export default class extends Controller {
   updatePointSize () {
     const feature = this.getFeature()
     const size = document.querySelector('#point-size').value
+    document.querySelector('#point-size-val').innerHTML = '(' + size + ')'
     feature.properties['marker-size'] = size
     // draw layer feature properties aren't getting updated by draw.set()
     draw.setFeatureProperty(this.featureIdValue, 'marker-size', size)
@@ -125,6 +133,7 @@ export default class extends Controller {
   updateLineWidth () {
     const feature = this.getFeature()
     const size = document.querySelector('#line-width').value
+    document.querySelector('#line-width-val').innerHTML = '(' + size + ')'
     feature.properties['stroke-width'] = size
     // draw layer feature properties aren't getting updated by draw.set()
     draw.setFeatureProperty(this.featureIdValue, 'stroke-width', size)
