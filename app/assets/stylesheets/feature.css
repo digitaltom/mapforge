@@ -80,15 +80,16 @@
   display: flex;
   align-items: center;
   gap: 1em;
+  max-width: 25em;
 }
 
-.edit-ui label,
 .edit-ui .slider {
   flex-grow: 1;
   flex-shrink: 1;
+  min-width: 8em;
 }
 
-.edit-ui span {
+.edit-ui label, .edit-ui span {
   flex-grow: 0;
   flex-shrink: 0;
 }

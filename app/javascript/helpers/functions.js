@@ -14,7 +14,6 @@ export function hexToRgb (hex) {
 }
 
 export function debounce (callback, delay) {
-  console.log('debounce ')
   let timeoutId
   return () => {
     clearTimeout(timeoutId)

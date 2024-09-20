@@ -43,6 +43,7 @@ export default class extends Controller {
       showFeatureDetails(this.getFeature())
     }
     document.querySelector('#feature-edit-raw .error').innerHTML = ''
+    event.stopPropagation()
   }
 
   show_feature_edit_ui () {
@@ -57,7 +58,7 @@ export default class extends Controller {
     easyMDE = new EasyMDE({
       element: document.getElementById('feature-desc'),
       placeholder: 'Add a description',
-      hideIcons: ['quote', 'ordered-list', 'fullscreen', 'side-by-side'],
+      hideIcons: ['quote', 'ordered-list', 'fullscreen', 'side-by-side', 'preview', 'guide'],
       maxHeight: '6em',
       spellChecker: false,
       status: [{
@@ -69,7 +70,7 @@ export default class extends Controller {
     functions.e('#feature-edit-ui .edit-ui', e => { e.classList.add('hidden') })
     if (feature.geometry.type === 'Point') {
       functions.e('#feature-edit-ui .edit-point', e => { e.classList.remove('hidden') })
-      const size = feature.properties['marker-size'] || 6
+      const size = feature.properties['marker-size'] || 8
       document.querySelector('#point-size').value = size
       document.querySelector('#point-size-val').innerHTML = '(' + size + ')'
     } else if (feature.geometry.type === 'LineString') {
@@ -150,6 +151,7 @@ export default class extends Controller {
     const modal = e.target.closest('.map-modal')
     modal.classList.toggle('modal-pull-down')
     modal.classList.toggle('modal-pull-up')
+    e.stopPropagation()
   }
 
   pullUpModal () {
