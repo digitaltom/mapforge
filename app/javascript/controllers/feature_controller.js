@@ -112,7 +112,6 @@ export default class extends Controller {
     try {
       if (feature.properties.desc !== easyMDE.value()) {
         feature.properties.desc = easyMDE.value()
-        // redrawGeojson()
         mapChannel.send_message('update_feature', feature)
       }
     } catch (error) {
@@ -121,6 +120,7 @@ export default class extends Controller {
     }
   }
 
+  // called as preview on slider change
   updatePointSize () {
     const feature = this.getFeature()
     const size = document.querySelector('#point-size').value
@@ -131,6 +131,7 @@ export default class extends Controller {
     redrawGeojson()
   }
 
+  // called as preview on slider change
   updateLineWidth () {
     const feature = this.getFeature()
     const size = document.querySelector('#line-width').value
@@ -148,6 +149,7 @@ export default class extends Controller {
   }
 
   toggleModalSize (e) {
+    console.log('toggleModalSize')
     const modal = e.target.closest('.map-modal')
     modal.classList.toggle('modal-pull-down')
     modal.classList.toggle('modal-pull-up')

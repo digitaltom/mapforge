@@ -22,23 +22,23 @@ export default class extends Controller {
   }
 
   mapNameValueChanged (value, previousValue) {
-    console.log('mapNameValueChanged(): ' + value)
+    // console.log('mapNameValueChanged(): ' + value)
     document.querySelector('#map-name').value = value
   }
 
   mapTerrainValueChanged (value, previousValue) {
-    console.log('mapTerrainValueChanged(): ' + value)
+    // console.log('mapTerrainValueChanged(): ' + value)
     document.querySelector('#map-terrain').checked = value
   }
 
   baseMapValueChanged (value, previousValue) {
-    console.log('baseMapValueChanged(): ' + value)
+    // console.log('baseMapValueChanged(): ' + value)
     functions.e('.layer-preview', e => { e.classList.remove('active') })
     functions.e('img[data-base-map="' + value + '"]', e => { e.classList.add('active') })
   }
 
   defaultPitchValueChanged (value, previousValue) {
-    console.log('defaultPitchValueChanged(): ' + value)
+    // console.log('defaultPitchValueChanged(): ' + value)
     document.querySelector('#map-pitch').innerHTML = value
   }
 
@@ -48,7 +48,7 @@ export default class extends Controller {
   }
 
   defaultZoomValueChanged (value, previousValue) {
-    console.log('defaultZoomValueChanged(): ' + value)
+    // console.log('defaultZoomValueChanged(): ' + value)
     document.querySelector('#map-zoom').innerHTML = value
   }
 
@@ -58,7 +58,7 @@ export default class extends Controller {
   }
 
   defaultBearingValueChanged (value, previousValue) {
-    console.log('defaultBearingValueChanged(): ' + value)
+    // console.log('defaultBearingValueChanged(): ' + value)
     document.querySelector('#map-bearing').innerHTML = value
   }
 
@@ -68,7 +68,7 @@ export default class extends Controller {
   }
 
   defaultCenterValueChanged (value, previousValue) {
-    console.log('defaultCenterValueChanged(): "' + value + '"')
+    // console.log('defaultCenterValueChanged(): "' + value + '"')
     if (value.length !== 0) {
       value = value.map(coord => parseFloat(coord.toFixed(4)))
     } else {
@@ -78,7 +78,7 @@ export default class extends Controller {
   }
 
   defaultAutoCenterValueChanged (value, previousValue) {
-    console.log('defaultAutoCenterValueChanged(): "' + value + '"')
+    // console.log('defaultAutoCenterValueChanged(): "' + value + '"')
     if (value.length !== 0 && !window.gon.map_properties.center) {
       value = value.map(coord => parseFloat(coord.toFixed(4)))
       document.querySelector('#map-center').innerHTML = `${value} (auto)`

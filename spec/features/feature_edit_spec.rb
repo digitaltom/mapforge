@@ -84,6 +84,7 @@ describe 'Feature edit' do
 
       it 'can update point size' do
         find('#point-size').set(15)
+        expect(page).to have_selector('#point-size-val', text: '15')
         expect(point.reload.properties['marker-size']).to eq('15')
       end
     end
