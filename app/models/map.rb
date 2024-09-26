@@ -21,8 +21,10 @@ class Map
   delegate :feature_collection, to: :layer
   delegate :features_count, to: :layer
 
-  BASE_MAPS = [ "osmRasterTiles", "satelliteTiles",
-                "stamenTonerTiles", "openTopoTiles" ]
+  BASE_MAPS = [ "osmRasterTiles", "satelliteTiles", "openTopoTiles" ]
+  STADIA_MAPS = [ "stamenTonerTiles", "stamenWatercolorTiles" ]
+  OPENFREE_MAPS = [ "openfreemapPositron", "openfreemapBright", "openfreemapLiberty" ]
+  VERSATILES_MAPS = [ "versatilesColorful", "versatilesGraybeard" ]
   MAPTILER_MAPS = [ "maptilerBuildings", "maptilerHybrid", "maptilerDataviz",
                     "maptilerStreets", "maptilerNoStreets", "maptilerWinter",
                     "maptilerBike", "maptilerBasic" ]
@@ -143,7 +145,7 @@ class Map
       return base_map if ENV["MAPTILER_KEY"].present?
       logger.warn("Cannot use maptiler map #{base_map} without MAPTILER_KEY")
       return default_base_map
-    elsif BASE_MAPS.include?(base_map) || base_map == "test"
+    elsif (BASE_MAPS + OPENFREE_MAPS + VERSATILES_MAPS).include?(base_map) || base_map == "test"
       return base_map
     end
     logger.warn("Map '#{base_map}' not found, falling back to #{default_base_map}")

@@ -19,13 +19,27 @@
     %input#map-name{type: "text", size: 27}
     %button#save-map-name{ type: 'submit', data: { action: "click->settings#updateName" } } Update
     %br
-    %label{for: "map-baselayer"} Base Map:
+    Free tile maps:
     %br
     - Map::BASE_MAPS.each do |base_map|
       - active = (@map_properties[:base_map] == base_map)
-      = image_tag("base_maps/#{base_map}.jpg", data: { base_map: base_map, action: "click->settings#updateBaseMap" },
-                  class: "layer-preview")
+      = image_tag("base_maps/#{base_map}.jpg", data: { base_map: base_map, action: "click->settings#updateBaseMap" }, class: "layer-preview")
+    %br
+    Versatiles maps:
+    %br
+    - Map::VERSATILES_MAPS.each do |base_map|
+      - active = (@map_properties[:base_map] == base_map)
+      = image_tag("base_maps/#{base_map}.jpg", data: { base_map: base_map, action: "click->settings#updateBaseMap" }, class: "layer-preview")
+    %br
+    Openfreemaps:
+    %br
+    - Map::OPENFREE_MAPS.each do |base_map|
+      - active = (@map_properties[:base_map] == base_map)
+      = image_tag("base_maps/#{base_map}.jpg", data: { base_map: base_map, action: "click->settings#updateBaseMap" }, class: "layer-preview")
     - if ENV['MAPTILER_KEY']
+      %br
+      Maptiler maps:
+      %br
       - Map::MAPTILER_MAPS.each do |base_map|
         = image_tag("base_maps/#{base_map}.jpg", data: { base_map: base_map, action: "click->settings#updateBaseMap"}, class: "layer-preview")
     %br

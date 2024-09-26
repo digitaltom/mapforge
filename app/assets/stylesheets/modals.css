@@ -7,8 +7,11 @@
   max-height: calc(100% - 2em);
   margin: 0.5em 1em 1.5em;
   border-radius: 10px;
-  background-color: rgba(255, 255, 255, 0.9);
-  /* backdrop-filter: blur(3px); */ /* Todo: Looks cool, but slows down browsers */
+  background-color: rgb(255 255 255 / 90%);
+
+  /* backdrop-filter: blur(3px); */
+
+ /* Todo: Looks cool, but slows down browsers */
   z-index: 1000;
   padding: 1.5em;
   border: 1px solid #ccc;
@@ -26,7 +29,7 @@
 }
 
 .layer-preview {
-  width: 5em;
+  width: 7em;
   border-radius: 4px;
   border-width: 2px;
   border-style: solid;

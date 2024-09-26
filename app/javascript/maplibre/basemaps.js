@@ -26,6 +26,8 @@ export const basemaps = {
     layers: defaultRasterLayer,
     glyphs: openmaptilesGlyphs
   },
+
+  // Stadia maps
   stamenWatercolorTiles: {
     version: 8,
     sources: {
@@ -60,6 +62,8 @@ export const basemaps = {
     layers: defaultRasterLayer,
     glyphs: openmaptilesGlyphs
   },
+
+  // free maps
   openTopoTiles: {
     version: 8,
     sources: {
@@ -111,6 +115,16 @@ export const basemaps = {
     layers: defaultRasterLayer,
     glyphs: openmaptilesGlyphs
   },
+
+  // openfreemap.org
+  openfreemapPositron: 'https://tiles.openfreemap.org/styles/positron',
+  openfreemapBright: 'https://tiles.openfreemap.org/styles/bright',
+  openfreemapLiberty: 'https://tiles.openfreemap.org/styles/liberty',
+
+  // https://github.com/versatiles-org/versatiles-style
+  versatilesColorful: 'https://tiles.versatiles.org/assets/styles/colorful.json',
+  versatilesGraybeard: 'https://tiles.versatiles.org/assets/styles/graybeard.json',
+  versatilesNeutrino: 'https://tiles.versatiles.org/assets/styles/neutrino.json',
 
   // 3D Houses
   maptilerBasic: 'https://api.maptiler.com/maps/basic-v2/style.json?key=' + window.gon.map_keys.maptiler,

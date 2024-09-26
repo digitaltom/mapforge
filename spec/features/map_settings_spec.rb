@@ -19,9 +19,9 @@ describe 'Map' do
     it 'basemap update gets saved' do
       find('.maplibregl-ctrl-map').click
       expect(page).to have_text('Configure Map')
-      find(".layer-preview[data-base-map='stamenTonerTiles']").click
+      find(".layer-preview[data-base-map='osmRasterTiles']").click
       expect(page).to have_text('Map style loaded')
-      expect(map.reload.base_map).to eq 'stamenTonerTiles'
+      expect(map.reload.base_map).to eq 'osmRasterTiles'
     end
 
     it 'terrain update gets saved' do
@@ -43,9 +43,9 @@ describe 'Map' do
 
     it 'basemap update' do
       find('.maplibregl-ctrl-map').click
-      map.update(base_map: 'stamenTonerTiles')
+      map.update(base_map: 'osmRasterTiles')
       expect(page).to have_text('Map style loaded')
-      expect(page).to have_css('.layer-preview[data-base-map="stamenTonerTiles"].active')
+      expect(page).to have_css('.layer-preview[data-base-map="osmRasterTiles"].active')
     end
 
     it 'terrain update' do
