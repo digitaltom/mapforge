@@ -2,7 +2,7 @@ import { Controller } from '@hotwired/stimulus'
 import { mapChannel } from 'channels/map_channel'
 import { map, geojsonData, upsert, mapProperties } from 'maplibre/map'
 import { initLayersModal, resetControls } from 'maplibre/controls'
-import { highlightFeature } from 'maplibre/styles'
+import { highlightFeature } from 'maplibre/feature'
 import { status } from 'helpers/status'
 
 // eslint expects variables to get imported, but we load the full lib in header

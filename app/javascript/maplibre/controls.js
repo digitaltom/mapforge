@@ -1,7 +1,7 @@
 import { mapProperties, geojsonData } from 'maplibre/map'
 import * as functions from 'helpers/functions'
 import { draw } from 'maplibre/edit'
-import { resetHighlightedFeature } from 'maplibre/styles'
+import { resetHighlightedFeature } from 'maplibre/feature'
 
 export class ControlGroup {
   constructor (controls) {

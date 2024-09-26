@@ -1,6 +1,6 @@
 import { map, geojsonData, initializeDefaultControls, redrawGeojson } from 'maplibre/map'
 import { editStyles, initializeEditStyles } from 'maplibre/edit_styles'
-import { highlightFeature } from 'maplibre/styles'
+import { highlightFeature } from 'maplibre/feature'
 import { mapChannel } from 'channels/map_channel'
 import { ControlGroup, MapSettingsControl, MapShareControl, MapLayersControl, resetControls } from 'maplibre/controls'
 import { status } from 'helpers/status'

@@ -1,9 +1,10 @@
-import { map, geojsonData } from 'maplibre/map'
+import { map } from 'maplibre/map'
 import * as f from 'helpers/functions'
-import { showFeatureDetails } from 'maplibre/modals'
+import {
+  highlightedFeatureId, stickyFeatureHighlight,
+  resetHighlightedFeature, highlightFeature
+} from 'maplibre/feature'
 
-let highlightedFeatureId
-let stickyFeatureHighlight = false
 export const viewStyleNames = [
   'polygon-layer',
   'polygon-layer-extrusion',
@@ -16,37 +17,6 @@ export const viewStyleNames = [
   'symbols-layer',
   'text-layer'
 ]
-
-export function resetHighlightedFeature (source = 'geojson-source') {
-  if (highlightedFeatureId) {
-    map.setFeatureState({ source, id: highlightedFeatureId }, { active: false })
-    highlightedFeatureId = null
-    // drop feature param from url
-    const url = new URL(window.location.href)
-    url.searchParams.delete('f')
-    window.history.replaceState({}, document.title, url.toString())
-  }
-  // reset active modals
-  f.e('#feature-details-modal', e => { e.classList.remove('show') })
-}
-
-export function highlightFeature (feature, sticky = false, source = 'geojson-source') {
-  if (highlightedFeatureId !== feature.id) { resetHighlightedFeature() }
-  if (feature.id) {
-    stickyFeatureHighlight = sticky
-    highlightedFeatureId = feature.id
-    // load feature from source, the style only returns the dimensions on screen
-    const sourceFeature = geojsonData.features.find(f => f.id === feature.id)
-    showFeatureDetails(sourceFeature)
-    // A feature's state is not part of the GeoJSON or vector tile data but can get used in styles
-    map.setFeatureState({ source, id: feature.id }, { active: true })
-    // set url to feature
-    if (sticky) {
-      const newPath = `${window.location.pathname}?f=${feature.id}`
-      window.history.pushState({}, '', newPath)
-    }
-  }
-}
 
 export function initializeViewStyles () {
   viewStyleNames.forEach(styleName => {
