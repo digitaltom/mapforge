@@ -46,6 +46,7 @@ export function initializeEditMode () {
   map.once('style.load', () => {
     initializeDefaultControls()
     map.addControl(draw, 'top-left')
+    addPaintButton()
     const controlGroup = new ControlGroup(
       [new MapSettingsControl(),
         new MapLayersControl(),
@@ -109,6 +110,8 @@ function handleCreate (e) {
   const feature = e.features[0] // Assuming one feature is created at a time
 
   status('Feature ' + feature.id + ' created')
+  // reset special paint button
+  functions.e('.mapbox-gl-draw_ctrl-draw-btn', e => { e.classList.remove('active') })
   geojsonData.features.push(feature)
   mapChannel.send_message('new_feature', feature)
 }
@@ -145,4 +148,22 @@ export function enableEditControls () {
   functions.e('.maplibregl-ctrl-map', e => { e.disabled = false })
   functions.e('#save-map-name', e => { e.disabled = false })
   functions.e('#save-map-defaults', e => { e.disabled = false })
+}
+
+function addPaintButton () {
+  const originalButton = document.querySelector('.mapbox-gl-draw_line')
+  const paintButton = originalButton.cloneNode(true)
+  paintButton.classList.remove('mapbox-gl-draw_line')
+  paintButton.classList.add('mapbox-gl-draw_paint')
+  const icon = document.createElement('i')
+  icon.classList.add('bi')
+  icon.classList.add('bi-pencil-fill')
+  paintButton.appendChild(icon)
+  paintButton.removeEventListener('click', null)
+  paintButton.addEventListener('click', (e) => {
+    draw.changeMode('draw_paint_mode')
+    document.querySelector('.mapbox-gl-draw_paint').classList.add('active')
+  })
+  const parentElement = originalButton.parentElement
+  parentElement.insertBefore(paintButton, originalButton.nextSibling)
 }

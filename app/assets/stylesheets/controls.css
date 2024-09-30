@@ -13,7 +13,7 @@
 }
 
 .mapbox-gl-draw_ctrl-draw-btn { /* stylelint-disable-line */
-  color: var(--hover-color);
+  color: #303030;
   opacity: 0.75;
 }
 

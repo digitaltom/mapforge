@@ -136,6 +136,7 @@ const labelSize = ['to-number', ['coalesce', ['get', 'user_label-size'], ['get',
 // font must be available via glyphs:
 // openmaptiles: https://github.com/openmaptiles/fonts/tree/gh-pages
 // maptiler: https://docs.maptiler.com/gl-style-specification/glyphs/
+// versatiles: https://github.com/versatiles-org/versatiles-fonts/tree/main/fonts
 // Emojis are not in the character range: https://github.com/maplibre/maplibre-gl-js/issues/2307
 const labelFont = ['Klokantech Noto Sans Bold']
 
