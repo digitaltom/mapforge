@@ -135,7 +135,7 @@ export default class extends Controller {
   updateLineWidth () {
     const feature = this.getFeature()
     const size = document.querySelector('#line-width').value
-    document.querySelector('#line-width-val').innerHTML = '(' + size + ')'
+    document.querySelector('#line-width-val').textContent = '(' + size + ')'
     feature.properties['stroke-width'] = size
     // draw layer feature properties aren't getting updated by draw.set()
     draw.setFeatureProperty(this.featureIdValue, 'stroke-width', size)
