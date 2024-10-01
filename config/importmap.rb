@@ -27,7 +27,7 @@ preload: false
 pin "mapbox-gl-draw-waypoint",
   to: "https://ga.jspm.io/npm:mapbox-gl-draw-waypoint@1.2.3/dist/mapbox-gl-draw-waypoint.esm.js", preload: false
 # https://github.com/piraveenankirupakaran/mapbox-gl-draw-paint-mode
-# local download because of removal of css import + latest git version
+# local download because of removal of css import, latest git version, feature id generation
 pin "mapbox-gl-draw-paint-mode", preload: false
 # https://github.com/maplibre/maplibre-gl-js
 pin "maplibre-gl", to: "https://ga.jspm.io/npm:maplibre-gl@4.7.1/dist/maplibre-gl.js"

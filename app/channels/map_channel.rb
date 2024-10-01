@@ -39,7 +39,7 @@ class MapChannel < ApplicationCable::Channel
     # ActionController::Parameters.new(data).permit(:type, :id, geometry: [:type, coordinates: []], properties: {})
     atts = data.slice("type", "id", "geometry", "properties")
     # drop the id in properties which is a workaround for https://github.com/mapbox/mapbox-gl-js/issues/2716
-    atts["properties"].delete("id")
+    atts["properties"]&.delete("id")
     atts
   end
 

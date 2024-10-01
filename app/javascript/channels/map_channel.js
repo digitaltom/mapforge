@@ -58,7 +58,6 @@ export function initializeSocket () {
           upsert(data.feature)
           break
         case 'delete_feature':
-          // ol feature delete
           destroy(data.feature.id)
           break
         case 'update_map':

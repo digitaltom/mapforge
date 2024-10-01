@@ -282,10 +282,12 @@ function updateFeature (feature, updatedFeature) {
 }
 
 export function destroy (featureId) {
-  status('Deleting feature ' + featureId)
-  geojsonData.features = geojsonData.features.filter(f => f.id !== featureId)
-  redrawGeojson()
-  resetHighlightedFeature()
+  if (geojsonData.features.find(f => f.id === featureId)) {
+    status('Deleting feature ' + featureId)
+    geojsonData.features = geojsonData.features.filter(f => f.id !== featureId)
+    redrawGeojson()
+    resetHighlightedFeature()
+  }
 }
 
 export function setBackgroundMapLayer (mapName = mapProperties.base_map, force = false) {

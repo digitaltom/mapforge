@@ -62,7 +62,7 @@ class Feature
   def broadcast_destroy
     [ map.id, map.public_id ].each do |id|
       ActionCable.server.broadcast("map_channel_#{id}",
-                                   { event: "delete_feature", feature: geojson.as_json })
+        { event: "delete_feature", feature: geojson.slice(:id).as_json })
     end
   end
 end

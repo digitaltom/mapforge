@@ -44,6 +44,7 @@ function stopDrawing(state, e, me) {
     type: "FeatureCollection",
     features: state.features.map((coordinates) => ({
       type: "Feature",
+      id: Math.floor(Math.random() * 16 ** 14).toString(16),
       properties: {},
       geometry: {
         type: "MultiLineString",

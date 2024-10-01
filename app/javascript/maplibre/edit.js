@@ -1,8 +1,11 @@
-import { map, geojsonData, initializeDefaultControls, redrawGeojson } from 'maplibre/map'
+import { map, geojsonData, initializeDefaultControls, redrawGeojson, destroy } from 'maplibre/map'
 import { editStyles, initializeEditStyles } from 'maplibre/edit_styles'
 import { highlightFeature } from 'maplibre/feature'
 import { mapChannel } from 'channels/map_channel'
-import { ControlGroup, MapSettingsControl, MapShareControl, MapLayersControl, resetControls } from 'maplibre/controls'
+import {
+  ControlGroup, MapSettingsControl, MapShareControl, MapLayersControl,
+  resetControls
+} from 'maplibre/controls'
 import { status } from 'helpers/status'
 import * as functions from 'helpers/functions'
 import MapboxDraw from '@mapbox/mapbox-gl-draw'
@@ -131,9 +134,9 @@ function handleUpdate (e) {
 export function handleDelete (e) {
   selectedFeature = null
   const deletedFeature = e.features[0] // Assuming one feature is deleted at a time
-
+  destroy(deletedFeature.id)
   status('Feature ' + deletedFeature.id + ' deleted')
-  mapChannel.send_message('delete_feature', deletedFeature)
+  mapChannel.send_message('delete_feature', { id: deletedFeature.id })
 }
 
 export function disableEditControls () {
