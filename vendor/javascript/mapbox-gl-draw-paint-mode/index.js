@@ -1,6 +1,7 @@
-import * as doubleClickZoom from "./mapbox-gl-draw-paint-mode/lib/double_click_zoom";
-import * as dragPan from "./mapbox-gl-draw-paint-mode/lib/drag_pan";
-import * as Constants from "./mapbox-gl-draw-paint-mode/lib/Constants";
+import * as doubleClickZoom from "./lib/double_click_zoom";
+import * as dragPan from "./lib/drag_pan";
+import * as Constants from "./lib/Constants";
+import "./icon/paint-brush.css";
 
 var PaintMode = {};
 
@@ -12,7 +13,7 @@ PaintMode.onSetup = function () {
   doubleClickZoom.disable(this);
   if(isTouchDevice()){
     dragPan.disable(this);
-  }
+  }  
   return state;
 };
 
