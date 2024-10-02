@@ -40,6 +40,7 @@ function stopDrawing(state, e, me) {
   state.features.push(state.currentLine);
   state.currentLine = null;
   me.changeMode(Constants.modes.SIMPLE_SELECT);
+  me.changeMode('draw_paint_mode')
   me.map.fire("draw.create", {
     type: "FeatureCollection",
     features: state.features.map((coordinates) => ({
@@ -81,8 +82,9 @@ PaintMode.onMouseMove = PaintMode.onTouchMove = function (state, e) {
         coordinates: [state.currentLine],
       },
     });
-    this.deleteFeature(state.currentLineFeature.id);
-    state.currentLineFeature = updatedLineFeature;
+    state.currentLineFeature['coordinates'] = [state.currentLine]
+    //this.deleteFeature(state.currentLineFeature.id);
+    //state.currentLineFeature = updatedLineFeature;
     this.addFeature(state.currentLineFeature);
     this.map.fire("draw.selectionchange", {
       featureIds: [state.currentLineFeature.id],
