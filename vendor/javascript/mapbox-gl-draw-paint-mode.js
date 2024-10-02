@@ -1,6 +1,6 @@
-import * as doubleClickZoom from "./mapbox-gl-draw-paint-mode/lib/double_click_zoom";
-import * as dragPan from "./mapbox-gl-draw-paint-mode/lib/drag_pan";
-import * as Constants from "./mapbox-gl-draw-paint-mode/lib/Constants";
+import * as doubleClickZoom from "mapbox-gl-draw-paint-mode/lib/double_click_zoom"
+import * as dragPan from "mapbox-gl-draw-paint-mode/lib/drag_pan"
+import * as Constants from "mapbox-gl-draw-paint-mode/lib/Constants"
 
 var PaintMode = {};
 
