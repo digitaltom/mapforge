@@ -2,6 +2,7 @@ import { Controller } from '@hotwired/stimulus'
 import { mapChannel } from 'channels/map_channel'
 import { geojsonData, redrawGeojson } from 'maplibre/map'
 import { handleDelete, draw } from 'maplibre/edit'
+import { defaultLineWidth } from 'maplibre/styles'
 import { status } from 'helpers/status'
 import { showFeatureDetails } from 'maplibre/modals'
 import * as functions from 'helpers/functions'
@@ -70,12 +71,12 @@ export default class extends Controller {
     functions.e('#feature-edit-ui .edit-ui', e => { e.classList.add('hidden') })
     if (feature.geometry.type === 'Point') {
       functions.e('#feature-edit-ui .edit-point', e => { e.classList.remove('hidden') })
-      const size = feature.properties['marker-size'] || 8
+      const size = feature.properties['marker-size'] || 6
       document.querySelector('#point-size').value = size
       document.querySelector('#point-size-val').innerHTML = '(' + size + ')'
     } else if (feature.geometry.type === 'LineString' || feature.geometry.type === 'MultiLineString') {
       functions.e('#feature-edit-ui .edit-line', e => { e.classList.remove('hidden') })
-      const size = feature.properties['stroke-width'] || 2
+      const size = feature.properties['stroke-width'] || defaultLineWidth
       document.querySelector('#line-width').value = size
       document.querySelector('#line-width-val').innerHTML = '(' + size + ')'
     } else if (feature.geometry.type === 'Polygon') {

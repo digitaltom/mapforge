@@ -173,6 +173,7 @@ function addPaintButton () {
       draw.changeMode('simple_select')
     } else {
       draw.changeMode('draw_paint_mode')
+      status('Paint Mode: Click on the map to start drawing, double click to finish', 4000)
     }
     map.fire('draw.modechange')
   })

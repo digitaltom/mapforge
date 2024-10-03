@@ -35,6 +35,7 @@ function startDrawing(state, e) {
   state.currentLine = state.currentLine || [];
   state.currentLine.push([e.lngLat.lng, e.lngLat.lat]);
 }
+
 function stopDrawing(state, e, me) {
   me.changeMode(Constants.modes.SIMPLE_SELECT);
   me.changeMode('draw_paint_mode')
