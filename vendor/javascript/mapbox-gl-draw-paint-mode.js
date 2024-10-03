@@ -6,7 +6,6 @@ var PaintMode = {};
 
 PaintMode.onSetup = function () {
   var state = {};
-  state.features = [];
   state.currentLine = null;
   state.currentLineFeature = null;
   doubleClickZoom.disable(this);
@@ -37,22 +36,21 @@ function startDrawing(state, e) {
   state.currentLine.push([e.lngLat.lng, e.lngLat.lat]);
 }
 function stopDrawing(state, e, me) {
-  state.features.push(state.currentLine);
-  state.currentLine = null;
   me.changeMode(Constants.modes.SIMPLE_SELECT);
   me.changeMode('draw_paint_mode')
+
   me.map.fire("draw.create", {
     type: "FeatureCollection",
-    features: state.features.map((coordinates) => ({
+    features: [{
       type: "Feature",
-      id: Math.floor(Math.random() * 16 ** 14).toString(16),
+      id: state.currentLineFeature.id,
       properties: {},
       geometry: {
-        type: "MultiLineString",
-        coordinates: [coordinates],
-      },
-    })),
-  });
+        type: "LineString",
+        coordinates: state.currentLineFeature.coordinates,
+      }
+    }]
+  })
 }
 
 PaintMode.onMouseMove = PaintMode.onTouchMove = function (state, e) {
@@ -65,32 +63,16 @@ PaintMode.onMouseMove = PaintMode.onTouchMove = function (state, e) {
       type: "Feature",
       properties: {},
       geometry: {
-        type: "MultiLineString",
-        coordinates: [state.currentLine],
+        type: "LineString"
       },
-    });
-    this.addFeature(state.currentLineFeature);
-    this.map.fire("draw.selectionchange", {
-      featureIds: [state.currentLineFeature.id],
-    });
-  } else {
-    let updatedLineFeature = this.newFeature({
-      type: "Feature",
-      properties: {},
-      geometry: {
-        type: "MultiLineString",
-        coordinates: [state.currentLine],
-      },
-    });
-    state.currentLineFeature['coordinates'] = [state.currentLine]
-    //this.deleteFeature(state.currentLineFeature.id);
-    //state.currentLineFeature = updatedLineFeature;
-    this.addFeature(state.currentLineFeature);
-    this.map.fire("draw.selectionchange", {
-      featureIds: [state.currentLineFeature.id],
-    });
+    })
   }
-};
+  state.currentLineFeature['coordinates'] = state.currentLine
+  this.addFeature(state.currentLineFeature);
+  this.map.fire("draw.selectionchange", {
+    featureIds: [state.currentLineFeature.id],
+  })
+}
 
 PaintMode.toDisplayFeatures = function (state, geojson, display) {
   display(geojson);
