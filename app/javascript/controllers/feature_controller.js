@@ -68,7 +68,9 @@ export default class extends Controller {
       }]
     })
 
-    functions.e('#feature-edit-ui .edit-ui', e => { e.classList.add('hidden') })
+    document.querySelector('#feature-title').value = feature.properties.title || null
+    document.querySelector('#feature-label').value = feature.properties.label || null
+    functions.e('.edit-point, .edit-line, .edit-polygon', e => { e.classList.add('hidden') })
     if (feature.geometry.type === 'Point') {
       functions.e('#feature-edit-ui .edit-point', e => { e.classList.remove('hidden') })
       const size = feature.properties['marker-size'] || 6
@@ -106,6 +108,23 @@ export default class extends Controller {
       status('Error updating feature', 'error')
       document.querySelector('#feature-edit-raw .error').innerHTML = error.message
     }
+  }
+
+  updateTitle () {
+    const feature = this.getFeature()
+    const title = document.querySelector('#feature-title').value
+    feature.properties.title = title
+    document.querySelector('#feature-details-header').textContent = title
+    this.saveFeature()
+  }
+
+  updateLabel () {
+    const feature = this.getFeature()
+    const label = document.querySelector('#feature-label').value
+    feature.properties.label = label
+    draw.setFeatureProperty(this.featureIdValue, 'label', label)
+    redrawGeojson()
+    this.saveFeature()
   }
 
   updateDesc () {

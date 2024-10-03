@@ -1,11 +1,19 @@
 #feature-edit-ui.hidden
-  %textarea#feature-desc
+
+  %form.form-floating.edit-ui
+    %input#feature-title.form-control{"data-action": "input->feature#updateTitle"}
+    %label{ for: "feature-title"} Title
+
+  %form.form-floating.edit-ui
+    %input#feature-label.form-control{"data-action": "input->feature#updateLabel"}
+    %label{ for: "feature-label"} Label
+
+  %input.edit-ui#feature-desc
 
   #point-size-ui.edit-ui.edit-point
     %label{ for: "point-size"} Size:
     %input.slider#point-size{ type: "range", min: "1", max: "50", value: "1", 'data-action': "input->feature#updatePointSize  change->feature#saveFeature"}
     %span#point-size-val
-
 
   #line-width-ui.edit-ui.edit-line.edit-polygon
     %label{ for: "line-width"} Width:
