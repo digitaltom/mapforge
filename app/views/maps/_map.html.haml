@@ -1,8 +1,8 @@
 .map-preview{id: dom_id(map)}
   = link_to map_path(id: map.public_id) do
     - if File.exist?(Rails.root.join("public/previews/#{map.public_id}.png"))
-      %img{src: "/previews/#{map.public_id}.png", class: 'preview-image'}
+      %img{src: "/previews/#{map.public_id}.png", class: 'preview-image', loading: 'lazy'}
     - else
-      = image_tag "preview.png", class: 'preview-image'
+      = image_tag "preview.png", class: 'preview-image', loading: 'lazy'
     .map-preview-title= map.name
   %i= "last change #{distance_of_time_in_words(DateTime.now, map.updated_at)} ago"

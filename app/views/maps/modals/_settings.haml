@@ -23,25 +23,25 @@
     %br
     - Map::BASE_MAPS.each do |base_map|
       - active = (@map_properties[:base_map] == base_map)
-      = image_tag("base_maps/#{base_map}.jpg", data: { base_map: base_map, action: "click->settings#updateBaseMap" }, class: "layer-preview")
+      = image_tag("base_maps/#{base_map}.jpg", data: { base_map: base_map, action: "click->settings#updateBaseMap" }, class: "layer-preview", loading: 'lazy')
     %br
     Versatiles maps:
     %br
     - Map::VERSATILES_MAPS.each do |base_map|
       - active = (@map_properties[:base_map] == base_map)
-      = image_tag("base_maps/#{base_map}.jpg", data: { base_map: base_map, action: "click->settings#updateBaseMap" }, class: "layer-preview")
+      = image_tag("base_maps/#{base_map}.jpg", data: { base_map: base_map, action: "click->settings#updateBaseMap" }, class: "layer-preview", loading: 'lazy')
     %br
     Openfreemaps:
     %br
     - Map::OPENFREE_MAPS.each do |base_map|
       - active = (@map_properties[:base_map] == base_map)
-      = image_tag("base_maps/#{base_map}.jpg", data: { base_map: base_map, action: "click->settings#updateBaseMap" }, class: "layer-preview")
+      = image_tag("base_maps/#{base_map}.jpg", data: { base_map: base_map, action: "click->settings#updateBaseMap" }, class: "layer-preview", loading: 'lazy')
     - if ENV['MAPTILER_KEY']
       %br
       Maptiler maps:
       %br
       - Map::MAPTILER_MAPS.each do |base_map|
-        = image_tag("base_maps/#{base_map}.jpg", data: { base_map: base_map, action: "click->settings#updateBaseMap"}, class: "layer-preview")
+        = image_tag("base_maps/#{base_map}.jpg", data: { base_map: base_map, action: "click->settings#updateBaseMap"}, class: "layer-preview", loading: 'lazy')
     %br
     %h4 Default view
     Center:
