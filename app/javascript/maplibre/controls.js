@@ -1,4 +1,4 @@
-import { mapProperties, geojsonData } from 'maplibre/map'
+import { map, mapProperties, geojsonData } from 'maplibre/map'
 import * as functions from 'helpers/functions'
 import { draw } from 'maplibre/edit'
 import { resetHighlightedFeature } from 'maplibre/feature'
@@ -173,4 +173,5 @@ export function resetControls () {
 
 function resetEditControls () {
   draw.changeMode('simple_select')
+  map.fire('draw.modechange')
 }

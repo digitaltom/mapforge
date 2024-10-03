@@ -68,7 +68,14 @@ export function initializeEditMode () {
     }
   })
 
-  map.on('draw.modechange', () => { resetControls() })
+  map.on('draw.modechange', () => {
+    resetControls()
+    if (draw.getMode() === 'draw_paint_mode') {
+      functions.e('.mapbox-gl-draw_paint', e => { e.classList.add('active') })
+    } else {
+      functions.e('.mapbox-gl-draw_paint', e => { e.classList.remove('active') })
+    }
+  })
   map.on('draw.selectionchange', function (e) {
     if (!e.features?.length) { return }
     selectedFeature = e.features[0]
@@ -113,8 +120,6 @@ function handleCreate (e) {
   const feature = e.features[0] // Assuming one feature is created at a time
 
   status('Feature ' + feature.id + ' created')
-  // reset special paint button
-  functions.e('.mapbox-gl-draw_ctrl-draw-btn', e => { e.classList.remove('active') })
   geojsonData.features.push(feature)
   mapChannel.send_message('new_feature', feature)
 }
@@ -164,8 +169,12 @@ function addPaintButton () {
   paintButton.appendChild(icon)
   paintButton.removeEventListener('click', null)
   paintButton.addEventListener('click', (e) => {
-    draw.changeMode('draw_paint_mode')
-    document.querySelector('.mapbox-gl-draw_paint').classList.add('active')
+    if (draw.getMode() === 'draw_paint_mode') {
+      draw.changeMode('simple_select')
+    } else {
+      draw.changeMode('draw_paint_mode')
+    }
+    map.fire('draw.modechange')
   })
   const parentElement = originalButton.parentElement
   parentElement.insertBefore(paintButton, originalButton.nextSibling)
