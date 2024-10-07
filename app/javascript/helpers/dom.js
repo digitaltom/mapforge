@@ -10,11 +10,13 @@ export function waitForElement (selector, callback, waitTime = 100) {
 export function showElements (selectors) {
   selectors = Array.isArray(selectors) ? selectors : [selectors]
   selectors.forEach(selector => {
-    document.querySelector(selector).classList.remove('hidden') })
+    document.querySelector(selector).classList.remove('hidden')
+  })
 }
 
 export function hideElements (selectors) {
   selectors = Array.isArray(selectors) ? selectors : [selectors]
   selectors.forEach(selector => {
-    document.querySelector(selector).classList.add('hidden') })
+    document.querySelector(selector).classList.add('hidden')
+  })
 }

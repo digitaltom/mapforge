@@ -48,7 +48,7 @@ function featureMeta (feature) {
 }
 
 export function showFeatureDetails (feature) {
-  dom.hideElements(['#feature-edit-raw','#feature-edit-ui'])
+  dom.hideElements(['#feature-edit-raw', '#feature-edit-ui'])
   functions.e('#edit-buttons button', (e) => { e.classList.remove('active') })
   document.querySelector('#edit-button-raw').classList.add('hidden')
   dom.showElements('#feature-details-body')

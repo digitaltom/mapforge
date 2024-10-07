@@ -1,4 +1,4 @@
-// eslint expects variables to get imported, but we load the full lib in header
+const debounceList = []
 
 export function hexToRgb (hex) {
   let r = parseInt(hex.slice(1, 3), 16)
@@ -13,12 +13,11 @@ export function hexToRgb (hex) {
   return [r, g, b]
 }
 
-export function debounce (callback, delay) {
-  let timeoutId
-  return () => {
-    clearTimeout(timeoutId)
-    timeoutId = setTimeout(() => callback(), delay)
-  }
+export function debounce (callback, name, delay = 1500) {
+  // console.log('debounce: clearing timeout ' + name)
+  clearTimeout(debounceList[name])
+  debounceList[name] = setTimeout(() => callback(), delay)
+  // console.log('debounce: setting ' + delay + 'ms timeout for ' + name)
 }
 
 export function sleep (ms) {

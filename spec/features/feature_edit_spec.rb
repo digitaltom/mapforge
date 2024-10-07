@@ -87,6 +87,28 @@ describe 'Feature edit' do
         expect(page).to have_selector('#point-size-val', text: '15')
         expect(point.reload.properties['marker-size']).to eq('15')
       end
+
+      it 'can update title' do
+        fill_in 'feature-title', with: "New Title"
+        wait_for { point.reload.properties['title'] }.to eq('New Title')
+      end
+
+      it 'can update label' do
+        expect(page).to_not have_selector('#feature-label')
+        click_button 'Add label'
+        fill_in 'feature-label', with: "New Label"
+        wait_for { point.reload.properties['label'] }.to eq('New Label')
+      end
+
+      # it 'can update desc' do
+      #   expect(page).to_not have_selector('#feature-desc-input')
+      #   click_button 'Add description'
+      #   expect(page).to have_text('Add a description')
+      #   within("#feature-desc") do
+      #    fill_in '.CodeMirror textarea', with: "New Desc"
+      #   end
+      #   wait_for { point.reload.properties['desc'] }.to eq('New Desc')
+      # end
     end
   end
 

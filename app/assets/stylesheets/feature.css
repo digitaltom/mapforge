@@ -79,6 +79,10 @@
   max-width: 25em;
 }
 
+#feature-desc {
+  padding-top: 0.5em;
+}
+
 .edit-ui .slider {
   flex-grow: 1;
   flex-shrink: 1;

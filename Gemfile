@@ -75,6 +75,7 @@ group :test do
   gem "factory_bot_rails"
   gem "rspec"
   gem "rspec-rails"
+  gem "rspec-wait"
   gem "selenium-webdriver"
   gem "simplecov"
   gem "database_cleaner-mongoid"
