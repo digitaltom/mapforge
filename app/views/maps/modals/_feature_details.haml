@@ -1,8 +1,7 @@
 #feature-details-modal.map-modal.modal-pull-down.fade{'data-controller': "feature"}
   %a.modal-pull-button.link{ 'data-action': "click->feature#toggleModalSize"}
-  = render 'maps/modals/feature/edit_buttons'
-  %h4#feature-details-header{ 'data-action': "click->feature#toggleModalSize"}
-  #feature-details-meta
+
+  = render 'maps/modals/feature/header'
 
   = render 'maps/modals/feature/edit_ui'
   = render 'maps/modals/feature/edit_raw'

@@ -43,6 +43,7 @@ a:hover, .link:hover {
 .flex-container {
   display: flex;
   flex-wrap: wrap;
+  align-items: center; /* Vertically centers the items */
 }
 
 .flex-center {

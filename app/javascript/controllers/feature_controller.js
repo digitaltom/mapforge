@@ -53,23 +53,18 @@ export default class extends Controller {
     document.querySelector('#feature-edit-ui').classList.remove('hidden')
     document.querySelector('#feature-edit-raw').classList.add('hidden')
 
-    // https://github.com/Ionaru/easy-markdown-editor
-    if (easyMDE) { easyMDE.toTextArea() }
-    document.querySelector('#feature-desc').value = feature.properties.desc || ''
-    easyMDE = new EasyMDE({
-      element: document.getElementById('feature-desc'),
-      placeholder: 'Add a description',
-      hideIcons: ['quote', 'ordered-list', 'fullscreen', 'side-by-side', 'preview', 'guide'],
-      maxHeight: '6em',
-      spellChecker: false,
-      status: [{
-        className: 'autosave',
-        onUpdate: functions.debounce(() => { this.updateDesc() }, 2000)
-      }]
-    })
+    // switch feature title to input form
+    document.querySelector('#feature-title-input').classList.remove('hidden')
+    document.querySelector('#feature-title').classList.add('hidden')
+    document.querySelector('#feature-title-input input').value = feature.properties.title || null
 
-    document.querySelector('#feature-title').value = feature.properties.title || null
-    document.querySelector('#feature-label').value = feature.properties.label || null
+    document.querySelector('#feature-desc').classList.add('hidden')
+    document.querySelector('#button-add-desc').classList.remove('hidden')
+    document.querySelector('#feature-label').classList.add('hidden')
+    document.querySelector('#button-add-label').classList.remove('hidden')
+    if (feature.properties.label) { this.show_add_label() }
+    if (feature.properties.desc) { this.show_add_desc() }
+
     functions.e('.edit-point, .edit-line, .edit-polygon', e => { e.classList.add('hidden') })
     if (feature.geometry.type === 'Point') {
       functions.e('#feature-edit-ui .edit-point', e => { e.classList.remove('hidden') })
@@ -96,6 +91,31 @@ export default class extends Controller {
       .value = JSON.stringify(feature.properties, undefined, 2)
   }
 
+  show_add_label () {
+    document.querySelector('#button-add-label').classList.add('hidden')
+    document.querySelector('#feature-label').classList.remove('hidden')
+    document.querySelector('#feature-label input').value = this.getFeature().properties.label || null
+  }
+
+  show_add_desc () {
+    document.querySelector('#button-add-desc').classList.add('hidden')
+    document.querySelector('#feature-desc').classList.remove('hidden')
+    // https://github.com/Ionaru/easy-markdown-editor
+    if (easyMDE) { easyMDE.toTextArea() }
+    document.querySelector('#feature-desc-input').value = this.getFeature().properties.desc || ''
+    easyMDE = new EasyMDE({
+      element: document.getElementById('feature-desc-input'),
+      placeholder: 'Add a description',
+      hideIcons: ['quote', 'ordered-list', 'fullscreen', 'side-by-side', 'preview', 'guide'],
+      maxHeight: '6em',
+      spellChecker: false,
+      status: [{
+        className: 'autosave',
+        onUpdate: functions.debounce(() => { this.updateDesc() }, 2000)
+      }]
+    })
+  }
+
   update_feature_raw () {
     const feature = this.getFeature()
     document.querySelector('#feature-edit-raw .error').innerHTML = ''
@@ -112,15 +132,15 @@ export default class extends Controller {
 
   updateTitle () {
     const feature = this.getFeature()
-    const title = document.querySelector('#feature-title').value
+    const title = document.querySelector('#feature-title-input input').value
     feature.properties.title = title
-    document.querySelector('#feature-details-header').textContent = title
+    document.querySelector('#feature-title').textContent = title
     this.saveFeature()
   }
 
   updateLabel () {
     const feature = this.getFeature()
-    const label = document.querySelector('#feature-label').value
+    const label = document.querySelector('#feature-label input').value
     feature.properties.label = label
     draw.setFeatureProperty(this.featureIdValue, 'label', label)
     redrawGeojson()

@@ -1,5 +1,6 @@
 import { marked } from 'marked'
 import * as functions from 'helpers/functions'
+import * as dom from 'helpers/dom'
 
 // eslint expects variables to get imported, but we load the full lib in header
 const turf = window.turf
@@ -47,28 +48,29 @@ function featureMeta (feature) {
 }
 
 export function showFeatureDetails (feature) {
-  document.querySelector('#feature-edit-raw').classList.add('hidden')
-  document.querySelector('#feature-edit-ui').classList.add('hidden')
+  dom.hideElements(['#feature-edit-raw','#feature-edit-ui'])
   functions.e('#edit-buttons button', (e) => { e.classList.remove('active') })
   document.querySelector('#edit-button-raw').classList.add('hidden')
-  document.querySelector('#feature-details-body').classList.remove('hidden')
+  dom.showElements('#feature-details-body')
   const modal = document.querySelector('#feature-details-modal')
   modal.classList.remove('expanded')
   modal.classList.add('show')
   modal.scrollTo(0, 0)
   modal.dataset.featureFeatureIdValue = feature.id
 
-  document.querySelector('#feature-details-header').innerHTML = ''
+  document.querySelector('#feature-symbol').innerHTML = ''
   if (feature.properties['marker-image-url']) {
     const imageUrl = feature.properties['marker-image-url'].replace('/icon/', '/image/')
     document.querySelector('#feature-details-header').innerHTML =
       "<a href='" + imageUrl + "' target='_blank'>" +
       "<img id='feature-details-icon' src='" + feature.properties['marker-image-url'] + "'></a>"
   } else if (feature.properties['marker-symbol']) {
-    document.querySelector('#feature-details-header').innerHTML =
+    document.querySelector('#feature-symbol').innerHTML =
       "<img id='feature-details-icon' src='/emojis/noto/" + feature.properties['marker-symbol'] + ".png'>"
   }
-  document.querySelector('#feature-details-header').innerHTML += featureTitle(feature)
+  dom.showElements('#feature-title')
+  dom.hideElements('#feature-title-input')
+  document.querySelector('#feature-title').innerHTML = featureTitle(feature)
   document.querySelector('#feature-details-meta').innerHTML = featureMeta(feature)
   const desc = marked(feature?.properties?.desc || '')
   document.querySelector('#feature-details-body').innerHTML = desc

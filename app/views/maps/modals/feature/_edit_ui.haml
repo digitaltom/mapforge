@@ -1,14 +1,17 @@
 #feature-edit-ui.hidden
 
-  %form.form-floating.edit-ui
-    %input#feature-title.form-control{"data-action": "input->feature#updateTitle"}
-    %label{ for: "feature-title"} Title
+  %div
+    %button#button-add-label.btn.btn-secondary{ type: "button", 'data-action': "click->feature#show_add_label" } Add label
+    %button#button-add-desc.btn.btn-secondary{ type: "button", 'data-action': "click->feature#show_add_desc" } Add Description
 
-  %form.form-floating.edit-ui
-    %input#feature-label.form-control{"data-action": "input->feature#updateLabel"}
+  #feature-label.form-floating.edit-ui.hidden
+    %input.form-control{"data-action": "input->feature#updateLabel"}
     %label{ for: "feature-label"} Label
 
-  %input.edit-ui#feature-desc
+  #feature-desc.hidden
+    %input#feature-desc-input.edit-ui
+
+  / layout properties
 
   #point-size-ui.edit-ui.edit-point
     %label{ for: "point-size"} Size:

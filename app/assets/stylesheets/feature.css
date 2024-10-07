@@ -23,10 +23,6 @@
   top: 4em;
 }
 
-#feature-details-header {
-  max-height: 2em;
-}
-
 #feature-details-body, #feature-edit-ui, #feature-edit-raw {
   overflow-y: hidden;
   max-height: 1.3em;
