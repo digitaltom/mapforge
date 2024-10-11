@@ -163,6 +163,8 @@ export function initLayersModal () {
 
 export function resetControls () {
   resetHighlightedFeature()
+  // reset cursor
+  functions.e('.maplibregl-canvas', e => { e.classList.remove('cursor-crosshair') })
   // reset ctrl buttons
   functions.e('.maplibregl-ctrl-btn', e => { e.classList.remove('active') })
   // reset active modals

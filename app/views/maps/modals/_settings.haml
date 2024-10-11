@@ -14,10 +14,11 @@
       Configure Map
 
   .map-modal-content
-    %label{ for: "map-name"} Name:
-    %br
-    %input#map-name{type: "text", size: 27}
-    %button#save-map-name{ type: 'submit', data: { action: "click->settings#updateName" } } Update
+
+    .form-floating.edit-ui
+      %input.form-control#map-name{"name": "map-name", type: "text", size: 27, data: { action: "input->settings#updateName" } }
+      %label{ for: "map-name"} Name:
+
     %br
     Free tile maps:
     %br

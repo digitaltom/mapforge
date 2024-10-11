@@ -52,3 +52,7 @@
 .layer-feature-item i {
   margin-left: 0.5em;
 }
+
+.cursor-crosshair {
+  cursor: crosshair;
+}

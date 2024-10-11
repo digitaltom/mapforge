@@ -61,7 +61,7 @@ export function showFeatureDetails (feature) {
   document.querySelector('#feature-symbol').innerHTML = ''
   if (feature.properties['marker-image-url']) {
     const imageUrl = feature.properties['marker-image-url'].replace('/icon/', '/image/')
-    document.querySelector('#feature-details-header').innerHTML =
+    document.querySelector('#feature-symbol').innerHTML =
       "<a href='" + imageUrl + "' target='_blank'>" +
       "<img id='feature-details-icon' src='" + feature.properties['marker-image-url'] + "'></a>"
   } else if (feature.properties['marker-symbol']) {

@@ -73,11 +73,15 @@ export function initializeEditMode () {
 
   map.on('draw.modechange', () => {
     resetControls()
+    if (draw.getMode() !== 'simple_select') {
+      functions.e('.maplibregl-canvas', e => { e.classList.add('cursor-crosshair') })
+    }
     if (draw.getMode() === 'draw_paint_mode') {
       functions.e('.mapbox-gl-draw_paint', e => { e.classList.add('active') })
     } else {
       functions.e('.mapbox-gl-draw_paint', e => { e.classList.remove('active') })
     }
+    console.log('draw mode: ' + draw.getMode())
   })
   map.on('draw.selectionchange', function (e) {
     if (!e.features?.length) { return }

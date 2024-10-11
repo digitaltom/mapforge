@@ -110,7 +110,9 @@ export default class extends Controller {
     event.preventDefault()
     const name = document.querySelector('#map-name').value
     updateMapName(name)
-    mapChannel.send_message('update_map', { name })
+    functions.debounce(() => {
+      mapChannel.send_message('update_map', { name })
+    }, 'map_name', 2000)
   }
 
   updateDefaultView (event) {
