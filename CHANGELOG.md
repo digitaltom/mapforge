@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 ## 2024-10
 
 * Free paint mode
+* GPX export
 
 ## 2024-09
 

@@ -10,32 +10,40 @@ describe 'Map' do
       expect(page).to have_text('Share Map')
     end
 
-    it 'can share public link' do
+    it 'has share public link' do
       expect(page).to have_link('Viewer link', href: '/m/' + subject.public_id)
     end
 
-    it 'can share private link' do
+    it 'has share private link' do
       expect(page).to have_link('Edit link', href: '/m/' + subject.id)
     end
 
-    it 'can share geojson link' do
-      expect(page).to have_link('Download geojson', href: '/m/' + subject.public_id + '/features')
+    it 'has share geojson link' do
+      expect(page).to have_link('Download geojson', href: '/m/' + subject.public_id + '.geojson')
     end
 
-    it 'can share map export link' do
-      expect(page).to have_link('Download map export', href: '/m/' + subject.public_id + '/export')
+    it 'has share gpx link' do
+      expect(page).to have_link('Download gpx', href: '/m/' + subject.public_id + '.gpx')
+    end
+
+    it 'has share map export link' do
+      expect(page).to have_link('Download map export', href: '/m/' + subject.public_id + '.json')
     end
   end
 
   context 'export' do
     it 'can download geojson export' do
-      visit '/m/' + subject.public_id + '/features'
-      expect(page).to have_text(map.feature_collection.to_json)
+      visit '/m/' + subject.public_id + '.geojson'
+      expect(page).to have_text(map.to_geojson.to_json)
     end
 
     it 'can download map export' do
-      visit '/m/' + subject.public_id + '/export'
+      visit '/m/' + subject.public_id + '.json'
       expect(page).to have_text(map.to_json)
+    end
+
+    it 'can download gpx export' do
+      visit '/m/' + subject.public_id + '.gpx'
     end
   end
 end

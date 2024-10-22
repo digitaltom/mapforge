@@ -42,6 +42,7 @@ gem "puppeteer-ruby"
 gem "rgeo"
 gem "rgeo-geojson"
 gem "rgeo-proj4"
+gem "gpx"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

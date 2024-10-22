@@ -1,5 +1,5 @@
 class MapsController < ApplicationController
-  before_action :set_map, only: %i[show features properties]
+  before_action :set_map, only: %i[show properties]
 
   def index
     @maps = Map.where.not(private: true).includes(layer: :features).order(updated_at: :desc)
@@ -22,6 +22,8 @@ class MapsController < ApplicationController
         end
       end
       format.json { render json: @map.to_json }
+      format.geojson { render json: @map.to_geojson }
+      format.gpx { send_data @map.to_gpx, filename: @map.public_id + ".gpx" }
     end
   end
 
@@ -29,10 +31,6 @@ class MapsController < ApplicationController
     @map = Map.create!(map_params)
 
     redirect_to map_url(@map), notice: "Map was successfully created."
-  end
-
-  def features
-    render json: @map.feature_collection
   end
 
   def properties

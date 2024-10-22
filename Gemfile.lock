@@ -210,6 +210,9 @@ GEM
       i18n (>= 0.7)
       multi_json
       request_store (>= 1.0)
+    gpx (1.2.0)
+      nokogiri (~> 1.7)
+      rake
     haml (6.3.0)
       temple (>= 0.8.2)
       thor
@@ -511,6 +514,7 @@ DEPENDENCIES
   dragonfly-mongoid_data_store
   factory_bot_rails
   gon
+  gpx
   haml
   importmap-rails
   jbuilder

@@ -8,8 +8,13 @@ class Layer
 
   field :features_count, type: Integer, default: 0
 
-  def feature_collection
+  def to_geojson
     { type: "FeatureCollection",
       features: features.map(&:geojson) }
+  end
+
+  def to_gpx
+    # https://github.com/hiroaki/ruby-gpx?tab=readme-ov-file#examples
+    GPX::GeoJSON.convert_to_gpx(geojson_data: to_geojson.to_json)
   end
 end

@@ -18,7 +18,8 @@ class Map
   field :private, type: Boolean
 
   delegate :features, to: :layer
-  delegate :feature_collection, to: :layer
+  delegate :to_geojson, to: :layer
+  delegate :to_gpx, to: :layer
   delegate :features_count, to: :layer
 
   BASE_MAPS = [ "osmRasterTiles", "satelliteTiles", "openTopoTiles" ]
@@ -71,7 +72,7 @@ class Map
   end
 
   def to_json
-    { properties: properties, layers: [ feature_collection ] }.to_json
+    { properties: properties, layers: [ to_geojson ] }.to_json
   end
 
   def public_id_must_be_unique

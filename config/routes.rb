@@ -9,12 +9,17 @@ Rails.application.routes.draw do
   scope "/m" do
     get "", to: "maps#index", as: "maps"
     get "/", to: "maps#index"
-    get "/:id" => "maps#show", as: :map, constraints: { id: ID_PATTERN }
-    post "" => "maps#create", as: :create_map
-    get "/:id/features" => "maps#features", as: :map_features, constraints: { id: ID_PATTERN }
-    get "/:id/export" => "maps#show", as: :map_export, constraints: { id: ID_PATTERN }, defaults: { format: "json" }
+
+    # map exports
+    get "/:id.json" => "maps#show", constraints: { id: ID_PATTERN }, defaults: { format: "json" }
+    get "/:id.geojson" => "maps#show", constraints: { id: ID_PATTERN }, defaults: { format: "geojson" }
+    get "/:id.gpx" => "maps#show", constraints: { id: ID_PATTERN }, defaults: { format: "gpx" }
     get "/:id/properties" => "maps#properties", as: :map_properties, constraints: { id: ID_PATTERN }
+    get "/:id" => "maps#show", as: :map, constraints: { id: ID_PATTERN }
+
+    post "" => "maps#create", as: :create_map
   end
+
   get "/d/:id" => "maps#show", defaults: { engine: "deck" }, as: :deck, constraints: { id: ID_PATTERN }
 
   get "/admin" => "admin#index"
