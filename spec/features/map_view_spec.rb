@@ -20,11 +20,11 @@ describe 'Map public view' do
 
   # features are created before loading the map, to make sure they're loaded via /features
   context 'with existing features' do
-    let!(:point) { create(:feature, :point, layer: map.layer) }
+    let!(:point) { create(:feature, :point, layer: map.layers.first) }
     # this polygon is in the middle of nbg (default view)
-    let!(:polygon) { create(:feature, :polygon_middle, layer: map.layer,
+    let!(:polygon) { create(:feature, :polygon_middle, layer: map.layers.first,
       title: 'Poly Title', desc: 'Poly Desc') }
-    let!(:line) { create(:feature, :line_string, layer: map.layer) }
+    let!(:line) { create(:feature, :line_string, layer: map.layers.first) }
 
     it 'shows feature details on hover' do
       # coordinates are calculated from the center middle
@@ -67,7 +67,7 @@ describe 'Map public view' do
 
   context 'with feature id in url' do
     # this polygon is in the middle of nbg (default view)
-    let!(:polygon) { create(:feature, :polygon_middle, layer: map.layer,
+    let!(:polygon) { create(:feature, :polygon_middle, layer: map.layers.first,
       properties: { title: 'F title' })}
     let(:path) { map_path(map, f: polygon.id) }
 
@@ -79,7 +79,7 @@ describe 'Map public view' do
 
   context 'with features that don\'t have properties' do
     # this polygon is in the middle of nbg (default view)
-    let!(:polygon) { create(:feature, :polygon_middle, layer: map.layer, properties: nil) }
+    let!(:polygon) { create(:feature, :polygon_middle, layer: map.layers.first, properties: nil) }
 
     it 'shows feature details on hover' do
       hover_coord('.map', 50, 50)
@@ -91,7 +91,7 @@ describe 'Map public view' do
   context 'with features added server side' do
     # feature is created after loading the map, to make sure it's loaded via websocket
     it 'receives new features via websocket channel' do
-      create(:feature, :polygon_middle, layer: map.layer, title: 'New Title')
+      create(:feature, :polygon_middle, layer: map.layers.first, title: 'New Title')
       click_coord('.map', 50, 50)
       expect(page).to have_css('#feature-details-modal')
       expect(page).to have_text('New Title')

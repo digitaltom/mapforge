@@ -7,7 +7,7 @@ class AdminController < ApplicationController
   # :nocov:
 
   def index
-    @maps = Map.includes(layer: :features).order(updated_at: :desc)
+    @maps = Map.includes(:layers).order(updated_at: :desc)
   end
 
   def destroy

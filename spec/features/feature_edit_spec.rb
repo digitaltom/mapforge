@@ -36,7 +36,7 @@ describe 'Feature edit' do
   end
 
   context 'with polygon on map' do
-    let!(:polygon) { create(:feature, :polygon_middle, layer: map.layer, title: 'Poly Title') }
+    let!(:polygon) { create(:feature, :polygon_middle, layer: map.layers.first, title: 'Poly Title') }
 
     context 'with selected feature' do
       before do
@@ -74,7 +74,7 @@ describe 'Feature edit' do
   end
 
   context 'with point on map' do
-    let!(:point) { create(:feature, :point_middle, layer: map.layer, title: 'Point Title') }
+    let!(:point) { create(:feature, :point_middle, layer: map.layers.first, title: 'Point Title') }
 
     context 'with selected feature' do
       before do

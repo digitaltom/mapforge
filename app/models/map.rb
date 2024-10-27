@@ -3,8 +3,7 @@ class Map
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  # one default layer for now
-  has_one :layer
+  has_many :layers
 
   field :base_map, type: String, default: -> { default_base_map }
   field :center, type: Array
@@ -16,11 +15,6 @@ class Map
   field :description, type: String
   field :public_id, type: String
   field :private, type: Boolean
-
-  delegate :features, to: :layer
-  delegate :to_geojson, to: :layer
-  delegate :to_gpx, to: :layer
-  delegate :features_count, to: :layer
 
   BASE_MAPS = [ "osmRasterTiles", "satelliteTiles", "openTopoTiles" ]
   STADIA_MAPS = [ "stamenTonerTiles", "stamenWatercolorTiles" ]
@@ -68,11 +62,25 @@ class Map
   end
 
   def create_layer
-    self.layer = Layer.create!(map: self) unless layer.present?
+    self.layers << Layer.create!(map: self) unless layers.present?
   end
 
   def to_json
     { properties: properties, layers: [ to_geojson ] }.to_json
+  end
+
+  def to_geojson
+    { type: "FeatureCollection",
+      features: layers.map(&:features).flatten.map(&:geojson) }
+  end
+
+  def to_gpx
+    # https://github.com/hiroaki/ruby-gpx?tab=readme-ov-file#examples
+    GPX::GeoJSON.convert_to_gpx(geojson_data: to_geojson.to_json)
+  end
+
+  def features
+    layers.map(&:features).flatten
   end
 
   def public_id_must_be_unique
@@ -91,8 +99,10 @@ class Map
 
     map = Map.find_or_create_by(public_id: map_hash["properties"]["public_id"])
     map.update(map_hash["properties"])
-    map.features.delete_all
-    map.layer.update!(features: Feature.from_collection(map_hash["layers"][0], collection_format: collection_format))
+    map.layers.delete_all
+    map.create_layer
+    map.layers.first.update!(features: Feature.from_collection(map_hash["layers"][0],
+collection_format: collection_format))
 
     Rails.logger.info "Created map with #{map.features.size} features from #{path}"
     Rails.logger.info "Public id: #{map.public_id}, private id: #{map.id}"

@@ -25,7 +25,6 @@
 
 #feature-details-body, #feature-edit-ui, #feature-edit-raw {
   overflow-y: hidden;
-  max-height: 1.3em;
 }
 
 .modal-pull-up #feature-details-body, .modal-pull-up #feature-edit-ui, .modal-pull-up #feature-edit-raw {
