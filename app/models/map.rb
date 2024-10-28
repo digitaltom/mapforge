@@ -71,7 +71,7 @@ class Map
 
   def to_geojson
     { type: "FeatureCollection",
-      features: layers.map(&:features).flatten.map(&:geojson) }
+      features: features.map(&:geojson) }
   end
 
   def to_gpx
@@ -80,7 +80,11 @@ class Map
   end
 
   def features
-    layers.map(&:features).flatten
+    Feature.in(layer: layers.map(&:id))
+  end
+
+  def features_count
+    layers.sum(:features_count)
   end
 
   def public_id_must_be_unique
@@ -98,7 +102,7 @@ class Map
     map_hash = JSON.parse(file)
 
     map = Map.find_or_create_by(public_id: map_hash["properties"]["public_id"])
-    map.update(map_hash["properties"])
+    map.update(map_hash["properties"].except("default_center", "default_zoom"))
     map.layers.delete_all
     map.create_layer
     map.layers.first.update!(features: Feature.from_collection(map_hash["layers"][0],

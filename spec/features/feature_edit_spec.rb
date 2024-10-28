@@ -67,7 +67,9 @@ describe 'Feature edit' do
           find('#edit-button-trash').click
         end
         # the actioncable events of map + feature update are not always received in the same order:
-        expect(page).to have_text("Feature #{polygon.id} deleted").or have_text('Map properties updated')
+        expect(page).to have_text("Deleting feature #{polygon.id}")
+          .or have_text('Map properties updated')
+          .or have_text('Map view updated')
         expect(Feature.count).to eq(0)
       end
     end

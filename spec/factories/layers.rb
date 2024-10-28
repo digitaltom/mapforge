@@ -1,6 +1,8 @@
 FactoryBot.define do
   factory :layer do
-    # association :map
-    # association :features
+    trait :with_features do
+      features { [ FactoryBot.create(:feature, :line_string),
+        FactoryBot.create(:feature, :point) ] }
+    end
   end
 end
