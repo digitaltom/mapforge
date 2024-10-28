@@ -30,7 +30,7 @@ module Ulogger
 
       # if the map has no track yet, create one, else append
       track = @map.features.line_string.first
-      track = Feature.new(layer: @map.layer, geometry: { 'coordinates' => [] }) unless track
+      track = Feature.new(layer: @map.layers.first, geometry: { 'coordinates' => [] }) unless track
       track_coords = track.geometry['coordinates'] << coords
       track.update(geometry: { "type" => "LineString",
                                "coordinates" => track_coords })
@@ -48,7 +48,7 @@ module Ulogger
         properties.merge!(image_properties)
       end
 
-      @map.features.create!(geometry: geometry, properties: properties)
+      @map.layers.first.features.create!(geometry: geometry, properties: properties)
       @map.update!(center: [ params[:lon].to_f, params[:lat].to_f ])
 
       render json: { error: false }

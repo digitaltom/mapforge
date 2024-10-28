@@ -23,7 +23,7 @@ class MapChannel < ApplicationCable::Channel
 
   def new_feature(data)
     map = Map.find(data["map_id"])
-    map.features.create!(feature_atts(data))
+    map.layers.first.features.create!(feature_atts(data))
   end
 
   def delete_feature(data)

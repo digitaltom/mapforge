@@ -36,7 +36,7 @@ describe 'Feature edit' do
   end
 
   context 'with polygon on map' do
-    let!(:polygon) { create(:feature, :polygon_middle, layer: map.layer, title: 'Poly Title') }
+    let!(:polygon) { create(:feature, :polygon_middle, layer: map.layers.first, title: 'Poly Title') }
 
     context 'with selected feature' do
       before do
@@ -67,14 +67,16 @@ describe 'Feature edit' do
           find('#edit-button-trash').click
         end
         # the actioncable events of map + feature update are not always received in the same order:
-        expect(page).to have_text("Feature #{polygon.id} deleted").or have_text('Map properties updated')
+        expect(page).to have_text("Deleting feature #{polygon.id}")
+          .or have_text('Map properties updated')
+          .or have_text('Map view updated')
         expect(Feature.count).to eq(0)
       end
     end
   end
 
   context 'with point on map' do
-    let!(:point) { create(:feature, :point_middle, layer: map.layer, title: 'Point Title') }
+    let!(:point) { create(:feature, :point_middle, layer: map.layers.first, title: 'Point Title') }
 
     context 'with selected feature' do
       before do

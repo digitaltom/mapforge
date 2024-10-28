@@ -65,7 +65,7 @@ describe 'Map' do
 
     it 'client follows default center update if map did not move' do
       find('.maplibregl-ctrl-map').click
-      feature = create(:feature, :point, layer: map.layer, coordinates: [ 11.543, 49.123 ])
+      feature = create(:feature, :point, layer: map.layers.first, coordinates: [ 11.543, 49.123 ])
       expect(page).to have_text('Map view updated')
       # new default center are the feature coordinates
       expect(page.evaluate_script("[map.getCenter().lng.toFixed(3), map.getCenter().lat.toFixed(3)].toString()"))

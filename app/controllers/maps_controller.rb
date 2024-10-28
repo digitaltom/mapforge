@@ -2,7 +2,7 @@ class MapsController < ApplicationController
   before_action :set_map, only: %i[show properties]
 
   def index
-    @maps = Map.where.not(private: true).includes(layer: :features).order(updated_at: :desc)
+    @maps = Map.where.not(private: true).includes(:layers).order(updated_at: :desc)
   end
 
   def show
