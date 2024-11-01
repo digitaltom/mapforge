@@ -306,7 +306,12 @@ export function setBackgroundMapLayer (mapName = mapProperties.base_map, force =
 }
 
 export function updateMapName (name) {
-  mapProperties.name = name
-  if (mapProperties.name) { document.title = 'mapforge.org - ' + mapProperties.name }
-  functions.e('#map-title', e => { e.textContent = mapProperties.name })
+  if (!document.getElementById('frontpage-map')) {
+    mapProperties.name = name
+    if (mapProperties.name) {
+      document.title = 'Mapforge.org: Map "' +
+      mapProperties.title || mapProperties.name + '"'
+    }
+    functions.e('#map-title', e => { e.textContent = mapProperties.name })
+  }
 }

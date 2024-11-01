@@ -1,3 +1,4 @@
+- content_for :title, "Mapforge: Create and share individual maps"
 #frontpage-map.map
 
 .container-fluid
@@ -13,5 +14,5 @@
   .row
     .col.frontpage-buttons.center
       %p
-        %a.btn.btn-primary.btn-lg{href: maps_path} explore
-        = link_to "create", create_map_path, data: { turbo_method: :post }, class: 'btn btn-primary btn-lg'
+        %a.btn.btn-primary.btn-lg{href: maps_path, 'aria-label': "Explore maps"} explore
+        = link_to "create", create_map_path, data: { turbo_method: :post }, class: 'btn btn-primary btn-lg', 'aria-label': "Create a new map"
