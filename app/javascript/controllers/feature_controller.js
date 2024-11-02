@@ -59,6 +59,7 @@ export default class extends Controller {
     if (feature.properties.desc) { this.show_add_desc() }
 
     dom.hideElements(['.edit-point', '.edit-line', '.edit-polygon'])
+    document.querySelector('#color').value = feature.properties.stroke || '#0A870A'
     if (feature.geometry.type === 'Point') {
       functions.e('#feature-edit-ui .edit-point', e => { e.classList.remove('hidden') })
       const size = feature.properties['marker-size'] || 6
@@ -172,6 +173,15 @@ export default class extends Controller {
     feature.properties['stroke-width'] = size
     // draw layer feature properties aren't getting updated by draw.set()
     draw.setFeatureProperty(this.featureIdValue, 'stroke-width', size)
+    redrawGeojson()
+  }
+
+  updateOutlineColor () {
+    const feature = this.getFeature()
+    const color = document.querySelector('#color').value
+    feature.properties.stroke = color
+    // draw layer feature properties aren't getting updated by draw.set()
+    draw.setFeatureProperty(this.featureIdValue, 'stroke', color)
     redrawGeojson()
   }
 

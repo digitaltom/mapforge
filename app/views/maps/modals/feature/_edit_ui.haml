@@ -15,10 +15,14 @@
 
   #point-size-ui.edit-ui.edit-point
     %label{ for: "point-size"} Size:
-    %input.slider#point-size{ type: "range", min: "1", max: "50", value: "1", 'data-action': "input->feature#updatePointSize  change->feature#saveFeature"}
+    %input.slider#point-size{ type: "range", min: "1", max: "50", value: "1", 'data-action': "input->feature#updatePointSize  change->feature#saveFeature" }
     %span#point-size-val
 
   #line-width-ui.edit-ui.edit-line.edit-polygon
     %label{ for: "line-width"} Width:
-    %input.slider#line-width{ type: "range", min: "1", max: "50", value: "1", 'data-action': "input->feature#updateLineWidth change->feature#saveFeature"}
+    %input.slider#line-width{ type: "range", min: "1", max: "50", value: "1", 'data-action': "input->feature#updateLineWidth change->feature#saveFeature" }
     %span#line-width-val
+
+  #color-ui.edit-ui.edit-line.edit-polygon.edit-ui.edit-point
+    %label{ for: "color"} Outline color:
+    %input#color{ type: "color", 'data-action': "input->feature#updateOutlineColor change->feature#saveFeature" }

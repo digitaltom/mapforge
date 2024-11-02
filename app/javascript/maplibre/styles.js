@@ -67,7 +67,7 @@ export async function loadImage (e) {
 // shared styles
 // Mapbox.Draw layers prefix user properties with '_user'
 
-const featureColor = 'rgb(10, 135, 10)' // green
+export const featureColor = 'rgb(10, 135, 10)' // green, #0A870A
 const featureOutlineColor = 'white'
 
 const fillColor = ['coalesce',
