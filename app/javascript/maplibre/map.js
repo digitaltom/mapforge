@@ -247,7 +247,13 @@ export function initializeViewMode () {
 
 export function redrawGeojson () {
   // draw has its own style layers based on editStyles
-  if (draw) { draw.set(geojsonData) }
+  if (draw) {
+    // TODO: this has a performance drawback over draw.set(), but otherwise
+    // feature properties like color don't get updated
+    // API: https://github.com/mapbox/mapbox-gl-draw/blob/main/docs/API.md
+    draw.deleteAll()
+    draw.add(geojsonData)
+  }
   map.getSource('geojson-source')?.setData(geojsonData)
 }
 
