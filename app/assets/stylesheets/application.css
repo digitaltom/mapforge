@@ -24,7 +24,7 @@
 html,
 body {
   overscroll-behavior: none; /* disable pull-to-refresh on mobile */
-  overflow-x: hidden;
+  overflow: hidden; /* this avoids mobile to scroll out the location bar */
   width: 100%;
   font-family: system-ui, sans-serif;
   font-weight: 300;
