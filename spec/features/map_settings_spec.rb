@@ -44,7 +44,7 @@ describe 'Map' do
     it 'basemap update' do
       find('.maplibregl-ctrl-map').click
       map.update(base_map: 'osmRasterTiles')
-      expect(page).to have_text('Map style loaded')
+      expect(page).to have_text('Map style loaded', wait: 20) # extended wait time for osm load
       expect(page).to have_css('.layer-preview[data-base-map="osmRasterTiles"].active')
     end
 
