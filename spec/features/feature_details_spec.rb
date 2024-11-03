@@ -17,8 +17,9 @@ describe 'Feature details' do
         expect(page).to have_css('#feature-details-modal')
       end
 
-      it 'can enlarge modal' do
+      it 'can enlarge modal with pull-up button' do
         find('.modal-pull-button').click
+        sleep(0.3)
         height = find('#feature-details-modal').native.style('height').sub('px', '').to_i
         expect(height).to be > 400
       end

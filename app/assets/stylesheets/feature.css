@@ -75,6 +75,10 @@
   max-width: 25em;
 }
 
+#feature-title-input {
+  margin-top: 1.5em;
+}
+
 #feature-desc {
   padding-top: 0.5em;
 }
