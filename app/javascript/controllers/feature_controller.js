@@ -63,17 +63,17 @@ export default class extends Controller {
     dom.hideElements(['.edit-point', '.edit-line', '.edit-polygon'])
     document.querySelector('#color').value = feature.properties.stroke || '#0A870A'
     if (feature.geometry.type === 'Point') {
-      functions.e('#feature-edit-ui .edit-point', e => { e.classList.remove('hidden') })
+      dom.showElements(['#feature-edit-ui .edit-point'])
       const size = feature.properties['marker-size'] || 6
       document.querySelector('#point-size').value = size
       document.querySelector('#point-size-val').innerHTML = '(' + size + ')'
     } else if (feature.geometry.type === 'LineString' || feature.geometry.type === 'MultiLineString') {
-      functions.e('#feature-edit-ui .edit-line', e => { e.classList.remove('hidden') })
+      dom.showElements(['#feature-edit-ui .edit-line'])
       const size = feature.properties['stroke-width'] || defaultLineWidth
       document.querySelector('#line-width').value = size
       document.querySelector('#line-width-val').innerHTML = '(' + size + ')'
     } else if (feature.geometry.type === 'Polygon') {
-      functions.e('#feature-edit-ui .edit-polygon', e => { e.classList.remove('hidden') })
+      dom.showElements(['#feature-edit-ui .edit-polygon'])
       document.querySelector('#line-width').value = feature.properties['stroke-width'] || 2
     }
   }
@@ -83,21 +83,21 @@ export default class extends Controller {
       this.pullUpModal()
     }
     const feature = this.getFeature()
-    document.querySelector('#feature-edit-ui').classList.add('hidden')
-    document.querySelector('#feature-edit-raw').classList.remove('hidden')
+    dom.hideElements(['#feature-edit-ui'])
+    dom.showElements(['#feature-edit-raw'])
     document.querySelector('#feature-edit-raw textarea')
       .value = JSON.stringify(feature.properties, undefined, 2)
   }
 
   show_add_label () {
-    document.querySelector('#button-add-label').classList.add('hidden')
-    document.querySelector('#feature-label').classList.remove('hidden')
+    dom.hideElements(['#button-add-label'])
+    dom.showElements(['#feature-label'])
     document.querySelector('#feature-label input').value = this.getFeature().properties.label || null
   }
 
   show_add_desc () {
-    document.querySelector('#button-add-desc').classList.add('hidden')
-    document.querySelector('#feature-desc').classList.remove('hidden')
+    dom.hideElements(['#button-add-desc'])
+    dom.showElements(['#feature-desc'])
     // https://github.com/Ionaru/easy-markdown-editor
     if (easyMDE) { easyMDE.toTextArea() }
     document.querySelector('#feature-desc-input').value = this.getFeature().properties.desc || ''
