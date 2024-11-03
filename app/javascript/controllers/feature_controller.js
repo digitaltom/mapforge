@@ -195,8 +195,13 @@ export default class extends Controller {
   toggleModalSize (e) {
     console.log('toggleModalSize')
     const modal = e.target.closest('.map-modal')
-    modal.classList.toggle('modal-pull-down')
-    modal.classList.toggle('modal-pull-up')
+    if (modal.classList.contains('modal-pull-up')) {
+      modal.classList.add('modal-pull-down')
+      modal.classList.remove('modal-pull-up')
+    } else {
+      modal.classList.remove('modal-pull-down')
+      modal.classList.add('modal-pull-up')
+    }
     e.stopPropagation()
   }
 

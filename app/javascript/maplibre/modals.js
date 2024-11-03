@@ -6,6 +6,9 @@ import * as dom from 'helpers/dom'
 const turf = window.turf
 window.marked = marked
 
+let isDragging = false
+let dragStartY, dragStartModalHeight
+
 function featureTitle (feature) {
   const title = feature?.properties?.title || feature?.properties?.user_title ||
     feature?.properties?.label || feature?.properties?.user_label
@@ -48,15 +51,38 @@ function featureMeta (feature) {
 }
 
 export function showFeatureDetails (feature) {
-  dom.hideElements(['#feature-edit-raw', '#feature-edit-ui'])
+  dom.hideElements(['#feature-edit-raw', '#edit-button-raw', '#feature-edit-ui'])
   functions.e('#edit-buttons button', (e) => { e.classList.remove('active') })
-  document.querySelector('#edit-button-raw').classList.add('hidden')
   dom.showElements('#feature-details-body')
   const modal = document.querySelector('#feature-details-modal')
   modal.classList.remove('expanded')
   modal.classList.add('show')
   modal.scrollTo(0, 0)
   modal.dataset.featureFeatureIdValue = feature.id
+
+  functions.addEventListeners(modal, ['mousedown', 'touchstart', 'dragstart'], (event) => {
+    if (isDragging) return
+
+    isDragging = true
+    dragStartY = event.clientY || event.touches[0].clientY
+    dragStartModalHeight = modal.offsetHeight
+    modal.style.cursor = 'move'
+  })
+
+  functions.addEventListeners(modal, ['mousemove', 'touchmove', 'drag'], (event) => {
+    if (!isDragging) return
+
+    const dragY = event.clientY || event.touches[0].clientY
+    const y = dragY - dragStartY
+    modal.classList.remove('modal-pull-up')
+    modal.classList.remove('modal-pull-down')
+    modal.style.height = (dragStartModalHeight - y) + 'px'
+  })
+
+  functions.addEventListeners(modal, ['mouseout', 'mouseup', 'touchend'], (event) => {
+    isDragging = false
+    modal.style.cursor = 'default'
+  })
 
   document.querySelector('#feature-symbol').innerHTML = ''
   if (feature.properties['marker-image-url']) {

@@ -60,9 +60,9 @@
 }
 
 .modal-pull-up {
-  height: 100%;
+  height: 100% !important;
 }
 
 .modal-pull-down {
-  height: 25%;
+  height: 25% !important;
 }
