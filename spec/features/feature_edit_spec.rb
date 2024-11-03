@@ -82,7 +82,7 @@ describe 'Feature edit' do
       before do
         click_coord('#maplibre-map', 50, 50)
         find('#edit-button-edit').click
-        find('.modal-pull-button').click
+        sleep(0.3) # wait for modal to expand
       end
 
       it 'can update point size' do
