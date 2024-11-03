@@ -1,3 +1,8 @@
+/* this avoids mobile to scroll vertically out the location bar */
+html:has(.map) {
+  overflow: hidden;
+}
+
 #map-logo-title {
   position: absolute;
 }
