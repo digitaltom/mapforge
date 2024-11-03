@@ -48,7 +48,9 @@ export default class extends Controller {
   }
 
   show_feature_edit_ui () {
-    this.pullUpModal()
+    if (document.querySelector('#feature-details-modal').classList.contains('modal-pull-down')) {
+      this.pullUpModal()
+    }
     const feature = this.getFeature()
     dom.showElements(['#feature-edit-ui', '#feature-title-input', '#button-add-desc', '#button-add-label'])
     dom.hideElements(['#feature-edit-raw', '#feature-title', '#feature-desc', '#feature-label'])
@@ -77,7 +79,9 @@ export default class extends Controller {
   }
 
   show_feature_edit_raw () {
-    this.pullUpModal()
+    if (document.querySelector('#feature-details-modal').classList.contains('modal-pull-down')) {
+      this.pullUpModal()
+    }
     const feature = this.getFeature()
     document.querySelector('#feature-edit-ui').classList.add('hidden')
     document.querySelector('#feature-edit-raw').classList.remove('hidden')
