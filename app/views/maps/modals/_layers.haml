@@ -1,9 +1,7 @@
 #layers-modal.map-modal.fade{'data-controller': "layers"}
-
+  %button.close-button{ data: { action: "click->layers#close" } } &times;
   .map-modal-header
-    %h2
-      %i.bi.bi-arrow-left.link.mr-2{ data: { action: "click->layers#close" } }
-      Layers
+    %h3 Layers
 
   .map-modal-content
     %input#fileInput{ type: "file" }

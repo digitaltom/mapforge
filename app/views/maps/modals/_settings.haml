@@ -7,11 +7,9 @@
            settings_current_center_value: (@map_properties[:center] || @map_properties[:default_center]) }
 
 #settings-modal.map-modal.fade{ data: data}
-
+  %button.close-button{ data: { action: "click->settings#close" } } &times;
   .map-modal-header
-    %h4
-      %i.bi.bi-arrow-left.link{ data: { action: "click->settings#close" } }
-      Configure Map
+    %h3 Configure Map
 
   .map-modal-content
 

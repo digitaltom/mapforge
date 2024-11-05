@@ -19,7 +19,7 @@
 }
 
 .map-modal-header {
-  border-bottom: 3px solid gray;
+  border-bottom: 2px solid gray;
 }
 
 .map-modal-content {
@@ -69,4 +69,19 @@
   height: 25% !important;
   transition:
     height 0.3s linear !important;
+}
+
+.close-button {
+  position: absolute;
+  top: 5px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: #333;
+}
+
+.close-button:hover {
+  color: #666;
 }
