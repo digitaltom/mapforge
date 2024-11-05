@@ -315,8 +315,7 @@ export function updateMapName (name) {
   if (!document.getElementById('frontpage-map')) {
     mapProperties.name = name
     if (mapProperties.name) {
-      document.title = 'Mapforge.org: Map "' +
-      mapProperties.title || mapProperties.name + '"'
+      document.title = 'Mapforge.org: Map "' + mapProperties.name + '"'
     }
     functions.e('#map-title', e => { e.textContent = mapProperties.name })
   }
