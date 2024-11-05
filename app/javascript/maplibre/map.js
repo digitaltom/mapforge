@@ -245,6 +245,12 @@ export function initializeViewMode () {
   })
 }
 
+export function updateGeojson () {
+  // draw has its own style layers based on editStyles
+  if (draw) { draw.set(geojsonData) }
+  map.getSource('geojson-source')?.setData(geojsonData)
+}
+
 export function redrawGeojson () {
   // draw has its own style layers based on editStyles
   if (draw) {

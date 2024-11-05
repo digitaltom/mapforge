@@ -1,6 +1,6 @@
 import { Controller } from '@hotwired/stimulus'
 import { mapChannel } from 'channels/map_channel'
-import { geojsonData, redrawGeojson } from 'maplibre/map'
+import { geojsonData, updateGeojson, redrawGeojson } from 'maplibre/map'
 import { handleDelete, draw } from 'maplibre/edit'
 import { defaultLineWidth } from 'maplibre/styles'
 import { status } from 'helpers/status'
@@ -61,12 +61,14 @@ export default class extends Controller {
     if (feature.properties.desc) { this.show_add_desc() }
 
     dom.hideElements(['.edit-point', '.edit-line', '.edit-polygon'])
-    document.querySelector('#color').value = feature.properties.stroke || '#0A870A'
+    document.querySelector('#stroke-color').value = feature.properties.stroke || '#0A870A'
+    document.querySelector('#fill-color').value = feature.properties.fill || '#0A870A'
     if (feature.geometry.type === 'Point') {
       dom.showElements(['#feature-edit-ui .edit-point'])
       const size = feature.properties['marker-size'] || 6
       document.querySelector('#point-size').value = size
       document.querySelector('#point-size-val').innerHTML = '(' + size + ')'
+      document.querySelector('#fill-color').value = feature.properties['marker-color'] || '#0A870A'
     } else if (feature.geometry.type === 'LineString' || feature.geometry.type === 'MultiLineString') {
       dom.showElements(['#feature-edit-ui .edit-line'])
       const size = feature.properties['stroke-width'] || defaultLineWidth
@@ -75,6 +77,7 @@ export default class extends Controller {
     } else if (feature.geometry.type === 'Polygon') {
       dom.showElements(['#feature-edit-ui .edit-polygon'])
       document.querySelector('#line-width').value = feature.properties['stroke-width'] || 2
+      document.querySelector('#fill-color').value = feature.properties.fill || '#0A870A'
     }
   }
 
@@ -141,7 +144,7 @@ export default class extends Controller {
     const label = document.querySelector('#feature-label input').value
     feature.properties.label = label
     draw.setFeatureProperty(this.featureIdValue, 'label', label)
-    redrawGeojson()
+    updateGeojson()
     functions.debounce(() => { this.saveFeature() }, 'label')
   }
 
@@ -150,6 +153,7 @@ export default class extends Controller {
     try {
       if (easyMDE && feature.properties.desc !== easyMDE.value()) {
         feature.properties.desc = easyMDE.value()
+        updateGeojson()
         functions.debounce(() => { this.saveFeature() }, 'desc', 2000)
       }
     } catch (error) {
@@ -166,7 +170,7 @@ export default class extends Controller {
     feature.properties['marker-size'] = size
     // draw layer feature properties aren't getting updated by draw.set()
     draw.setFeatureProperty(this.featureIdValue, 'marker-size', size)
-    redrawGeojson()
+    updateGeojson()
   }
 
   // called as preview on slider change
@@ -177,16 +181,26 @@ export default class extends Controller {
     feature.properties['stroke-width'] = size
     // draw layer feature properties aren't getting updated by draw.set()
     draw.setFeatureProperty(this.featureIdValue, 'stroke-width', size)
-    redrawGeojson()
+    updateGeojson()
   }
 
-  updateOutlineColor () {
+  updateStrokeColor () {
     const feature = this.getFeature()
-    const color = document.querySelector('#color').value
+    const color = document.querySelector('#stroke-color').value
     feature.properties.stroke = color
     // draw layer feature properties aren't getting updated by draw.set()
     draw.setFeatureProperty(this.featureIdValue, 'stroke', color)
-    redrawGeojson()
+    updateGeojson()
+  }
+
+  updateFillColor () {
+    const feature = this.getFeature()
+    const color = document.querySelector('#fill-color').value
+    if (feature.geometry.type === 'Polygon') { feature.properties.fill = color }
+    if (feature.geometry.type === 'Point') { feature.properties['marker-color'] = color }
+    // draw layer feature properties aren't getting updated by draw.set()
+    draw.setFeatureProperty(this.featureIdValue, 'fill', color)
+    updateGeojson()
   }
 
   saveFeature () {
