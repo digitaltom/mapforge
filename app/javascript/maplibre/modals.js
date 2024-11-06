@@ -57,7 +57,8 @@ export function showFeatureDetails (feature) {
   modal.classList.remove('expanded')
   modal.classList.add('show')
   modal.scrollTo(0, 0)
-  modal.dataset.featureFeatureIdValue = feature.id
+  modal.dataset.featureModalFeatureIdValue = feature.id
+  modal.dataset.featureEditFeatureIdValue = feature.id
 
   functions.addEventListeners(modal, ['mousedown', 'touchstart', 'dragstart'], (event) => {
     if (isDragging) return

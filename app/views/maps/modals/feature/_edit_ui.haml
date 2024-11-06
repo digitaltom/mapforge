@@ -1,11 +1,11 @@
 #feature-edit-ui.hidden
 
   %div
-    %button#button-add-label.btn.btn-secondary{ type: "button", 'data-action': "click->feature#show_add_label" } Add label
-    %button#button-add-desc.btn.btn-secondary{ type: "button", 'data-action': "click->feature#show_add_desc" } Add description
+    %button#button-add-label.btn.btn-secondary{ type: "button", 'data-action': "click->feature-modal#show_add_label" } Add label
+    %button#button-add-desc.btn.btn-secondary{ type: "button", 'data-action': "click->feature-modal#show_add_desc" } Add description
 
   #feature-label.form-floating.edit-ui.hidden
-    %input.form-control{"name": "feature-label", "data-action": "input->feature#updateLabel"}
+    %input.form-control{"name": "feature-label", "data-action": "input->feature-edit#updateLabel"}
     %label{ for: "feature-label"} Label
 
   #feature-desc.hidden
@@ -15,18 +15,18 @@
 
   #point-size-ui.edit-ui.edit-point
     %label{ for: "point-size"} Size:
-    %input.slider#point-size{ type: "range", min: "1", max: "50", value: "1", 'data-action': "input->feature#updatePointSize  change->feature#saveFeature" }
+    %input.slider#point-size{ type: "range", min: "1", max: "50", value: "1", 'data-action': "input->feature-edit#updatePointSize  change->feature-edit#saveFeature" }
     %span#point-size-val
 
   #line-width-ui.edit-ui.edit-line.edit-polygon
     %label{ for: "line-width"} Width:
-    %input.slider#line-width{ type: "range", min: "1", max: "50", value: "1", 'data-action': "input->feature#updateLineWidth change->feature#saveFeature" }
+    %input.slider#line-width{ type: "range", min: "1", max: "50", value: "1", 'data-action': "input->feature-edit#updateLineWidth change->feature-edit#saveFeature" }
     %span#line-width-val
 
   #stroke-color-ui.edit-ui.edit-line.edit-polygon.edit-point
     %label{ for: "stroke-color"} Outline color:
-    %input#stroke-color{ type: "color", 'data-action': "input->feature#updateStrokeColor change->feature#saveFeature" }
+    %input#stroke-color{ type: "color", 'data-action': "input->feature-edit#updateStrokeColor change->feature-edit#saveFeature" }
 
   #fill-color-ui.edit-ui.edit-polygon.edit-point
     %label{ for: "fill-color"} Fill color:
-    %input#fill-color{ type: "color", 'data-action': "input->feature#updateFillColor change->feature#saveFeature" }
+    %input#fill-color{ type: "color", 'data-action': "input->feature-edit#updateFillColor change->feature-edit#saveFeature" }
