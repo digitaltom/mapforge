@@ -1,9 +1,6 @@
 import { map, redrawGeojson } from 'maplibre/map'
 import * as functions from 'helpers/functions'
 
-// eslint expects variables to get imported, but we load the full lib in header
-const turf = window.turf
-
 export class AnimationManager {
   constructor () {
     this.animationId = null
@@ -51,6 +48,7 @@ export class AnimatePointAnimation extends AnimationManager {
   }
 
   async animatePointPath (feature, path) {
+    const turf = window.turf
     const coordinates = path.geometry.coordinates
     console.log('Animating ' + feature.id + ' along ' + path.id)
     // Loop over the coordinates

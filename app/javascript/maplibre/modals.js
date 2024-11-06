@@ -2,8 +2,6 @@ import { marked } from 'marked'
 import * as functions from 'helpers/functions'
 import * as dom from 'helpers/dom'
 
-// eslint expects variables to get imported, but we load the full lib in header
-const turf = window.turf
 window.marked = marked
 
 let isDragging = false
@@ -19,6 +17,7 @@ function featureTitle (feature) {
 }
 
 function featureMeta (feature) {
+  const turf = window.turf
   let meta = ''
   if (feature.geometry.type === 'LineString') {
     const turfLineString = turf.lineString(feature.geometry.coordinates)

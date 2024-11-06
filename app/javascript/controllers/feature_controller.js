@@ -8,9 +8,6 @@ import { showFeatureDetails } from 'maplibre/modals'
 import * as functions from 'helpers/functions'
 import * as dom from 'helpers/dom'
 
-// eslint expects variables to get imported, but we load the full lib in header
-const EasyMDE = window.EasyMDE
-
 let easyMDE
 
 export default class extends Controller {
@@ -104,7 +101,7 @@ export default class extends Controller {
     // https://github.com/Ionaru/easy-markdown-editor
     if (easyMDE) { easyMDE.toTextArea() }
     document.querySelector('#feature-desc-input').value = this.getFeature().properties.desc || ''
-    easyMDE = new EasyMDE({
+    easyMDE = new window.EasyMDE({
       element: document.getElementById('feature-desc-input'),
       placeholder: 'Add a description',
       hideIcons: ['quote', 'ordered-list', 'fullscreen', 'side-by-side', 'preview', 'guide'],

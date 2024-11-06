@@ -5,9 +5,6 @@ import { initLayersModal, resetControls } from 'maplibre/controls'
 import { highlightFeature } from 'maplibre/feature'
 import { status } from 'helpers/status'
 
-// eslint expects variables to get imported, but we load the full lib in header
-const turf = window.turf
-
 export default class extends Controller {
   upload () {
     const fileInput = document.getElementById('fileInput')
@@ -72,7 +69,7 @@ export default class extends Controller {
     const id = this.element.getAttribute('data-feature-id')
     const feature = geojsonData.features.find(f => f.id === id)
     // Calculate the centroid
-    const centroid = turf.centroid(feature)
+    const centroid = window.turf.centroid(feature)
     console.log('Fly to: ' + feature.id + ' ' + centroid.geometry.coordinates)
     resetControls()
     map.once('moveend', function () { highlightFeature(feature, true) })

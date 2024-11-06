@@ -12,9 +12,6 @@ import MapboxDraw from '@mapbox/mapbox-gl-draw'
 import * as MapboxDrawWaypoint from 'mapbox-gl-draw-waypoint'
 import PaintMode from 'mapbox-gl-draw-paint-mode'
 
-// eslint expects variables to get imported, but we load the full lib in header
-const turf = window.turf
-
 export let draw
 export let selectedFeature
 
@@ -128,7 +125,7 @@ function handleCreate (e) {
 
   if (draw.getMode() === 'draw_paint_mode') {
     const options = { tolerance: 0.00001, highQuality: true }
-    feature = turf.simplify(feature, options)
+    feature = window.turf.simplify(feature, options)
   }
 
   status('Feature ' + feature.id + ' created')

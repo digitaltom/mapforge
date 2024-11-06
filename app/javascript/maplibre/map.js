@@ -9,9 +9,6 @@ import { status } from 'helpers/status'
 import maplibregl from 'maplibre-gl'
 import { GeocodingControl } from 'maptiler-geocoding-control'
 
-// eslint expects variables to get imported, but we load the full lib in header
-const turf = window.turf
-
 export let map
 export let geojsonData //= { type: 'FeatureCollection', features: [] }
 export let mapProperties
@@ -96,7 +93,7 @@ export function initializeMap (divId = 'maplibre-map') {
     const feature = geojsonData.features.find(f => f.id === urlFeatureId)
     if (feature) {
       highlightFeature(feature, true)
-      const centroid = turf.center(feature)
+      const centroid = window.turf.center(feature)
       map.setCenter(centroid.geometry.coordinates)
     }
   })
