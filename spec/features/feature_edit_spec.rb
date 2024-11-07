@@ -103,15 +103,24 @@ describe 'Feature edit' do
         wait_for { point.reload.properties['label'] }.to eq('New Label')
       end
 
-      # it 'can update desc' do
-      #   expect(page).to_not have_selector('#feature-desc-input')
-      #   click_button 'Add description'
-      #   expect(page).to have_text('Add a description')
-      #   within("#feature-desc") do
-      #    fill_in '.CodeMirror textarea', with: "New Desc"
-      #   end
-      #   wait_for { point.reload.properties['desc'] }.to eq('New Desc')
-      # end
+      it 'can update desc' do
+        expect(page).to_not have_selector('#feature-desc-input')
+        click_button 'Add description'
+        expect(page).to have_text('Add a description text')
+        text_area = find(:css, '.CodeMirror textarea', visible: false)
+        text_area.set('New Desc')
+        wait_for { point.reload.properties['desc'] }.to eq('New Desc')
+      end
+
+      it 'can update fill color' do
+        find('#fill-color').set('#aabbcc')
+        wait_for { point.reload.properties['marker-color'] }.to eq('#aabbcc')
+      end
+
+      it 'can update outline color' do
+        find('#stroke-color').set('#aabbcc')
+        wait_for { point.reload.properties['stroke'] }.to eq('#aabbcc')
+      end
     end
   end
 

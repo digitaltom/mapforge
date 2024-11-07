@@ -10,7 +10,7 @@
   #feature-symbol{ 'data-action': "click->feature-modal#toggleModalSize"}
   #feature-title{ 'data-action': "click->feature-modal#toggleModalSize"}
   #feature-title-input.form-floating.edit-ui.hidden
-    %input.form-control{ "name": "feature-title", data: { action: "click->feature-edit#updateTitle" } }
+    %input.form-control{ "name": "feature-title", data: { action: "input->feature-edit#updateTitle" } }
     %label{ for: "feature-title"} Title
 
 #feature-details-meta

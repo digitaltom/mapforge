@@ -95,7 +95,7 @@ export default class extends Controller {
     document.querySelector('#feature-desc-input').value = this.getFeature().properties.desc || ''
     easyMDE = new window.EasyMDE({
       element: document.getElementById('feature-desc-input'),
-      placeholder: 'Add a description',
+      placeholder: 'Add a description text',
       hideIcons: ['quote', 'ordered-list', 'fullscreen', 'side-by-side', 'preview', 'guide'],
       maxHeight: '6em',
       spellChecker: false,
