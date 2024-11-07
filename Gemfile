@@ -21,7 +21,7 @@ gem "stimulus-rails"
 
 # Databases
 gem "redis", ">= 4.0.1"
-gem "mongoid", github: "mongodb/mongoid"
+gem "mongoid", ">= 9.0.2" # without version, bundler tries to install 8.1.6
 gem "mongoid_rails_migrations"
 
 # image uploads
@@ -43,6 +43,7 @@ gem "rgeo"
 gem "rgeo-geojson"
 gem "rgeo-proj4"
 gem "gpx"
+gem "csv" # needed by 'gpx'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

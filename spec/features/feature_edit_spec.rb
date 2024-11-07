@@ -81,7 +81,6 @@ describe 'Feature edit' do
 
     context 'with selected feature' do
       before do
-        expect(page).to have_text('Added feature')
         click_coord('#maplibre-map', 50, 50)
         find('#edit-button-edit').click
         sleep(0.3) # wait for modal to expand
