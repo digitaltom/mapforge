@@ -272,8 +272,8 @@ export function upsert (updatedFeature) {
 function addFeature (feature) {
   feature.properties.id = feature.id
   geojsonData.features.push(feature)
-  status('Added feature ' + feature.id)
   redrawGeojson()
+  status('Added feature ' + feature.id)
 }
 
 function updateFeature (feature, updatedFeature) {

@@ -55,6 +55,7 @@ describe 'Feature edit' do
       it 'can raw update feature' do
         find('#edit-button-edit').click
         find('#edit-button-raw').click
+        expect(page).to have_selector('textarea[name="properties"]')
         fill_in 'properties', with: '{"title": "TEST"}'
         find('.feature-update').click
         # the actioncable events of map + feature update are not always received in the same order:
@@ -80,6 +81,7 @@ describe 'Feature edit' do
 
     context 'with selected feature' do
       before do
+        expect(page).to have_text('Added feature')
         click_coord('#maplibre-map', 50, 50)
         find('#edit-button-edit').click
         sleep(0.3) # wait for modal to expand
