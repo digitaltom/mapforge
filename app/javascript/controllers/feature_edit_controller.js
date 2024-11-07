@@ -53,7 +53,7 @@ export default class extends Controller {
   updatePointSize () {
     const feature = this.getFeature()
     const size = document.querySelector('#point-size').value
-    document.querySelector('#point-size-val').innerHTML = '(' + size + ')'
+    document.querySelector('#point-size-val').textContent = '(' + size + ')'
     feature.properties['marker-size'] = size
     // draw layer feature properties aren't getting updated by draw.set()
     draw.setFeatureProperty(this.featureIdValue, 'marker-size', size)
