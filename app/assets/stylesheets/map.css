@@ -1,5 +1,5 @@
 /* this avoids mobile to scroll vertically out the location bar */
-html:has(.map) {
+html:has(.map), body:has(.map) {
   overflow: hidden;
 }
 
