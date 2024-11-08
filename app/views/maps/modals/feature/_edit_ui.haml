@@ -1,5 +1,9 @@
 #feature-edit-ui.hidden
 
+  #feature-title-input.form-floating.edit-ui.mt-2.hidden
+    %input.form-control{ "name": "feature-title", data: { action: "input->feature-edit#updateTitle" } }
+    %label{ for: "feature-title"} Title
+
   %div
     %button#button-add-label.btn.btn-secondary{ type: "button", 'data-action': "click->feature-modal#show_add_label" } Add label
     %button#button-add-desc.btn.btn-secondary{ type: "button", 'data-action': "click->feature-modal#show_add_desc" } Add description

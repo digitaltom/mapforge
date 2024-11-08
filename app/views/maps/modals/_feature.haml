@@ -1,0 +1,21 @@
+#feature-details-modal.map-modal.modal-pull-down.fade{ 'data-controller': "feature-modal feature-edit" }
+  %a.modal-pull-button.link{ 'data-action': "click->feature-modal#toggleModalSize"}
+
+  #edit-buttons.hidden.maplibregl-ctrl-group.maplibregl-ctrl.edit-button-group
+    %button.edit-button.maplibregl-ctrl-btn#edit-button-edit{title: "Edit", 'data-action': "click->feature-modal#toggle_edit_feature", 'data-ui': 'true'}
+      %i.bi.bi-pencil-square
+    %button.edit-button.hidden#edit-button-raw{title: "Edit Raw", 'data-action': "click->feature-modal#toggle_edit_feature", 'data-raw': 'true'}
+      %i.bi.bi-filetype-raw
+    %button.edit-button#edit-button-trash{title: "Delete", data: { action: "click->feature-edit#delete_feature" } }
+      %i.bi.bi-trash
+
+  %h4#feature-details-header.flex-container
+    #feature-symbol{ 'data-action': "click->feature-modal#toggleModalSize"}
+    #feature-title{ 'data-action': "click->feature-modal#toggleModalSize"}
+
+  #feature-details-meta
+
+  = render 'maps/modals/feature/edit_ui'
+  = render 'maps/modals/feature/edit_raw'
+
+  %p#feature-details-body
