@@ -90,6 +90,15 @@ export default class extends Controller {
     updateGeojson()
   }
 
+  updateMarkerSymbol () {
+    const feature = this.getFeature()
+    const symbol = document.querySelector('#marker-symbol').value
+    feature.properties['marker-symbol'] = symbol
+    // draw layer feature properties aren't getting updated by draw.set()
+    draw.setFeatureProperty(this.featureIdValue, 'marker-symbol', symbol)
+    updateGeojson()
+  }
+
   saveFeature () {
     const feature = this.getFeature()
     status('Saving feature ' + feature.id)

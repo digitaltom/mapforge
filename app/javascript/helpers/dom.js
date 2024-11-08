@@ -10,23 +10,19 @@ export function waitForElement (selector, callback, waitTime = 100) {
 export function showElements (selectors) {
   selectors = Array.isArray(selectors) ? selectors : [selectors]
   selectors.forEach(selector => {
-    const el = document.querySelector(selector)
-    if (el) {
-      el.classList.remove('hidden')
-    } else {
-      console.error('Did not find element "' + selector + '" :-(')
-    }
+    const elements = document.querySelectorAll(selector)
+    elements.forEach(element => {
+      element.classList.remove('hidden')
+    })
   })
 }
 
 export function hideElements (selectors) {
   selectors = Array.isArray(selectors) ? selectors : [selectors]
   selectors.forEach(selector => {
-    const el = document.querySelector(selector)
-    if (el) {
-      el.classList.add('hidden')
-    } else {
-      console.error('Did not find element "' + selector + '" :-(')
-    }
+    const elements = document.querySelectorAll(selector)
+    elements.forEach(element => {
+      element.classList.add('hidden')
+    })
   })
 }

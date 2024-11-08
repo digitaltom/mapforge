@@ -58,6 +58,7 @@ export default class extends Controller {
       document.querySelector('#point-size').value = size
       document.querySelector('#point-size-val').innerHTML = '(' + size + ')'
       document.querySelector('#fill-color').value = feature.properties['marker-color'] || '#0A870A'
+      document.querySelector('#marker-symbol').value = feature.properties['marker-symbol'] || ''
     } else if (feature.geometry.type === 'LineString' || feature.geometry.type === 'MultiLineString') {
       dom.showElements(['#feature-edit-ui .edit-line'])
       const size = feature.properties['stroke-width'] || defaultLineWidth
