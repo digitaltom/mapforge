@@ -122,6 +122,13 @@ describe 'Feature edit' do
         find('#stroke-color').set('#aabbcc')
         wait_for { point.reload.properties['stroke'] }.to eq('#aabbcc')
       end
+
+      it 'can upload image' do
+        image_path = Rails.root.join('spec', 'fixtures', 'files', '2024-04-04_00-14.png')
+        attach_file('marker-image', image_path)
+
+        wait_for { point.reload.properties['marker-image-url'] }.to match(/icon\/.+/)
+      end
     end
   end
 

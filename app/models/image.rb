@@ -11,7 +11,7 @@ class Image
   field :img_uid, type: String
   field :public_id, type: String
 
-  validates_size_of :img, maximum: 500.kilobytes
+  validates_size_of :img, maximum: 4096.kilobytes
   validate :public_id_must_be_unique_or_nil
   before_create :create_public_id
 

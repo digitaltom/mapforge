@@ -84,6 +84,16 @@ export function showFeatureDetails (feature) {
     modal.style.cursor = 'default'
   })
 
+  setFeatureTitleImage(feature)
+  dom.showElements('#feature-title')
+  dom.hideElements('#feature-title-input')
+  document.querySelector('#feature-title').innerHTML = featureTitle(feature)
+  document.querySelector('#feature-details-meta').innerHTML = featureMeta(feature)
+  const desc = marked(feature?.properties?.desc || '')
+  document.querySelector('#feature-details-body').innerHTML = desc
+}
+
+export function setFeatureTitleImage (feature) {
   document.querySelector('#feature-symbol').innerHTML = ''
   if (feature.properties['marker-image-url']) {
     const imageUrl = feature.properties['marker-image-url'].replace('/icon/', '/image/')
@@ -94,10 +104,4 @@ export function showFeatureDetails (feature) {
     document.querySelector('#feature-symbol').innerHTML =
       "<img id='feature-details-icon' src='/emojis/noto/" + feature.properties['marker-symbol'] + ".png'>"
   }
-  dom.showElements('#feature-title')
-  dom.hideElements('#feature-title-input')
-  document.querySelector('#feature-title').innerHTML = featureTitle(feature)
-  document.querySelector('#feature-details-meta').innerHTML = featureMeta(feature)
-  const desc = marked(feature?.properties?.desc || '')
-  document.querySelector('#feature-details-body').innerHTML = desc
 }

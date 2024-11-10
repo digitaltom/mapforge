@@ -14,6 +14,15 @@ class ImagesController < ApplicationController
     redirect_to image_url
   end
 
+  def upload
+    file = params[:image]
+    ext = file.content_type.split("/").last
+    filename = "#{SecureRandom.hex(4)}.#{ext}"
+    uid = Dragonfly.app.store(file.tempfile, "name" => filename)
+    img = Image.create!(img_uid: uid)
+    render json: { icon: "/icon/#{img.public_id}", image: "/image/#{img.public_id}" }
+  end
+
   private
 
   def set_image

@@ -39,3 +39,6 @@
     %label{ for: "marker-symbol"} Symbol:
     %input#marker-symbol{ type: "text", size: '1', 'data-action': "input->feature-edit#updateMarkerSymbol change->feature-edit#saveFeature" }
 
+  #marker-image-ui.edit-ui.edit-point
+    %label{ for: "marker-image"} Image:
+    %input#marker-image{ type: "file", name: 'marker-image', 'data-action': "input->feature-edit#updateMarkerImage" }

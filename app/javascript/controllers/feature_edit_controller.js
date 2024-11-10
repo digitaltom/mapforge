@@ -1,6 +1,7 @@
 import { Controller } from '@hotwired/stimulus'
 import { mapChannel } from 'channels/map_channel'
 import { geojsonData, updateGeojson, redrawGeojson } from 'maplibre/map'
+import { setFeatureTitleImage } from 'maplibre/modals'
 import { handleDelete, draw } from 'maplibre/edit'
 import { status } from 'helpers/status'
 import * as functions from 'helpers/functions'
@@ -97,6 +98,31 @@ export default class extends Controller {
     // draw layer feature properties aren't getting updated by draw.set()
     draw.setFeatureProperty(this.featureIdValue, 'marker-symbol', symbol)
     updateGeojson()
+  }
+
+  async updateMarkerImage () {
+    const feature = this.getFeature()
+    const image = document.querySelector('#marker-image').files[0]
+    const formData = new FormData() // send using multipart/form-data
+    formData.append('image', image)
+    fetch('/images', {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'X-CSRF-Token': window.gon.csrf_token
+      }
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data)
+        console.log('Setting icon: ' + data.icon)
+        feature.properties['marker-image-url'] = data.icon
+        draw.setFeatureProperty(this.featureIdValue, 'marker-image-url', data.icon)
+        setFeatureTitleImage(feature)
+        updateGeojson()
+        this.saveFeature()
+      })
+      .catch(error => console.error('Error:', error))
   }
 
   saveFeature () {
