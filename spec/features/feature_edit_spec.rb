@@ -36,9 +36,10 @@ describe 'Feature edit' do
   end
 
   context 'with polygon on map' do
-    let!(:polygon) { create(:feature, :polygon_middle, layer: map.layers.first, title: 'Poly Title') }
+    let!(:polygon) { create(:feature, :polygon_middle, title: 'Poly Title') }
+    let(:map) { create(:map, features: [ polygon ]) }
 
-    context 'with selected feature' do
+    context 'with selected polygon feature' do
       before do
         click_coord('#maplibre-map', 50, 50)
         expect(page).to have_css('#edit-button-edit')
@@ -78,13 +79,13 @@ describe 'Feature edit' do
   end
 
   context 'with point on map' do
-    let!(:point) { create(:feature, :point_middle, layer: map.layers.first, title: 'Point Title') }
+    let(:point) { create(:feature, :point_middle, title: 'Point Title') }
+    let(:map) { create(:map, features: [ point ]) }
 
-    context 'with selected feature' do
+    context 'with selected point feature' do
       before do
         click_coord('#maplibre-map', 50, 50)
         find('#edit-button-edit').click
-        sleep(0.3) # wait for modal to expand
       end
 
       it 'can update point size' do
@@ -126,6 +127,7 @@ describe 'Feature edit' do
 
       it 'can upload image' do
         image_path = Rails.root.join('spec', 'fixtures', 'files', '2024-04-04_00-14.png')
+        expect(page).to have_selector('#marker-image')
         attach_file('marker-image', image_path)
 
         wait_for { point.reload.properties['marker-image-url'] }.to match(/icon\/.+/)
