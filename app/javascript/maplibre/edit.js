@@ -73,10 +73,15 @@ export function initializeEditMode () {
     if (draw.getMode() !== 'simple_select') {
       functions.e('.maplibregl-canvas', e => { e.classList.add('cursor-crosshair') })
     }
+    functions.e('.mapbox-gl-draw_paint', e => { e.classList.remove('active') })
     if (draw.getMode() === 'draw_paint_mode') {
       functions.e('.mapbox-gl-draw_paint', e => { e.classList.add('active') })
-    } else {
-      functions.e('.mapbox-gl-draw_paint', e => { e.classList.remove('active') })
+    } else if (draw.getMode() === 'draw_point') {
+      status('Point Mode: Click on the map to place a marker', 'info', 'medium', 8000)
+    } else if (draw.getMode() === 'draw_polygon') {
+      status('Polygon Mode: Click on the map to draw a polygon', 'info', 'medium', 8000)
+    } else if (draw.getMode() === 'draw_line_string') {
+      status('Line Mode: Click on the map to draw a line', 'info', 'medium', 8000)
     }
     console.log('draw mode: ' + draw.getMode())
   })
@@ -182,7 +187,8 @@ function addPaintButton () {
       draw.changeMode('simple_select')
     } else {
       draw.changeMode('draw_paint_mode')
-      status('Paint Mode: Click on the map to start drawing, double click to finish', 8000)
+      status('Paint Mode: Click on the map to start drawing, double click to finish',
+        'info', 'medium', 8000)
     }
     map.fire('draw.modechange')
   })

@@ -47,7 +47,7 @@ export function initializeSocket () {
       disableEditControls()
       mapChannel = null
       // show error with delay to avoid showing it on unload/refresh
-      setTimeout(function () { status('Connection to server lost', 'error', 60 * 60 * 1000) }, 1000)
+      setTimeout(function () { status('Connection to server lost', 'error', 'medium', 60 * 60 * 1000) }, 1000)
       reconnectTimer = setInterval(() => { console.log('Trying to re-connect websocket..'); initializeSocket() }, 10000)
     },
 

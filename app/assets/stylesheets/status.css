@@ -23,3 +23,11 @@
 .status-warning {
   background-color: rgb(255 210 123 / 85%) !important;
 }
+
+#status-message.small {
+  font-size: 14px;
+}
+
+#status-message.medium {
+  font-size: 18px;
+}
