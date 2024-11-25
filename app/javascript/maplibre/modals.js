@@ -62,6 +62,8 @@ export function showFeatureDetails (feature) {
 
   functions.addEventListeners(modal, ['mousedown', 'touchstart', 'dragstart'], (event) => {
     if (isDragging) return
+    // don't break multiline select -> disable drag on textarea
+    if (event.target.tagName.toLowerCase() === 'textarea' && !functions.isMobileDevice()) return
 
     isDragging = true
     dragStartY = event.clientY || event.touches[0].clientY

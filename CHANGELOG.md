@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 
 
+## 2024-11
+
+* Rails 8.0
+* UI editor for fill/outline colour, symbol
+* Icon upload
+
 ## 2024-10
 
 * Free paint mode

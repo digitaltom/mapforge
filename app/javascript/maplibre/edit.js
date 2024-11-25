@@ -1,4 +1,4 @@
-import { map, geojsonData, initializeDefaultControls, redrawGeojson, destroy } from 'maplibre/map'
+import { map, geojsonData, initializeDefaultControls, destroy } from 'maplibre/map'
 import { editStyles, initializeEditStyles } from 'maplibre/edit_styles'
 import { highlightFeature } from 'maplibre/feature'
 import { mapChannel } from 'channels/map_channel'
@@ -80,6 +80,7 @@ export function initializeEditMode () {
     }
     console.log('draw mode: ' + draw.getMode())
   })
+
   map.on('draw.selectionchange', function (e) {
     if (!e.features?.length) { return }
     selectedFeature = e.features[0]
@@ -140,7 +141,6 @@ function handleUpdate (e) {
   const geojsonFeature = geojsonData.features.find(f => f.id === feature.id)
   geojsonFeature.geometry = feature.geometry
   mapChannel.send_message('update_feature', feature)
-  redrawGeojson()
   // trigger highlight, to update eg. coordinates
   highlightFeature(feature, true)
 }
