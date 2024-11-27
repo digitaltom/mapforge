@@ -102,6 +102,7 @@ describe 'Feature edit' do
       it 'can update label' do
         expect(page).to_not have_selector('#feature-label')
         click_button 'Add label'
+        expect(page).to have_selector('#feature-label')
         fill_in 'feature-label', with: "New Label"
         wait_for { point.reload.properties['label'] }.to eq('New Label')
       end

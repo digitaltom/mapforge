@@ -1,4 +1,4 @@
-import { map, geojsonData, initializeDefaultControls, destroy } from 'maplibre/map'
+import { map, geojsonData, initializeDefaultControls, redrawGeojson, destroy } from 'maplibre/map'
 import { editStyles, initializeEditStyles } from 'maplibre/edit_styles'
 import { highlightFeature } from 'maplibre/feature'
 import { mapChannel } from 'channels/map_channel'
@@ -145,6 +145,7 @@ function handleUpdate (e) {
   status('Feature ' + feature.id + ' changed')
   const geojsonFeature = geojsonData.features.find(f => f.id === feature.id)
   geojsonFeature.geometry = feature.geometry
+  redrawGeojson()
   mapChannel.send_message('update_feature', feature)
   // trigger highlight, to update eg. coordinates
   highlightFeature(feature, true)

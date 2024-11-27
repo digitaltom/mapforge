@@ -147,8 +147,7 @@ export const styles = {
     type: 'fill',
     source: 'geojson-source',
     filter: ['all',
-      ['in', '$type', 'Polygon'],
-      ['!=', 'active', 'true']],
+      ['in', '$type', 'Polygon']],
     paint: {
       'fill-color': fillColor,
       'fill-opacity': [

@@ -158,7 +158,8 @@ export function loadGeoJsonData () {
         // https://github.com/mapbox/mapbox-gl-js/issues/2716
         // because to highlight a feature we need the id,
         // and in the style layers it only accepts mumeric ids in the id field initially
-        geojsonData.features.forEach(feature => { feature.properties.id = feature.id })
+        geojsonData.features.forEach((feature, index) => { feature.properties.id = feature.id })
+
         redrawGeojson()
         // drop the properties.id after sending to the map
         geojsonData.features.forEach(feature => { delete feature.properties.id })
@@ -257,7 +258,30 @@ export function redrawGeojson () {
     draw.deleteAll()
     draw.add(geojsonData)
   }
-  map.getSource('geojson-source')?.setData(geojsonData)
+  map.getSource('geojson-source')?.setData(renderedGeojsonData())
+}
+
+// change geojson data before rendering:
+// - For LineStrings with a 'fill-extrusion-height', add a polygon to render extrusion
+export function renderedGeojsonData () {
+  let extrusionLines = geojsonData.features.filter(feature => (
+    feature.geometry.type === 'LineString' &&
+      feature.properties['fill-extrusion-height']
+  ))
+
+  extrusionLines = extrusionLines.map(feature => {
+    const extrusionLine = window.turf.buffer(feature, 10, { units: 'meters' })
+    // clone properties hash, else we're writing into the original feature's properties
+    extrusionLine.properties = { ...feature.properties }
+    if (feature.properties.stroke) {
+      extrusionLine.properties['fill-extrusion-color'] = feature.properties.stroke
+      extrusionLine.properties.fill = feature.properties.stroke
+    }
+    extrusionLine.properties['fill-extrusion-base'] = 20
+    extrusionLine.properties['stroke-width'] = 0
+    return extrusionLine
+  })
+  return { type: 'FeatureCollection', features: geojsonData.features.concat(extrusionLines) }
 }
 
 export function upsert (updatedFeature) {

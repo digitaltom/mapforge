@@ -2,11 +2,15 @@ import { styles, loadImage, pointSize, pointOutlineSize, pointOutlineSizeActive 
 import { map } from 'maplibre/map'
 import * as f from 'helpers/functions'
 
-// MapboxDraw cannot render symbol+text styles.
-// Adding those as extra layers to the map.
 export function initializeEditStyles () {
+  // MapboxDraw cannot render symbol+text styles.
+  // Adding those as extra layers to the map.
   map.addLayer(styles['symbols-layer'])
   map.addLayer(styles['text-layer'])
+
+  // render the extrusion layer from "source: 'geojson-source' without having it available for edit in draw
+  map.addLayer(styles['polygon-layer-extrusion'])
+
   map.on('styleimagemissing', loadImage)
   // TODO setting feature state (hover) doesn't work on draw features
 
@@ -27,7 +31,6 @@ const highlightColor = '#fbb03b'
 export const editStyles = [
 
   removeSource(styles['polygon-layer']), // gl-draw-polygon-fill-inactive
-  removeSource(styles['polygon-layer-extrusion']),
   removeSource(styles['line-layer-outline']),
   removeSource(styles['line-layer']), // 'gl-draw-line-inactive', 'gl-draw-polygon-stroke-inactive',
 
@@ -150,51 +153,6 @@ export const editStyles = [
       'circle-opacity': 0.8,
       'circle-stroke-color': '#222',
       'circle-stroke-width': pointOutlineSizeActive
-    }
-  },
-  {
-    id: 'gl-draw-polygon-fill-static',
-    type: 'fill',
-    filter: ['all', ['==', 'mode', 'static'], ['==', '$type', 'Polygon']],
-    paint: {
-      'fill-color': '#404040',
-      'fill-outline-color': '#404040',
-      'fill-opacity': 0.1
-    }
-  },
-  {
-    id: 'gl-draw-polygon-stroke-static',
-    type: 'line',
-    filter: ['all', ['==', 'mode', 'static'], ['==', '$type', 'Polygon']],
-    layout: {
-      'line-cap': 'round',
-      'line-join': 'round'
-    },
-    paint: {
-      'line-color': '#404040',
-      'line-width': 2
-    }
-  },
-  {
-    id: 'gl-draw-line-static',
-    type: 'line',
-    filter: ['all', ['==', 'mode', 'static'], ['==', '$type', 'LineString']],
-    layout: {
-      'line-cap': 'round',
-      'line-join': 'round'
-    },
-    paint: {
-      'line-color': '#404040',
-      'line-width': 2
-    }
-  },
-  {
-    id: 'gl-draw-point-static',
-    type: 'circle',
-    filter: ['all', ['==', 'mode', 'static'], ['==', '$type', 'Point']],
-    paint: {
-      'circle-radius': 5,
-      'circle-color': '#404040'
     }
   }
 ]
