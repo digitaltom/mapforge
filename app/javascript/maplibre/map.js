@@ -273,12 +273,11 @@ export function renderedGeojsonData () {
     const extrusionLine = window.turf.buffer(feature, 10, { units: 'meters' })
     // clone properties hash, else we're writing into the original feature's properties
     extrusionLine.properties = { ...feature.properties }
-    if (feature.properties.stroke) {
+    if (!extrusionLine.properties['fill-extrusion-color']) {
       extrusionLine.properties['fill-extrusion-color'] = feature.properties.stroke
-      extrusionLine.properties.fill = feature.properties.stroke
     }
-    extrusionLine.properties['fill-extrusion-base'] = 20
     extrusionLine.properties['stroke-width'] = 0
+    extrusionLine.properties['stroke-opacity'] = 0
     return extrusionLine
   })
   return { type: 'FeatureCollection', features: geojsonData.features.concat(extrusionLines) }
@@ -293,7 +292,7 @@ export function upsert (updatedFeature) {
   }
 }
 
-function addFeature (feature) {
+export function addFeature (feature) {
   feature.properties.id = feature.id
   geojsonData.features.push(feature)
   redrawGeojson()

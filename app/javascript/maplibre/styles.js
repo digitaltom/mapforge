@@ -178,7 +178,7 @@ export const styles = {
         ['get', 'fill-extrusion-base'],
         ['get', 'user_fill-extrusion-base']],
       // opacity does not support data expressions!?!
-      'fill-extrusion-opacity': 0.7
+      'fill-extrusion-opacity': 0.9
     }
   },
   'line-layer-outline': {

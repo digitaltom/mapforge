@@ -17,6 +17,7 @@ pin_all_from "app/javascript/helpers", under: "helpers"
 pin "frontpage"
 pin "deck", preload: false
 pin "maplibre"
+pin "animate"
 
 # vendor
 # examples: https://generator.jspm.io/

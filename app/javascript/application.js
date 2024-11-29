@@ -4,3 +4,4 @@ import 'controllers'
 
 import 'frontpage'
 import 'maplibre'
+import 'animate'
