@@ -1,8 +1,7 @@
-import { map, geojsonData, destroy, addFeature, redrawGeojson } from 'maplibre/map'
+import { map, geojsonData, destroy, addFeature, redrawGeojson, setViewFromProperties } from 'maplibre/map'
 
 ['turbo:load'].forEach(function (e) {
   window.addEventListener(e, function () {
-    console.log(e)
     const animateFeatureId = new URLSearchParams(window.location.search).get('animate')
     if (animateFeatureId) {
       init()
@@ -43,21 +42,22 @@ function animateLine (line) {
   const steps = 500
 
   let counter = 0
-  map.setZoom(16)
+  map.setZoom(14)
   map.setPitch(60)
 
   function animate (timestamp) {
     const progress = counter / steps
     const distance = progress * lineDistance
-    const coordinates = window.turf.along(line, distance, 'kilometers').geometry.coordinates
+    const coordinate = window.turf.along(line, distance, 'kilometers').geometry.coordinates
     // console.log("Frame #" + timestamp + ", distance: " + distance + ", coords: " + coordinates)
 
-    animationLine.geometry.coordinates.push(coordinates)
+    animationLine.geometry.coordinates.push(coordinate)
     // console.log("New line coords: " + animationLine.features[0].geometry.coordinates)
     redrawGeojson()
 
     // Update camera position
-    map.setCenter(coordinates, 12)
+    map.setCenter(coordinate, 12)
+
     map.setBearing(map.getBearing() + 1)
     counter++
 
@@ -66,6 +66,7 @@ function animateLine (line) {
     } else {
       // after animation is done, re-add original line
       addFeature(line)
+      setViewFromProperties()
     }
   }
 
