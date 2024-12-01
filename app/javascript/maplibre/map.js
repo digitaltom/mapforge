@@ -43,7 +43,7 @@ export function initializeMaplibreProperties () {
   }
 }
 
-function setViewFromProperties () {
+export function setViewFromProperties () {
   map.once('moveend', function () { status('Map view updated') })
   map.flyTo({
     center: mapProperties.center || mapProperties.default_center,
@@ -270,14 +270,16 @@ export function renderedGeojsonData () {
   ))
 
   extrusionLines = extrusionLines.map(feature => {
-    const extrusionLine = window.turf.buffer(feature, 10, { units: 'meters' })
+    const width = feature.properties['fill-extrusion-width'] || 10
+    const extrusionLine = window.turf.buffer(feature, width, { units: 'meters' })
     // clone properties hash, else we're writing into the original feature's properties
     extrusionLine.properties = { ...feature.properties }
-    if (!extrusionLine.properties['fill-extrusion-color']) {
+    if (!extrusionLine.properties['fill-extrusion-color'] && feature.properties.stroke) {
       extrusionLine.properties['fill-extrusion-color'] = feature.properties.stroke
     }
     extrusionLine.properties['stroke-width'] = 0
     extrusionLine.properties['stroke-opacity'] = 0
+    extrusionLine.properties['fill-opacity'] = 0
     return extrusionLine
   })
   return { type: 'FeatureCollection', features: geojsonData.features.concat(extrusionLines) }
