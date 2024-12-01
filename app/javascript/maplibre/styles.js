@@ -171,12 +171,12 @@ export const styles = {
         ['get', 'fill'],
         ['get', 'user_fill'],
         featureColor],
-      'fill-extrusion-height': ['coalesce',
+      'fill-extrusion-height': ['to-number', ['coalesce',
         ['get', 'fill-extrusion-height'],
-        ['get', 'user_fill-extrusion-height']],
-      'fill-extrusion-base': ['coalesce',
+        ['get', 'user_fill-extrusion-height']]],
+      'fill-extrusion-base': ['to-number', ['coalesce',
         ['get', 'fill-extrusion-base'],
-        ['get', 'user_fill-extrusion-base']],
+        ['get', 'user_fill-extrusion-base']]],
       // opacity does not support data expressions!?!
       'fill-extrusion-opacity': 0.8
     }

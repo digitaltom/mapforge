@@ -72,6 +72,18 @@ export default class extends Controller {
     updateGeojson()
   }
 
+  // called as preview on slider change
+  updateFillExtrusionHeight () {
+    const feature = this.getFeature()
+    const size = document.querySelector('#fill-extrusion-height').value
+    document.querySelector('#fill-extrusion-height-val').textContent = '(' + size + ')'
+    feature.properties['fill-extrusion-height'] = Number(size)
+    // draw layer feature properties aren't getting updated by draw.set()
+    draw.setFeatureProperty(this.featureIdValue, 'fill-extrusion-height', Number(size))
+    // needs redraw to add extrusion
+    redrawGeojson()
+  }
+
   updateStrokeColor () {
     const feature = this.getFeature()
     const color = document.querySelector('#stroke-color').value

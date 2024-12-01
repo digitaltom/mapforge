@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 * Rails 8.0
 * UI editor for fill/outline colour, symbol
 * Icon upload
+* Line extrusion support
 
 ## 2024-10
 
