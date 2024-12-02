@@ -1,6 +1,6 @@
 import { Controller } from '@hotwired/stimulus'
 import { mapChannel } from 'channels/map_channel'
-import { geojsonData, updateGeojson } from 'maplibre/map'
+import { geojsonData } from 'maplibre/map'
 import { defaultLineWidth } from 'maplibre/styles'
 import { status } from 'helpers/status'
 import { showFeatureDetails } from 'maplibre/modals'
@@ -112,7 +112,6 @@ export default class extends Controller {
     try {
       if (easyMDE && feature.properties.desc !== easyMDE.value()) {
         feature.properties.desc = easyMDE.value()
-        updateGeojson()
         functions.debounce(() => { this.saveFeature() }, 'desc', 2000)
       }
     } catch (error) {

@@ -1,6 +1,6 @@
 import { Controller } from '@hotwired/stimulus'
 import { mapChannel } from 'channels/map_channel'
-import { geojsonData, updateGeojson, redrawGeojson } from 'maplibre/map'
+import { geojsonData, redrawGeojson } from 'maplibre/map'
 import { setFeatureTitleImage } from 'maplibre/modals'
 import { handleDelete, draw } from 'maplibre/edit'
 import { status } from 'helpers/status'
@@ -46,7 +46,7 @@ export default class extends Controller {
     const label = document.querySelector('#feature-label input').value
     feature.properties.label = label
     draw.setFeatureProperty(this.featureIdValue, 'label', label)
-    updateGeojson()
+    redrawGeojson(false)
     functions.debounce(() => { this.saveFeature() }, 'label')
   }
 
@@ -58,7 +58,7 @@ export default class extends Controller {
     feature.properties['marker-size'] = size
     // draw layer feature properties aren't getting updated by draw.set()
     draw.setFeatureProperty(this.featureIdValue, 'marker-size', size)
-    updateGeojson()
+    redrawGeojson(false)
   }
 
   // called as preview on slider change
@@ -69,7 +69,7 @@ export default class extends Controller {
     feature.properties['stroke-width'] = size
     // draw layer feature properties aren't getting updated by draw.set()
     draw.setFeatureProperty(this.featureIdValue, 'stroke-width', size)
-    updateGeojson()
+    redrawGeojson(true)
   }
 
   // called as preview on slider change
@@ -81,7 +81,7 @@ export default class extends Controller {
     // draw layer feature properties aren't getting updated by draw.set()
     draw.setFeatureProperty(this.featureIdValue, 'fill-extrusion-height', Number(size))
     // needs redraw to add extrusion
-    redrawGeojson()
+    redrawGeojson(true)
   }
 
   updateStrokeColor () {
@@ -90,7 +90,7 @@ export default class extends Controller {
     feature.properties.stroke = color
     // draw layer feature properties aren't getting updated by draw.set()
     draw.setFeatureProperty(this.featureIdValue, 'stroke', color)
-    updateGeojson()
+    redrawGeojson(false)
   }
 
   updateFillColor () {
@@ -100,7 +100,7 @@ export default class extends Controller {
     if (feature.geometry.type === 'Point') { feature.properties['marker-color'] = color }
     // draw layer feature properties aren't getting updated by draw.set()
     draw.setFeatureProperty(this.featureIdValue, 'fill', color)
-    updateGeojson()
+    redrawGeojson(false)
   }
 
   updateMarkerSymbol () {
@@ -109,7 +109,7 @@ export default class extends Controller {
     feature.properties['marker-symbol'] = symbol
     // draw layer feature properties aren't getting updated by draw.set()
     draw.setFeatureProperty(this.featureIdValue, 'marker-symbol', symbol)
-    updateGeojson()
+    redrawGeojson(false)
   }
 
   async updateMarkerImage () {
@@ -131,7 +131,7 @@ export default class extends Controller {
         feature.properties['marker-image-url'] = data.icon
         draw.setFeatureProperty(this.featureIdValue, 'marker-image-url', data.icon)
         setFeatureTitleImage(feature)
-        updateGeojson()
+        redrawGeojson(false)
         this.saveFeature()
       })
       .catch(error => console.error('Error:', error))

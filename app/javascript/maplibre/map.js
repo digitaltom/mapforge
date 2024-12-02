@@ -243,20 +243,18 @@ export function initializeViewMode () {
   })
 }
 
-export function updateGeojson () {
-  // draw has its own style layers based on editStyles
-  if (draw) { draw.set(geojsonData) }
-  map.getSource('geojson-source')?.setData(geojsonData)
-}
-
-export function redrawGeojson () {
+export function redrawGeojson (resetDraw = true) {
   // draw has its own style layers based on editStyles
   if (draw) {
-    // TODO: this has a performance drawback over draw.set(), but otherwise
-    // feature properties like color don't get updated
-    // API: https://github.com/mapbox/mapbox-gl-draw/blob/main/docs/API.md
-    draw.deleteAll()
-    draw.add(geojsonData)
+    if (resetDraw) {
+      // This has a performance drawback over draw.set(), but otherwise
+      // feature properties like color don't get updated
+      // API: https://github.com/mapbox/mapbox-gl-draw/blob/main/docs/API.md
+      draw.deleteAll()
+      draw.add(geojsonData)
+    } else {
+      draw.set(geojsonData)
+    }
   }
   map.getSource('geojson-source')?.setData(renderedGeojsonData())
 }
@@ -270,7 +268,7 @@ export function renderedGeojsonData () {
   ))
 
   extrusionLines = extrusionLines.map(feature => {
-    const width = feature.properties['fill-extrusion-width'] || 10
+    const width = feature.properties['fill-extrusion-width'] || feature.properties['stroke-width'] || 10
     const extrusionLine = window.turf.buffer(feature, width, { units: 'meters' })
     // clone properties hash, else we're writing into the original feature's properties
     extrusionLine.properties = { ...feature.properties }
