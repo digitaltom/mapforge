@@ -176,6 +176,7 @@ export function enableEditControls () {
 function addPaintButton () {
   const originalButton = document.querySelector('.mapbox-gl-draw_line')
   const paintButton = originalButton.cloneNode(true)
+  paintButton.title = 'Freehand draw'
   paintButton.classList.remove('mapbox-gl-draw_line')
   paintButton.classList.add('mapbox-gl-draw_paint')
   const icon = document.createElement('i')
