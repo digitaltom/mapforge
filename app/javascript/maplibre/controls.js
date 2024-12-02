@@ -62,7 +62,7 @@ export class MapSettingsControl {
 export class MapShareControl {
   constructor (options) {
     this._container = document.createElement('div')
-    this._container.innerHTML = '<button class="maplibregl-ctrl-btn maplibregl-ctrl-share" type="button" title="Map settings" aria-label="Map settings" aria-pressed="false"><b><i class="bi bi-share-fill"></i></b></button>'
+    this._container.innerHTML = '<button class="maplibregl-ctrl-btn maplibregl-ctrl-share" type="button" title="Share map" aria-label="Share map" aria-pressed="false"><b><i class="bi bi-share-fill"></i></b></button>'
     this._container.onclick = function (e) {
       const modal = document.querySelector('#share-modal')
       if (modal.classList.contains('show')) {
@@ -92,7 +92,7 @@ export class MapLayersControl {
   constructor (options) {
     this._container = document.createElement('div')
     this._container.innerHTML = '<button class="maplibregl-ctrl-btn maplibregl-ctrl-layers" ' +
-      'type="button" title="Map settings" aria-label="Map settings" aria-pressed="false">' +
+      'type="button" title="Map layers" aria-label="Map layers" aria-pressed="false">' +
       '<b><i class="bi bi-stack"></i></b></button>'
     this._container.onclick = function (e) {
       const modal = document.querySelector('#layers-modal')
