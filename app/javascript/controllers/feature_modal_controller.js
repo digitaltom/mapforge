@@ -37,8 +37,8 @@ export default class extends Controller {
   }
 
   show_feature_edit_ui () {
-    if (document.querySelector('#feature-details-modal').classList.contains('modal-pull-down')) {
-      this.pullUpModal()
+    if (this.element.classList.contains('modal-pull-down')) {
+      this.pullUpModal(this.element)
     }
     const feature = this.getFeature()
     dom.showElements(['#feature-edit-ui', '#feature-title-input', '#button-add-desc', '#button-add-label'])
@@ -72,8 +72,8 @@ export default class extends Controller {
   }
 
   show_feature_edit_raw () {
-    if (document.querySelector('#feature-details-modal').classList.contains('modal-pull-down')) {
-      this.pullUpModal()
+    if (this.element.classList.contains('modal-pull-down')) {
+      this.pullUpModal(this.element)
     }
     const feature = this.getFeature()
     dom.hideElements(['#feature-edit-ui'])
@@ -128,22 +128,30 @@ export default class extends Controller {
   }
 
   toggleModalSize (e) {
-    console.log('toggleModalSize')
-    const modal = e.target.closest('.map-modal')
-    if (modal.classList.contains('modal-pull-up')) {
-      modal.classList.add('modal-pull-down')
-      modal.classList.remove('modal-pull-up')
+    const modal = this.element
+    console.log('toggleModalSize ' + modal.classList)
+    if (modal.classList.contains('modal-pull-up') || modal.classList.contains('modal-pull-up-half')) {
+      this.pullDownModal(modal)
     } else {
-      modal.classList.remove('modal-pull-down')
-      modal.classList.add('modal-pull-up')
+      this.pullUpModal(modal)
     }
     e.stopPropagation()
   }
 
-  pullUpModal () {
-    const modal = document.querySelector('#feature-details-modal')
+  pullDownModal (modal) {
+    modal.classList.add('modal-pull-down')
+    modal.classList.remove('modal-pull-up')
+    modal.classList.remove('modal-pull-up-half')
+  }
+
+  pullUpModal (modal) {
     modal.classList.remove('modal-pull-down')
-    modal.classList.add('modal-pull-up')
+    console.log('screen: ' + screen.height)
+    if (screen.height >= 600) {
+      modal.classList.add('modal-pull-up-half')
+    } else {
+      modal.classList.add('modal-pull-up')
+    }
   }
 
   getFeature () {

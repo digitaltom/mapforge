@@ -268,7 +268,7 @@ export function renderedGeojsonData () {
   ))
 
   extrusionLines = extrusionLines.map(feature => {
-    const width = feature.properties['fill-extrusion-width'] || feature.properties['stroke-width'] || 10
+    const width = feature.properties['fill-extrusion-width'] || feature.properties['stroke-width'] * 5 || 10
     const extrusionLine = window.turf.buffer(feature, width, { units: 'meters' })
     // clone properties hash, else we're writing into the original feature's properties
     extrusionLine.properties = { ...feature.properties }
