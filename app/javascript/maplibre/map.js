@@ -31,7 +31,7 @@ export function initializeMaplibreProperties () {
   const lastProperties = JSON.parse(JSON.stringify(mapProperties || {}))
   mapProperties = window.gon.map_properties
   if (JSON.stringify(lastProperties) !== JSON.stringify(mapProperties)) {
-    console.log('init with map properties: ' + JSON.stringify(mapProperties))
+    console.log('update map properties: ' + JSON.stringify(mapProperties))
     updateMapName(mapProperties.name)
     initSettingsModal()
     status('Map properties updated')
@@ -307,10 +307,14 @@ function updateFeature (feature, updatedFeature) {
       animation.animatePoint(feature, newCoords)
     }
   }
-  feature.geometry = updatedFeature.geometry
-  feature.properties = updatedFeature.properties
-  status('Updated feature ' + updatedFeature.id)
-  redrawGeojson()
+  // only update feature if it was changed
+  if (JSON.stringify(feature.geometry) !== JSON.stringify(updatedFeature.geometry) ||
+    JSON.stringify(feature.properties) !== JSON.stringify(updatedFeature.properties)) {
+    feature.geometry = updatedFeature.geometry
+    feature.properties = updatedFeature.properties
+    status('Updated feature ' + updatedFeature.id)
+    redrawGeojson()
+  }
 }
 
 export function destroy (featureId) {
