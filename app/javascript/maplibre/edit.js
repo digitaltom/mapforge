@@ -112,8 +112,9 @@ export function initializeEditMode () {
   map.on('touchend', (e) => {
     touchEndPosition = e.point
     if (touchStartPosition.x === touchEndPosition.x &&
-      touchStartPosition.y === touchEndPosition.y) {
-      resetControls()
+      touchStartPosition.y === touchEndPosition.y &&
+      draw.getMode() === 'simple_select') {
+      map.fire('click')
     }
   })
 
@@ -146,9 +147,8 @@ function handleCreate (e) {
   justCreated = true
   const mode = draw.getMode()
   setTimeout(() => {
-    resetControls()
     draw.changeMode(mode)
-    map.fire('draw.modechange')
+    map.fire('draw.modechange') // not fired automatically with draw.changeMode()
   }, 10)
 }
 

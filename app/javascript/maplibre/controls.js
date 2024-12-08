@@ -167,6 +167,7 @@ export function resetControls () {
   functions.e('.maplibregl-canvas', e => { e.classList.remove('cursor-crosshair') })
   // reset ctrl buttons
   functions.e('.maplibregl-ctrl-btn', e => { e.classList.remove('active') })
+
   // reset active modals
   functions.e('.map-modal', e => { e.classList.remove('show') })
   // collapse menu
