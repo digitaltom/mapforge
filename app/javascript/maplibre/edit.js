@@ -14,6 +14,7 @@ import PaintMode from 'mapbox-gl-draw-paint-mode'
 
 export let draw
 export let selectedFeature
+let justCreated = false
 
 MapboxDraw.constants.classes.CONTROL_BASE = 'maplibregl-ctrl'
 MapboxDraw.constants.classes.CONTROL_PREFIX = 'maplibregl-ctrl-'
@@ -23,6 +24,7 @@ MapboxDraw.constants.classes.CONTROL_GROUP = 'maplibregl-ctrl-group'
 export function initializeEditMode () {
   console.log('Initializing MapboxDraw')
   const modes = MapboxDrawWaypoint.enable(MapboxDraw.modes)
+
   draw = new MapboxDraw({
     displayControlsDefault: false,
     controls: {
@@ -88,6 +90,7 @@ export function initializeEditMode () {
 
   map.on('draw.selectionchange', function (e) {
     if (!e.features?.length) { return }
+    if (justCreated) { justCreated = false; return }
     selectedFeature = e.features[0]
     if (selectedFeature) {
       console.log('selected: ' + JSON.stringify(selectedFeature))
@@ -129,6 +132,7 @@ function sourcedataHandler (e) {
 function handleCreate (e) {
   let feature = e.features[0] // Assuming one feature is created at a time
 
+  // simplify hand-drawing
   if (draw.getMode() === 'draw_paint_mode') {
     const options = { tolerance: 0.00001, highQuality: true }
     feature = window.turf.simplify(feature, options)
@@ -137,6 +141,15 @@ function handleCreate (e) {
   status('Feature ' + feature.id + ' created')
   geojsonData.features.push(feature)
   mapChannel.send_message('new_feature', feature)
+
+  // Prevent automatic selection + stay in create mode
+  justCreated = true
+  const mode = draw.getMode()
+  setTimeout(() => {
+    resetControls()
+    draw.changeMode(mode)
+    map.fire('draw.modechange')
+  }, 10)
 }
 
 function handleUpdate (e) {

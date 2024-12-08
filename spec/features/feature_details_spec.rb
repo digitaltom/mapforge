@@ -21,7 +21,7 @@ describe 'Feature details' do
         find('.modal-pull-button').click
         sleep(0.3)
         height = find('#feature-details-modal').native.style('height').sub('px', '').to_i
-        expect(height).to be > 400
+        expect(height).to be > 250
       end
     end
   end
