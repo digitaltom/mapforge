@@ -78,15 +78,50 @@ const fillOpacityActive = ['*', 0.7, fillOpacity]
 
 const lineColor = ['coalesce', ['get', 'stroke'], ['get', 'user_stroke'], featureColor]
 export const defaultLineWidth = 4
-const lineWidth = ['to-number', ['coalesce',
-  ['get', 'stroke-width'], ['get', 'user_stroke-width'], defaultLineWidth]]
-const lineWidthActive = ['+', 2, lineWidth]
+const lineWidthMin = ['-', ['to-number', ['coalesce', ['get', 'user_stroke-width'], ['get', 'stroke-width'], defaultLineWidth]], 2]
+const lineWidthMax = ['+', ['to-number', ['coalesce', ['get', 'user_stroke-width'], ['get', 'stroke-width'], defaultLineWidth]], 10]
+const lineWidth = [
+  'interpolate',
+  ['linear'],
+  ['zoom'],
+  8, [
+    'case',
+    ['boolean', ['feature-state', 'active'], false],
+    ['+', 1, lineWidthMin],
+    lineWidthMin
+  ], // At zoom level 8, the line width is min
+  13, [
+    'case',
+    ['boolean', ['feature-state', 'active'], false],
+    ['+', 1, lineWidthMax],
+    lineWidthMax
+  ] // At zoom level 13, the line width is max
+]
+
 const lineOpacity = ['to-number', ['coalesce',
   ['get', 'stroke-opacity'], ['get', 'user_stroke-opacity'], 0.8]]
 const lineOpacityActive = 1
 const outlineColor = featureOutlineColor
-const outlineWidth = ['+', 4, lineWidth]
-const outlineWidthActive = ['+', 3, outlineWidth]
+
+const outlineWidthMin = ['+', 4, lineWidthMin]
+const outlineWidthMax = ['+', 6, lineWidthMax]
+const outlineWidth = [
+  'interpolate',
+  ['linear'],
+  ['zoom'],
+  8, [
+    'case',
+    ['boolean', ['feature-state', 'active'], false],
+    ['+', 1, outlineWidthMin],
+    outlineWidthMin
+  ], // At zoom level 8, the outline width is min
+  13, [
+    'case',
+    ['boolean', ['feature-state', 'active'], false],
+    ['+', 1, outlineWidthMax],
+    outlineWidthMax
+  ] // At zoom level 13, the outline width is max
+]
 
 const pointColor = ['coalesce', ['get', 'user_marker-color'], ['get', 'marker-color'],
   ['case',
@@ -193,12 +228,7 @@ export const styles = {
     },
     paint: {
       'line-color': outlineColor,
-      'line-width': [
-        'case',
-        ['boolean', ['feature-state', 'active'], false],
-        outlineWidthActive,
-        outlineWidth
-      ],
+      'line-width': outlineWidth,
       'line-opacity': lineOpacity
     }
   },
@@ -215,12 +245,7 @@ export const styles = {
     // Draw prefixes properties with '_user'
     paint: {
       'line-color': lineColor,
-      'line-width': [
-        'case',
-        ['boolean', ['feature-state', 'active'], false],
-        lineWidthActive,
-        lineWidth
-      ],
+      'line-width': lineWidth,
       'line-opacity': [
         'case',
         ['boolean', ['feature-state', 'active'], false],
@@ -236,7 +261,7 @@ export const styles = {
     filter: ['all',
       ['in', '$type', 'LineString']],
     paint: {
-      'line-width': ['+', 15, outlineWidth],
+      'line-width': ['+', 15, outlineWidthMax],
       'line-opacity': 0
     }
   },
