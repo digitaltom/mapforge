@@ -78,8 +78,10 @@ const fillOpacityActive = ['*', 0.7, fillOpacity]
 
 const lineColor = ['coalesce', ['get', 'stroke'], ['get', 'user_stroke'], featureColor]
 export const defaultLineWidth = 4
-const lineWidthMin = ['-', ['to-number', ['coalesce', ['get', 'user_stroke-width'], ['get', 'stroke-width'], defaultLineWidth]], 2]
-const lineWidthMax = ['+', ['to-number', ['coalesce', ['get', 'user_stroke-width'], ['get', 'stroke-width'], defaultLineWidth]], 10]
+const lineWidthMin = ['ceil', ['/', ['to-number', ['coalesce',
+  ['get', 'user_stroke-width'], ['get', 'stroke-width'], defaultLineWidth]], 2]]
+const lineWidthMax = ['*', ['to-number', ['coalesce',
+  ['get', 'user_stroke-width'], ['get', 'stroke-width'], defaultLineWidth]], 3]
 const lineWidth = [
   'interpolate',
   ['linear'],
@@ -90,7 +92,7 @@ const lineWidth = [
     ['+', 1, lineWidthMin],
     lineWidthMin
   ], // At zoom level 8, the line width is min
-  13, [
+  17, [
     'case',
     ['boolean', ['feature-state', 'active'], false],
     ['+', 1, lineWidthMax],
@@ -103,19 +105,19 @@ const lineOpacity = ['to-number', ['coalesce',
 const lineOpacityActive = 1
 const outlineColor = featureOutlineColor
 
-const outlineWidthMin = ['+', 4, lineWidthMin]
-const outlineWidthMax = ['+', 6, lineWidthMax]
+const outlineWidthMin = ['+', 3, lineWidthMin]
+const outlineWidthMax = ['+', 5, lineWidthMax]
 const outlineWidth = [
   'interpolate',
   ['linear'],
   ['zoom'],
-  8, [
+  5, [
     'case',
     ['boolean', ['feature-state', 'active'], false],
     ['+', 1, outlineWidthMin],
     outlineWidthMin
   ], // At zoom level 8, the outline width is min
-  13, [
+  17, [
     'case',
     ['boolean', ['feature-state', 'active'], false],
     ['+', 1, outlineWidthMax],
@@ -131,23 +133,23 @@ const pointSizeMin = ['to-number', ['coalesce',
   ['get', 'user_marker-size'], ['get', 'marker-size'],
   ['case',
     ['any', ['has', 'user_marker-symbol'], ['has', 'marker-symbol']],
-    6, 2]]]
+    7, 3]]]
 export const pointSizeMax = ['to-number', ['coalesce',
   ['get', 'user_marker-size'], ['get', 'marker-size'],
   ['case',
     ['any', ['has', 'user_marker-symbol'], ['has', 'marker-symbol']],
-    16, 6]]]
+    16, 8]]]
 export const pointSize = [
   'interpolate',
   ['linear'],
   ['zoom'],
-  8, [
+  5, [
     'case',
     ['boolean', ['feature-state', 'active'], false],
     ['+', 1, pointSizeMin],
     pointSizeMin
   ], // At zoom level 8, the point size is min
-  13, [
+  17, [
     'case',
     ['boolean', ['feature-state', 'active'], false],
     ['+', 1, pointSizeMax],
@@ -271,7 +273,6 @@ export const styles = {
     source: 'geojson-source',
     filter: ['all',
       ['==', '$type', 'Point'],
-      ['!=', 'active', 'true'],
       ['!=', 'meta', 'midpoint'],
       ['!=', 'meta', 'vertex']
     ],
@@ -296,9 +297,7 @@ export const styles = {
     source: 'geojson-source',
     filter: ['all',
       ['==', '$type', 'Point'],
-      ['!=', 'active', 'true'],
-      ['!=', 'meta', 'midpoint'],
-      ['!=', 'meta', 'vertex']
+      ['!=', 'meta', 'midpoint']
     ],
     paint: {
       'circle-pitch-scale': 'map', // points get bigger when camera is closer

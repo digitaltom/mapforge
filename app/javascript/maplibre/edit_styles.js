@@ -1,4 +1,4 @@
-import { styles, loadImage, pointSize, pointOutlineSize, pointOutlineSizeActive } from 'maplibre/styles'
+import { styles, loadImage, pointSize, pointOutlineSize, pointSizeMax } from 'maplibre/styles'
 import { map } from 'maplibre/map'
 import * as f from 'helpers/functions'
 
@@ -102,6 +102,24 @@ export const editStyles = [
       'circle-stroke-width': 1
     }
   },
+
+  // active point, either single or on a line / polygon
+  {
+    id: 'gl-draw-point-stroke-active',
+    type: 'circle',
+    filter: ['all',
+      ['==', '$type', 'Point'],
+      ['==', 'active', 'true'],
+      ['!=', 'meta', 'midpoint']
+    ],
+    paint: {
+      'circle-radius': ['*', pointSizeMax, 2],
+      'circle-color': '#fff',
+      'circle-opacity': 0.2,
+      'circle-stroke-color': highlightColor,
+      'circle-stroke-width': 1
+    }
+  },
   // inactive single point features
   removeSource(styles['points-border-layer']),
   removeSource(styles['points-layer']),
@@ -136,23 +154,6 @@ export const editStyles = [
     paint: {
       'circle-radius': pointSize,
       'circle-color': highlightColor
-    }
-  },
-  // active point, either single or on a line / polygon
-  {
-    id: 'gl-draw-point-stroke-active',
-    type: 'circle',
-    filter: ['all',
-      ['==', '$type', 'Point'],
-      ['==', 'active', 'true'],
-      ['!=', 'meta', 'midpoint']
-    ],
-    paint: {
-      'circle-radius': pointSize,
-      'circle-color': highlightColor,
-      'circle-opacity': 0.8,
-      'circle-stroke-color': '#222',
-      'circle-stroke-width': pointOutlineSizeActive
     }
   }
 ]
