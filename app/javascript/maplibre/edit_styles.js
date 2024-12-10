@@ -7,6 +7,8 @@ export function initializeEditStyles () {
   // Adding those as extra layers to the map.
   map.addLayer(styles['symbols-layer'])
   map.addLayer(styles['text-layer'])
+  // render the extrusion layer from "source: 'geojson-source' without having it available for edit in draw
+  map.addLayer(styles['polygon-layer-extrusion'])
 
   map.on('styleimagemissing', loadImage)
   // TODO setting feature state (hover) doesn't work on draw features
@@ -28,8 +30,6 @@ const highlightColor = '#fbb03b'
 export const editStyles = [
 
   removeSource(styles['polygon-layer']), // gl-draw-polygon-fill-inactive
-  // render the extrusion layer from "source: 'geojson-source' without having it available for edit in draw
-  removeSource(styles['polygon-layer-extrusion']),
   removeSource(styles['line-layer-outline']),
   removeSource(styles['line-layer']), // 'gl-draw-line-inactive', 'gl-draw-polygon-stroke-inactive',
 
