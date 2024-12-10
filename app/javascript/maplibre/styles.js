@@ -77,7 +77,7 @@ const fillOpacity = ['*', 0.7, ['to-number', ['coalesce',
 const fillOpacityActive = ['*', 0.7, fillOpacity]
 
 const lineColor = ['coalesce', ['get', 'stroke'], ['get', 'user_stroke'], featureColor]
-export const defaultLineWidth = 4
+export const defaultLineWidth = 3
 const lineWidthMin = ['ceil', ['/', ['to-number', ['coalesce',
   ['get', 'user_stroke-width'], ['get', 'stroke-width'], defaultLineWidth]], 2]]
 const lineWidthMax = ['*', ['to-number', ['coalesce',
@@ -105,8 +105,8 @@ const lineOpacity = ['to-number', ['coalesce',
 const lineOpacityActive = 1
 const outlineColor = featureOutlineColor
 
-const outlineWidthMin = ['+', 3, lineWidthMin]
-const outlineWidthMax = ['+', 5, lineWidthMax]
+const outlineWidthMin = ['+', 2, lineWidthMin]
+const outlineWidthMax = ['+', 4, lineWidthMax]
 const outlineWidth = [
   'interpolate',
   ['linear'],
