@@ -7,7 +7,6 @@ import {
 
 export const viewStyleNames = [
   'polygon-layer',
-  'polygon-layer-extrusion',
   'line-layer-outline',
   'line-layer',
   'line-layer-hit',
@@ -15,7 +14,8 @@ export const viewStyleNames = [
   'points-layer',
   'points-hit-layer',
   'symbols-layer',
-  'text-layer'
+  'text-layer',
+  'polygon-layer-extrusion'
 ]
 
 export function initializeViewStyles () {
@@ -77,11 +77,11 @@ const fillOpacity = ['*', 0.7, ['to-number', ['coalesce',
 const fillOpacityActive = ['*', 0.7, fillOpacity]
 
 const lineColor = ['coalesce', ['get', 'stroke'], ['get', 'user_stroke'], featureColor]
-export const defaultLineWidth = 3
+export const defaultLineWidth = 2
 const lineWidthMin = ['ceil', ['/', ['to-number', ['coalesce',
   ['get', 'user_stroke-width'], ['get', 'stroke-width'], defaultLineWidth]], 2]]
 const lineWidthMax = ['*', ['to-number', ['coalesce',
-  ['get', 'user_stroke-width'], ['get', 'stroke-width'], defaultLineWidth]], 3]
+  ['get', 'user_stroke-width'], ['get', 'stroke-width'], defaultLineWidth]], 2]
 const lineWidth = [
   'interpolate',
   ['linear'],
@@ -200,7 +200,8 @@ export const styles = {
     type: 'fill-extrusion',
     source: 'geojson-source',
     filter: ['all',
-      ['in', '$type', 'Polygon']],
+      ['in', '$type', 'Polygon'],
+      ['has', 'fill-extrusion-height']],
     paint: {
       'fill-extrusion-color': ['coalesce',
         ['get', 'fill-extrusion-color'],
