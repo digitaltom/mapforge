@@ -65,16 +65,17 @@ export async function loadImage (e) {
 // layout is fixed, paint flexible
 
 // shared styles
-// Mapbox.Draw layers prefix user properties with '_user'
+// Mapbox.Draw layers prefix user properties with 'user_'
 
 export const featureColor = 'rgb(10, 135, 10)' // green, #0A870A
-const featureOutlineColor = 'white'
+const featureOutlineColor = '#ffffff'
 
 const fillColor = ['coalesce',
   ['get', 'fill'], ['get', 'user_fill'], featureColor]
 const fillOpacity = ['*', 0.7, ['to-number', ['coalesce',
   ['get', 'fill-opacity'], ['get', 'user_fill-opacity'], 1]]]
 const fillOpacityActive = ['*', 0.7, fillOpacity]
+const lineColorPolygon = ['coalesce', ['get', 'stroke'], ['get', 'user_stroke'], featureOutlineColor]
 
 const lineColor = ['coalesce', ['get', 'stroke'], ['get', 'user_stroke'], featureColor]
 export const defaultLineWidth = 2
@@ -224,7 +225,7 @@ export const styles = {
     type: 'line',
     source: 'geojson-source',
     filter: ['all',
-      ['in', '$type', 'LineString', 'Polygon']],
+      ['in', '$type', 'LineString']],
     layout: {
       'line-join': 'round',
       'line-cap': 'round'
@@ -235,6 +236,7 @@ export const styles = {
       'line-opacity': lineOpacity
     }
   },
+  // lines + polygon outlines
   'line-layer': {
     id: 'line-layer',
     type: 'line',
@@ -245,15 +247,19 @@ export const styles = {
       'line-join': 'round',
       'line-cap': 'round'
     },
-    // Draw prefixes properties with '_user'
     paint: {
-      'line-color': lineColor,
+      'line-color': [
+        'case',
+        ['boolean', ['==', ['geometry-type'], 'LineString'], true],
+        lineColor, lineColorPolygon
+      ],
       'line-width': lineWidth,
       'line-opacity': [
         'case',
-        ['boolean', ['feature-state', 'active'], false],
-        lineOpacityActive,
-        lineOpacity
+        ['boolean', ['==', ['geometry-type'], 'LineString'], true],
+        ['case', ['boolean', ['feature-state', 'active'], false],
+          lineOpacityActive, lineOpacity
+        ], 1
       ]
     }
   },
@@ -364,7 +370,7 @@ export const styles = {
       'text-size': labelSize,
       'text-font': labelFont,
       // arrange text to avoid collision
-      'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
+      'text-variable-anchor': ['top'], // text under point
       // distance the text from the element depending on the type
       'text-radial-offset': [
         'match',

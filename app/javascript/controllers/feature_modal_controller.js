@@ -64,6 +64,7 @@ export default class extends Controller {
     } else if (feature.geometry.type === 'Polygon') {
       dom.showElements(['#feature-edit-ui .edit-polygon'])
       document.querySelector('#fill-color').value = feature.properties.fill || '#0A870A'
+      document.querySelector('#stroke-color').value = feature.properties.stroke || '#ffffff'
     }
 
     if (feature.geometry.type === 'LineString' || feature.geometry.type === 'MultiLineString' ||
