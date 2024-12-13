@@ -13,9 +13,9 @@ export const viewStyleNames = [
   'points-border-layer',
   'points-layer',
   'points-hit-layer',
-  'symbols-layer',
   'text-layer',
-  'polygon-layer-extrusion'
+  'polygon-layer-extrusion',
+  'symbols-layer'
 ]
 
 export function initializeViewStyles () {
