@@ -257,6 +257,7 @@ export function redrawGeojson (resetDraw = true) {
     }
   }
   map.getSource('geojson-source')?.setData(renderedGeojsonData())
+  map.redraw()
 }
 
 // change geojson data before rendering:
@@ -264,7 +265,8 @@ export function redrawGeojson (resetDraw = true) {
 export function renderedGeojsonData () {
   let extrusionLines = geojsonData.features.filter(feature => (
     feature.geometry.type === 'LineString' &&
-      feature.properties['fill-extrusion-height']
+      feature.properties['fill-extrusion-height'] &&
+      feature.geometry.coordinates.length !== 1 // don't break line animation
   ))
 
   extrusionLines = extrusionLines.map(feature => {
