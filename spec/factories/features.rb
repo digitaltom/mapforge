@@ -28,9 +28,11 @@ FactoryBot.define do
     trait :point_middle do
       geometry do
         { 'type' => 'Point',
-          'coordinates' => [ 11.085353409646018, 49.440728444532255 ],
-          'properties' => { 'marker-size' => '20' }
+          'coordinates' => [ 11.085353409646018, 49.440728444532255 ]
         }
+      end
+      properties do
+        { 'marker-size' => '20' }
       end
     end
 

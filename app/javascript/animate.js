@@ -1,8 +1,10 @@
-import { map, geojsonData, destroy, addFeature, redrawGeojson, setViewFromProperties } from 'maplibre/map'
+import { map, geojsonData, setViewFromProperties } from 'maplibre/map'
+import { AnimateLineAnimation, AnimatePolygonAnimation } from 'maplibre/animations'
+import * as functions from 'helpers/functions'
 
 ['turbo:load'].forEach(function (e) {
   window.addEventListener(e, function () {
-    const animateFeatureId = new URLSearchParams(window.location.search).get('animate')
+    const animateFeatureId = new URLSearchParams(window.location.search).get('a')
     if (animateFeatureId) {
       init()
     }
@@ -10,65 +12,20 @@ import { map, geojsonData, destroy, addFeature, redrawGeojson, setViewFromProper
 })
 
 async function init () {
-  map.on('geojson.load', (e) => {
-    const animateFeatureId = new URLSearchParams(window.location.search).get('animate')
+  map.on('geojson.load', async (e) => {
+    const animateFeatureId = new URLSearchParams(window.location.search).get('a')
     const feature = geojsonData.features.find(f => f.id === animateFeatureId)
-    if (feature) {
-      animateLine(feature)
+    console.log('Animating ' + feature.id)
+    if (feature?.geometry?.type === 'LineString') {
+      await functions.sleep(1000)
+      map.setZoom(14)
+      map.setPitch(60)
+      new AnimateLineAnimation().run(feature)
+    } else if (feature?.geometry?.type === 'Polygon') {
+      new AnimatePolygonAnimation().run(feature)
     } else {
       console.error('Feature to animate ' + animateFeatureId + ' not found!')
     }
+    setViewFromProperties()
   })
-}
-
-function animateLine (line) {
-  // drop feature from map
-  destroy(line.id)
-  const animationLine = {
-    type: 'Feature',
-    geometry: {
-      type: 'LineString',
-      coordinates: [
-        line.geometry.coordinates[0]
-      ]
-    },
-    properties: line.properties
-  }
-  geojsonData.features.push(animationLine)
-  console.log('Animating ' + line.id)
-
-  const lineDistance = window.turf.lineDistance(line, 'kilometers')
-  console.log('Line length: ' + lineDistance + ' km')
-  const steps = 500
-
-  let counter = 0
-  map.setZoom(14)
-  map.setPitch(60)
-
-  function animate (timestamp) {
-    const progress = counter / steps
-    const distance = progress * lineDistance
-    const coordinate = window.turf.along(line, distance, 'kilometers').geometry.coordinates
-    // console.log("Frame #" + timestamp + ", distance: " + distance + ", coords: " + coordinates)
-
-    animationLine.geometry.coordinates.push(coordinate)
-    // console.log("New line coords: " + animationLine.features[0].geometry.coordinates)
-    redrawGeojson()
-
-    // Update camera position
-    map.setCenter(coordinate, 12)
-
-    map.setBearing(map.getBearing() + 1)
-    counter++
-
-    if (counter <= steps) {
-      requestAnimationFrame(animate)
-    } else {
-      // after animation is done, re-add original line
-      addFeature(line)
-      setViewFromProperties()
-    }
-  }
-
-  animate(0)
 }

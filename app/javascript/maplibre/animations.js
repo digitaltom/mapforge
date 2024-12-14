@@ -64,3 +64,69 @@ export class AnimatePointAnimation extends AnimationManager {
     }
   }
 }
+
+export class AnimateLineAnimation extends AnimationManager {
+  run = (line) => {
+    const path = {
+      type: line.type,
+      geometry: {
+        type: line.geometry.type,
+        coordinates: [...line.geometry.coordinates]
+      }
+    }
+    const lineDistance = window.turf.lineDistance(path, 'kilometers')
+    console.log('Line length: ' + lineDistance + ' km')
+    const steps = 500
+    let counter = 0
+
+    function animate (frame) {
+      const progress = counter / steps
+      const distance = progress * lineDistance
+      const coordinate = window.turf.along(path, distance, 'kilometers').geometry.coordinates
+      // console.log("Frame #" + frame + ", distance: " + distance + ", coords: " + coordinates)
+
+      line.geometry.coordinates.push(coordinate)
+      // console.log("New line coords: " + animationLine.features[0].geometry.coordinates)
+      redrawGeojson()
+
+      // Update camera position
+      map.setCenter(coordinate, 12)
+      // map.setBearing(map.getBearing() + 1)
+      counter++
+
+      if (counter <= steps) {
+        requestAnimationFrame(animate)
+      }
+    }
+
+    line.geometry.coordinates = []
+    redrawGeojson()
+    animate(0)
+  }
+}
+
+export class AnimatePolygonAnimation extends AnimationManager {
+  run = (polygon) => {
+    const height = polygon.properties['fill-extrusion-height']
+    console.log('Polygon height: ' + height + 'm')
+    const steps = 100
+    let counter = 0
+
+    function animate (timestamp) {
+      const progress = counter / steps
+      polygon.properties['fill-extrusion-height'] = progress * height
+      // console.log('New height: ' + polygon.properties['fill-extrusion-height'])
+      redrawGeojson()
+
+      counter++
+
+      if (counter <= steps) {
+        requestAnimationFrame(animate)
+      }
+    }
+
+    polygon.properties['fill-extrusion-height'] = 0
+    redrawGeojson()
+    animate(0)
+  }
+}

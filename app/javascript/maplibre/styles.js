@@ -7,15 +7,15 @@ import {
 
 export const viewStyleNames = [
   'polygon-layer',
-  'polygon-layer-extrusion',
   'line-layer-outline',
   'line-layer',
   'line-layer-hit',
   'points-border-layer',
   'points-layer',
   'points-hit-layer',
-  'symbols-layer',
-  'text-layer'
+  'text-layer',
+  'polygon-layer-extrusion',
+  'symbols-layer'
 ]
 
 export function initializeViewStyles () {
@@ -65,28 +65,66 @@ export async function loadImage (e) {
 // layout is fixed, paint flexible
 
 // shared styles
-// Mapbox.Draw layers prefix user properties with '_user'
+// Mapbox.Draw layers prefix user properties with 'user_'
 
 export const featureColor = 'rgb(10, 135, 10)' // green, #0A870A
-const featureOutlineColor = 'white'
+const featureOutlineColor = '#ffffff'
 
 const fillColor = ['coalesce',
   ['get', 'fill'], ['get', 'user_fill'], featureColor]
 const fillOpacity = ['*', 0.7, ['to-number', ['coalesce',
   ['get', 'fill-opacity'], ['get', 'user_fill-opacity'], 1]]]
 const fillOpacityActive = ['*', 0.7, fillOpacity]
+const lineColorPolygon = ['coalesce', ['get', 'stroke'], ['get', 'user_stroke'], featureOutlineColor]
 
 const lineColor = ['coalesce', ['get', 'stroke'], ['get', 'user_stroke'], featureColor]
-export const defaultLineWidth = 4
-const lineWidth = ['to-number', ['coalesce',
-  ['get', 'stroke-width'], ['get', 'user_stroke-width'], defaultLineWidth]]
-const lineWidthActive = ['+', 2, lineWidth]
+export const defaultLineWidth = 2
+const lineWidthMin = ['ceil', ['/', ['to-number', ['coalesce',
+  ['get', 'user_stroke-width'], ['get', 'stroke-width'], defaultLineWidth]], 2]]
+const lineWidthMax = ['*', ['to-number', ['coalesce',
+  ['get', 'user_stroke-width'], ['get', 'stroke-width'], defaultLineWidth]], 2]
+const lineWidth = [
+  'interpolate',
+  ['linear'],
+  ['zoom'],
+  8, [
+    'case',
+    ['boolean', ['feature-state', 'active'], false],
+    ['+', 1, lineWidthMin],
+    lineWidthMin
+  ], // At zoom level 8, the line width is min
+  17, [
+    'case',
+    ['boolean', ['feature-state', 'active'], false],
+    ['+', 1, lineWidthMax],
+    lineWidthMax
+  ] // At zoom level 13, the line width is max
+]
+
 const lineOpacity = ['to-number', ['coalesce',
   ['get', 'stroke-opacity'], ['get', 'user_stroke-opacity'], 0.8]]
 const lineOpacityActive = 1
 const outlineColor = featureOutlineColor
-const outlineWidth = ['+', 4, lineWidth]
-const outlineWidthActive = ['+', 3, outlineWidth]
+
+const outlineWidthMin = ['+', 2, lineWidthMin]
+const outlineWidthMax = ['+', 4, lineWidthMax]
+const outlineWidth = [
+  'interpolate',
+  ['linear'],
+  ['zoom'],
+  5, [
+    'case',
+    ['boolean', ['feature-state', 'active'], false],
+    ['+', 1, outlineWidthMin],
+    outlineWidthMin
+  ], // At zoom level 8, the outline width is min
+  17, [
+    'case',
+    ['boolean', ['feature-state', 'active'], false],
+    ['+', 1, outlineWidthMax],
+    outlineWidthMax
+  ] // At zoom level 13, the outline width is max
+]
 
 const pointColor = ['coalesce', ['get', 'user_marker-color'], ['get', 'marker-color'],
   ['case',
@@ -96,23 +134,23 @@ const pointSizeMin = ['to-number', ['coalesce',
   ['get', 'user_marker-size'], ['get', 'marker-size'],
   ['case',
     ['any', ['has', 'user_marker-symbol'], ['has', 'marker-symbol']],
-    6, 2]]]
+    7, 3]]]
 export const pointSizeMax = ['to-number', ['coalesce',
   ['get', 'user_marker-size'], ['get', 'marker-size'],
   ['case',
     ['any', ['has', 'user_marker-symbol'], ['has', 'marker-symbol']],
-    16, 6]]]
+    16, 8]]]
 export const pointSize = [
   'interpolate',
   ['linear'],
   ['zoom'],
-  8, [
+  5, [
     'case',
     ['boolean', ['feature-state', 'active'], false],
     ['+', 1, pointSizeMin],
     pointSizeMin
   ], // At zoom level 8, the point size is min
-  13, [
+  17, [
     'case',
     ['boolean', ['feature-state', 'active'], false],
     ['+', 1, pointSizeMax],
@@ -163,7 +201,8 @@ export const styles = {
     type: 'fill-extrusion',
     source: 'geojson-source',
     filter: ['all',
-      ['in', '$type', 'Polygon']],
+      ['in', '$type', 'Polygon'],
+      ['has', 'fill-extrusion-height']],
     paint: {
       'fill-extrusion-color': ['coalesce',
         ['get', 'fill-extrusion-color'],
@@ -186,22 +225,18 @@ export const styles = {
     type: 'line',
     source: 'geojson-source',
     filter: ['all',
-      ['in', '$type', 'LineString', 'Polygon']],
+      ['in', '$type', 'LineString']],
     layout: {
       'line-join': 'round',
       'line-cap': 'round'
     },
     paint: {
       'line-color': outlineColor,
-      'line-width': [
-        'case',
-        ['boolean', ['feature-state', 'active'], false],
-        outlineWidthActive,
-        outlineWidth
-      ],
+      'line-width': outlineWidth,
       'line-opacity': lineOpacity
     }
   },
+  // lines + polygon outlines
   'line-layer': {
     id: 'line-layer',
     type: 'line',
@@ -212,20 +247,19 @@ export const styles = {
       'line-join': 'round',
       'line-cap': 'round'
     },
-    // Draw prefixes properties with '_user'
     paint: {
-      'line-color': lineColor,
-      'line-width': [
+      'line-color': [
         'case',
-        ['boolean', ['feature-state', 'active'], false],
-        lineWidthActive,
-        lineWidth
+        ['boolean', ['==', ['geometry-type'], 'LineString'], true],
+        lineColor, lineColorPolygon
       ],
+      'line-width': lineWidth,
       'line-opacity': [
         'case',
-        ['boolean', ['feature-state', 'active'], false],
-        lineOpacityActive,
-        lineOpacity
+        ['boolean', ['==', ['geometry-type'], 'LineString'], true],
+        ['case', ['boolean', ['feature-state', 'active'], false],
+          lineOpacityActive, lineOpacity
+        ], 1
       ]
     }
   },
@@ -236,7 +270,7 @@ export const styles = {
     filter: ['all',
       ['in', '$type', 'LineString']],
     paint: {
-      'line-width': ['+', 15, outlineWidth],
+      'line-width': ['+', 15, outlineWidthMax],
       'line-opacity': 0
     }
   },
@@ -246,7 +280,6 @@ export const styles = {
     source: 'geojson-source',
     filter: ['all',
       ['==', '$type', 'Point'],
-      ['!=', 'active', 'true'],
       ['!=', 'meta', 'midpoint'],
       ['!=', 'meta', 'vertex']
     ],
@@ -271,9 +304,7 @@ export const styles = {
     source: 'geojson-source',
     filter: ['all',
       ['==', '$type', 'Point'],
-      ['!=', 'active', 'true'],
-      ['!=', 'meta', 'midpoint'],
-      ['!=', 'meta', 'vertex']
+      ['!=', 'meta', 'midpoint']
     ],
     paint: {
       'circle-pitch-scale': 'map', // points get bigger when camera is closer
@@ -339,7 +370,7 @@ export const styles = {
       'text-size': labelSize,
       'text-font': labelFont,
       // arrange text to avoid collision
-      'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
+      'text-variable-anchor': ['top'], // text under point
       // distance the text from the element depending on the type
       'text-radial-offset': [
         'match',

@@ -71,7 +71,7 @@ module Ulogger
       desc = "[![image](/image/#{img.public_id})](/image/#{img.public_id})\n" +
         description
       { "marker-color" => "transparent",
-        "stroke" => "#fff",
+        "stroke" => "#ffffff",
         "marker-size" => 20,
         "stroke-width" => 8,
         "marker-image-url" => "/icon/" + img.public_id,

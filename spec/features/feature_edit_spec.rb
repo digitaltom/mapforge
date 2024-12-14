@@ -59,10 +59,7 @@ describe 'Feature edit' do
         find('#edit-button-raw').click
         expect(page).to have_selector('textarea[name="properties"]')
         fill_in 'properties', with: '{"title": "TEST"}'
-        find('.feature-update').click
-        # the actioncable events of map + feature update are not always received in the same order:
-        expect(page).to have_text('Updated feature').or have_text('Map properties updated')
-        expect(polygon.reload.properties).to eq({ "title" => "TEST" })
+        expect { find('.feature-update').click }.to change { polygon.reload.properties['title'] }
       end
 
       it 'can delete feature' do

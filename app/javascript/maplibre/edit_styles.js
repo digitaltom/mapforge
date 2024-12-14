@@ -1,13 +1,12 @@
-import { styles, loadImage, pointSize, pointOutlineSize, pointOutlineSizeActive } from 'maplibre/styles'
+import { styles, loadImage, pointSize, pointOutlineSize, pointSizeMax } from 'maplibre/styles'
 import { map } from 'maplibre/map'
 import * as f from 'helpers/functions'
 
 export function initializeEditStyles () {
   // MapboxDraw cannot render symbol+text styles.
   // Adding those as extra layers to the map.
-  map.addLayer(styles['symbols-layer'])
   map.addLayer(styles['text-layer'])
-
+  map.addLayer(styles['symbols-layer'])
   // render the extrusion layer from "source: 'geojson-source' without having it available for edit in draw
   map.addLayer(styles['polygon-layer-extrusion'])
 
@@ -80,7 +79,7 @@ export const editStyles = [
       'circle-radius': pointSize,
       'circle-color': 'grey',
       'circle-opacity': 0.8,
-      'circle-stroke-color': '#fff',
+      'circle-stroke-color': '#ffffff',
       'circle-stroke-width': 1
     }
   },
@@ -97,8 +96,26 @@ export const editStyles = [
     paint: {
       'circle-radius': pointSize,
       'circle-opacity': 0.2,
-      'circle-color': '#fff',
+      'circle-color': '#ffffff',
       'circle-stroke-color': '#c0c0c0',
+      'circle-stroke-width': 1
+    }
+  },
+
+  // active point, either single or on a line / polygon
+  {
+    id: 'gl-draw-point-stroke-active',
+    type: 'circle',
+    filter: ['all',
+      ['==', '$type', 'Point'],
+      ['==', 'active', 'true'],
+      ['!=', 'meta', 'midpoint']
+    ],
+    paint: {
+      'circle-radius': ['*', pointSizeMax, 2],
+      'circle-color': '#ffffff',
+      'circle-opacity': 0.2,
+      'circle-stroke-color': highlightColor,
       'circle-stroke-width': 1
     }
   },
@@ -136,23 +153,6 @@ export const editStyles = [
     paint: {
       'circle-radius': pointSize,
       'circle-color': highlightColor
-    }
-  },
-  // active point, either single or on a line / polygon
-  {
-    id: 'gl-draw-point-stroke-active',
-    type: 'circle',
-    filter: ['all',
-      ['==', '$type', 'Point'],
-      ['==', 'active', 'true'],
-      ['!=', 'meta', 'midpoint']
-    ],
-    paint: {
-      'circle-radius': pointSize,
-      'circle-color': highlightColor,
-      'circle-opacity': 0.8,
-      'circle-stroke-color': '#222',
-      'circle-stroke-width': pointOutlineSizeActive
     }
   }
 ]

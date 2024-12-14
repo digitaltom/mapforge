@@ -76,7 +76,7 @@ export default class extends Controller {
   updateFillExtrusionHeight () {
     const feature = this.getFeature()
     const size = document.querySelector('#fill-extrusion-height').value
-    document.querySelector('#fill-extrusion-height-val').textContent = '(' + size + ')'
+    document.querySelector('#fill-extrusion-height-val').textContent = '(' + size + 'm)'
     feature.properties['fill-extrusion-height'] = Number(size)
     // draw layer feature properties aren't getting updated by draw.set()
     draw.setFeatureProperty(this.featureIdValue, 'fill-extrusion-height', Number(size))
