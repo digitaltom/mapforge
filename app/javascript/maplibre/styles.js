@@ -379,7 +379,8 @@ export const styles = {
         ['/', pointSizeMin, 12]
       ],
       'text-justify': 'auto',
-      'text-ignore-placement': false // hide on collision
+      'text-ignore-placement': false, // hide on collision
+      'symbol-sort-key': ['to-number', ['coalesce', ['get', 'user_label-sort-key'], ['get', 'label-sort-key'], 1]]
     },
     paint: {
       'text-color': ['coalesce', ['get', 'user_label-color'], ['get', 'label-color'], '#000'],
