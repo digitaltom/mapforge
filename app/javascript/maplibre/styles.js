@@ -13,9 +13,9 @@ export const viewStyleNames = [
   'points-border-layer',
   'points-layer',
   'points-hit-layer',
+  'symbols-layer',
   'text-layer',
-  'polygon-layer-extrusion',
-  'symbols-layer'
+  'polygon-layer-extrusion'
 ]
 
 export function initializeViewStyles () {
@@ -375,8 +375,8 @@ export const styles = {
       'text-radial-offset': [
         'match',
         ['to-string', ['has', 'marker-symbol']],
-        'true', 1.4,
-        0.6
+        'true', ['*', iconSize, 2.5],
+        ['/', pointSizeMin, 12]
       ],
       'text-justify': 'auto',
       'text-ignore-placement': false // hide on collision

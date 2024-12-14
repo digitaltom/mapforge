@@ -5,8 +5,8 @@ import * as f from 'helpers/functions'
 export function initializeEditStyles () {
   // MapboxDraw cannot render symbol+text styles.
   // Adding those as extra layers to the map.
-  map.addLayer(styles['text-layer'])
   map.addLayer(styles['symbols-layer'])
+  map.addLayer(styles['text-layer'])
   // render the extrusion layer from "source: 'geojson-source' without having it available for edit in draw
   map.addLayer(styles['polygon-layer-extrusion'])
 
