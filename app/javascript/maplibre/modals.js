@@ -71,12 +71,14 @@ export function showFeatureDetails (feature) {
     modal.style.cursor = 'move'
   })
 
+  // Allow to drag up/down modal on touch devices
   functions.addEventListeners(modal, ['mousemove', 'touchmove', 'drag'], (event) => {
     if (!isDragging) return
 
     const dragY = event.clientY || event.touches[0].clientY
     const y = dragY - dragStartY
     modal.classList.remove('modal-pull-up')
+    modal.classList.remove('modal-pull-up-half')
     modal.classList.remove('modal-pull-down')
     modal.style.height = (dragStartModalHeight - y) + 'px'
   })
