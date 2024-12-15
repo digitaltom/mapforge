@@ -2,7 +2,7 @@ class ImagesController < ApplicationController
   before_action :set_image, only: %i[icon image]
 
   def icon
-    redirect_to '/images/image-not-found_100.webp' and return unless @image
+    redirect_to "/images/image-not-found_100.webp" and return unless @image
     expires_in 60.minutes, public: true
     # resize, crop if necessary to maintain aspect ratio (centre gravity)
     image_url = @image.img.thumb("100x100#", quality: 95).rounded.url
@@ -10,7 +10,7 @@ class ImagesController < ApplicationController
   end
 
   def image
-    redirect_to '/images/image-not-found.webp' and return unless @image
+    redirect_to "/images/image-not-found.webp" and return unless @image
     expires_in 60.minutes, public: true
     image_url = @image.img.url
     redirect_to image_url
