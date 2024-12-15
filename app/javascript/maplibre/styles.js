@@ -13,9 +13,9 @@ export const viewStyleNames = [
   'points-border-layer',
   'points-layer',
   'points-hit-layer',
+  'symbols-layer',
   'text-layer',
-  'polygon-layer-extrusion',
-  'symbols-layer'
+  'polygon-layer-extrusion'
 ]
 
 export function initializeViewStyles () {
@@ -65,16 +65,17 @@ export async function loadImage (e) {
 // layout is fixed, paint flexible
 
 // shared styles
-// Mapbox.Draw layers prefix user properties with '_user'
+// Mapbox.Draw layers prefix user properties with 'user_'
 
 export const featureColor = 'rgb(10, 135, 10)' // green, #0A870A
-const featureOutlineColor = 'white'
+const featureOutlineColor = '#ffffff'
 
 const fillColor = ['coalesce',
   ['get', 'fill'], ['get', 'user_fill'], featureColor]
 const fillOpacity = ['*', 0.7, ['to-number', ['coalesce',
   ['get', 'fill-opacity'], ['get', 'user_fill-opacity'], 1]]]
 const fillOpacityActive = ['*', 0.7, fillOpacity]
+const lineColorPolygon = ['coalesce', ['get', 'stroke'], ['get', 'user_stroke'], featureOutlineColor]
 
 const lineColor = ['coalesce', ['get', 'stroke'], ['get', 'user_stroke'], featureColor]
 export const defaultLineWidth = 2
@@ -224,7 +225,7 @@ export const styles = {
     type: 'line',
     source: 'geojson-source',
     filter: ['all',
-      ['in', '$type', 'LineString', 'Polygon']],
+      ['in', '$type', 'LineString']],
     layout: {
       'line-join': 'round',
       'line-cap': 'round'
@@ -235,6 +236,7 @@ export const styles = {
       'line-opacity': lineOpacity
     }
   },
+  // lines + polygon outlines
   'line-layer': {
     id: 'line-layer',
     type: 'line',
@@ -245,15 +247,19 @@ export const styles = {
       'line-join': 'round',
       'line-cap': 'round'
     },
-    // Draw prefixes properties with '_user'
     paint: {
-      'line-color': lineColor,
+      'line-color': [
+        'case',
+        ['boolean', ['==', ['geometry-type'], 'LineString'], true],
+        lineColor, lineColorPolygon
+      ],
       'line-width': lineWidth,
       'line-opacity': [
         'case',
-        ['boolean', ['feature-state', 'active'], false],
-        lineOpacityActive,
-        lineOpacity
+        ['boolean', ['==', ['geometry-type'], 'LineString'], true],
+        ['case', ['boolean', ['feature-state', 'active'], false],
+          lineOpacityActive, lineOpacity
+        ], 1
       ]
     }
   },
@@ -338,6 +344,7 @@ export const styles = {
     filter: ['!=', 'active', 'true'],
     // minzoom: 15, // TODO: only static values possible right now
     layout: {
+      'symbol-sort-key': ['to-number', ['coalesce', ['get', 'user_sort-key'], ['get', 'sort-key'], 1]],
       'icon-image': ['coalesce',
         ['get', 'marker-image-url'],
         // replacing marker-symbol value with path to emoji png
@@ -347,8 +354,8 @@ export const styles = {
           '']
       ],
       'icon-size': iconSize, // cannot scale on hover/zoom because it's not a paint property
-      'icon-overlap': 'always', // https://maplibre.org/maplibre-style-spec/layers/#icon-overlap
-      'icon-ignore-placement': true // other symbols can be visible even if they collide with the icon
+      'icon-overlap': 'always' // https://maplibre.org/maplibre-style-spec/layers/#icon-overlap
+      // 'icon-ignore-placement': true // other symbols can be visible even if they collide with the icon
     },
     paint: {
       // cannot set circle-stroke-* in the symbol layer :-(
@@ -360,20 +367,18 @@ export const styles = {
     source: 'geojson-source',
     filter: ['has', 'label'],
     layout: {
+      'icon-overlap': 'never',
       'text-field': ['coalesce', ['get', 'label'], ['get', 'room']],
       'text-size': labelSize,
       'text-font': labelFont,
       // arrange text to avoid collision
-      'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
-      // distance the text from the element depending on the type
-      'text-radial-offset': [
-        'match',
-        ['to-string', ['has', 'marker-symbol']],
-        'true', 1.4,
-        0.6
-      ],
+      'text-variable-anchor': ['top'], // text under point
+      // distance of the text in 'em'
+      'text-radial-offset': ['/', pointSizeMax, 14],
       'text-justify': 'auto',
-      'text-ignore-placement': false // hide on collision
+      'text-ignore-placement': false, // hide on collision
+      // TODO: sort keys on text are ascending, on symbols descending???
+      'symbol-sort-key': ['-', 1000, ['to-number', ['coalesce', ['get', 'user_sort-key'], ['get', 'sort-key'], 1]]]
     },
     paint: {
       'text-color': ['coalesce', ['get', 'user_label-color'], ['get', 'label-color'], '#000'],

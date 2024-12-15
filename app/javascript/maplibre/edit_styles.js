@@ -5,10 +5,10 @@ import * as f from 'helpers/functions'
 export function initializeEditStyles () {
   // MapboxDraw cannot render symbol+text styles.
   // Adding those as extra layers to the map.
+  map.addLayer(styles['symbols-layer'])
   map.addLayer(styles['text-layer'])
   // render the extrusion layer from "source: 'geojson-source' without having it available for edit in draw
   map.addLayer(styles['polygon-layer-extrusion'])
-  map.addLayer(styles['symbols-layer'])
 
   map.on('styleimagemissing', loadImage)
   // TODO setting feature state (hover) doesn't work on draw features
@@ -79,7 +79,7 @@ export const editStyles = [
       'circle-radius': pointSize,
       'circle-color': 'grey',
       'circle-opacity': 0.8,
-      'circle-stroke-color': '#fff',
+      'circle-stroke-color': '#ffffff',
       'circle-stroke-width': 1
     }
   },
@@ -96,7 +96,7 @@ export const editStyles = [
     paint: {
       'circle-radius': pointSize,
       'circle-opacity': 0.2,
-      'circle-color': '#fff',
+      'circle-color': '#ffffff',
       'circle-stroke-color': '#c0c0c0',
       'circle-stroke-width': 1
     }
@@ -113,7 +113,7 @@ export const editStyles = [
     ],
     paint: {
       'circle-radius': ['*', pointSizeMax, 2],
-      'circle-color': '#fff',
+      'circle-color': '#ffffff',
       'circle-opacity': 0.2,
       'circle-stroke-color': highlightColor,
       'circle-stroke-width': 1

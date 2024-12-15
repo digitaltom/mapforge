@@ -113,6 +113,11 @@ collection_format: collection_format))
     map
   end
 
+  def screenshot
+    "/previews/#{public_id}.png" if File.exist?(Rails.root.join("public/previews/#{public_id}.png"))
+  end
+
+
   private
 
   def all_points
