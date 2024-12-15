@@ -158,7 +158,7 @@ function handleUpdate (e) {
   status('Feature ' + feature.id + ' changed')
   const geojsonFeature = geojsonData.features.find(f => f.id === feature.id)
   geojsonFeature.geometry = feature.geometry
-  redrawGeojson()
+  redrawGeojson(false)
   mapChannel.send_message('update_feature', feature)
   // trigger highlight, to update eg. coordinates
   highlightFeature(feature, true)
