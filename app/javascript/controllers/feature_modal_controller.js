@@ -70,8 +70,8 @@ export default class extends Controller {
     if (feature.geometry.type === 'LineString' || feature.geometry.type === 'MultiLineString' ||
       feature.geometry.type === 'Polygon') {
       const size = feature.properties['stroke-width'] || defaultLineWidth
-      document.querySelector('#line-width').value = size
-      document.querySelector('#line-width-val').innerHTML = '(' + size + ')'
+      document.querySelector('#outline-width').value = size
+      document.querySelector('#outline-width-val').innerHTML = '(' + size + ')'
       const height = feature.properties['fill-extrusion-height'] || 0
       document.querySelector('#fill-extrusion-height').value = height
       document.querySelector('#fill-extrusion-height-val').innerHTML = '(' + height + 'm)'

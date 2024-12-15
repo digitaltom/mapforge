@@ -73,6 +73,17 @@ export default class extends Controller {
   }
 
   // called as preview on slider change
+  updateOutLineWidth () {
+    const feature = this.getFeature()
+    const size = document.querySelector('#outline-width').value
+    document.querySelector('#outline-width-val').textContent = '(' + size + ')'
+    feature.properties['stroke-width'] = size
+    // draw layer feature properties aren't getting updated by draw.set()
+    draw.setFeatureProperty(this.featureIdValue, 'stroke-width', size)
+    redrawGeojson(true)
+  }
+
+  // called as preview on slider change
   updateFillExtrusionHeight () {
     const feature = this.getFeature()
     const size = document.querySelector('#fill-extrusion-height').value

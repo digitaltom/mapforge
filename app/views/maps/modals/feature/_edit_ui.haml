@@ -22,10 +22,15 @@
     %input.slider#point-size{ type: "range", min: "1", max: "50", value: "1", 'data-action': "input->feature-edit#updatePointSize  change->feature-edit#saveFeature" }
     %span#point-size-val
 
-  #line-width-ui.edit-ui.edit-line.edit-polygon
+  #line-width-ui.edit-ui.edit-line
     %label{ for: "line-width"} Line width:
-    %input.slider#line-width{ type: "range", min: "0", max: "15", value: "1", 'data-action': "input->feature-edit#updateLineWidth change->feature-edit#saveFeature" }
+    %input.slider#line-width{ type: "range", min: "1", max: "15", value: "1", 'data-action': "input->feature-edit#updateLineWidth change->feature-edit#saveFeature" }
     %span#line-width-val
+
+  #outline-width-ui.edit-ui.edit-polygon
+    %label{ for: "outline-width"} Outline width:
+    %input.slider#outline-width{ type: "range", min: "0", max: "15", value: "1", 'data-action': "input->feature-edit#updateOutLineWidth change->feature-edit#saveFeature" }
+    %span#outline-width-val
 
   #stroke-color-ui.edit-ui.edit-line.edit-polygon.edit-point
     %label{ for: "stroke-color"} Line color:
