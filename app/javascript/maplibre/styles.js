@@ -202,7 +202,7 @@ export const styles = {
     source: 'geojson-source',
     filter: ['all',
       ['in', '$type', 'Polygon'],
-      ['has', 'fill-extrusion-height']],
+      ['>', 'fill-extrusion-height', 0]],
     paint: {
       'fill-extrusion-color': ['coalesce',
         ['get', 'fill-extrusion-color'],
