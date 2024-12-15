@@ -98,6 +98,26 @@ export function initializeMap (divId = 'maplibre-map') {
     }
   })
 
+  map.once('load', () => {
+    // WIP re-sort layers to overlay geojson layers with labels & extrusion objects
+    const currentStyle = map.getStyle()
+    const layers = currentStyle.layers
+
+    const extrusionLayers = layers.filter(l => l.paint &&
+      (l.paint['fill-extrusion-height'] || l.paint['user_fill-extrusion-height']))
+    // console.log(extrusionLayers)
+    const mapLabels = layers.filter(l => l.layout && l.layout['text-field'])
+    // console.log(map_labels)
+
+    let sortedLayers = layers.filter(l => (!extrusionLayers.includes(l) &&
+      !mapLabels.includes(l)))
+    sortedLayers = sortedLayers.concat(extrusionLayers).concat(mapLabels)
+    const newStyle = { ...currentStyle, layers: sortedLayers }
+    map.setStyle(newStyle)
+
+    console.log(map.getStyle().layers)
+  })
+
   map.on('mousemove', (e) => { lastMousePosition = e.lngLat })
   map.on('touchend', (e) => { lastMousePosition = e.lngLat })
   map.on('drag', () => { mapInteracted = true })

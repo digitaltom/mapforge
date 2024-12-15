@@ -48,16 +48,14 @@ export function initializeEditMode () {
     }
   })
 
-  map.once('style.load', () => {
-    initializeDefaultControls()
-    map.addControl(draw, 'top-left')
-    addPaintButton()
-    const controlGroup = new ControlGroup(
-      [new MapSettingsControl(),
-        new MapLayersControl(),
-        new MapShareControl()])
-    map.addControl(controlGroup, 'top-left')
-  })
+  initializeDefaultControls()
+  map.addControl(draw, 'top-left')
+  addPaintButton()
+  const controlGroup = new ControlGroup(
+    [new MapSettingsControl(),
+      new MapLayersControl(),
+      new MapShareControl()])
+  map.addControl(controlGroup, 'top-left')
 
   map.on('geojson.load', function (e) {
     // register callback to reload edit styles when source layer changed
