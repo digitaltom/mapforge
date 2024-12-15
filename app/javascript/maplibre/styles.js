@@ -72,8 +72,8 @@ const featureOutlineColor = '#ffffff'
 
 const fillColor = ['coalesce',
   ['get', 'fill'], ['get', 'user_fill'], featureColor]
-const fillOpacity = ['*', 0.7, ['to-number', ['coalesce',
-  ['get', 'fill-opacity'], ['get', 'user_fill-opacity'], 1]]]
+const fillOpacity = ['to-number', ['coalesce',
+  ['get', 'fill-opacity'], ['get', 'user_fill-opacity'], 0.7]]
 const fillOpacityActive = ['*', 0.7, fillOpacity]
 const lineColorPolygon = ['coalesce', ['get', 'stroke'], ['get', 'user_stroke'], featureOutlineColor]
 
