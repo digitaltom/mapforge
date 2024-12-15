@@ -344,6 +344,7 @@ export const styles = {
     filter: ['!=', 'active', 'true'],
     // minzoom: 15, // TODO: only static values possible right now
     layout: {
+      'symbol-sort-key': ['to-number', ['coalesce', ['get', 'user_sort-key'], ['get', 'sort-key'], 1]],
       'icon-image': ['coalesce',
         ['get', 'marker-image-url'],
         // replacing marker-symbol value with path to emoji png
@@ -353,8 +354,8 @@ export const styles = {
           '']
       ],
       'icon-size': iconSize, // cannot scale on hover/zoom because it's not a paint property
-      'icon-overlap': 'always', // https://maplibre.org/maplibre-style-spec/layers/#icon-overlap
-      'icon-ignore-placement': true // other symbols can be visible even if they collide with the icon
+      'icon-overlap': 'always' // https://maplibre.org/maplibre-style-spec/layers/#icon-overlap
+      // 'icon-ignore-placement': true // other symbols can be visible even if they collide with the icon
     },
     paint: {
       // cannot set circle-stroke-* in the symbol layer :-(
@@ -366,20 +367,18 @@ export const styles = {
     source: 'geojson-source',
     filter: ['has', 'label'],
     layout: {
+      'icon-overlap': 'never',
       'text-field': ['coalesce', ['get', 'label'], ['get', 'room']],
       'text-size': labelSize,
       'text-font': labelFont,
       // arrange text to avoid collision
       'text-variable-anchor': ['top'], // text under point
-      // distance the text from the element depending on the type
-      'text-radial-offset': [
-        'match',
-        ['to-string', ['has', 'marker-symbol']],
-        'true', ['*', iconSize, 2.5],
-        ['/', pointSizeMin, 12]
-      ],
+      // distance of the text in 'em'
+      'text-radial-offset': ['/', pointSizeMax, 14],
       'text-justify': 'auto',
-      'text-ignore-placement': false // hide on collision
+      'text-ignore-placement': false, // hide on collision
+      // TODO: sort keys on text are ascending, on symbols descending???
+      'symbol-sort-key': ['-', 1000, ['to-number', ['coalesce', ['get', 'user_sort-key'], ['get', 'sort-key'], 1]]]
     },
     paint: {
       'text-color': ['coalesce', ['get', 'user_label-color'], ['get', 'label-color'], '#000'],
