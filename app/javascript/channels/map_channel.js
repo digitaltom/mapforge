@@ -1,12 +1,13 @@
 import consumer from 'channels/consumer'
 import {
   upsert, destroy, setBackgroundMapLayer, mapProperties,
-  initializeMaplibreProperties, geojsonData, map, resetGeojsonData
+  initializeMaplibreProperties, map, resetGeojsonData
 } from 'maplibre/map'
 import { disableEditControls, enableEditControls } from 'maplibre/edit'
 import { status } from 'helpers/status'
 
 export let mapChannel
+let channelStatus
 let reconnectTimer
 
 ['turbo:load'].forEach(function (e) {
@@ -16,12 +17,13 @@ let reconnectTimer
 })
 
 function unload () {
-  if (mapChannel) { mapChannel.unsubscribe(); mapChannel = null }
+  if (mapChannel) { mapChannel.unsubscribe(); mapChannel = null; channelStatus = undefined }
 }
 
 export function initializeSocket () {
   unload()
-  // console.log('Request socket for ' + window.gon.map_id)
+  channelStatus ||= 'init'
+
   consumer.subscriptions.create({ channel: 'MapChannel', map_id: window.gon.map_id }, {
     connected () {
       // Called when the subscription is ready for use on the server
@@ -30,7 +32,8 @@ export function initializeSocket () {
       map.fire('online', { detail: { message: 'Connected to map_channel' } })
       mapChannel = this
       enableEditControls()
-      if (geojsonData) {
+      // only reload data when there has been a connection before, to avoid double load
+      if (channelStatus === 'off') {
         status('Connection to server re-established')
         initializeMaplibreProperties()
         resetGeojsonData()
@@ -38,17 +41,22 @@ export function initializeSocket () {
       } else {
         status('Connection to server established')
       }
+      channelStatus = 'on'
     },
 
     disconnected () {
       // Called when the subscription has been terminated by the server
       console.log('Disconnected from map_channel ' + window.gon.map_id)
       map.fire('offline', { detail: { message: 'Disconnected from map_channel' } })
+      channelStatus = 'off'
       disableEditControls()
       mapChannel = null
       // show error with delay to avoid showing it on unload/refresh
       setTimeout(function () { status('Connection to server lost', 'error', 'medium', 60 * 60 * 1000) }, 1000)
-      reconnectTimer = setInterval(() => { console.log('Trying to re-connect websocket..'); initializeSocket() }, 10000)
+      reconnectTimer = setInterval(() => {
+        console.log('Trying to re-connect websocket..');
+        initializeSocket()
+      }, 10000)
     },
 
     received (data) {
