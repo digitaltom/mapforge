@@ -19,13 +19,12 @@ let backgroundMapLayer
 let backgroundTerrain
 
 // workflow of event based map loading:
-//
-// * initializeMap() - set map object
-// * setup map callbacks (initializeViewMode(), initializeEditMode())
-// * setBackgroundMapLayer() -> 'style.load' event
-//   -> initializeDefaultControls(), loadGeoJsonData() -> 'geojson.load' event
-//      -> triggers callbacks for setting geojson/draw style layers,
-//         sets data-geojson-loaded attribute to true
+// page calls: initializeMap(), [initializeSocket()],
+// initializeViewMode() or initializeEditMode() or initializeStaticMode()
+// setBackgroundMapLayer() -> 'style.load' event
+// 'style.load' -> initializeDefaultControls()
+// 'style.load' -> loadGeoJsonData() -> 'geojson.load'
+// 'geojson.load' -> initializeViewStyles()
 
 export function initializeMaplibreProperties () {
   const lastProperties = JSON.parse(JSON.stringify(mapProperties || {}))
@@ -82,7 +81,7 @@ export function initializeMap (divId = 'maplibre-map') {
 
   // after basemap style is ready/changed, load geojson layer
   map.on('style.load', () => {
-    status('Map style loaded')
+    console.log('Map style loaded')
     loadGeoJsonData()
     if (mapProperties.terrain && window.gon.map_keys.maptiler) { addTerrain() }
   })
@@ -98,24 +97,11 @@ export function initializeMap (divId = 'maplibre-map') {
     }
   })
 
-  map.once('load', () => {
-    // WIP re-sort layers to overlay geojson layers with labels & extrusion objects
-    const currentStyle = map.getStyle()
-    const layers = currentStyle.layers
-
-    const extrusionLayers = layers.filter(l => l.paint &&
-      (l.paint['fill-extrusion-height'] || l.paint['user_fill-extrusion-height']))
-    // console.log(extrusionLayers)
-    const mapLabels = layers.filter(l => l.layout && l.layout['text-field'])
-    // console.log(map_labels)
-
-    let sortedLayers = layers.filter(l => (!extrusionLayers.includes(l) &&
-      !mapLabels.includes(l)))
-    sortedLayers = sortedLayers.concat(extrusionLayers).concat(mapLabels)
-    const newStyle = { ...currentStyle, layers: sortedLayers }
-    map.setStyle(newStyle)
-
-    console.log(map.getStyle().layers)
+  map.once('load', function (e) {
+    // re-sort layers late, when all map, view + edit layers are added
+    sortLayers()
+    functions.e('#maplibre-map', e => { e.setAttribute('data-loaded', true) })
+    console.log('Map loaded')
   })
 
   map.on('mousemove', (e) => { lastMousePosition = e.lngLat })
@@ -184,7 +170,7 @@ export function loadGeoJsonData () {
         // drop the properties.id after sending to the map
         geojsonData.features.forEach(feature => { delete feature.properties.id })
       }
-      status('Geojson layer loaded')
+      console.log('Geojson layer loaded')
       map.fire('geojson.load', { detail: { message: 'geojson-source loaded' } })
     })
     .catch(error => {
@@ -244,23 +230,17 @@ export function initializeDefaultControls () {
   })
   map.addControl(scale)
   scale.setUnit('metric')
-  status('Controls added to map')
 }
 
 export function initializeStaticMode () {
-  map.on('geojson.load', function (e) {
+  map.on('geojson.load', () => {
     initializeViewStyles()
   })
 }
 
 export function initializeViewMode () {
-  map.once('style.load', () => {
-    initializeDefaultControls()
-  })
-
-  map.on('geojson.load', function (e) {
-    initializeViewStyles()
-  })
+  map.once('style.load', () => { initializeDefaultControls() })
+  map.on('geojson.load', () => { initializeViewStyles() })
 }
 
 export function redrawGeojson (resetDraw = true) {
@@ -351,7 +331,7 @@ export function destroy (featureId) {
 export function setBackgroundMapLayer (mapName = mapProperties.base_map, force = false) {
   if (backgroundMapLayer === mapName && backgroundTerrain === mapProperties.terrain && !force) { return }
   if (basemaps[mapName]) {
-    status('Loading base map ' + mapName)
+    map.once('style.load', () => { status('Loaded base map ' + mapName) })
     map.setStyle(basemaps[mapName],
       // adding 'diff: false' so that 'style.load' gets triggered (https://github.com/maplibre/maplibre-gl-js/issues/2587)
       // which will trigger loadGeoJsonData()
@@ -361,6 +341,24 @@ export function setBackgroundMapLayer (mapName = mapProperties.base_map, force =
   } else {
     console.error('Base map ' + mapName + ' not available!')
   }
+}
+
+// re-sort layers to overlay geojson layers with labels & extrusion objects
+export function sortLayers () {
+  const currentStyle = map.getStyle()
+  const layers = currentStyle.layers
+
+  const extrusionLayers = layers.filter(l => l.paint &&
+    (l.paint['fill-extrusion-height'] || l.paint['user_fill-extrusion-height']))
+  // console.log(extrusionLayers)
+  const mapLabels = layers.filter(l => l.layout && l.layout['text-field'])
+  // console.log(map_labels)
+  let sortedLayers = layers.filter(l => (!extrusionLayers.includes(l) &&
+    !mapLabels.includes(l)))
+  sortedLayers = sortedLayers.concat(extrusionLayers).concat(mapLabels)
+  const newStyle = { ...currentStyle, layers: sortedLayers }
+  map.setStyle(newStyle, { diff: true })
+  // console.log(map.getStyle().layers)
 }
 
 export function updateMapName (name) {
