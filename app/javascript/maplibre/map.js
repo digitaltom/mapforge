@@ -345,6 +345,7 @@ export function setBackgroundMapLayer (mapName = mapProperties.base_map, force =
 
 // re-sort layers to overlay geojson layers with labels & extrusion objects
 export function sortLayers () {
+  console.log('Sorting layers')
   const currentStyle = map.getStyle()
   const layers = currentStyle.layers
 

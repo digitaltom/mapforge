@@ -38,6 +38,7 @@ export function initializeSocket () {
         initializeMaplibreProperties()
         resetGeojsonData()
         setBackgroundMapLayer(mapProperties.base_map, true)
+        map.fire('load', { detail: { message: 'Map re-loaded by map_channel' } })
       } else {
         status('Connection to server established')
       }
@@ -54,7 +55,7 @@ export function initializeSocket () {
       // show error with delay to avoid showing it on unload/refresh
       setTimeout(function () { status('Connection to server lost', 'error', 'medium', 60 * 60 * 1000) }, 1000)
       reconnectTimer = setInterval(() => {
-        console.log('Trying to re-connect websocket..');
+        console.log('Trying to re-connect websocket..')
         initializeSocket()
       }, 10000)
     },

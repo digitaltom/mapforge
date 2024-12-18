@@ -1,4 +1,4 @@
-import { map } from 'maplibre/map'
+import { map, sortLayers } from 'maplibre/map'
 import {
   highlightedFeatureId, stickyFeatureHighlight,
   resetHighlightedFeature, highlightFeature
@@ -21,6 +21,7 @@ export function initializeViewStyles () {
   viewStyleNames.forEach(styleName => {
     map.addLayer(styles[styleName])
   })
+  sortLayers()
   console.log('View styles added')
 
   // click is needed to select on mobile and for sticky highlight
