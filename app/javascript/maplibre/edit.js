@@ -48,6 +48,8 @@ export function initializeEditMode () {
     }
   })
 
+  map.on('geojson.load', function (e) { initializeEditStyles() })
+
   initializeDefaultControls()
   map.addControl(draw, 'top-left')
   addPaintButton()
@@ -58,8 +60,6 @@ export function initializeEditMode () {
   map.addControl(controlGroup, 'top-left')
 
   map.on('geojson.load', function (e) {
-    // register callback to reload edit styles when source layer changed
-    map.on('sourcedata', sourcedataHandler)
     const urlFeatureId = new URLSearchParams(window.location.search).get('f')
     const feature = geojsonData.features.find(f => f.id === urlFeatureId)
     if (feature) {
@@ -117,15 +117,6 @@ export function initializeEditMode () {
   })
 
   document.querySelector('#edit-buttons').classList.remove('hidden')
-}
-
-function sourcedataHandler (e) {
-  if (e.sourceId === 'mapbox-gl-draw-cold' && e.isSourceLoaded) {
-    // Unsubscribe to avoid multiple triggers
-    map.off('sourcedata', sourcedataHandler)
-    // initialize additional styles (icons) after draw is loaded
-    initializeEditStyles()
-  }
 }
 
 function handleCreate (e) {
