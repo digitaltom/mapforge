@@ -6,7 +6,7 @@ describe 'Map public view' do
 
   before do
     visit path
-    expect(page).to have_css('.map[data-loaded="true"]')
+    expect(page).to have_css('#maplibre-map[data-loaded="true"]')
   end
 
   context 'with initial map rendering' do
@@ -20,11 +20,9 @@ describe 'Map public view' do
 
   # features are created before loading the map, to make sure they're loaded via /features
   context 'with existing features' do
-    let!(:point) { create(:feature, :point, layer: map.layers.first) }
     # this polygon is in the middle of nbg (default view)
-    let!(:polygon) { create(:feature, :polygon_middle, layer: map.layers.first,
-      title: 'Poly Title', desc: 'Poly Desc') }
-    let!(:line) { create(:feature, :line_string, layer: map.layers.first) }
+    let(:polygon) { create(:feature, :polygon_middle, title: 'Poly Title', desc: 'Poly Desc') }
+    let(:map) { create(:map, features: [ polygon ]) }
 
     it 'shows feature details on hover' do
       # coordinates are calculated from the center middle
