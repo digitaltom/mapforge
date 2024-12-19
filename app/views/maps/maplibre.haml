@@ -13,7 +13,7 @@
 - content_for :title, "Mapforge: #{(@map.name.presence || @map.id)}"
 - content_for :head do
   - if @map.screenshot
-    %meta{ 'og:image': @map.screenshot }
+    %meta{ 'og:image': "#{request.protocol}#{request.host_with_port}#{@map.screenshot}" }
 
 #maplibre-map.map
 
