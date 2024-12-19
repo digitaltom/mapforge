@@ -20,7 +20,7 @@ describe 'Map' do
       find('.maplibregl-ctrl-map').click
       expect(page).to have_text('Configure Map')
       find(".layer-preview[data-base-map='osmRasterTiles']").click
-      expect(page).to have_text('Map style loaded')
+      expect(page).to have_text('Loaded base map osmRasterTiles', wait: 20) # extended wait time for osm load
       expect(map.reload.base_map).to eq 'osmRasterTiles'
     end
 
@@ -44,14 +44,14 @@ describe 'Map' do
     it 'basemap update' do
       find('.maplibregl-ctrl-map').click
       map.update(base_map: 'osmRasterTiles')
-      expect(page).to have_text('Map style loaded', wait: 20) # extended wait time for osm load
+      expect(page).to have_text('Loaded base map osmRasterTiles', wait: 20) # extended wait time for osm load
       expect(page).to have_css('.layer-preview[data-base-map="osmRasterTiles"].active')
     end
 
     it 'terrain update' do
       find('.maplibregl-ctrl-map').click
       map.update(terrain: true)
-      expect(page).to have_text('Map style loaded')
+      expect(page).to have_text('Loaded base map test')
       expect(find('#map-terrain')).to be_checked
     end
 

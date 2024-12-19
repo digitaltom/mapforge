@@ -1,5 +1,4 @@
-import { map } from 'maplibre/map'
-import * as f from 'helpers/functions'
+import { map, sortLayers } from 'maplibre/map'
 import {
   highlightedFeatureId, stickyFeatureHighlight,
   resetHighlightedFeature, highlightFeature
@@ -22,6 +21,9 @@ export function initializeViewStyles () {
   viewStyleNames.forEach(styleName => {
     map.addLayer(styles[styleName])
   })
+  sortLayers()
+  console.log('View styles added')
+
   // click is needed to select on mobile and for sticky highlight
   map.on('click', viewStyleNames, function (e) {
     if (!e.features?.length || window.gon.map_mode === 'static') { return }
@@ -43,7 +45,6 @@ export function initializeViewStyles () {
   })
 
   map.on('styleimagemissing', loadImage)
-  f.e('#maplibre-map', e => { e.setAttribute('data-loaded', true) })
 }
 
 // loading images from 'marker-image-url' attributes

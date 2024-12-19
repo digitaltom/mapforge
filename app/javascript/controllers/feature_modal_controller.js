@@ -60,18 +60,21 @@ export default class extends Controller {
       document.querySelector('#fill-color').value = feature.properties['marker-color'] || '#0A870A'
       document.querySelector('#marker-symbol').value = feature.properties['marker-symbol'] || ''
     } else if (feature.geometry.type === 'LineString' || feature.geometry.type === 'MultiLineString') {
+      const size = feature.properties['stroke-width'] || defaultLineWidth
+      document.querySelector('#line-width').value = size
+      document.querySelector('#line-width-val').innerHTML = '(' + size + ')'
       dom.showElements(['#feature-edit-ui .edit-line'])
     } else if (feature.geometry.type === 'Polygon') {
       dom.showElements(['#feature-edit-ui .edit-polygon'])
       document.querySelector('#fill-color').value = feature.properties.fill || '#0A870A'
       document.querySelector('#stroke-color').value = feature.properties.stroke || '#ffffff'
+      const size = feature.properties['stroke-width'] || defaultLineWidth
+      document.querySelector('#outline-width').value = size
+      document.querySelector('#outline-width-val').innerHTML = '(' + size + ')'
     }
 
     if (feature.geometry.type === 'LineString' || feature.geometry.type === 'MultiLineString' ||
       feature.geometry.type === 'Polygon') {
-      const size = feature.properties['stroke-width'] || defaultLineWidth
-      document.querySelector('#outline-width').value = size
-      document.querySelector('#outline-width-val').innerHTML = '(' + size + ')'
       const height = feature.properties['fill-extrusion-height'] || 0
       document.querySelector('#fill-extrusion-height').value = height
       document.querySelector('#fill-extrusion-height-val').innerHTML = '(' + height + 'm)'

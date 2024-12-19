@@ -1,6 +1,5 @@
 import { styles, loadImage, pointSize, pointOutlineSize, pointSizeMax } from 'maplibre/styles'
-import { map } from 'maplibre/map'
-import * as f from 'helpers/functions'
+import { map, sortLayers } from 'maplibre/map'
 
 export function initializeEditStyles () {
   // MapboxDraw cannot render symbol+text styles.
@@ -9,11 +8,11 @@ export function initializeEditStyles () {
   map.addLayer(styles['polygon-layer-extrusion'])
   map.addLayer(styles['symbols-layer'])
   map.addLayer(styles['text-layer'])
+  sortLayers()
+  console.log('Edit styles added')
 
   map.on('styleimagemissing', loadImage)
   // TODO setting feature state (hover) doesn't work on draw features
-
-  f.e('#maplibre-map', e => { e.setAttribute('data-loaded', true) })
 }
 
 // started from https://github.com/mapbox/mapbox-gl-draw/blob/main/src/lib/theme.js

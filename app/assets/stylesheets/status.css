@@ -25,6 +25,10 @@
   background-color: rgb(255 210 123 / 85%) !important;
 }
 
+#status-message {
+  text-align: center;
+}
+
 #status-message.small {
   font-size: 14px;
 }
