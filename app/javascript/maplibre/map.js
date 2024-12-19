@@ -351,6 +351,10 @@ export function sortLayers () {
 
   const extrusionLayers = layers.filter(l => l.paint &&
     (l.paint['fill-extrusion-height'] || l.paint['user_fill-extrusion-height']))
+  extrusionLayers.filter(l => l.id === 'Building 3D').forEach((layer) => {
+    layer.paint['fill-extrusion-opacity'] = 0.8
+  })
+
   // console.log(extrusionLayers)
   const mapLabels = layers.filter(l => l.layout && l.layout['text-field'])
   // console.log(map_labels)
