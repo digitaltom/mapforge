@@ -32,7 +32,7 @@ FactoryBot.define do
         }
       end
       properties do
-        { 'marker-size' => '20' }
+        { 'marker-size' => '150' }
       end
     end
 
