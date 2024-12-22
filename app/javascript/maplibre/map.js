@@ -98,7 +98,8 @@ export function initializeMap (divId = 'maplibre-map') {
   })
 
   map.once('load', function (e) {
-    // re-sort layers late, when all map, view + edit layers are added
+    // on first map load, re-sort layers late, when all map,
+    // view + edit layers are added
     sortLayers()
     functions.e('#maplibre-map', e => { e.setAttribute('data-loaded', true) })
     console.log('Map loaded')
@@ -344,24 +345,28 @@ export function setBackgroundMapLayer (mapName = mapProperties.base_map, force =
 }
 
 // re-sort layers to overlay geojson layers with labels & extrusion objects
+// workflows to consider: first map load, basemap update, socket reconnect
+// sorting:
+// - lines, points etc.
+// - extrusions
+// - text/symbol
 export function sortLayers () {
   console.log('Sorting layers')
   const currentStyle = map.getStyle()
-  const layers = currentStyle.layers
+  let layers = currentStyle.layers
 
-  const extrusionLayers = layers.filter(l => l.paint &&
-    (l.paint['fill-extrusion-height'] || l.paint['user_fill-extrusion-height']))
-  extrusionLayers.filter(l => l.id === 'Building 3D').forEach((layer) => {
+  // const userExtrusions = layers.filter(l => l.properties &&
+  //   (l.properties['fill-extrusion-height'] || l.properties['user_fill-extrusion-height']))
+  const mapExtrusions = functions.reduceArray(layers, (e) => e.paint && e.paint['fill-extrusion-height'])
+  // increase opacity of 3D houses
+  mapExtrusions.filter(l => l.id === 'Building 3D').forEach((layer) => {
     layer.paint['fill-extrusion-opacity'] = 0.8
   })
+  const symbols = functions.reduceArray(layers, (e) => e.type === 'symbol')
+  const mapLabels = functions.reduceArray(layers, (e) => e.layout && e.layout['text-field'])
 
-  // console.log(extrusionLayers)
-  const mapLabels = layers.filter(l => l.layout && l.layout['text-field'])
-  // console.log(map_labels)
-  let sortedLayers = layers.filter(l => (!extrusionLayers.includes(l) &&
-    !mapLabels.includes(l)))
-  sortedLayers = sortedLayers.concat(extrusionLayers).concat(mapLabels)
-  const newStyle = { ...currentStyle, layers: sortedLayers }
+  layers = layers.concat(mapExtrusions).concat(mapLabels).concat(symbols)
+  const newStyle = { ...currentStyle, layers }
   map.setStyle(newStyle, { diff: true })
   // console.log(map.getStyle().layers)
 }

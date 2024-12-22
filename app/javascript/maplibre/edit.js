@@ -48,8 +48,6 @@ export function initializeEditMode () {
     }
   })
 
-  map.on('geojson.load', function (e) { initializeEditStyles() })
-
   initializeDefaultControls()
   map.addControl(draw, 'top-left')
   addPaintButton()
@@ -60,6 +58,7 @@ export function initializeEditMode () {
   map.addControl(controlGroup, 'top-left')
 
   map.on('geojson.load', function (e) {
+    initializeEditStyles()
     const urlFeatureId = new URLSearchParams(window.location.search).get('f')
     const feature = geojsonData.features.find(f => f.id === urlFeatureId)
     if (feature) {
