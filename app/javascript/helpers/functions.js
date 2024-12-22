@@ -34,6 +34,16 @@ export function arraysEqual (array1, array2) {
   return array1.length === array2.length && array1.every(element => array2.includes(element))
 }
 
+// takes array, and reduces it with condition function
+// returns reduced array, and array of filtered elements
+export function reduceArray (array, condition) {
+  const filtered = array.filter(condition)
+  console.log(filtered)
+  array = array.filter(e => !filtered.includes(e))
+  console.log(array)
+  return [filtered, array]
+}
+
 export function roundedCoords (coords, precision = 3) {
   return coords.map(coord => parseFloat(coord.toFixed(precision)))
 }

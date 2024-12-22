@@ -8,7 +8,7 @@ export function initializeEditStyles () {
   map.addLayer(styles['polygon-layer-extrusion'])
   map.addLayer(styles['symbols-layer'])
   map.addLayer(styles['text-layer'])
-  sortLayers()
+  // sortLayers()
   console.log('Edit styles added')
 
   map.on('styleimagemissing', loadImage)

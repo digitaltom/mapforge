@@ -344,26 +344,38 @@ export function setBackgroundMapLayer (mapName = mapProperties.base_map, force =
 }
 
 // re-sort layers to overlay geojson layers with labels & extrusion objects
+// sorting:
+// - extrusions
+// - text/symbol
 export function sortLayers () {
+  console.log(map.getStyle().layers)
   console.log('Sorting layers')
   const currentStyle = map.getStyle()
-  const layers = currentStyle.layers
+  let layers = currentStyle.layers
 
-  const extrusionLayers = layers.filter(l => l.paint &&
-    (l.paint['fill-extrusion-height'] || l.paint['user_fill-extrusion-height']))
-  extrusionLayers.filter(l => l.id === 'Building 3D').forEach((layer) => {
+  const userExtrusions = layers.filter(l => l.properties &&
+    (l.properties['fill-extrusion-height'] || l.properties['user_fill-extrusion-height']))
+
+  let result = functions.reduceArray(layers, (e) => e.paint && e.paint['fill-extrusion-height'])
+  const mapExtrusions = result[0]
+  layers = result[1]
+  // increase opacity of 3D houses
+  mapExtrusions.filter(l => l.id === 'Building 3D').forEach((layer) => {
     layer.paint['fill-extrusion-opacity'] = 0.8
   })
 
-  // console.log(extrusionLayers)
-  const mapLabels = layers.filter(l => l.layout && l.layout['text-field'])
-  // console.log(map_labels)
-  let sortedLayers = layers.filter(l => (!extrusionLayers.includes(l) &&
-    !mapLabels.includes(l)))
-  sortedLayers = sortedLayers.concat(extrusionLayers).concat(mapLabels)
-  const newStyle = { ...currentStyle, layers: sortedLayers }
+  result = functions.reduceArray(layers, (e) => e.type === 'symbol')
+  const symbols = result[0]
+  layers = result[1]
+
+  result = functions.reduceArray(layers, (e) => e.layout && e.layout['text-field'])
+  const mapLabels = result[0]
+  layers = result[1]
+
+  layers = layers.concat(mapExtrusions).concat(mapLabels).concat(symbols)
+  const newStyle = { ...currentStyle, layers }
   map.setStyle(newStyle, { diff: true })
-  // console.log(map.getStyle().layers)
+  console.log(map.getStyle().layers)
 }
 
 export function updateMapName (name) {

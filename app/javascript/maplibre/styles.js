@@ -21,7 +21,7 @@ export function initializeViewStyles () {
   viewStyleNames.forEach(styleName => {
     map.addLayer(styles[styleName])
   })
-  sortLayers()
+  // sortLayers()
   console.log('View styles added')
 
   // click is needed to select on mobile and for sticky highlight
