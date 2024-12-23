@@ -69,7 +69,7 @@ export default class extends Controller {
     feature.properties['stroke-width'] = size
     // draw layer feature properties aren't getting updated by draw.set()
     draw.setFeatureProperty(this.featureIdValue, 'stroke-width', size)
-    redrawGeojson(true)
+    redrawGeojson(false)
   }
 
   // called as preview on slider change
@@ -80,7 +80,7 @@ export default class extends Controller {
     feature.properties['stroke-width'] = size
     // draw layer feature properties aren't getting updated by draw.set()
     draw.setFeatureProperty(this.featureIdValue, 'stroke-width', size)
-    redrawGeojson(true)
+    redrawGeojson(false)
   }
 
   // called as preview on slider change
@@ -92,7 +92,7 @@ export default class extends Controller {
     // draw layer feature properties aren't getting updated by draw.set()
     draw.setFeatureProperty(this.featureIdValue, 'fill-extrusion-height', Number(size))
     // needs redraw to add extrusion
-    redrawGeojson(true)
+    redrawGeojson(false)
   }
 
   updateStrokeColor () {

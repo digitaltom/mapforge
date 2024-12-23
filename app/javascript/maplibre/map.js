@@ -248,8 +248,8 @@ export function redrawGeojson (resetDraw = true) {
   // draw has its own style layers based on editStyles
   if (draw) {
     if (resetDraw) {
-      // This has a performance drawback over draw.set(), but otherwise
-      // feature properties like color don't get updated
+      // This has a performance drawback over draw.set(), but some feature
+      // properties don't get updated otherwise
       // API: https://github.com/mapbox/mapbox-gl-draw/blob/main/docs/API.md
       draw.deleteAll()
       draw.add(geojsonData)

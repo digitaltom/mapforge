@@ -41,7 +41,7 @@ export class AnimatePointAnimation extends AnimationManager {
         start[1] + (end[1] - start[1]) * progress
       ]
       feature.geometry.coordinates = newCoordinates
-      redrawGeojson()
+      redrawGeojson(false)
       if (progress < 1) { this.animationId = requestAnimationFrame(animate) }
     }
     this.animationId = requestAnimationFrame(animate)
@@ -87,7 +87,7 @@ export class AnimateLineAnimation extends AnimationManager {
 
       line.geometry.coordinates.push(coordinate)
       // console.log("New line coords: " + animationLine.features[0].geometry.coordinates)
-      redrawGeojson()
+      redrawGeojson(false)
 
       // Update camera position
       map.setCenter(coordinate, 12)
@@ -100,7 +100,7 @@ export class AnimateLineAnimation extends AnimationManager {
     }
 
     line.geometry.coordinates = []
-    redrawGeojson()
+    redrawGeojson(false)
     animate(0)
   }
 }
@@ -116,7 +116,7 @@ export class AnimatePolygonAnimation extends AnimationManager {
       const progress = counter / steps
       polygon.properties['fill-extrusion-height'] = progress * height
       // console.log('New height: ' + polygon.properties['fill-extrusion-height'])
-      redrawGeojson()
+      redrawGeojson(false)
 
       counter++
 
