@@ -1,5 +1,5 @@
 require "dragonfly"
-require "dragonfly/mongoid_data_store"
+# require "dragonfly/mongoid_data_store"
 
 Dragonfly.app.configure do
   plugin :imagemagick
@@ -7,11 +7,11 @@ Dragonfly.app.configure do
   secret ENV["DRAGONFLY_SECRET"] || "de11cfe896ea9350ca27bc8603fb72438808a7ec214080d89bdfe1f82508c3c8"
 
   url_format "/media/:job/:name"
-  datastore :mongoid
+  # datastore :mongoid
 
-  # datastore :file,
-  #   root_path: Rails.root.join('public/system/dragonfly', Rails.env),
-  #   server_root: Rails.root.join('public')
+  datastore :file,
+    root_path: "storage/dragonfly",
+    server_root: Rails.root.join("public")
 
   response_header "cache-control", "public, max-age=3600"
 
