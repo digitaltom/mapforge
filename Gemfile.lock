@@ -512,6 +512,7 @@ DEPENDENCIES
   database_cleaner-mongoid
   debug
   dotenv-rails
+  dragonfly
   dragonfly-mongoid_data_store
   factory_bot_rails
   gon
