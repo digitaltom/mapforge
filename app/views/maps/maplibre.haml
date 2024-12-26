@@ -17,12 +17,6 @@
 
 #maplibre-map.map
 
-#map-logo-title.flex-container.flex-no-wrap
-  = render 'shared/menu'
-  %span#mapforge-logo.mapforge-font.white-shadow
-    Mapforge
-  %span#map-title.dark-shadow
-
 - unless @map_mode == 'static'
   = render 'status'
   = render 'maps/modals/settings' if @map_mode == 'rw'

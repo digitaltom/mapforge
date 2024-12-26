@@ -2,6 +2,10 @@ Rails.application.routes.draw do
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
   ID_PATTERN = /[^\/]+/ # all characters but '/'
 
+  # login routes
+  get "auth/:provider/callback", to: "sessions#create"
+  get "/login", to: "sessions#new"
+
   # some maplibre style tries to load eg. /atm_11; catching those calls here
   get "/:map_resource" => "maps#catchall", as: :catchall, constraints: { map_resource: /[a-z]+_11/ }
   get "/m/:map_resource" => "maps#catchall", constraints: { map_resource: /[a-z]+_11/ }
@@ -25,12 +29,10 @@ Rails.application.routes.draw do
   get "/admin" => "admin#index"
   delete "/admin/:id" => "admin#destroy", as: :destroy_map, constraints: { id: ID_PATTERN }
 
-  get "/frontpage" => "frontpage#index"
-
+  # map icons
   get "/icon/:public_id", to: "images#icon", as: "icon", constraints: { public_id: ID_PATTERN }
   get "/image/:public_id", to: "images#image", as: "image", constraints: { public_id: ID_PATTERN }
   post "/images", to: "images#upload", as: "upload"
-
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
@@ -38,6 +40,7 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   root "frontpage#index"
+  get "/frontpage" => "frontpage#index"
 
   # Render dynamic PWA files from app/views/pwa/*
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
