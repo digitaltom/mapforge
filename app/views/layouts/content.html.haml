@@ -2,7 +2,7 @@
 %html{ lang: 'en' }
   = render 'layouts/head'
 
-  %body
+  %body.map-bg
     = Gon::Base.render_data
 
     #map-logo-title.flex-container.flex-no-wrap
@@ -11,5 +11,6 @@
         Mapforge
       %span#map-title.dark-shadow
 
-    .centered
-      = yield
+    .centered.container
+      .row.content-box
+        = yield
