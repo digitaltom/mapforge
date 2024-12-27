@@ -4,7 +4,7 @@ Rails.application.routes.draw do
 
   # login routes
   get "auth/:provider/callback", to: "sessions#create"
-  post "auth/developer/login", to: "sessions#developer" if Rails.env.development?
+  post "auth/developer/login", to: "sessions#developer" if Rails.env.local?
   get "/login", to: "sessions#new"
 
   # some maplibre style tries to load eg. /atm_11; catching those calls here

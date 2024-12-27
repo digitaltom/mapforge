@@ -3,7 +3,8 @@ class User
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  field :username
+  field :uid
+  field :provider
   field :email
   field :admin
 end
