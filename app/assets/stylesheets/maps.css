@@ -1,3 +1,7 @@
+#maps {
+  margin-top: 2em;
+}
+
 .flex-item {
  flex: 1; /* Each item will grow to take up equal space within the container */
  margin: 1em;
