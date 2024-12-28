@@ -303,6 +303,8 @@ GEM
       actionpack (>= 4.2)
       omniauth (~> 2.0)
     parallel (1.26.3)
+    parallel_tests (4.7.2)
+      parallel
     parser (3.3.6.0)
       ast (~> 2.4.1)
       racc
@@ -557,6 +559,7 @@ DEPENDENCIES
   omniauth
   omniauth-github
   omniauth-rails_csrf_protection
+  parallel_tests
   puma
   puppeteer-ruby
   rack-cache

@@ -6,8 +6,6 @@ import {
 import { RotateCameraAnimation } from 'maplibre/animations'
 import * as functions from 'helpers/functions'
 
-// eslint expects variables to get imported, but we load the full lib in header
-
 let featureShowInterval
 let featureShowIndex = 0
 let activeAnimations = []
@@ -81,14 +79,17 @@ async function featureShow () {
       functions.e('.frontpage-subtitle', e => { e.style.opacity = 0 })
       await functions.sleep(500)
 
-      window.gon.map_id = properties.public_id
-      window.gon.map_properties = properties
+      // don't continue if we aren't on the frontpage anymore
+      if (document.getElementById('frontpage-map')) {
+        window.gon.map_id = properties.public_id
+        window.gon.map_properties = properties
 
-      initializeMaplibreProperties()
-      resetGeojsonData()
-      setBackgroundMapLayer(properties.base_map)
-      map.setCenter(properties.center)
-      map.setZoom(properties.zoom)
+        initializeMaplibreProperties()
+        resetGeojsonData()
+        setBackgroundMapLayer(properties.base_map)
+        map.setCenter(properties.center)
+        map.setZoom(properties.zoom)
+      }
     })
     .catch(error => console.error('Error loading ' + category.key + ': ', error))
 }

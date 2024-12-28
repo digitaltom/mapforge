@@ -56,6 +56,7 @@ group :development, :test do
   gem "dotenv-rails", require: "dotenv/load"
   gem "listen"
   gem "mongo_logs_on_roids"
+  gem "parallel_tests"
 end
 
 group :development do

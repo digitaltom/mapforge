@@ -101,7 +101,7 @@ export function initializeMap (divId = 'maplibre-map') {
     // on first map load, re-sort layers late, when all map,
     // view + edit layers are added
     sortLayers()
-    functions.e('#maplibre-map', e => { e.setAttribute('data-loaded', true) })
+    functions.e('.map', e => { e.setAttribute('data-loaded', true) })
     console.log('Map loaded')
   })
 
@@ -166,7 +166,6 @@ export function loadGeoJsonData () {
         // because to highlight a feature we need the id,
         // and in the style layers it only accepts mumeric ids in the id field initially
         geojsonData.features.forEach((feature, index) => { feature.properties.id = feature.id })
-
         redrawGeojson()
         // drop the properties.id after sending to the map
         geojsonData.features.forEach(feature => { delete feature.properties.id })
