@@ -19,6 +19,7 @@ gem "net-pop", github: "ruby/net-pop"
 gem "omniauth"
 gem "omniauth-rails_csrf_protection"
 gem "omniauth-github"
+gem "omniauth-google-oauth2"
 
 # Javascript
 gem "gon"
