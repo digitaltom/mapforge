@@ -55,5 +55,9 @@ module Mapforge
        metastore:   "file:tmp/cache/rack/meta",
        entitystore: "file:tmp/cache/rack/body"
     }
+
+    config.session_store :cookie_store, key: "_mapforge_session"
+    config.middleware.use ActionDispatch::Cookies
+    config.middleware.use ActionDispatch::Session::CookieStore, config.session_options
   end
 end

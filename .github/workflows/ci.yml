@@ -66,8 +66,10 @@ jobs:
           bundler-cache: true
       - name: Run tests
         id: rspec
+        #run: |
+        #  bin/rspec --pattern "spec/**/*_spec.rb,engines/**/*_spec.rb"
         run: |
-          bin/rspec --pattern "spec/**/*_spec.rb,engines/**/*_spec.rb"
+          bin/parallel_rspec spec engines
         shell: bash
       - name: Upload screenshots
         if: failure()

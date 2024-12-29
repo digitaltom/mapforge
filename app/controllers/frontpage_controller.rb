@@ -1,4 +1,6 @@
 class FrontpageController < ApplicationController
+  layout "frontpage"
+
   def index
     @map = Map.frontpage
     raise "Please see the README.md how to import the maps for the frontpage" unless @map

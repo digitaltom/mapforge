@@ -4,6 +4,7 @@ class Map
   include Mongoid::Timestamps
 
   has_many :layers
+  belongs_to :user, optional: true
 
   field :base_map, type: String, default: -> { default_base_map }
   field :center, type: Array

@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## 2024-12
+
+* Support login via Github + Google
+* UI editor for line/outline
 
 ## 2024-11
 

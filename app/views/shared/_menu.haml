@@ -10,7 +10,11 @@
       = link_to 'Frontpage', frontpage_path, class: 'burger-menu-item'
     %li
       = link_to 'Maps', maps_path, class: 'burger-menu-item'
-    %li
-      = link_to 'Admin', admin_path, class: 'burger-menu-item'
+    - unless @user
+      %li
+        = link_to 'Login', login_path, class: 'burger-menu-item'
+    - if @user&.admin?
+      %li
+        = link_to 'Admin', admin_path, class: 'burger-menu-item'
     %li
       = link_to 'Github', 'https://github.com/digitaltom/mapforge', class: 'burger-menu-item'

@@ -31,6 +31,7 @@ class MapsController < ApplicationController
 
   def create
     @map = Map.create!(map_params)
+    @map.update(user: @user)
 
     redirect_to map_url(@map), notice: "Map was successfully created."
   end

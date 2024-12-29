@@ -1,9 +1,4 @@
 - content_for :title, "Mapforge: Search maps"
-.flex-container.flex-no-wrap
-  = render 'shared/menu'
-  %h1#mapforge-logo.mapforge-font.white-shadow
-    Mapforge Maps
-  %span#map-title
 
 #maps.flex-container
   - @maps.each do |map|

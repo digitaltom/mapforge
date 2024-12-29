@@ -1,9 +1,3 @@
-.flex-container.flex-no-wrap
-  = render 'shared/menu'
-  %span#mapforge-logo.mapforge-font.white-shadow
-    Mapforge Admin
-  %span#map-title
-
 #maps.flex-container
   - @maps.each do |map|
     %div.flex-item.map-preview{id: dom_id(map)}

@@ -1,0 +1,8 @@
+= form_tag('/auth/developer/login', method: 'post', data: {turbo: false}) do
+  = button_tag 'Login with Developer'
+
+= form_tag('/auth/github', method: 'post', data: {turbo: false}) do
+  = button_tag 'Login with Github'
+
+= form_tag('/auth/google_oauth2', method: 'post', data: {turbo: false}) do
+  = button_tag 'Login with Google'

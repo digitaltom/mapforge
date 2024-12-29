@@ -3,10 +3,11 @@ require 'rails_helper'
 describe 'Frontpage' do
   before do
     # create empty map for frontpage tour
-    Map.create_from_file("db/seeds/frontpage/frontpage.json")
-    Map.find_by(public_id: 'frontpage').dup.update(public_id: 'frontpage-category-friends')
-    Map.find_by(public_id: 'frontpage').dup.update(public_id: 'frontpage-category-office')
-    Map.find_by(public_id: 'frontpage').dup.update(public_id: 'frontpage-category-data')
+    map = Map.create_from_file("db/seeds/frontpage/frontpage.json")
+    map.update(base_map: 'test')
+    map.dup.update(public_id: 'frontpage-category-friends')
+    map.dup.update(public_id: 'frontpage-category-office')
+    map.dup.update(public_id: 'frontpage-category-data')
 
     visit root_path
   end
@@ -17,14 +18,11 @@ describe 'Frontpage' do
   end
 
   it 'shows tour' do
-    expect(page).to have_text('map your friends')
-  end
-
-  it 'shows link to explore' do
+    expect(page).to have_css('#frontpage-map[data-loaded="true"]')
+    # It can take a while for the text to show
+    expect(page).to have_selector(:css, "*", text: 'map your friends',
+      visible: :all, wait: 30)
     expect(page).to have_link('explore')
-  end
-
-  it 'shows link to create' do
     expect(page).to have_link('create')
   end
 
@@ -51,10 +49,6 @@ describe 'Frontpage rake task' do
       Rails.application.load_tasks
       Rake::Task['seed:frontpage'].invoke
     end
-  end
-
-  after do
-    # Rails.logger
   end
 
   it 'makes frontpage functional' do
