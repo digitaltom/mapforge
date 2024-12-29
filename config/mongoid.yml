@@ -302,6 +302,17 @@ test:
         read:
           mode: :primary
         max_pool_size: 1
+        server_selection_timeout: 10
 
 production:
   <<: *default
+  clients:
+    default:
+      database: mapforge_production
+      hosts:
+        - <%= ENV.fetch("MONGO_URL") { "localhost:27017" } %>
+      options:
+        read:
+          mode: :primary
+        max_pool_size: 1
+        server_selection_timeout: 10
