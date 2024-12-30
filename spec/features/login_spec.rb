@@ -16,7 +16,7 @@ describe 'Login' do
   end
 
   it 'login via developer provider' do
-    click_button('Login with Developer')
+    click_button('Developer Login')
     fill_in 'name', with: 'Test User'
     fill_in 'email', with: 'test@mapforge.org'
     click_button('Sign In')

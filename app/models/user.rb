@@ -7,6 +7,8 @@ class User
 
   field :uid
   field :provider
+  field :name
   field :email
+  field :image
   field :admin
 end

@@ -1,6 +1,9 @@
 class MapsController < ApplicationController
   before_action :set_map, only: %i[show properties]
 
+  layout "content", only: [ :index ]
+  layout "map", only: [ :show ]
+
   def index
     @maps = Map.where.not(private: true).includes(:layers).order(updated_at: :desc)
   end
