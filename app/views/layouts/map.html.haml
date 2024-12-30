@@ -4,7 +4,12 @@
 
   %body
 
-    #map-logo-title.flex-container.flex-no-wrap
+    #map-head
+      .maplibregl-ctrl.maplibregl-ctrl-group
+        %button.me-4.btn.maplibregl-ctrl-btn{ type: "button" }
+          = link_to create_map_path, { class: '' } do
+            %img.mapforge-logo.me-2{ src: "/icons/mapforge-logo-header.png", alt: "" }
+
       %span#map-title.dark-shadow
 
     = yield

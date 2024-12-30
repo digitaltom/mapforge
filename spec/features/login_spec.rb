@@ -23,4 +23,17 @@ describe 'Login' do
     expect(page).to have_text('map your friends')
     expect(User.count).to eq 1
   end
+
+  it 'destroys session on logout' do
+    click_button('Developer Login')
+    fill_in 'name', with: 'Test User'
+    fill_in 'email', with: 'test@mapforge.org'
+    click_button('Sign In')
+    expect(page).to have_text('map your friends')
+    expect(User.count).to eq 1
+    visit maps_path
+    find('.profile-image').click
+    click_link('Logout')
+    expect(page).to have_text('map your friends')
+  end
 end

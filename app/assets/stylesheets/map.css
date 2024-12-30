@@ -3,18 +3,15 @@ html:has(.map), body:has(.map) {
   overflow: hidden;
 }
 
-#map-logo-title {
-  position: absolute;
-}
-
-#map-title {
+#map-head {
   color: white;
   font-weight: 500;
   float: left;
-  padding-top: 0.9em;
+  padding-top: 0.5em;
   overflow: hidden;
-  height: 3em;
-  margin-left: 1em;
+  margin-left: 0.7em;
+  width: 55px;
+  height: 70px;
 }
 
 .map {

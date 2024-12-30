@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   get "auth/:provider/callback", to: "sessions#create"
   post "auth/developer/login", to: "sessions#developer" if Rails.env.local?
   get "/login", to: "sessions#new"
-  post "/logout", to: "sessions#logout"
+  get "/logout", to: "sessions#logout"
 
   # some maplibre style tries to load eg. /atm_11; catching those calls here
   get "/:map_resource" => "maps#catchall", as: :catchall, constraints: { map_resource: /[a-z]+_11/ }
