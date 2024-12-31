@@ -4,12 +4,14 @@
 
   %body
 
-    #map-head
-      .maplibregl-ctrl.maplibregl-ctrl-group
-        %button.me-4.btn.maplibregl-ctrl-btn{ type: "button" }
-          = link_to create_map_path, { class: '' } do
-            %img.mapforge-logo.me-2{ src: "/icons/mapforge-logo-header.png", alt: "" }
+    #map-header
+      = render 'shared/header'
 
-      %span#map-title.dark-shadow
+
+
+    #map-head.dark-shadow{ 'data-controller': "map" }
+      %i#map-nav-toggle.bi.bi-caret-down.me-2{ 'data-action': "click->map#toggleNavigation" }
+
+      #map-title
 
     = yield

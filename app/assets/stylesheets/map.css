@@ -3,15 +3,24 @@ html:has(.map), body:has(.map) {
   overflow: hidden;
 }
 
+#map-header {
+  display: none;
+}
+
 #map-head {
+  display: flex;
+  align-items: center;
   color: white;
   font-weight: 500;
-  float: left;
-  padding-top: 0.5em;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   overflow: hidden;
-  margin-left: 0.7em;
-  width: 55px;
-  height: 70px;
+  font-size: 1.2em;
+}
+
+#map-nav-toggle {
+  font-size: 1.3em;
 }
 
 .map {

@@ -2,6 +2,12 @@
   background-color: #e0e0e0a1;
 }
 
+.mapforge-font {
+  font-family: "IM Fell Great Primer SC", serif;
+  font-weight: 600;
+  font-style: normal;
+}
+
 .mapforge-logo {
   width: 53px;
   height: 35px;
