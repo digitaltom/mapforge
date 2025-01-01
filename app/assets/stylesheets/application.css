@@ -75,3 +75,7 @@ a:hover, .link:hover {
   visibility: visible;
   opacity: 1;
 }
+
+.small {
+  size: 85%;
+}

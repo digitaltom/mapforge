@@ -10,7 +10,7 @@ import { status } from 'helpers/status'
 import * as functions from 'helpers/functions'
 import MapboxDraw from '@mapbox/mapbox-gl-draw'
 import * as MapboxDrawWaypoint from 'mapbox-gl-draw-waypoint'
-import PaintMode from 'mapbox-gl-draw-paint-mode'
+import PaintMode from 'mapbox-gl-draw-paint-mode' // prevents accidential dragging features
 
 export let draw
 export let selectedFeature
@@ -142,9 +142,15 @@ function handleCreate (e) {
 
 function handleUpdate (e) {
   const feature = e.features[0] // Assuming one feature is updated at a time
+  const geojsonFeature = geojsonData.features.find(f => f.id === feature.id)
+
+  // mapbox-gl-draw-waypoint sends empty update when dragging on selected feature
+  if (JSON.stringify(geojsonFeature.geometry) === JSON.stringify(feature.geometry)) {
+    // console.log('Feature update event triggered without update')
+    return
+  }
 
   status('Feature ' + feature.id + ' changed')
-  const geojsonFeature = geojsonData.features.find(f => f.id === feature.id)
   geojsonFeature.geometry = feature.geometry
   redrawGeojson(false)
   mapChannel.send_message('update_feature', feature)

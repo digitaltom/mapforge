@@ -41,7 +41,7 @@ function featureMeta (feature) {
     const turfPolygon = turf.polygon(feature.geometry.coordinates)
     const area = turf.area(turfPolygon)
     if (area < 1000000) {
-      meta = (area / 100).toFixed(2) + ' m²'
+      meta = area.toFixed(2) + ' m²'
     } else {
       meta = (area / 1000000).toFixed(2) + ' km²'
     }

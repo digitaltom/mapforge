@@ -54,7 +54,7 @@ export default class extends Controller {
   updatePointSize () {
     const feature = this.getFeature()
     const size = document.querySelector('#point-size').value
-    document.querySelector('#point-size-val').textContent = '(' + size + ')'
+    document.querySelector('#point-size-val').textContent = size
     feature.properties['marker-size'] = size
     // draw layer feature properties aren't getting updated by draw.set()
     draw.setFeatureProperty(this.featureIdValue, 'marker-size', size)
@@ -65,7 +65,7 @@ export default class extends Controller {
   updateLineWidth () {
     const feature = this.getFeature()
     const size = document.querySelector('#line-width').value
-    document.querySelector('#line-width-val').textContent = '(' + size + ')'
+    document.querySelector('#line-width-val').textContent = size
     feature.properties['stroke-width'] = size
     // draw layer feature properties aren't getting updated by draw.set()
     draw.setFeatureProperty(this.featureIdValue, 'stroke-width', size)
@@ -76,7 +76,7 @@ export default class extends Controller {
   updateOutLineWidth () {
     const feature = this.getFeature()
     const size = document.querySelector('#outline-width').value
-    document.querySelector('#outline-width-val').textContent = '(' + size + ')'
+    document.querySelector('#outline-width-val').textContent = size
     feature.properties['stroke-width'] = size
     // draw layer feature properties aren't getting updated by draw.set()
     draw.setFeatureProperty(this.featureIdValue, 'stroke-width', size)
@@ -87,7 +87,7 @@ export default class extends Controller {
   updateFillExtrusionHeight () {
     const feature = this.getFeature()
     const size = document.querySelector('#fill-extrusion-height').value
-    document.querySelector('#fill-extrusion-height-val').textContent = '(' + size + 'm)'
+    document.querySelector('#fill-extrusion-height-val').textContent = size + 'm'
     feature.properties['fill-extrusion-height'] = Number(size)
     // draw layer feature properties aren't getting updated by draw.set()
     draw.setFeatureProperty(this.featureIdValue, 'fill-extrusion-height', Number(size))
