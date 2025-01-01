@@ -33,10 +33,10 @@
                   %a.dropdown-item{ href: "/admin" }
                     %i.bi.bi-person-workspace
                     Admin
-              %li
-                = link_to logout_path, { class: 'dropdown-item', data: { turbo: false } } do
-                  %i.bi.bi-box-arrow-in-left
-                  Logout
+                %li
+                  = link_to logout_path, { class: 'dropdown-item', data: { turbo: false } } do
+                    %i.bi.bi-box-arrow-in-left
+                    Logout
         - else
           .nav-item
             = link_to login_path, { class: 'nav-link' } do
