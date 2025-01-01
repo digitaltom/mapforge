@@ -1,0 +1,51 @@
+.navbar {
+  background-color: #e0e0e0a1;
+}
+
+.mapforge-font {
+  font-family: "IM Fell Great Primer SC", serif;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.mapforge-logo {
+  width: 53px;
+  height: 35px;
+}
+
+.navbar-brand {
+  font-weight: 600;
+  font-size: 1.5em;
+  display: flex;
+  align-items: center;
+}
+
+.btn-orange {
+  background-color: #f60;
+  border-color: #f60;
+  color: #fff;
+}
+
+.btn-orange:hover,
+.btn-orange:focus,
+.btn-orange:active {
+  background-color: #ff6600b1 !important;
+  color: #fff;
+}
+
+.profile-dropdown {
+    display: flex;
+    align-items: center;
+}
+
+.profile-image {
+  border-radius: 50%;
+  overflow: hidden;
+  width: 35px;
+  height: 35px;
+}
+
+.dropdown-menu[data-bs-popper] {
+  right: -0.5rem;
+  left: unset;
+}

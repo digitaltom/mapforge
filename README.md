@@ -19,7 +19,7 @@ The geojson layer can get styled to your needs in an extended version of the [ge
 
 ### Install dependencies:
 
-For openSUSE (Debian):
+For openSUSE (Debian package names in braces):
 
 ```
 zypper in proj-devel # (libproj-dev) for building rgeo-proj4
@@ -35,8 +35,11 @@ bundle
 * To use [Maptiler](https://www.maptiler.com/) base maps, provide the key (MAPTILER_KEY) in `.env.development`
 * MongoDB backend is expected at: `ENV.fetch("MONGO_URL") { "localhost:27017" }`
 * Redis (for action cable) is expected at: `ENV.fetch("REDIS_URL") { "redis://localhost:6379/1" }`
-* Login credentials for /admin is read from `ENV.fetch("ADMIN_USER")` and `ENV.fetch("ADMIN_PW")`
+* To allow login via Github and Google, create oauth apps there, and set `GITHUB_CLIENT_ID`/`GITHUB_CLIENT_SECRET` and `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET`.
+* The first user that logs in automatically gets set as admin
 * To import the initial frontpage, run: `bin/rake seed:frontpage`
+
+In development, the ENV vars can get set in the file `.env.development`.
 
 ### Base maps
 
@@ -85,4 +88,4 @@ For example `act -j test`.
 * Build: `sudo podman build -t mapforge --network=host .`
 * Run: `podman run -e SECRET_KEY_BASE=e3c9f2... mapforge`
 
-Github builds a new container on each commit to `main`: ghcr.io/digitaltom/mapforge
+Github builds a new container on each commit to `main` at: ghcr.io/digitaltom/mapforge

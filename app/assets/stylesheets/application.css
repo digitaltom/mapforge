@@ -19,6 +19,8 @@
 :root {
   --text-color: #000;
   --hover-color: #2091b0;
+  --bs-btn-border-radius: 0px;
+  --bs-border-radius: 0px;
 }
 
 html,

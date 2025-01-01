@@ -1,0 +1,17 @@
+!!!
+%html{ lang: 'en' }
+  = render 'layouts/head'
+
+  %body
+
+    #map-header
+      = render 'shared/header'
+
+    #map-head.dark-shadow{ 'data-controller': "map" }
+      %i#map-nav-toggle.bi.bi-caret-down.me-2{ 'data-action': "click->map#toggleNavigation" }
+
+      #map-title
+
+    = yield
+
+    #dropdown-space

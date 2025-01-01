@@ -2,7 +2,7 @@ import * as functions from 'helpers/functions'
 
 let fadeInterval = null
 
-export function status (text, status = 'info', size = 'small', duration = 2500) {
+export function status (text, status = 'info', size = 'small', duration = 3500) {
   console.log('Status: ' + text)
   functions.e('#status-message', e => {
     e.innerHTML = text
@@ -15,5 +15,6 @@ export function status (text, status = 'info', size = 'small', duration = 2500) 
   if (fadeInterval) { clearInterval(fadeInterval) }
   fadeInterval = setInterval(function () {
     functions.e('#status-container', e => { e.style.opacity = 0 })
+    functions.e('#status-message', e => { e.innerHTML = '' })
   }, duration)
 }

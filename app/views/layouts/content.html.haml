@@ -3,14 +3,7 @@
   = render 'layouts/head'
 
   %body.map-bg
-    = Gon::Base.render_data
 
-    #map-logo-title.flex-container.flex-no-wrap
-      = render 'shared/menu'
-      %span#mapforge-logo.mapforge-font.white-shadow
-        Mapforge
-      %span#map-title.dark-shadow
+    = render 'shared/header'
 
-    .centered.container
-      .row.content-box
-        = yield
+    = yield

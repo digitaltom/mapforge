@@ -3,27 +3,31 @@ html:has(.map), body:has(.map) {
   overflow: hidden;
 }
 
-#map-logo-title {
-  position: absolute;
+#map-header {
+  display: none;
 }
 
-#mapforge-logo {
-  font-weight: 600;
-  font-size: 1.5em;
-  margin-left: 1.5em;
-  padding-top: 0.1em;
-  line-height: 1.8em;
-  z-index: 100;
-}
-
-#map-title {
+#map-head {
+  z-index: 1;
+  display: flex;
+  align-items: center;
   color: white;
   font-weight: 500;
-  float: left;
-  padding-top: 0.9em;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   overflow: hidden;
-  height: 3em;
-  margin-left: 1em;
+  font-size: 1.2em;
+}
+
+/* this is an ugly hack for the profile dropdown not to be cut off */
+#dropdown-space {
+  height: 500px;
+}
+
+#map-nav-toggle {
+  font-size: 1.3em;
+  cursor: pointer;
 }
 
 .map {
@@ -34,7 +38,6 @@ html:has(.map), body:has(.map) {
   padding: 0;
   text-align: center;
   position: absolute;
-  z-index: -1;
 }
 
 .white-shadow {
