@@ -164,7 +164,7 @@ collection_format: collection_format))
   def get_base_map
     if MAPTILER_MAPS.include?(base_map)
       return base_map if ENV["MAPTILER_KEY"].present?
-      logger.warn("Cannot use maptiler map #{base_map} without MAPTILER_KEY")
+      logger.warn("Cannot use maptiler map #{base_map} without MAPTILER_KEY. Falling back to: #{default_base_map}")
       return default_base_map
     elsif (BASE_MAPS + OPENFREE_MAPS + VERSATILES_MAPS).include?(base_map) || base_map == "test"
       return base_map

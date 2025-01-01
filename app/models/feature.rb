@@ -36,7 +36,10 @@ class Feature
       # transform coords from input to db format
       transformed_geometry = RGeo::Feature.cast(feature.geometry, factory: db_format, project: true)
       transformed_feature = RGeo::GeoJSON::Feature.new(transformed_geometry, feature.feature_id, feature.properties)
-      create!(RGeo::GeoJSON.encode(transformed_feature))
+      transformed_feature = RGeo::GeoJSON.encode(transformed_feature)
+      f = find_or_initialize_by(id: transformed_feature["id"])
+      f.update!(transformed_feature)
+      f
     end
   end
 

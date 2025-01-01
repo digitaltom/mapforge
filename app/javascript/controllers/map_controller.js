@@ -7,7 +7,6 @@ export default class extends Controller {
   }
 
   toggleNavigation (event) {
-    console.log('toggle nav')
     if (document.querySelector('#map-header').style.display === 'none') {
       functions.e('#map-header', e => { e.style.display = 'block' })
       functions.e('#map-nav-toggle', e => { e.classList.remove('bi-caret-down') })

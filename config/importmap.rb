@@ -23,6 +23,7 @@ pin "animate"
 # examples: https://generator.jspm.io/
 
 # https://github.com/zakjan/mapbox-gl-draw-waypoint
+# prevents accidential dragging features
 pin "mapbox-gl-draw-waypoint",
   to: "https://ga.jspm.io/npm:mapbox-gl-draw-waypoint@1.2.3/dist/mapbox-gl-draw-waypoint.esm.js", preload: false
 
@@ -33,7 +34,7 @@ pin_all_from "vendor/javascript/mapbox-gl-draw-paint-mode",
   under: "mapbox-gl-draw-paint-mode", preload: false
 
 # https://github.com/maplibre/maplibre-gl-js
-pin "maplibre-gl"
+pin "maplibre-gl" # @5.0.0
 # https://github.com/maptiler/maptiler-geocoding-control
 pin "maptiler-geocoding-control", to: "https://ga.jspm.io/npm:@maptiler/geocoding-control@1.4.1/maplibregl.js"
 # render markdown

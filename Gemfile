@@ -1,5 +1,5 @@
 source "https://rubygems.org"
-ruby "3.3.3"
+ruby "3.4.1"
 
 gem "rails"
 
@@ -23,6 +23,7 @@ gem "omniauth-google-oauth2"
 
 # Javascript
 gem "gon"
+gem "ostruct" # needed by 'gon', but not included in Ruby 3.5
 gem "stimulus-rails"
 
 # Databases

@@ -12,7 +12,7 @@ describe 'Login' do
   end
 
   it 'shows login options' do
-    expect(page).to have_button('Login with Github')
+    expect(page).to have_button('Developer Login')
   end
 
   it 'login via developer provider' do
