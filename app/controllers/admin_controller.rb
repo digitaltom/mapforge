@@ -1,10 +1,5 @@
 class AdminController < ApplicationController
-  # TODO: Find a better way to stub/authorize in selenium tests
-  # :nocov:
-  unless Rails.env.test?
-    http_basic_authenticate_with name: ENV.fetch("ADMIN_USER", ""), password: ENV.fetch("ADMIN_PW", "")
-  end
-  # :nocov:
+  before_action :require_admin_user
 
   def index
     @maps = Map.includes(:layers).order(updated_at: :desc)
@@ -14,5 +9,11 @@ class AdminController < ApplicationController
     Map.find_by(id: params[:id]).destroy!
 
     redirect_to admin_path, notice: "Map was deleted."
+  end
+
+  private
+
+  def require_admin_user
+    not_found! unless @user&.admin?
   end
 end

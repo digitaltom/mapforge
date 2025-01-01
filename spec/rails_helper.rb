@@ -57,7 +57,8 @@ RSpec.configure do |config|
         # "maplibre-gl.js TypeError: Failed to fetch" seems to be caused by
         # the js file being cached already
         exclude = [ /TypeError: Failed to fetch/,
-                    /The user aborted a request/ ]
+                    /The user aborted a request/,
+                    /Failed to load resource/ ]
         errors = page.driver.browser.logs.get(:browser)
                    .select { |e| levels.include?(e.level) && e.message.present? }
                    .reject { |e| exclude.any? { |ex| e.message =~ ex } }

@@ -35,8 +35,8 @@ bundle
 * To use [Maptiler](https://www.maptiler.com/) base maps, provide the key (MAPTILER_KEY) in `.env.development`
 * MongoDB backend is expected at: `ENV.fetch("MONGO_URL") { "localhost:27017" }`
 * Redis (for action cable) is expected at: `ENV.fetch("REDIS_URL") { "redis://localhost:6379/1" }`
-* Login credentials for /admin is read from `ENV.fetch("ADMIN_USER")` and `ENV.fetch("ADMIN_PW")`
-* To allow login via Github and Google, create oauth apps there, and set `GITHUB_CLIENT_ID`/`GITHUB_CLIENT_SECRET` and `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET`
+* To allow login via Github and Google, create oauth apps there, and set `GITHUB_CLIENT_ID`/`GITHUB_CLIENT_SECRET` and `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET`.
+* The first user that logs in automatically gets set as admin
 * To import the initial frontpage, run: `bin/rake seed:frontpage`
 
 In development, the ENV vars can get set in the file `.env.development`.
