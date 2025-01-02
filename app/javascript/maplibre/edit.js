@@ -8,8 +8,9 @@ import {
 } from 'maplibre/controls'
 import { status } from 'helpers/status'
 import * as functions from 'helpers/functions'
+import equal from 'fast-deep-equal' // https://github.com/epoberezkin/fast-deep-equal
 import MapboxDraw from '@mapbox/mapbox-gl-draw'
-import PaintMode from 'mapbox-gl-draw-paint-mode' // prevents accidential dragging features
+import PaintMode from 'mapbox-gl-draw-paint-mode'
 
 export let draw
 export let selectedFeature
@@ -158,7 +159,7 @@ function handleUpdate (e) {
   const geojsonFeature = geojsonData.features.find(f => f.id === feature.id)
 
   // mapbox-gl-draw-waypoint sends empty update when dragging on selected feature
-  if (JSON.stringify(geojsonFeature.geometry) === JSON.stringify(feature.geometry)) {
+  if (equal(geojsonFeature.geometry, feature.geometry)) {
     // console.log('Feature update event triggered without update')
     return
   }

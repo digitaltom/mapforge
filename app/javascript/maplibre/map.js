@@ -6,6 +6,7 @@ import { highlightFeature, resetHighlightedFeature } from 'maplibre/feature'
 import { AnimatePointAnimation } from 'maplibre/animations'
 import * as functions from 'helpers/functions'
 import { status } from 'helpers/status'
+import equal from 'fast-deep-equal' // https://github.com/epoberezkin/fast-deep-equal
 import maplibregl from 'maplibre-gl'
 import { GeocodingControl } from 'maptiler-geocoding-control'
 
@@ -29,16 +30,14 @@ let backgroundTerrain
 export function initializeMaplibreProperties () {
   const lastProperties = JSON.parse(JSON.stringify(mapProperties || {}))
   mapProperties = window.gon.map_properties
-  if (JSON.stringify(lastProperties) !== JSON.stringify(mapProperties)) {
+  if (!equal(lastProperties, mapProperties)) {
     console.log('update map properties: ' + JSON.stringify(mapProperties))
     updateMapName(mapProperties.name)
     initSettingsModal()
     status('Map properties updated')
     if (Object.keys(lastProperties).length === 0 || !mapProperties) { return }
     // animate to new view if map had no interaction yet
-    if (!mapInteracted && JSON.stringify(lastProperties) !== JSON.stringify(mapProperties)) {
-      setViewFromProperties()
-    }
+    if (!mapInteracted) { setViewFromProperties() }
   }
 }
 
@@ -292,7 +291,7 @@ export function upsert (updatedFeature) {
   const feature = geojsonData.features.find(f => f.id === updatedFeature.id)
   if (!feature) {
     addFeature(updatedFeature)
-  } else if (JSON.stringify(updatedFeature) !== JSON.stringify(feature)) {
+  } else if (!equal(updatedFeature, feature)) {
     updateFeature(feature, updatedFeature)
   }
 }
@@ -307,14 +306,14 @@ export function addFeature (feature) {
 function updateFeature (feature, updatedFeature) {
   if (feature.geometry.type === 'Point') {
     const newCoords = updatedFeature.geometry.coordinates
-    if (!functions.arraysEqual(feature.geometry.coordinates, newCoords)) {
+    if (!equal(feature.geometry.coordinates, newCoords)) {
       const animation = new AnimatePointAnimation()
       animation.animatePoint(feature, newCoords)
     }
   }
   // only update feature if it was changed
-  if (JSON.stringify(feature.geometry) !== JSON.stringify(updatedFeature.geometry) ||
-    JSON.stringify(feature.properties) !== JSON.stringify(updatedFeature.properties)) {
+  if (!equal(feature.geometry, updatedFeature.geometry) ||
+    !equal(feature.properties, updatedFeature.properties)) {
     feature.geometry = updatedFeature.geometry
     feature.properties = updatedFeature.properties
     status('Updated feature ' + updatedFeature.id)
@@ -353,7 +352,7 @@ export function setBackgroundMapLayer (mapName = mapProperties.base_map, force =
 // - extrusions
 // - text/symbol
 export function sortLayers () {
-  console.log('Sorting layers')
+  // console.log('Sorting layers')
   const currentStyle = map.getStyle()
   let layers = currentStyle.layers
 
