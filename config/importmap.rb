@@ -22,11 +22,6 @@ pin "animate"
 # vendor
 # examples: https://generator.jspm.io/
 
-# https://github.com/zakjan/mapbox-gl-draw-waypoint
-# prevents accidential dragging features
-pin "mapbox-gl-draw-waypoint",
-  to: "https://ga.jspm.io/npm:mapbox-gl-draw-waypoint@1.2.3/dist/mapbox-gl-draw-waypoint.esm.js", preload: false
-
 # https://github.com/piraveenankirupakaran/mapbox-gl-draw-paint-mode
 # free hand draw; local download because of removal of css import, latest git version, feature id generation
 pin "mapbox-gl-draw-paint-mode", preload: false

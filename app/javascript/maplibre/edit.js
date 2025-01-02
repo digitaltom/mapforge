@@ -9,7 +9,6 @@ import {
 import { status } from 'helpers/status'
 import * as functions from 'helpers/functions'
 import MapboxDraw from '@mapbox/mapbox-gl-draw'
-import * as MapboxDrawWaypoint from 'mapbox-gl-draw-waypoint'
 import PaintMode from 'mapbox-gl-draw-paint-mode' // prevents accidential dragging features
 
 export let draw
@@ -23,7 +22,17 @@ MapboxDraw.constants.classes.CONTROL_GROUP = 'maplibregl-ctrl-group'
 // https://github.com/mapbox/mapbox-gl-draw
 export function initializeEditMode () {
   console.log('Initializing MapboxDraw')
-  const modes = MapboxDrawWaypoint.enable(MapboxDraw.modes)
+
+  // Patching direct select mode to not allw dragging features
+  // similar to https://github.com/zakjan/mapbox-gl-draw-waypoint
+  const DirectSelectMode = { ...MapboxDraw.modes.direct_select }
+  DirectSelectMode.dragFeature = function (state, e, delta) { /* noop */ }
+
+  const modes = {
+    ...MapboxDraw.modes,
+    direct_select: DirectSelectMode,
+    draw_paint_mode: PaintMode
+  }
 
   draw = new MapboxDraw({
     displayControlsDefault: false,
@@ -40,12 +49,7 @@ export function initializeEditMode () {
     touchBuffer: 25, // default 25
     // user properties are available, prefixed with 'user_'
     userProperties: true,
-    // MapboxDrawWaypoint disables dragging polygons + lines,
-    // + switches to direct_select mode directly
-    modes: {
-      ...modes,
-      draw_paint_mode: PaintMode
-    }
+    modes
   })
 
   initializeDefaultControls()
@@ -61,10 +65,7 @@ export function initializeEditMode () {
     initializeEditStyles()
     const urlFeatureId = new URLSearchParams(window.location.search).get('f')
     const feature = geojsonData.features.find(f => f.id === urlFeatureId)
-    if (feature) {
-      selectedFeature = feature
-      draw.changeMode('simple_select', { featureIds: [feature.id] })
-    }
+    if (feature) { select(feature) }
   })
 
   map.on('draw.modechange', () => {
@@ -85,12 +86,14 @@ export function initializeEditMode () {
     console.log('draw mode: ' + draw.getMode())
   })
 
+  // FIXME: probably mapbox draw bug: map can lose drag capabilities on double click
   map.on('draw.selectionchange', function (e) {
     if (!e.features?.length) { return }
     if (justCreated) { justCreated = false; return }
     selectedFeature = e.features[0]
     if (selectedFeature) {
       console.log('selected: ' + JSON.stringify(selectedFeature))
+      select(selectedFeature)
       highlightFeature(selectedFeature, true)
     }
   })
@@ -116,6 +119,16 @@ export function initializeEditMode () {
   })
 
   document.querySelector('#edit-buttons').classList.remove('hidden')
+}
+
+// switching directly from 'simple_select' to 'direct_select',
+// allow only to select one feature
+function select (feature) {
+  if (feature.geometry.type !== 'Point') {
+    draw.changeMode('direct_select', { featureId: feature.id })
+  } else {
+    draw.changeMode('simple_select', { featureIds: [feature.id] })
+  }
 }
 
 function handleCreate (e) {
