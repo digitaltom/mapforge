@@ -5,10 +5,27 @@
     <meta content='width=device-width, height=device-height, initial-scale=1' name
     ='viewport'>
     <title>Maplibre test page</title>
-    <link href="https://unpkg.com/maplibre-gl@5.0.0/dist/maplibre-gl.css" rel="stylesheet">
+    <!-- <link href="https://unpkg.com/maplibre-gl@5.0.0/dist/maplibre-gl.css" rel="stylesheet"> -->
+    <!-- un-minified version of above via https://webformatter.com/css: -->
+    <link href="maplibre-gl.css" rel="stylesheet">
     <style>
         body { margin: 0; padding: 0; }
         #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+
+        /* .maplibregl-ctrl button:not(:disabled):hover{
+            background-color:rgb(0 0 0/5%)
+        }*/
+
+/*        @media (hover: none) {
+          .maplibregl-ctrl button:not(:disabled):hover {
+            background-color: inherit;
+          }
+          .maplibregl-ctrl button:not(:disabled):active {
+            background-color:rgb(0 0 0/5%);
+          }
+        }*/
+
+
     </style>
 </head>
 <body>
@@ -24,7 +41,6 @@
 
     let nav = new maplibregl.NavigationControl();
     map.addControl(nav, 'top-left');
-
 </script>
 </body>
 </html>

@@ -17,8 +17,30 @@
   opacity: 0.75;
 }
 
-.maplibregl-ctrl button:hover, .maplibregl-ctrl button.active,
-.mapbox-gl-draw_ctrl-draw-btn:hover { /* stylelint-disable-line */
+/* only add hover effects to supported browsers */
+@media (hover: hover) {
+  .maplibregl-ctrl button:hover, .mapbox-gl-draw_ctrl-draw-btn:hover { /* stylelint-disable-line */
+    background-color: rgb(0 0 0/15%) !important;
+    transition:
+      background-color 0.2s ease-in-out;
+    color: var(--hover-color) !important;
+  }
+
+  /* Need to overwrite the mapbox draw icons with hover color */
+  .mapbox-gl-draw_point:hover { /* stylelint-disable-line */
+    background-image: url('data:image/svg+xml;utf8,%3Csvg xmlns="http://www.w3.org/2000/svg" width="20" height="20">%3Cpath style="fill: %232091b0;" d="m10 2c-3.3 0-6 2.7-6 6s6 9 6 9 6-5.7 6-9-2.7-6-6-6zm0 2c2.1 0 3.8 1.7 3.8 3.8 0 1.5-1.8 3.9-2.9 5.2h-1.7c-1.1-1.4-2.9-3.8-2.9-5.2-.1-2.1 1.6-3.8 3.7-3.8z"/>%3C/svg>');
+  }
+
+  .mapbox-gl-draw_polygon:hover { /* stylelint-disable-line */
+    background-image: url('data:image/svg+xml;utf8,%3Csvg xmlns="http://www.w3.org/2000/svg" width="20" height="20">%3Cpath style="fill: %232091b0;" d="m15 12.3v-4.6c.6-.3 1-1 1-1.7 0-1.1-.9-2-2-2-.7 0-1.4.4-1.7 1h-4.6c-.3-.6-1-1-1.7-1-1.1 0-2 .9-2 2 0 .7.4 1.4 1 1.7v4.6c-.6.3-1 1-1 1.7 0 1.1.9 2 2 2 .7 0 1.4-.4 1.7-1h4.6c.3.6 1 1 1.7 1 1.1 0 2-.9 2-2 0-.7-.4-1.4-1-1.7zm-8-.3v-4l1-1h4l1 1v4l-1 1h-4z"/>%3C/svg>')
+  }
+
+  .mapbox-gl-draw_line:hover { /* stylelint-disable-line */
+    background-image: url('data:image/svg+xml;utf8,%3Csvg xmlns="http://www.w3.org/2000/svg" width="20" height="20">%3Cpath style="fill: %232091b0;" d="m13.5 3.5c-1.4 0-2.5 1.1-2.5 2.5 0 .3 0 .6.2.9l-3.8 3.8c-.3-.1-.6-.2-.9-.2-1.4 0-2.5 1.1-2.5 2.5s1.1 2.5 2.5 2.5 2.5-1.1 2.5-2.5c0-.3 0-.6-.2-.9l3.8-3.8c.3.1.6.2.9.2 1.4 0 2.5-1.1 2.5-2.5s-1.1-2.5-2.5-2.5z"/>%3C/svg>');
+  }
+}
+
+.maplibregl-ctrl button.active, .maplibregl-ctrl button:active {
   background-color: rgb(0 0 0/15%) !important;
   transition:
     background-color 0.2s ease-in-out;
@@ -26,15 +48,15 @@
 }
 
 /* Need to overwrite the mapbox draw icons with hover color */
-.mapbox-gl-draw_point:hover, .mapbox-gl-draw_point.active { /* stylelint-disable-line */
+.mapbox-gl-draw_point.active { /* stylelint-disable-line */
   background-image: url('data:image/svg+xml;utf8,%3Csvg xmlns="http://www.w3.org/2000/svg" width="20" height="20">%3Cpath style="fill: %232091b0;" d="m10 2c-3.3 0-6 2.7-6 6s6 9 6 9 6-5.7 6-9-2.7-6-6-6zm0 2c2.1 0 3.8 1.7 3.8 3.8 0 1.5-1.8 3.9-2.9 5.2h-1.7c-1.1-1.4-2.9-3.8-2.9-5.2-.1-2.1 1.6-3.8 3.7-3.8z"/>%3C/svg>');
 }
 
-.mapbox-gl-draw_polygon:hover, .mapbox-gl-draw_polygon.active { /* stylelint-disable-line */
+.mapbox-gl-draw_polygon.active { /* stylelint-disable-line */
   background-image: url('data:image/svg+xml;utf8,%3Csvg xmlns="http://www.w3.org/2000/svg" width="20" height="20">%3Cpath style="fill: %232091b0;" d="m15 12.3v-4.6c.6-.3 1-1 1-1.7 0-1.1-.9-2-2-2-.7 0-1.4.4-1.7 1h-4.6c-.3-.6-1-1-1.7-1-1.1 0-2 .9-2 2 0 .7.4 1.4 1 1.7v4.6c-.6.3-1 1-1 1.7 0 1.1.9 2 2 2 .7 0 1.4-.4 1.7-1h4.6c.3.6 1 1 1.7 1 1.1 0 2-.9 2-2 0-.7-.4-1.4-1-1.7zm-8-.3v-4l1-1h4l1 1v4l-1 1h-4z"/>%3C/svg>')
 }
 
-.mapbox-gl-draw_line:hover, .mapbox-gl-draw_line.active { /* stylelint-disable-line */
+.mapbox-gl-draw_line.active { /* stylelint-disable-line */
   background-image: url('data:image/svg+xml;utf8,%3Csvg xmlns="http://www.w3.org/2000/svg" width="20" height="20">%3Cpath style="fill: %232091b0;" d="m13.5 3.5c-1.4 0-2.5 1.1-2.5 2.5 0 .3 0 .6.2.9l-3.8 3.8c-.3-.1-.6-.2-.9-.2-1.4 0-2.5 1.1-2.5 2.5s1.1 2.5 2.5 2.5 2.5-1.1 2.5-2.5c0-.3 0-.6-.2-.9l3.8-3.8c.3.1.6.2.9.2 1.4 0 2.5-1.1 2.5-2.5s-1.1-2.5-2.5-2.5z"/>%3C/svg>');
 }
 
@@ -61,4 +83,11 @@
 
 .maplibregl-ctrl-top-left {
   top: 2.4em !important;
+}
+
+/* fix for https://github.com/maplibre/maplibre-gl-js/issues/5284 */
+@media (hover: none) {
+  .maplibregl-ctrl button:not(:disabled):hover {
+    background-color: inherit;
+  }
 }
