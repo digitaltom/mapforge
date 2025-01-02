@@ -16,11 +16,11 @@
     var map = new maplibregl.Map({
         container: 'map',
         style: 'https://demotiles.maplibre.org/style.json', // Use a style or any other compatible style URL
-        center: [0, 0],
-        zoom: 1
+        center: [-0.1276, 51.5072],
+        zoom: 5
     });
 
-    map.on('load', function () {
+    map.on('style.load', function () {
         // Add a source of type GeoJSON
         map.addSource('emojiSource', {
             type: 'geojson',
