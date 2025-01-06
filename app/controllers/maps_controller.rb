@@ -1,7 +1,6 @@
 class MapsController < ApplicationController
   before_action :set_map, only: %i[show properties]
 
-  layout "content", only: [ :index ]
   layout "map", only: [ :show ]
 
   def index

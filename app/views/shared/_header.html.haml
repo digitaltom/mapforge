@@ -1,7 +1,7 @@
-%nav.navbar.navbar-expand-lg.navbar-light
+%nav.navbar.navbar-expand-lg.navbar-light{class: "#{'fixed-top' if static}"}
   .container-fluid
     %a.navbar-brand{href: '/'}
-      %img.mapforge-logo.me-2{ src: "/icons/mapforge-logo-header.png", alt: "" }
+      %img.mapforge-logo{ src: "/icons/mapforge-logo-header_white.png", alt: "" }
       .mapforge-font.white-shadow{ href: "#" } Mapforge
 
     %button.navbar-toggler{ type: "button", "data-bs-toggle": "collapse", "data-bs-target": "#navbarSupportedContent", "aria-controls": "navbarSupportedContent", "aria-expanded": "false", "aria-label": "Toggle navigation" }
@@ -9,15 +9,17 @@
 
     #navbarSupportedContent.collapse.navbar-collapse
       %ul.navbar-nav.me-auto.mb-2.mb-lg-0.mt-1
-        %li.nav-item
-          %a.nav-link.active{ "aria-current": "page", href: "/m" } Explore
-        / %li.nav-item
-        /  %a.nav-link.active{ "aria-current": "page", href: "/m" } Features
+        - if menu
+          %li.nav-item
+            %a.nav-link.active{ "aria-current": "page", href: "/m" } Explore
+          / %li.nav-item
+          /  %a.nav-link.active{ "aria-current": "page", href: "/m" } Features
 
       .d-flex.align-items-center
-        = link_to create_map_path, { class: 'me-4 btn btn-orange', data: { turbo_method: :post } } do
-          %i.bi.bi-plus-square
-          Create map
+        - if create_button
+          = link_to create_map_path, { class: 'me-4 btn btn-orange', data: { turbo_method: :post } } do
+            %i.bi.bi-plus-square
+            Create map
 
         - if @user
           .nav-item.dropdown.profile-dropdown

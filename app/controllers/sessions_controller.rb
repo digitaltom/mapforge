@@ -1,6 +1,4 @@
 class SessionsController < ApplicationController
-  layout "content"
-
   def new
     render :new
   end

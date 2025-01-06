@@ -1,18 +1,14 @@
 - content_for :title, "Mapforge: Create and share individual maps"
-#frontpage-map.map
 
-.container-fluid
-  .row
-    - # h1 tag is required by search engines on index page
-    %h1.col.text-center.frontpage-title.mapforge-font
-      mapforge
-  .row
-    .col.frontpage-subtitle.fade-in-slow
-      %span
-        map your
-        %span.highlight#frontpage-category-name
-  .row
-    .col.frontpage-buttons.center
-      %p
-        %a.btn.btn-primary.btn-lg{href: maps_path, 'aria-label': "Explore maps"} explore
-        = link_to "create", create_map_path, data: { turbo_method: :post }, class: 'btn btn-primary btn-lg', 'aria-label': "Create a new map"
+%main#frontpage.main
+
+  / Hero Section
+  #hero.hero.section.dark-background
+    = image_tag "frontpage/background_map1.png", alt: ""
+    .container
+      .row
+        .col-xl-5
+          %h1.mapforge-font Create your own maps
+          %blockquote
+            %p Mapforge lets you create and share individual maps. You can build your own unique maps by layering your data onto various base maps. Collaborate in real-time just like editing a document together online and share your maps.
+            %p Mapforge.org is free to use and available as open-source for self-hosting, giving you full control over your data.

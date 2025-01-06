@@ -2,11 +2,8 @@
 %html{ lang: 'en' }
   = render 'layouts/head'
 
-  %body
+  %body.dark-background
 
-    = render 'shared/header'
-
-    #map-logo-title.flex-container.flex-no-wrap
-      %span#map-title.dark-shadow
+    = render 'shared/header', menu: true, create_button: true, static: false
 
     = yield

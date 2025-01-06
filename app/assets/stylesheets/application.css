@@ -16,9 +16,21 @@
 
 /* General styles used throughout the whole app */
 
+
+/* Palette: https://coolors.co/e5e5d7-dae2c8-cedfb9-dac591-e6aa68-ca3c25-1d1a05-49622d-354a51-4d7a9c */
 :root {
-  --text-color: #000;
-  --hover-color: #2091b0;
+  --color-light-sand: #E5E5D7;
+  --color-light-beige: #DAE2C8;
+  --color-light-teagreen: #CEDFB9;
+  --color-dark-moss-green: #354620;
+  --color-mid-ecru: #DAC591;
+  --color-mid-fawn: #E6AA68;
+  --color-mid-chili: #CA3C25;
+  --color-dark-smoky-black: #1D1A05;
+  --color-dark-charcoal: #354A51;
+  --color-mid-steel-blue: #4D7A9C;
+  --text-color: var(--color-dark-smoky-black);
+  --hover-color: var(--color-dark-charcoal);
   --bs-btn-border-radius: 0px;
   --bs-border-radius: 0px;
 }

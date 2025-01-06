@@ -37,8 +37,7 @@ bundle
 * Redis (for action cable) is expected at: `ENV.fetch("REDIS_URL") { "redis://localhost:6379/1" }`
 * To allow login via Github and Google, create oauth apps there, and set `GITHUB_CLIENT_ID`/`GITHUB_CLIENT_SECRET` and `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET`.
 * The first user that logs in automatically gets set as admin
-* The default base map can get set with `DEFAULT_MAP`.
-* To import the initial frontpage, run: `bin/rake seed:frontpage`
+* The default base map can get set with `DEFAULT_MAP`
 
 In development, the ENV vars can get set in the file `.env.development`.
 
@@ -90,7 +89,7 @@ For example `act -j test`.
 
 Github builds a new container on each commit to `main` at: `ghcr.io/digitaltom/mapforge:main`. Or, you can build your own image with: `podman build -t mapforge .`.
 
-Before running the container, make sure the services MongoDB (`podman run -d --name mongo -v <local_dir>:/data/db -p 27017:27017 mongo:7.0`) and Redis (`podman run -d --name redis -p 6379:6379 redis`) are running. Then, seed the frontpage with `podman run -e SECRET_KEY_BASE=e3c9f2... --network=host mapforge -- bin/rake seed:frontpage`.
+Before running the container, make sure the services MongoDB (`podman run -d --name mongo -v <local_dir>:/data/db -p 27017:27017 mongo:7.0`) and Redis (`podman run -d --name redis -p 6379:6379 redis`) are running.
 
 Now, you can run the image with: `podman run -e SECRET_KEY_BASE=e3c9f2... ghcr.io/digitaltom/mapforge:main` (use `-e RAILS_ENV=development` if you don't have an SSL termination, like Traefik in front of the container)
 

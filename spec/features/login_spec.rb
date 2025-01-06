@@ -2,12 +2,6 @@ require 'rails_helper'
 
 describe 'Login' do
   before do
-    # create empty map for frontpage tour
-    Map.create_from_file("db/seeds/frontpage/frontpage.json")
-    Map.find_by(public_id: 'frontpage').dup.update(public_id: 'frontpage-category-friends')
-    Map.find_by(public_id: 'frontpage').dup.update(public_id: 'frontpage-category-office')
-    Map.find_by(public_id: 'frontpage').dup.update(public_id: 'frontpage-category-data')
-
     visit login_path
   end
 
@@ -20,7 +14,7 @@ describe 'Login' do
     fill_in 'name', with: 'Test User'
     fill_in 'email', with: 'test@mapforge.org'
     click_button('Sign In')
-    expect(page).to have_text('map your friends')
+    expect(page).to have_text('Create your own maps')
     expect(User.count).to eq 1
   end
 
@@ -29,11 +23,11 @@ describe 'Login' do
     fill_in 'name', with: 'Test User'
     fill_in 'email', with: 'test@mapforge.org'
     click_button('Sign In')
-    expect(page).to have_text('map your friends')
+    expect(page).to have_text('Create your own maps')
     expect(User.count).to eq 1
     visit maps_path
     find('.profile-image').click
     click_link('Logout')
-    expect(page).to have_text('map your friends')
+    expect(page).to have_text('Create your own maps')
   end
 end
