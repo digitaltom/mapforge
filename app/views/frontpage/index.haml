@@ -1,14 +1,50 @@
 - content_for :title, "Mapforge: Create and share individual maps"
 
+/ https://swiperjs.com/
+= javascript_include_tag "swiper-bundle.min.js"
+
 %main#frontpage.main
 
   / Hero Section
   #hero.hero.section.dark-background
-    = image_tag "frontpage/background_map1.png", alt: ""
+    = image_tag "frontpage/background_map2.png", alt: "", 'data-aos': "zoom-out", 'data-aos-duration': "1000"
     .container
       .row
         .col-xl-5
-          %h1.mapforge-font Create your own maps
-          %blockquote
+          %h1.mapforge-font{ 'data-aos': "fade-up" } Create your own maps
+          %blockquote{ 'data-aos': "fade-up" }
             %p Mapforge lets you create and share individual maps. You can build your own unique maps by layering your data onto various base maps. Collaborate in real-time just like editing a document together online and share your maps.
             %p Mapforge.org is free to use and available as open-source for self-hosting, giving you full control over your data.
+
+
+  %section#why-us.why-us.section.hidden
+    .container
+      .row.g-0
+        .col-xl-5.img-bg{"data-aos" => "fade-up", "data-aos-delay" => "100"}
+          = image_tag "frontpage/feature1.png", alt: ""
+        .col-xl-7.slides.position-relative{"data-aos" => "fade-up", "data-aos-delay" => "200"}
+          .swiper.init-swiper
+            .swiper-wrapper
+              .swiper-slide
+                .item
+                  %h3.mb-3 Let's grow your business together
+                  %h4.mb-3 Optio reiciendis accusantium iusto architecto at quia minima maiores quidem, dolorum.
+                  %p Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellendus, ipsam perferendis asperiores explicabo vel tempore velit totam, natus nesciunt accusantium dicta quod quibusdam ipsum maiores nobis non, eum. Ullam reiciendis dignissimos laborum aut, magni voluptatem velit doloribus quas sapiente optio.
+              .swiper-slide
+                .item
+                  %h3.mb-3 Unde perspiciatis ut repellat dolorem
+                  %h4.mb-3 Amet cumque nam sed voluptas doloribus iusto. Dolorem eos aliquam quis.
+                  %p Dolorem quia fuga consectetur voluptatem. Earum consequatur nulla maxime necessitatibus cum accusamus. Voluptatem dolorem ut numquam dolorum delectus autem veritatis facilis. Et ea ut repellat ea. Facere est dolores fugiat dolor.
+              .swiper-slide
+                .item
+                  %h3.mb-3 Aliquid non alias minus
+                  %h4.mb-3 Necessitatibus voluptatibus explicabo dolores a vitae voluptatum.
+                  %p Neque voluptates aut. Soluta aut perspiciatis porro deserunt. Voluptate ut itaque velit. Aut consectetur voluptatem aspernatur sequi sit laborum. Voluptas enim dolorum fugiat aut.
+              .swiper-slide
+                .item
+                  %h3.mb-3 Necessitatibus suscipit non voluptatem quibusdam
+                  %h4.mb-3 Tempora quos est ut quia adipisci ut voluptas. Deleniti laborum soluta nihil est. Eum similique neque autem ut.
+                  %p Ut rerum et autem vel. Et rerum molestiae aut sit vel incidunt sit at voluptatem. Saepe dolorem et sed voluptate impedit. Ad et qui sint at qui animi animi rerum.
+            .swiper-pagination
+          .swiper-button-prev
+          .swiper-button-next

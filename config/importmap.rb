@@ -43,3 +43,6 @@ pin "@mapbox/point-geometry", to: "@mapbox--point-geometry.js", preload: false #
 pin "fast-deep-equal", preload: false # @3.1.3
 pin "nanoid/non-secure", to: "nanoid--non-secure.js", preload: false # @5.0.9
 pin "wgs84", preload: false # @0.0.0
+
+# Animations for frontpage: https://github.com/michalsnik/aos
+pin "aos", preload: false # @2.3.4

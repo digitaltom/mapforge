@@ -49,3 +49,7 @@
   right: -0.5rem;
   left: unset;
 }
+
+.navbar-toggler {
+  border-width: 1px !important;
+}

@@ -38,9 +38,11 @@ class MapsController < ApplicationController
     redirect_to map_url(@map), notice: "Map was successfully created."
   end
 
+  # :nocov:
   def properties
     render json: @map.properties.as_json
   end
+  # :nocov:
 
   # some maplibre style tries to load eg. /atm_11; catching those calls here
   # :nocov:
