@@ -94,10 +94,6 @@ class Map
     end
   end
 
-  def self.frontpage
-    find_by(public_id: "frontpage")
-  end
-
   def self.create_from_file(path, collection_format: 4326)
     file = File.read(path)
     map_hash = JSON.parse(file)

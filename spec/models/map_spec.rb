@@ -99,6 +99,11 @@ describe Map do
       it 'returns default_base_map when map is not found' do
         expect(map.properties[:base_map]).to eq "osmRasterTiles"
       end
+
+      it 'returns default_base_map when maptiler key is not set' do
+        map.update(base_map: Map::MAPTILER_MAPS.first)
+        expect(map.properties[:base_map]).to eq "osmRasterTiles"
+      end
     end
   end
 end
