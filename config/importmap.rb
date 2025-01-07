@@ -33,7 +33,7 @@ pin "maplibre-gl" # @5.0.0
 # https://github.com/maptiler/maptiler-geocoding-control
 pin "maptiler-geocoding-control", to: "https://ga.jspm.io/npm:@maptiler/geocoding-control@1.4.1/maplibregl.js"
 # render markdown
-pin "marked", to: "https://ga.jspm.io/npm:marked@15.0.5/lib/marked.esm.js"
+pin "marked", to: "https://ga.jspm.io/npm:marked@15.0.6/lib/marked.esm.js"
 
 # https://github.com/mapbox/mapbox-gl-draw
 pin "@mapbox/mapbox-gl-draw", to: "@mapbox--mapbox-gl-draw.js", preload: false # @1.5.0
