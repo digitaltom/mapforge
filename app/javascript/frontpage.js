@@ -6,7 +6,6 @@ window.AOS = AOS;
 
 ['turbo:load'].forEach(function (e) {
   window.addEventListener(e, function () {
-    // console.log(e)
     if (document.getElementById('frontpage')) {
       init()
     }
@@ -24,8 +23,8 @@ function unload () {
 }
 
 function init () {
-  window.addEventListener('load', aosInit)
-  window.addEventListener('load', initSwiper)
+  aosInit()
+  initSwiper()
 }
 
 function aosInit () {

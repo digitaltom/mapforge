@@ -13,7 +13,7 @@ import AOS from 'aos'
 })
 
 async function init () {
-  window.addEventListener('load', aosInit)
+  aosInit()
   initializeMap('maplibre-map')
   // static mode is used for screenshots + frontpage
   if (window.gon.map_mode === 'static') {
