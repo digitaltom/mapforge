@@ -56,11 +56,15 @@ export function initializeEditMode () {
   initializeDefaultControls()
   map.addControl(draw, 'top-left')
   addPaintButton()
+  document.querySelector('.maplibregl-ctrl:has(button.mapbox-gl-draw_line)').setAttribute('data-aos', 'fade-right')
+
   const controlGroup = new ControlGroup(
     [new MapSettingsControl(),
       new MapLayersControl(),
       new MapShareControl()])
   map.addControl(controlGroup, 'top-left')
+  document.querySelector('.maplibregl-ctrl:has(button.maplibregl-ctrl-map)').setAttribute('data-aos', 'fade-right')
+
 
   map.on('geojson.load', function (e) {
     initializeEditStyles()

@@ -204,6 +204,7 @@ export function initializeDefaultControls () {
       maplibregl
     })
     map.addControl(gc, 'top-right')
+    document.querySelector('.maplibregl-ctrl-geocoder').setAttribute('data-aos', 'fade-down')
   }
 
   const nav = new maplibregl.NavigationControl({
@@ -212,6 +213,7 @@ export function initializeDefaultControls () {
     showCompass: true
   })
   map.addControl(nav)
+  document.querySelector('.maplibregl-ctrl:has(button.maplibregl-ctrl-zoom-in)').setAttribute('data-aos', 'fade-left')
 
   // https://maplibre.org/maplibre-gl-js/docs/API/classes/GeolocateControl
   // Note: This might work only via https
@@ -225,6 +227,7 @@ export function initializeDefaultControls () {
     status('Error detecting location', 'warning')
   })
   map.addControl(geolocate, 'top-right')
+  document.querySelector('.maplibregl-ctrl:has(button.maplibregl-ctrl-geolocate)').setAttribute('data-aos', 'fade-left')
 
   const scale = new maplibregl.ScaleControl({
     maxWidth: 100,

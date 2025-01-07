@@ -7,11 +7,4 @@
     #map-header
       = render 'shared/header', menu: true, create_button: false, static: false
 
-    #map-head.dark-shadow{ 'data-controller': "map", 'data-aos': "zoom-out-down", "data-aos-delay": "1000" }
-      %i#map-nav-toggle.bi.bi-caret-down.me-2{ 'data-action': "click->map#toggleNavigation" }
-
-      #map-title
-
     = yield
-
-    #dropdown-space
