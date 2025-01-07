@@ -50,6 +50,14 @@
   left: unset;
 }
 
+@media (width <= 990px) {
+  .dropdown-menu[data-bs-popper] {
+    left: 0;
+  }
+}
+
 .navbar-toggler {
   border-width: 1px !important;
 }
+
+

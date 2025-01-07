@@ -65,7 +65,6 @@ export function initializeEditMode () {
   map.addControl(controlGroup, 'top-left')
   document.querySelector('.maplibregl-ctrl:has(button.maplibregl-ctrl-map)').setAttribute('data-aos', 'fade-right')
 
-
   map.on('geojson.load', function (e) {
     initializeEditStyles()
     const urlFeatureId = new URLSearchParams(window.location.search).get('f')
