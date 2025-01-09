@@ -30,8 +30,7 @@ describe 'Map' do
       expect(page).to have_text('Configure Map')
       find('#map-terrain').click
       # Terrain feature is only used with maptiler key
-      # expect(page).to have_text('Terrain added to map')
-      expect(map.reload.terrain).to eq true
+      wait_for { map.reload.terrain }.to eq(true)
     end
   end
 
