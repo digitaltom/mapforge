@@ -30,8 +30,9 @@ pin_all_from "vendor/javascript/mapbox-gl-draw-paint-mode",
 
 # https://github.com/maplibre/maplibre-gl-js
 pin "maplibre-gl" # @5.0.0
-# https://github.com/maptiler/maptiler-geocoding-control
-pin "maptiler-geocoding-control", to: "https://ga.jspm.io/npm:@maptiler/geocoding-control@1.4.1/maplibregl.js"
+# https://github.com/maplibre/maplibre-gl-geocoder
+pin "maplibre-gl-geocoder", to: "https://ga.jspm.io/npm:@maplibre/maplibre-gl-geocoder@1.7.0/dist/maplibre-gl-geocoder.mjs"
+
 # render markdown
 pin "marked", to: "https://ga.jspm.io/npm:marked@15.0.5/lib/marked.esm.js"
 

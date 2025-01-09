@@ -8,7 +8,7 @@
 = stylesheet_link_tag "https://unpkg.com/easymde/dist/easymde.min.css"
 
 = stylesheet_link_tag "https://unpkg.com/@mapbox/mapbox-gl-draw@1.4.3/dist/mapbox-gl-draw.css"
-= stylesheet_link_tag "https://cdn.maptiler.com/maptiler-geocoding-control/v1.4.1/style.css"
+= stylesheet_link_tag "https://unpkg.com/@maplibre/maplibre-gl-geocoder@1.5.0/dist/maplibre-gl-geocoder.css"
 
 - content_for :title, "Mapforge: #{(@map.name.presence || @map.id)}"
 - content_for :head do

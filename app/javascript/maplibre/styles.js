@@ -284,7 +284,7 @@ export const styles = {
       ['==', '$type', 'Point'],
       ['!=', 'meta', 'midpoint'],
       ['!=', 'meta', 'vertex'],
-      ['!', ['any', ['has', 'user_marker-image-url'], ['has', 'marker-image-url']]]
+      ['none', ['has', 'user_marker-image-url'], ['has', 'marker-image-url']]
     ],
     paint: {
       'circle-pitch-scale': 'map', // points get bigger when camera is closer

@@ -1,6 +1,6 @@
 import { basemaps } from 'maplibre/basemaps'
 import { draw } from 'maplibre/edit'
-import { resetControls, initSettingsModal } from 'maplibre/controls'
+import { resetControls, initSettingsModal, geocoderConfig } from 'maplibre/controls'
 import { initializeViewStyles } from 'maplibre/styles'
 import { highlightFeature, resetHighlightedFeature } from 'maplibre/feature'
 import { AnimatePointAnimation } from 'maplibre/animations'
@@ -8,7 +8,7 @@ import * as functions from 'helpers/functions'
 import { status } from 'helpers/status'
 import equal from 'fast-deep-equal' // https://github.com/epoberezkin/fast-deep-equal
 import maplibregl from 'maplibre-gl'
-import { GeocodingControl } from 'maptiler-geocoding-control'
+import MaplibreGeocoder from 'maplibre-gl-geocoder'
 
 export let map
 export let geojsonData //= { type: 'FeatureCollection', features: [] }
@@ -195,17 +195,12 @@ function addTerrain () {
 }
 
 export function initializeDefaultControls () {
-  // https://docs.maptiler.com/sdk-js/modules/geocoding/api/api-reference/#geocoding-options
-  if (window.gon.map_keys.maptiler) {
-    const gc = new GeocodingControl({
-      apiKey: window.gon.map_keys.maptiler,
-      class: 'search-form',
-      marker: false, // TODO rendering markers is broken with maplibre importmap
+  map.addControl(
+    new MaplibreGeocoder(geocoderConfig, {
       maplibregl
-    })
-    map.addControl(gc, 'top-right')
-    document.querySelector('.maplibregl-ctrl-geocoder').setAttribute('data-aos', 'fade-down')
-  }
+    }), 'top-right'
+  )
+  document.querySelector('.maplibregl-ctrl-geocoder').setAttribute('data-aos', 'fade-left')
 
   const nav = new maplibregl.NavigationControl({
     visualizePitch: true,
