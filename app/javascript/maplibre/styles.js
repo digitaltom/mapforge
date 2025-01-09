@@ -12,6 +12,7 @@ export const viewStyleNames = [
   'points-border-layer',
   'points-layer',
   'points-hit-layer',
+  'symbols-border-layer',
   'symbols-layer',
   'text-layer',
   'polygon-layer-extrusion'
@@ -282,7 +283,8 @@ export const styles = {
     filter: ['all',
       ['==', '$type', 'Point'],
       ['!=', 'meta', 'midpoint'],
-      ['!=', 'meta', 'vertex']
+      ['!=', 'meta', 'vertex'],
+      ['!', ['any', ['has', 'user_marker-image-url'], ['has', 'marker-image-url']]]
     ],
     paint: {
       'circle-pitch-scale': 'map', // points get bigger when camera is closer
@@ -335,6 +337,31 @@ export const styles = {
     paint: {
       'circle-radius': ['+', 5, pointSizeMax],
       'circle-opacity': 0
+    }
+  },
+  'symbols-border-layer': {
+    id: 'symbols-border-layer',
+    type: 'circle',
+    source: 'geojson-source',
+    filter: ['all',
+      ['==', '$type', 'Point'],
+      ['!=', 'meta', 'midpoint'],
+      ['!=', 'meta', 'vertex'],
+      ['any', ['has', 'user_marker-image-url'], ['has', 'marker-image-url']]
+    ],
+    paint: {
+      'circle-pitch-scale': 'map', // points get bigger when camera is closer
+      'circle-radius': pointSize,
+      'circle-opacity': 0,
+      'circle-stroke-color': pointOutlineColor,
+      'circle-blur': 0.1,
+      'circle-stroke-width': [
+        'case',
+        ['boolean', ['feature-state', 'active'], false],
+        pointOutlineSizeActive,
+        pointOutlineSize
+      ],
+      'circle-stroke-opacity': pointOpacity + 0.2
     }
   },
   // support symbols on all feature types

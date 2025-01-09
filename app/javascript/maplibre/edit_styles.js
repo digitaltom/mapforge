@@ -153,7 +153,8 @@ export const editStyles = [
       'circle-radius': pointSize,
       'circle-color': highlightColor
     }
-  }
+  },
+  removeSource(styles['symbols-border-layer'])
 ]
 
 function removeSource (style) {
