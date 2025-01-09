@@ -91,6 +91,6 @@ Github builds a new container on each commit to `main` at: `ghcr.io/digitaltom/m
 
 Before running the container, make sure the services MongoDB (`podman run -d --name mongo -v <local_dir>:/data/db -p 27017:27017 mongo:7.0`) and Redis (`podman run -d --name redis -p 6379:6379 redis`) are running.
 
-Now, you can run the image with: `podman run -e SECRET_KEY_BASE=e3c9f2... ghcr.io/digitaltom/mapforge:main` (use `-e RAILS_ENV=development` if you don't have an SSL termination, like Traefik in front of the container)
+Now, you can run the image with: `podman run -e SECRET_KEY_BASE=e3c9f2... --network=host ghcr.io/digitaltom/mapforge:main` (use `-e RAILS_ENV=development` if you don't have an SSL termination, like Traefik in front of the container)
 
 

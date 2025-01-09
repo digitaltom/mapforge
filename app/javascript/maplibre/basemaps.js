@@ -86,6 +86,7 @@ export const basemaps = {
   },
   satelliteTiles: {
     version: 8,
+    projection: { type: 'globe' },
     sources: {
       'raster-tiles': {
         type: 'raster',
@@ -96,6 +97,16 @@ export const basemaps = {
         attribution: 'Powered by Esri, ' +
           'Sources: Esri, DigitalGlobe, GeoEye, i-cubed, USDA FSA, USGS, AEX, Getmapping, Aerogrid, IGN, IGP, swisstopo, and the GIS User Community'
       }
+    },
+    sky: {
+      'atmosphere-blend': [
+        'interpolate',
+        ['linear'],
+        ['zoom'],
+        0, 1,
+        5, 1,
+        7, 0
+      ]
     },
     layers: defaultRasterLayer,
     glyphs: openmaptilesGlyphs
