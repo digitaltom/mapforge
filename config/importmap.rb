@@ -34,7 +34,7 @@ pin "maplibre-gl" # @5.0.0
 pin "maplibre-gl-geocoder", to: "https://ga.jspm.io/npm:@maplibre/maplibre-gl-geocoder@1.7.0/dist/maplibre-gl-geocoder.mjs"
 
 # render markdown
-pin "marked", to: "https://ga.jspm.io/npm:marked@15.0.5/lib/marked.esm.js"
+pin "marked", to: "https://ga.jspm.io/npm:marked@15.0.6/lib/marked.esm.js"
 
 # https://github.com/mapbox/mapbox-gl-draw
 pin "@mapbox/mapbox-gl-draw", to: "@mapbox--mapbox-gl-draw.js", preload: false # @1.5.0
