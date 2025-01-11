@@ -4,9 +4,12 @@
     %h3 Layers
 
   .map-modal-content
-    %input#fileInput{ type: "file" }
-    %button.btn.btn-secondary{ data: { action: "click->layers#upload" } }
-      Import gpx/kml
+
+    #layer-upload.row.align-items-center
+      .col
+        %label{ for: "formFile" } Import gpx/kml (max. 500Kb)
+      .col
+        %input.form-control#fileInput{ type: "file", data: { action: "input->layers#upload" } }
 
     #default-layer
       %h4.layer-name Default Layer

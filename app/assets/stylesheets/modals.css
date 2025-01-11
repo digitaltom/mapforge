@@ -13,7 +13,7 @@
 
  /* Todo: Looks cool, but slows down browsers */
   z-index: 1000;
-  padding: 1.5em 0.5em 1.5em 1.5em;
+  padding: 1.5em 1em 1.5em 1.5em;
   border: 1px solid #ccc;
   box-shadow: 0 0 6px 2px rgb(0 0 0 / 8%);
 }
@@ -39,6 +39,10 @@
   transition:
     opacity 0.3s linear,
     border-color 0.3s linear;
+}
+
+#layer-upload {
+  margin-right: 0.2em;
 }
 
 .layer-preview.active, .layer-preview:hover {

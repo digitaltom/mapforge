@@ -10,6 +10,12 @@ export default class extends Controller {
   upload () {
     const fileInput = document.getElementById('fileInput')
     const file = fileInput.files[0]
+    const fileSize = (file.size / 1024).toFixed(2)
+
+    if (fileSize > 500) {
+      status('File exceeds 500Kb', 'error')
+      return
+    }
 
     if (file) {
       const reader = new FileReader()
