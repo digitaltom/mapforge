@@ -90,8 +90,10 @@ export function initializeEditMode () {
     console.log('draw mode: ' + draw.getMode())
   })
 
-  // FIXME: probably mapbox draw bug: map can lose drag capabilities on double click
   map.on('draw.selectionchange', function (e) {
+    // probably mapbox draw bug: map can lose drag capabilities on double click
+    map.dragPan.enable()
+
     if (!e.features?.length) { return }
     if (justCreated) { justCreated = false; return }
     selectedFeature = e.features[0]
