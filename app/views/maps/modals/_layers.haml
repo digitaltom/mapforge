@@ -7,7 +7,9 @@
 
     #layer-upload.row.align-items-center
       .col
-        %label{ for: "formFile" } Import gpx/kml (max. 500Kb)
+        %label{ for: "formFile" } Import gpx/kml (max. 800Kb)
+        %br
+        %small EPSG:4326 (WGS 84) format
       .col
         %input.form-control#fileInput{ type: "file", data: { action: "input->layers#upload" } }
 

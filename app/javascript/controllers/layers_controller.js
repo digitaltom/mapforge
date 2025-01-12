@@ -12,8 +12,8 @@ export default class extends Controller {
     const file = fileInput.files[0]
     const fileSize = (file.size / 1024).toFixed(2)
 
-    if (fileSize > 500) {
-      status('File exceeds 500Kb', 'error')
+    if (fileSize > 800) {
+      status('File exceeds 800Kb', 'error')
       return
     }
 
@@ -39,11 +39,13 @@ export default class extends Controller {
           if (geoJSON.layers) { geoJSON = geoJSON.layers[0] }
         }
 
+        let i = 1
         geoJSON.features.forEach(feature => {
           feature.id = Math.random().toString(36).substring(2, 18)
           feature.properties ||= {}
           upsert(feature)
           mapChannel.send_message('new_feature', feature)
+          status('Added feature ' + i++ + '/' + geoJSON.features.length)
         })
 
         const props = JSON.parse(content).properties
