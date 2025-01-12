@@ -18,6 +18,7 @@ html:has(.map), body:has(.map) {
   transform: translateX(-50%);
   overflow: hidden;
   font-size: 1.2em;
+  cursor: pointer;
 }
 
 /* this is an ugly hack for the profile dropdown not to be cut off */

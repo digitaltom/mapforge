@@ -14,13 +14,16 @@ module Ulogger
     ]
 
     def auth
+      session['email'] = params[:user]
       render json: { error: false }
     end
 
     def addtrack
+      user = User.find_by(email: session['email'])
       map_id, padded_id = create_numeric_map_id
       @map = Map.create!(id: padded_id, name: params[:track],
-                         public_id: params[:track], private: true)
+                         public_id: params[:track], private: true,
+                         user: user)
       @map.save!
       render json: { error: false, trackid: map_id }
     end
@@ -39,7 +42,7 @@ module Ulogger
       geometry = { "type" => "Point", "coordinates" => coords }
 
       timestamp = Time.at(params[:time].to_i).to_datetime.strftime("%Y-%m-%d %H:%M:%S")
-      properties = { "title" => timestamp, "desc" => description || "" }
+      properties = { "title" => timestamp, "desc" => description || "", "marker-size" => 4 }
 
       uploaded = params.fetch(:image, nil)
 

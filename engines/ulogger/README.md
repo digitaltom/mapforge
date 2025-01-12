@@ -8,9 +8,9 @@
 
 ## API endpoints:
 Auth
-`curl -H 'Content-Type: application/x-www-form-urlencoded' -X POST http://localhost:3000/ulogger/client/index.php -d 'action=auth&pass=supers3cr3t&user=cwh'`
+`curl -H 'Content-Type: application/x-www-form-urlencoded' -X POST http://localhost:3000/ulogger/client/index.php -d 'action=auth&pass=supers3cr3t&user=cwh@domain.org'`
 
-Sets a cookie with a token for the following requests.
+Sets a cookie with a token for the following requests. If a user with the provided email is found, the map is assigned to that user.
 
 New Track
 `curl -H 'Content-Type: application/x-www-form-urlencoded' -X POST http://localhost:3000/ulogger/client/index.php -d 'action=addtrack&track=Auto_2024.06.09_20.59.57'`
