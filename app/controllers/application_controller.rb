@@ -14,4 +14,8 @@ class ApplicationController < ActionController::Base
   def set_user
     @user = User.find_by(id: session[:user_id]) if session[:user_id]
   end
+
+  def require_login
+    not_found! unless @user
+  end
 end

@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## 2025-01
+
+* Maplibre 7.5
+* MyMaps view
+
 ## 2024-12
 
 * New navigation layout

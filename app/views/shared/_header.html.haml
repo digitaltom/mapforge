@@ -11,7 +11,7 @@
       %ul.navbar-nav.me-auto.mb-2.mb-lg-0.mt-1
         - if menu
           %li.nav-item
-            %a.nav-link.active{ "aria-current": "page", href: "/m" } Explore
+            %a.nav-link.active{ "aria-current": "page", href: maps_path } Explore
 
       .d-flex.align-items-center
         - if create_button
@@ -33,6 +33,10 @@
                   %a.dropdown-item{ href: "/admin" }
                     %i.bi.bi-person-workspace
                     Admin
+              %li
+                = link_to my_path, { class: 'dropdown-item' } do
+                  %i.bi.bi-map
+                  = "Your maps (#{@user.maps_count})"
               %li
                 = link_to logout_path, { class: 'dropdown-item', data: { turbo: false } } do
                   %i.bi.bi-box-arrow-in-left

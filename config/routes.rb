@@ -25,6 +25,7 @@ Rails.application.routes.draw do
 
     post "" => "maps#create", as: :create_map
   end
+  get "/my" => "maps#my", as: "my"
 
   get "/d/:id" => "maps#show", defaults: { engine: "deck" }, as: :deck, constraints: { id: ID_PATTERN }
 

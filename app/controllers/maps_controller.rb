@@ -1,10 +1,15 @@
 class MapsController < ApplicationController
   before_action :set_map, only: %i[show properties]
+  before_action :require_login, only: %i[my]
 
   layout "map", only: [ :show ]
 
   def index
     @maps = Map.where.not(private: true).includes(:layers).order(updated_at: :desc)
+  end
+
+  def my
+    @maps = Map.where(user: @user).includes(:layers).order(updated_at: :desc)
   end
 
   def show
