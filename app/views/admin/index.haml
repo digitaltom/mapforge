@@ -3,9 +3,9 @@
     %div.flex-item.map-preview{id: dom_id(map)}
       = link_to map_path(id: map.id) do
         - if map.screenshot
-          %img{src: map.screenshot, class: 'preview-image', loading: 'lazy'}
+          %img{src: map.screenshot, class: 'preview-image', loading: 'lazy', alt: 'preview'}
         - else
-          = image_tag "preview.png", class: 'preview-image', loading: 'lazy'
+          = image_tag "preview.png", class: 'preview-image', loading: 'lazy', alt: 'no preview'
         .map-preview-title= map.name
       %i= "last change #{distance_of_time_in_words(DateTime.now, map.updated_at)} ago"
       %br
