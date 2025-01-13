@@ -1,12 +1,25 @@
-.centered.container
-  .row.content-box
+- content_for :title, "Mapforge: Developer Login"
 
-    %h1 User Info
+%main#login.main
 
-    %form{method: "get", action: "/auth/developer/callback", novalidate: "noValidate"}
+  / Hero Section
+  #hero.hero.section.dark-background
+    = image_tag "frontpage/background_map4.jpg", alt: "", 'data-aos': "zoom-out", 'data-aos-duration': "1000"
+    .container
+      .row
+        .col-xl-5
 
-      %label{for: "name"} Name:
-      %input{type: "text", id: "name", name: "name"}
-      %label{for: "email"} Email:
-      %input{type: "text", id: "email", name: "email"}
-      %button{type: "submit"} Sign In
+          %h1.mb-4 User Info
+          %p
+            This will create & sign in a local development user.
+            - if User.count == 0
+              Because this is the first user, it will be the admin.
+
+          = form_tag('/auth/developer/callback', class: "developer-form", method: 'get', novalidate: "noValidate") do
+            .mb-3
+              %label.fw-bold.form-label{for: "name"} Name:
+              %input.form-control{type: "text", id: "name", name: "name"}
+            .mb-3
+              %label.fw-bold.form-label{for: "email"} Email:
+              %input.form-control{type: "text", id: "email", name: "email"}
+            %button.form-control.btn.w-100.btn-secondary.btn-login{type: "submit"} Sign In

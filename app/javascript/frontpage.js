@@ -1,9 +1,4 @@
 // loaded in /frontpage/index.html.haml
-import AOS from 'aos'
-
-// for debugging
-window.AOS = AOS;
-
 ['turbo:load'].forEach(function (e) {
   window.addEventListener(e, function () {
     if (document.getElementById('frontpage')) {
@@ -23,16 +18,7 @@ function unload () {
 }
 
 function init () {
-  aosInit()
   // initSwiper()
-}
-
-function aosInit () {
-  AOS.init({
-    duration: 600,
-    easing: 'ease-in-out',
-    once: true
-  })
 }
 
 // function initSwiper () {
