@@ -29,7 +29,7 @@ pin_all_from "vendor/javascript/mapbox-gl-draw-paint-mode",
   under: "mapbox-gl-draw-paint-mode", preload: false
 
 # https://github.com/maplibre/maplibre-gl-js
-pin "maplibre-gl" # @5.0.0
+pin "maplibre-gl" # @5.0.1
 # https://github.com/maplibre/maplibre-gl-geocoder
 pin "maplibre-gl-geocoder", to: "https://ga.jspm.io/npm:@maplibre/maplibre-gl-geocoder@1.7.1/dist/maplibre-gl-geocoder.mjs"
 
