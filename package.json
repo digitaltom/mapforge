@@ -6,7 +6,7 @@
     "lint:css": "stylelint 'app/assets/stylesheets/**/*.css'"
   },
   "devDependencies": {
-    "eslint": "^8.57.0",
+    "eslint": "^9.18.0",
     "eslint-config-standard": "^17.1.0",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-n": "^16.6.2",
