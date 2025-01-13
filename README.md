@@ -61,9 +61,9 @@ There are also examples for using maptiler vector maps with custom styles, for e
 
   More geojson example files at: https://exploratory.io/map
 
-* Take screenshots of existing maps for preview:
+* Take screenshots of updated maps for preview:
 
-  `bin/rake maps:screenshots[<changed_since_hours>]` (use MAPFORGE_HOST to set the host)
+  `bin/rake maps:screenshots` (use MAPFORGE_HOST to set the host)
 
 * Animate a marker along a line: `bin/rake animation:path[<map_id>, <line_id>, <point_id>]`
 

@@ -6,7 +6,7 @@ describe 'Map public view' do
 
   before do
     visit path
-    expect(page).to have_css('#maplibre-map[data-loaded="true"]')
+    expect(page).to have_css('#maplibre-map[map-loaded="true"]')
   end
 
   context 'with initial map rendering' do

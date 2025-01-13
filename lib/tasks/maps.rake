@@ -3,12 +3,16 @@ require "selenium-webdriver"
 require_relative "../../spec/support/capybara.rb"
 
 namespace :maps do
-  desc "Take preview screenshots of maps (changed last 24h by default)"
-  task :screenshots, %i[hours] => :environment do |_, args|
+  desc "Take preview screenshots of updated maps"
+  task screenshots: :environment do |_, args|
     base_url = ENV.fetch("MAPFORGE_HOST", "http://localhost:3000") + "/m/"
-    timeframe = args.hours ? args.hours.to_i.hours.ago : 5.years.ago
-    Map.where(:updated_at.gte => timeframe).each do |map|
+
+    Map.each do |map|
       begin
+        last_update = File.mtime(map.screenshot_file) if File.exist?(map.screenshot_file)
+        next if File.exist?(map.screenshot_file) && map.updated_at < last_update
+        puts "Map #{map.public_id} updated #{map.updated_at}, last screenshot from #{last_update || 'n/a'}"
+
         # https://github.com/YusukeIwaki/puppeteer-ruby
         Puppeteer.launch(headless: true, ignore_https_errors: true) do |browser|
           context = browser.create_incognito_browser_context
@@ -34,12 +38,11 @@ namespace :maps do
           page.viewport = Puppeteer::Viewport.new(width: 800, height: 600)
           puts "Loading #{map_url}"
           page.goto(map_url, wait_until: "networkidle0")
-          page.wait_for_selector("#maplibre-map[data-loaded='true']", timeout: 30000)
+          page.wait_for_selector("#maplibre-map[map-loaded='true']", timeout: 30000)
 
           unless failure
-            path = "public/previews/#{map.public_id}.png"
-            page.screenshot(path: Rails.root.join(path).to_s)
-            puts "Stored #{path}"
+            page.screenshot(path: map.screenshot_file)
+            puts "Updated #{map.screenshot_file}"
           end
          browser.close
         end

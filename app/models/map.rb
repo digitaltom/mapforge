@@ -32,6 +32,7 @@ class Map
   DEFAULT_TERRAIN = false
 
   after_save :broadcast_update
+  after_destroy :delete_screenshot
   # broadcast updates when the layer changed because of default_center + default_zoom
   after_touch :broadcast_update, unless: proc { |record| record.center && record.zoom }
   before_create :create_public_id, :create_layer
@@ -89,6 +90,8 @@ class Map
   end
 
   def public_id_must_be_unique
+    # public id must not contain '/'
+    errors.add(:public_id, "invalid public id") if public_id =~ /\//
     if Map.where(public_id: public_id).where.not(id: id).exists?
       errors.add(:public_id, "has already been taken")
     end
@@ -111,9 +114,12 @@ collection_format: collection_format))
   end
 
   def screenshot
-    "/previews/#{public_id}.png" if File.exist?(Rails.root.join("public/previews/#{public_id}.png"))
+    "/previews/#{safe_public_id}.png" if File.exist?(screenshot_file)
   end
 
+  def screenshot_file
+    Rails.root.join("public/previews/#{safe_public_id}.png").to_s
+  end
 
   private
 
@@ -179,5 +185,13 @@ collection_format: collection_format))
       ActionCable.server.broadcast("map_channel_#{id}",
                                    { event: "update_map", map: properties.as_json })
     end
+  end
+
+  def delete_screenshot
+    File.delete(screenshot_file) if File.exist?(screenshot_file)
+  end
+
+  def safe_public_id
+    public_id.gsub(/\/|\.\./, "_")
   end
 end

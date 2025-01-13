@@ -100,7 +100,7 @@ export function initializeMap (divId = 'maplibre-map') {
     // on first map load, re-sort layers late, when all map,
     // view + edit layers are added
     sortLayers()
-    functions.e('.map', e => { e.setAttribute('data-loaded', true) })
+    functions.e('.map', e => { e.setAttribute('map-loaded', true) })
     console.log('Map loaded')
   })
 

@@ -2,8 +2,8 @@
   - @maps.each do |map|
     %div.flex-item.map-preview{id: dom_id(map)}
       = link_to map_path(id: map.id) do
-        - if File.exist?(Rails.root.join("public/previews/#{map.public_id}.png"))
-          %img{src: "/previews/#{map.public_id}.png", class: 'preview-image', loading: 'lazy'}
+        - if map.screenshot
+          %img{src: map.screenshot, class: 'preview-image', loading: 'lazy'}
         - else
           = image_tag "preview.png", class: 'preview-image', loading: 'lazy'
         .map-preview-title= map.name
@@ -16,8 +16,3 @@
       %br
       = button_to 'Delete', destroy_map_path(id: map.id), method: :delete, data: { turbo_method: :delete }, class: 'btn btn-secondary'
 
-%hr
-
-= link_to 'Contact', 'tom@digitalflow.de'
-
-= link_to 'Github', 'https://github.com/digitaltom/mapforge'
