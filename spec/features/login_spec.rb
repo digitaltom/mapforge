@@ -11,6 +11,7 @@ describe 'Login' do
 
   it 'login via developer provider' do
     click_button('Developer Login')
+    expect(page).to have_text("User Info")
     fill_in 'name', with: 'Test User'
     fill_in 'email', with: 'test@mapforge.org'
     click_button('Sign In')

@@ -4,6 +4,7 @@ Rails.application.routes.draw do
 
   # login routes
   get "auth/:provider/callback", to: "sessions#create"
+  get "auth/developer/login", to: "sessions#new"
   post "auth/developer/login", to: "sessions#developer" if Rails.env.local?
   get "/login", to: "sessions#new"
   get "/logout", to: "sessions#logout"

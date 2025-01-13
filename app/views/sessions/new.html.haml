@@ -1,25 +1,34 @@
-.centered.container
-  .row.content-box
+- content_for :title, "Mapforge: Login"
 
-    %h2 Log in
+%main#login.main
 
-    %p
-      You can log in with the following providers to Mapforge:
+  / Hero Section
+  #hero.hero.section.dark-background
+    = image_tag "frontpage/background_map4.jpg", alt: "", 'data-aos': "zoom-out", 'data-aos-once': "true"
+    .container
+      .row
+        .col-xl-5
 
-    - if ENV["GITHUB_CLIENT_ID"] && ENV["GITHUB_CLIENT_SECRET"]
-      = form_tag('/auth/github', method: 'post', data: {turbo: false}) do
-        = button_tag class: 'btn w-50 btn-outline-secondary btn-social btn-github mb-2' do
-          %i.bi.bi-github.me-1
-          Login with Github
+          %h1.mb-4 Log in
+          %p.mb-3
+            When logged in, you can manage your maps.
+            %br
+            You can log in with the following providers:
 
-    - if ENV["GOOGLE_CLIENT_ID"] && ENV["GOOGLE_CLIENT_SECRET"]
-      = form_tag('/auth/google_oauth2', method: 'post', data: {turbo: false}) do
-        = button_tag class: 'btn w-50 btn-outline-secondary btn-social btn-google mb-2' do
-          %i.bi.bi-google.me-1
-          Login with Google
+          - if ENV["GITHUB_CLIENT_ID"] && ENV["GITHUB_CLIENT_SECRET"]
+            = form_tag('/auth/github', method: 'post', data: {turbo: false}) do
+              = button_tag class: 'btn w-100 btn-secondary btn-login btn-social btn-github mb-2' do
+                %i.bi.bi-github.me-1
+                Login with Github
 
-    - if Rails.env.local?
-      = form_tag('/auth/developer/login', method: 'post', data: {turbo: false}) do
-        = button_tag class: 'btn w-50 btn-outline-secondary btn-social btn-developer mb-2' do
-          %i.bi.bi-tools.me-1
-          Developer Login
+          - if ENV["GOOGLE_CLIENT_ID"] && ENV["GOOGLE_CLIENT_SECRET"]
+            = form_tag('/auth/google_oauth2', method: 'post', data: {turbo: false}) do
+              = button_tag class: 'btn w-100 btn-secondary btn-login btn-social btn-google mb-2' do
+                %i.bi.bi-google.me-1
+                Login with Google
+
+          - if Rails.env.local?
+            = form_tag('/auth/developer/login', method: 'post', data: {turbo: false}) do
+              = button_tag class: 'btn w-100 btn-secondary btn-login btn-social btn-developer mb-2' do
+                %i.bi.bi-tools.me-1
+                Developer Login
