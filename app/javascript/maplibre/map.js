@@ -100,6 +100,14 @@ export function initializeMap (divId = 'maplibre-map') {
     // on first map load, re-sort layers late, when all map,
     // view + edit layers are added
     sortLayers()
+
+    // re-trigger map fade-in
+    functions.e('.map', e => { e.classList.remove('aos-animate')})
+    functions.e('.maplibregl-ctrl:has(button.mapbox-gl-draw_line)', e => { e.classList.remove('aos-animate')})
+    functions.e('.map', e => { e.classList.remove('hidden')})
+    AOS.refresh()
+
+    functions.e('#preloader', e => { e.classList.add('hidden')})
     functions.e('.map', e => { e.setAttribute('map-loaded', true) })
     console.log('Map loaded')
   })

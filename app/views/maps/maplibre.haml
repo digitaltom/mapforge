@@ -15,11 +15,13 @@
   - if @map.screenshot
     %meta{ 'og:image': "#{request.protocol}#{request.host_with_port}#{@map.screenshot}" }
 
+#preloader
+
 #map-head.dark-shadow{ 'data-controller': "map", 'data-aos': "zoom-out-down", "data-aos-delay": "1000", 'data-action': "click->map#toggleNavigation" }
   %i#map-nav-toggle.bi.bi-caret-down.me-2
   #map-title
 
-#maplibre-map.map{ 'data-aos': "fade-in", "data-aos-delay": "250" }
+#maplibre-map.map.hidden{ 'data-aos': "fade-in", "data-aos-delay": "250" }
 
 - unless @map_mode == 'static'
   = render 'status'
