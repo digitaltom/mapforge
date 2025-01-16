@@ -15,6 +15,5 @@ window.AOS = AOS
 AOS.init({
   duration: 600,
   easing: 'ease-in-out',
-  once: true,
-  disable: 'phone'
+  once: true
 })
