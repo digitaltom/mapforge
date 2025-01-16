@@ -76,17 +76,25 @@ html:has(.map), body:has(.map) {
   transition: all 0.6s ease-out;
 }
 
-#preloader:before {
+#preloader::before {
   content: "";
   position: fixed;
   top: calc(50% - 30px);
   left: calc(50% - 30px);
-  border: 6px solid var(--accent-color);
-  border-top-color: color-mix(in srgb, var(--accent-color), transparent 90%);
+  border: 6px solid var(--color-mid-ecru);
+  border-top-color: color-mix(in srgb, var(--color-mid-ecru), transparent 90%);
   border-radius: 50%;
   width: 60px;
   height: 60px;
   animation: animate-preloader 1s linear infinite;
+}
+
+#preloader img {
+  position: fixed;
+  top: calc(50% - 20px);
+  left: calc(50% - 28px);
+  width: 53px;
+  height: 35px;
 }
 
 @keyframes animate-preloader {
