@@ -11,8 +11,10 @@ import AOS from 'aos'
 // for debugging
 window.AOS = AOS
 
+// https://github.com/michalsnik/aos
 AOS.init({
   duration: 600,
   easing: 'ease-in-out',
-  once: true
+  once: true,
+  disable: 'phone'
 })

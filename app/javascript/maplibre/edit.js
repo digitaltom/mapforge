@@ -11,6 +11,7 @@ import * as functions from 'helpers/functions'
 import equal from 'fast-deep-equal' // https://github.com/epoberezkin/fast-deep-equal
 import MapboxDraw from '@mapbox/mapbox-gl-draw'
 import PaintMode from 'mapbox-gl-draw-paint-mode'
+import { animateElement } from 'helpers/dom'
 
 export let draw
 export let selectedFeature
@@ -54,16 +55,7 @@ export function initializeEditMode () {
   })
 
   initializeDefaultControls()
-  map.addControl(draw, 'top-left')
-  addPaintButton()
-  document.querySelector('.maplibregl-ctrl:has(button.mapbox-gl-draw_line)').setAttribute('data-aos', 'fade-right')
-
-  const controlGroup = new ControlGroup(
-    [new MapSettingsControl(),
-      new MapLayersControl(),
-      new MapShareControl()])
-  map.addControl(controlGroup, 'top-left')
-  document.querySelector('.maplibregl-ctrl:has(button.maplibregl-ctrl-map)').setAttribute('data-aos', 'fade-right')
+  initializeEditControls()
 
   map.on('geojson.load', function (e) {
     initializeEditStyles()
@@ -125,6 +117,24 @@ export function initializeEditMode () {
   })
 
   document.querySelector('#edit-buttons').classList.remove('hidden')
+}
+
+function initializeEditControls () {
+  map.addControl(draw, 'top-left')
+  addPaintButton()
+  document.querySelector('.maplibregl-ctrl:has(button.mapbox-gl-draw_line)').classList.add('hidden')
+
+  const controlGroup = new ControlGroup(
+    [new MapSettingsControl(),
+      new MapLayersControl(),
+      new MapShareControl()])
+  map.addControl(controlGroup, 'top-left')
+  document.querySelector('.maplibregl-ctrl:has(button.maplibregl-ctrl-map)').classList.add('hidden')
+
+  map.once('load', function (e) {
+    animateElement('.maplibregl-ctrl:has(button.mapbox-gl-draw_line)', 'fade-right', 500)
+    animateElement('.maplibregl-ctrl:has(button.maplibregl-ctrl-map)', 'fade-right', 500)
+  })
 }
 
 // switching directly from 'simple_select' to 'direct_select',

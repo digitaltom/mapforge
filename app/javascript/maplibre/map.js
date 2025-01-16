@@ -9,6 +9,7 @@ import { status } from 'helpers/status'
 import equal from 'fast-deep-equal' // https://github.com/epoberezkin/fast-deep-equal
 import maplibregl from 'maplibre-gl'
 import MaplibreGeocoder from 'maplibre-gl-geocoder'
+import { animateElement } from 'helpers/dom'
 
 export let map
 export let geojsonData //= { type: 'FeatureCollection', features: [] }
@@ -100,6 +101,9 @@ export function initializeMap (divId = 'maplibre-map') {
     // on first map load, re-sort layers late, when all map,
     // view + edit layers are added
     sortLayers()
+    // trigger map fade-in
+    animateElement('.map', 'fade-in', 250)
+    functions.e('#preloader', e => { e.classList.add('hidden') })
     functions.e('.map', e => { e.setAttribute('map-loaded', true) })
     console.log('Map loaded')
   })
@@ -200,7 +204,7 @@ export function initializeDefaultControls () {
       maplibregl
     }), 'top-right'
   )
-  document.querySelector('.maplibregl-ctrl-geocoder').setAttribute('data-aos', 'fade-left')
+  document.querySelector('.maplibregl-ctrl-geocoder').classList.add('hidden')
 
   const nav = new maplibregl.NavigationControl({
     visualizePitch: true,
@@ -208,7 +212,7 @@ export function initializeDefaultControls () {
     showCompass: true
   })
   map.addControl(nav)
-  document.querySelector('.maplibregl-ctrl:has(button.maplibregl-ctrl-zoom-in)').setAttribute('data-aos', 'fade-left')
+  document.querySelector('.maplibregl-ctrl:has(button.maplibregl-ctrl-zoom-in)').classList.add('hidden')
 
   // https://maplibre.org/maplibre-gl-js/docs/API/classes/GeolocateControl
   // Note: This might work only via https
@@ -222,7 +226,7 @@ export function initializeDefaultControls () {
     status('Error detecting location', 'warning')
   })
   map.addControl(geolocate, 'top-right')
-  document.querySelector('.maplibregl-ctrl:has(button.maplibregl-ctrl-geolocate)').setAttribute('data-aos', 'fade-left')
+  document.querySelector('.maplibregl-ctrl:has(button.maplibregl-ctrl-geolocate)').classList.add('hidden')
 
   const scale = new maplibregl.ScaleControl({
     maxWidth: 100,
@@ -230,6 +234,12 @@ export function initializeDefaultControls () {
   })
   map.addControl(scale)
   scale.setUnit('metric')
+
+  map.once('load', function (e) {
+    animateElement('.maplibregl-ctrl-geocoder', 'fade-left', 500)
+    animateElement('.maplibregl-ctrl:has(button.maplibregl-ctrl-zoom-in)', 'fade-left', 500)
+    animateElement('.maplibregl-ctrl:has(button.maplibregl-ctrl-geolocate)', 'fade-left', 500)
+  })
 }
 
 export function initializeStaticMode () {

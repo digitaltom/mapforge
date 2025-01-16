@@ -32,6 +32,7 @@
   --color-mid-steel-blue: #4D7A9C;
   --text-color: var(--color-dark-smoky-black);
   --hover-color: var(--color-dark-charcoal);
+  --accent-color: var(--color-mid-chili);
   --bs-btn-border-radius: 0px;
   --bs-border-radius: 0px;
 }
@@ -71,6 +72,7 @@ a:hover, .link:hover {
 }
 
 .hidden {
+  opacity: 0;
   display: none !important;
 }
 
