@@ -5,6 +5,6 @@
   %body
 
     #map-header
-      = render 'shared/header', menu: true, create_button: false, static: false
+      = render 'shared/header', menu: true, create_button: !!@user, static: false
 
     = yield

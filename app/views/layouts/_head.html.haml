@@ -1,7 +1,9 @@
 %head
   %title= content_for?(:title) ? yield(:title) : "Mapforge: Create and share individual maps"
   %meta{ charset: "UTF-8"}
-  %meta{ content: 'width=device-width, height=device-height, initial-scale=1', name: 'viewport' }
+  %meta{ name: 'viewport', content: 'width=device-width, height=device-height, initial-scale=1' }
+  %meta{ name: 'view-transition', content: 'same-origin' }
+
   %meta{ name: 'turbo-prefetch', content: 'false' }
   %meta{ name: 'apple-mobile-web-app-capable', content: 'yes' }
 

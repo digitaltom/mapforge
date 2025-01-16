@@ -47,6 +47,11 @@ body {
   color: var(--text-color);
 }
 
+/* View transition */
+::view-transition-old(root), ::view-transition-new(root) {
+  animation-duration: 0.5s;
+}
+
 a, .link {
   color: var(--text-color);
   cursor: pointer;

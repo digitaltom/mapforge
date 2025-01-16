@@ -17,7 +17,7 @@ html:has(.map), body:has(.map) {
   left: 50%;
   transform: translateX(-50%);
   overflow: hidden;
-  font-size: 1.2em;
+  font-size: 1.5em;
   cursor: pointer;
 }
 
