@@ -78,7 +78,7 @@
 
 
 .maplibregl-ctrl-top-left {
-  top: 2.4em !important;
+  top: 2.4em;
 }
 
 /* fix for https://github.com/maplibre/maplibre-gl-js/issues/5284 */

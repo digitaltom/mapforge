@@ -29,6 +29,7 @@ export function hideElements (selectors) {
   })
 }
 
+// available animations: http://michalsnik.github.io/aos/
 export function animateElement (selector, effect = 'fade-in', delay = 0) {
   functions.e(selector, e => {
     e.classList.remove('aos-animate')
