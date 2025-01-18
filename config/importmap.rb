@@ -32,6 +32,7 @@ pin_all_from "vendor/javascript/mapbox-gl-draw-paint-mode",
 pin "maplibre-gl" # @5.0.1
 # https://github.com/maplibre/maplibre-gl-geocoder
 pin "maplibre-gl-geocoder", to: "https://ga.jspm.io/npm:@maplibre/maplibre-gl-geocoder@1.7.1/dist/maplibre-gl-geocoder.mjs"
+pin "openrouteservice-js", preload: false # @0.4.1
 
 # render markdown
 pin "marked", to: "https://ga.jspm.io/npm:marked@15.0.6/lib/marked.esm.js"
@@ -46,4 +47,4 @@ pin "nanoid/non-secure", to: "nanoid--non-secure.js", preload: false # @5.0.9
 pin "wgs84", preload: false # @0.0.0
 
 # Animations for frontpage: https://github.com/michalsnik/aos
-pin "aos", preload: false # @2.3.4
+pin "aos" # @2.3.4
