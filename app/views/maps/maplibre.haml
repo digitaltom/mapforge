@@ -18,7 +18,7 @@
 #preloader
   %img.mapforge-logo{ src: "/icons/mapforge-logo-header_white.png", alt: "Logo" }
 
-#map-head.dark-shadow{ 'data-controller': "map", 'data-aos': "zoom-out-down", "data-aos-delay": "1000", 'data-action': "click->map#toggleNavigation" }
+#map-head.dark-shadow{ title: "Toggle Navigation", data: { 'controller': "map", 'aos': "zoom-out-down", "aos-delay": "500", 'action': "click->map#toggleNavigation", 'toggle': "tooltip", 'placement': "bottom" } }
   %i#map-nav-toggle.bi.bi-caret-down.me-2
   #map-title
 
