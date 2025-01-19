@@ -103,7 +103,11 @@ export function initializeMap (divId = 'maplibre-map') {
     sortLayers()
     // trigger map fade-in
     animateElement('.map', 'fade-in', 250)
-    functions.e('.maplibregl-ctrl button', e => { e.setAttribute('data-toggle', 'tooltip') })
+    functions.e('.maplibregl-ctrl button', e => {
+      e.setAttribute('data-toggle', 'tooltip')
+      e.setAttribute('data-bs-custom-class', 'maplibregl-ctrl-tooltip')
+      e.setAttribute('data-bs-trigger', 'hover')
+    })
     initTooltips()
     functions.e('#preloader', e => { e.classList.add('hidden') })
     functions.e('.map', e => { e.setAttribute('map-loaded', true) })

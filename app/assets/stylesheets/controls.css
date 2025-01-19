@@ -76,6 +76,9 @@
   margin-right: 0.5em;
 }
 
+.maplibregl-ctrl-geocoder--result div { /* stylelint-disable-line */
+  width: 100%;
+}
 
 .maplibregl-ctrl-top-left {
   top: 2.4em;
@@ -86,4 +89,10 @@
   .maplibregl-ctrl button:not(:disabled):hover {
     background-color: inherit;
   }
+}
+
+.maplibregl-ctrl-tooltip {
+  --bs-tooltip-bg: var(--color-dark-charcoal);
+  --bs-tooltip-border-radius: 2px;
+  --bs-tooltip-opacity: 0.9;
 }

@@ -99,9 +99,3 @@ a:hover, .link:hover {
 .small {
   size: 85%;
 }
-
-.tooltip .tooltip-inner {
-  background-color: var(--color-dark-charcoal) !important;
-  border-radius: 2px;
-  opacity: 0.9;
-}

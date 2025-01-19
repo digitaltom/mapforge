@@ -18,8 +18,8 @@
 #preloader
   %img.mapforge-logo{ src: "/icons/mapforge-logo-header_white.png", alt: "Logo" }
 
-#map-head.dark-shadow{ title: "Toggle Navigation", data: { 'controller': "map", 'aos': "zoom-out-down", "aos-delay": "500", 'action': "click->map#toggleNavigation", 'toggle': "tooltip", 'placement': "bottom" } }
-  %i#map-nav-toggle.bi.bi-caret-down.me-2
+#map-head.dark-shadow{ title: "Toggle Navigation", data: { 'controller': "map", 'action': "click->map#toggleNavigation", 'toggle': "tooltip", 'bs-placement': "bottom", 'bs-custom-class': 'maplibregl-ctrl-tooltip' } }
+  %i#map-nav-toggle.bi.bi-caret-down.ms-2.me-2
   #map-title
 
 #maplibre-map.map.hidden
