@@ -12,10 +12,13 @@ import equal from 'fast-deep-equal' // https://github.com/epoberezkin/fast-deep-
 import MapboxDraw from '@mapbox/mapbox-gl-draw'
 import PaintMode from 'mapbox-gl-draw-paint-mode'
 import { animateElement } from 'helpers/dom'
+import Openrouteservice from 'openrouteservice-js'
+import { decodePolyline } from 'helpers/polyline'
 
 export let draw
 export let selectedFeature
 let justCreated = false
+let lineMenu
 
 MapboxDraw.constants.classes.CONTROL_BASE = 'maplibregl-ctrl'
 MapboxDraw.constants.classes.CONTROL_PREFIX = 'maplibregl-ctrl-'
@@ -25,13 +28,16 @@ MapboxDraw.constants.classes.CONTROL_GROUP = 'maplibregl-ctrl-group'
 export function initializeEditMode () {
   console.log('Initializing MapboxDraw')
 
-  // Patching direct select mode to not allw dragging features
+  // Patching direct select mode to not allow dragging features
   // similar to https://github.com/zakjan/mapbox-gl-draw-waypoint
   const DirectSelectMode = { ...MapboxDraw.modes.direct_select }
   DirectSelectMode.dragFeature = function (state, e, delta) { /* noop */ }
 
+  const RoadMode = { ...MapboxDraw.modes.draw_line_string }
+
   const modes = {
     ...MapboxDraw.modes,
+    road: RoadMode,
     direct_select: DirectSelectMode,
     draw_paint_mode: PaintMode
   }
@@ -72,11 +78,16 @@ export function initializeEditMode () {
     functions.e('.mapbox-gl-draw_paint', e => { e.classList.remove('active') })
     if (draw.getMode() === 'draw_paint_mode') {
       functions.e('.mapbox-gl-draw_paint', e => { e.classList.add('active') })
+      functions.e('.ctrl-line-menu', e => { e.classList.remove('hidden') })
+    } else if (draw.getMode() === 'road') {
+      functions.e('.mapbox-gl-draw_road', e => { e.classList.add('active') })
+      functions.e('.ctrl-line-menu', e => { e.classList.remove('hidden') })
     } else if (draw.getMode() === 'draw_point') {
       status('Point Mode: Click on the map to place a marker', 'info', 'medium', 8000)
     } else if (draw.getMode() === 'draw_polygon') {
       status('Polygon Mode: Click on the map to draw a polygon', 'info', 'medium', 8000)
     } else if (draw.getMode() === 'draw_line_string') {
+      functions.e('.ctrl-line-menu', e => { e.classList.remove('hidden') })
       status('Line Mode: Click on the map to draw a line', 'info', 'medium', 8000)
     }
     console.log('draw mode: ' + draw.getMode())
@@ -121,18 +132,20 @@ export function initializeEditMode () {
 
 function initializeEditControls () {
   map.addControl(draw, 'top-left')
-  addPaintButton()
-  document.querySelector('.maplibregl-ctrl:has(button.mapbox-gl-draw_line)').classList.add('hidden')
+  addLineMenu()
+  document.querySelector('button.mapbox-gl-draw_polygon').setAttribute('title', 'Draw polygon')
+  document.querySelector('button.mapbox-gl-draw_point').setAttribute('title', 'Draw point')
+  document.querySelector('.maplibregl-ctrl:has(button.ctrl-line-menu-btn)').classList.add('hidden') // hide for aos animation
 
   const controlGroup = new ControlGroup(
     [new MapSettingsControl(),
       new MapLayersControl(),
       new MapShareControl()])
   map.addControl(controlGroup, 'top-left')
-  document.querySelector('.maplibregl-ctrl:has(button.maplibregl-ctrl-map)').classList.add('hidden')
+  document.querySelector('.maplibregl-ctrl:has(button.maplibregl-ctrl-map)').classList.add('hidden') // hide for aos animation
 
   map.once('load', function (e) {
-    animateElement('.maplibregl-ctrl:has(button.mapbox-gl-draw_line)', 'fade-right', 500)
+    animateElement('.maplibregl-ctrl:has(button.ctrl-line-menu-btn)', 'fade-right', 500)
     animateElement('.maplibregl-ctrl:has(button.maplibregl-ctrl-map)', 'fade-right', 500)
   })
 }
@@ -147,26 +160,64 @@ function select (feature) {
   }
 }
 
-function handleCreate (e) {
+async function handleCreate (e) {
   let feature = e.features[0] // Assuming one feature is created at a time
-
-  // simplify hand-drawing
-  if (draw.getMode() === 'draw_paint_mode') {
-    const options = { tolerance: 0.00001, highQuality: true }
-    feature = window.turf.simplify(feature, options)
-  }
-
-  status('Feature ' + feature.id + ' created')
-  geojsonData.features.push(feature)
-  mapChannel.send_message('new_feature', feature)
+  const mode = draw.getMode()
 
   // Prevent automatic selection + stay in create mode
   justCreated = true
-  const mode = draw.getMode()
   setTimeout(() => {
     draw.changeMode(mode)
     map.fire('draw.modechange') // not fired automatically with draw.changeMode()
   }, 10)
+
+  // simplify hand-drawing
+  if (mode === 'draw_paint_mode') {
+    const options = { tolerance: 0.00001, highQuality: true }
+    feature = window.turf.simplify(feature, options)
+  } else if (mode === 'road') {
+    // const Snap = new Openrouteservice.Snap({ api_key: window.gon.map_keys.openrouteservice })
+    const orsDirections = new Openrouteservice.Directions({ api_key: window.gon.map_keys.openrouteservice })
+
+    try {
+      // let response = await Snap.calculate({
+      //   locations: feature.geometry.coordinates,
+      //   radius: 300,
+      //   profile: 'driving-car',
+      //   format: 'json'
+      // })
+
+      const response = await orsDirections.calculate({
+        coordinates: feature.geometry.coordinates,
+        profile: 'driving-hgv'
+      })
+
+      // Add your own result handling here
+      console.log('response: ', response.routes[0])
+
+      // polyline.setCompressionAlgorithm(polyline.Polyline5)
+      const locationValues = decodePolyline(
+        response.routes[0].geometry
+      )
+
+      // const locationValues = response.locations.map(item => item.location)
+      console.log('locationValues: ', locationValues)
+      feature.geometry.coordinates = locationValues
+      // response
+      // console.log("response: ", response)
+      status('Feature ' + feature.id + ' created')
+      geojsonData.features.push(feature)
+      mapChannel.send_message('new_feature', feature)
+      redrawGeojson(false)
+    } catch (err) {
+      console.log('An error occurred: ' + err)
+      // console.error(await err.response.json())
+    }
+  } else {
+    status('Feature ' + feature.id + ' created')
+    geojsonData.features.push(feature)
+    mapChannel.send_message('new_feature', feature)
+  }
 }
 
 function handleUpdate (e) {
@@ -209,10 +260,38 @@ export function enableEditControls () {
   functions.e('#save-map-defaults', e => { e.disabled = false })
 }
 
-function addPaintButton () {
+function addLineMenu () {
   const originalButton = document.querySelector('.mapbox-gl-draw_line')
+  originalButton.title = 'Draw line'
+  lineMenu = document.createElement('div')
+  document.querySelector('.maplibregl-ctrl-top-left').appendChild(lineMenu)
+  lineMenu.classList.add('maplibregl-ctrl-group')
+  lineMenu.classList.add('maplibregl-ctrl')
+  lineMenu.classList.add('ctrl-line-menu')
+  lineMenu.classList.add('hidden')
+
+  const lineMenuButton = originalButton.cloneNode(true)
+  lineMenuButton.title = 'Select line draw mode'
+  lineMenuButton.classList.add('ctrl-line-menu-btn')
+  lineMenuButton.removeEventListener('click', null)
+  lineMenuButton.addEventListener('click', (e) => {
+    if (lineMenu.classList.contains('hidden')) {
+      lineMenu.classList.remove('hidden')
+    } else {
+      resetControls()
+    }
+  })
+  const parentElement = originalButton.parentElement
+  parentElement.insertBefore(lineMenuButton, originalButton.nextSibling)
+  lineMenu.appendChild(originalButton)
+  addPaintButton()
+  addRoadButton()
+}
+
+function addPaintButton () {
+  const originalButton = document.querySelector('.ctrl-line-menu .mapbox-gl-draw_line')
   const paintButton = originalButton.cloneNode(true)
-  paintButton.title = 'Freehand draw'
+  paintButton.title = 'Draw freehand'
   paintButton.classList.remove('mapbox-gl-draw_line')
   paintButton.classList.add('mapbox-gl-draw_paint')
   const icon = document.createElement('i')
@@ -230,6 +309,29 @@ function addPaintButton () {
     }
     map.fire('draw.modechange')
   })
-  const parentElement = originalButton.parentElement
-  parentElement.insertBefore(paintButton, originalButton.nextSibling)
+  lineMenu.appendChild(paintButton)
+}
+
+function addRoadButton () {
+  const originalButton = document.querySelector('.ctrl-line-menu .mapbox-gl-draw_line')
+  const paintButton = originalButton.cloneNode(true)
+  paintButton.title = 'Draw line along road'
+  paintButton.classList.remove('mapbox-gl-draw_line')
+  paintButton.classList.add('mapbox-gl-draw_road')
+  const icon = document.createElement('i')
+  icon.classList.add('bi')
+  icon.classList.add('bi-car-front-fill')
+  paintButton.appendChild(icon)
+  paintButton.removeEventListener('click', null)
+  paintButton.addEventListener('click', (e) => {
+    if (draw.getMode() === 'road') {
+      draw.changeMode('simple_select')
+    } else {
+      draw.changeMode('road')
+      status('Road Mode: Click on the map to start drawing, double click to finish',
+        'info', 'medium', 8000)
+    }
+    map.fire('draw.modechange')
+  })
+  lineMenu.appendChild(paintButton)
 }

@@ -2,6 +2,7 @@ import { map, mapProperties, geojsonData } from 'maplibre/map'
 import * as functions from 'helpers/functions'
 import { draw } from 'maplibre/edit'
 import { resetHighlightedFeature } from 'maplibre/feature'
+import { initTooltips } from 'helpers/dom'
 
 export class ControlGroup {
   constructor (controls) {
@@ -167,6 +168,7 @@ export function resetControls () {
   functions.e('.maplibregl-canvas', e => { e.classList.remove('cursor-crosshair') })
   // reset ctrl buttons
   functions.e('.maplibregl-ctrl-btn', e => { e.classList.remove('active') })
+  functions.e('.ctrl-line-menu', e => { e.classList.add('hidden') })
 
   // reset active modals
   functions.e('.map-modal', e => { e.classList.remove('show') })
@@ -212,4 +214,13 @@ export const geocoderConfig = {
       features
     }
   }
+}
+
+export function initCtrlTooltips () {
+  functions.e('.maplibregl-ctrl button', e => {
+    e.setAttribute('data-toggle', 'tooltip')
+    e.setAttribute('data-bs-custom-class', 'maplibregl-ctrl-tooltip')
+    e.setAttribute('data-bs-trigger', 'hover')
+  })
+  initTooltips()
 }

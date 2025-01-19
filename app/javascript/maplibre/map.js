@@ -1,6 +1,6 @@
 import { basemaps } from 'maplibre/basemaps'
 import { draw } from 'maplibre/edit'
-import { resetControls, initSettingsModal, geocoderConfig } from 'maplibre/controls'
+import { resetControls, initSettingsModal, geocoderConfig, initCtrlTooltips } from 'maplibre/controls'
 import { initializeViewStyles } from 'maplibre/styles'
 import { highlightFeature, resetHighlightedFeature } from 'maplibre/feature'
 import { AnimatePointAnimation } from 'maplibre/animations'
@@ -103,6 +103,7 @@ export function initializeMap (divId = 'maplibre-map') {
     sortLayers()
     // trigger map fade-in
     animateElement('.map', 'fade-in', 250)
+    initCtrlTooltips()
     functions.e('.maplibregl-ctrl button', e => {
       e.setAttribute('data-toggle', 'tooltip')
       e.setAttribute('data-bs-custom-class', 'maplibregl-ctrl-tooltip')

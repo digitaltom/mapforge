@@ -12,6 +12,10 @@
   color: #404040;
 }
 
+.maplibregl-ctrl-group:not(:empty) {
+  box-shadow: 0 0 0 2px rgb(0 0 0 / 10%);
+}
+
 .mapbox-gl-draw_ctrl-draw-btn { /* stylelint-disable-line */
   color: #303030 !important;
   opacity: 0.75;
@@ -95,4 +99,10 @@
   --bs-tooltip-bg: var(--color-dark-charcoal);
   --bs-tooltip-border-radius: 2px;
   --bs-tooltip-opacity: 0.9;
+}
+
+.ctrl-line-menu {
+  position: absolute;
+  left: 2.6em;
+  top: 0;
 }
