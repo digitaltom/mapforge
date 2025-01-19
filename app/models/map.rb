@@ -56,7 +56,8 @@ class Map
 
   def self.provider_keys
     { mapbox: ENV["MAPBOX_KEY"],
-      maptiler: ENV["MAPTILER_KEY"] }
+      maptiler: ENV["MAPTILER_KEY"],
+      openrouteservice: ENV["OPENROUTESERVICE_KEY"] }
   end
 
   def create_public_id

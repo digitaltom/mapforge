@@ -39,3 +39,12 @@ export function animateElement (selector, effect = 'fade-in', delay = 0) {
     window.AOS.refreshHard()
   })
 }
+
+// initialize bs5 tooltips
+export function initTooltips () {
+  if (!functions.isTouchDevice()) {
+    document.querySelectorAll('[data-toggle="tooltip"]').forEach(element => {
+      return new window.bootstrap.Tooltip(element)
+    })
+  }
+}

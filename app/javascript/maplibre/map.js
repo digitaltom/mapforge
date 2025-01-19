@@ -9,7 +9,7 @@ import { status } from 'helpers/status'
 import equal from 'fast-deep-equal' // https://github.com/epoberezkin/fast-deep-equal
 import maplibregl from 'maplibre-gl'
 import MaplibreGeocoder from 'maplibre-gl-geocoder'
-import { animateElement } from 'helpers/dom'
+import { animateElement, initTooltips } from 'helpers/dom'
 
 export let map
 export let geojsonData //= { type: 'FeatureCollection', features: [] }
@@ -103,6 +103,8 @@ export function initializeMap (divId = 'maplibre-map') {
     sortLayers()
     // trigger map fade-in
     animateElement('.map', 'fade-in', 250)
+    functions.e('.maplibregl-ctrl button', e => { e.setAttribute('data-toggle', 'tooltip') })
+    initTooltips()
     functions.e('#preloader', e => { e.classList.add('hidden') })
     functions.e('.map', e => { e.setAttribute('map-loaded', true) })
     console.log('Map loaded')

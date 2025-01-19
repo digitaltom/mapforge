@@ -46,6 +46,14 @@ export function isMobileDevice () {
   return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
 }
 
+export function isTouchDevice () {
+  return ('ontouchstart' in window) ||
+         (navigator.maxTouchPoints > 0) ||
+         (navigator.msMaxTouchPoints > 0) ||
+         (window.matchMedia('(pointer: coarse)').matches) ||
+         (!!window.DocumentTouch && document instanceof window.DocumentTouch)
+}
+
 // takes a css selector and callback method
 export function e (selector, callback) {
   const elements = document.querySelectorAll(selector)
