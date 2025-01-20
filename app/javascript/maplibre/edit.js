@@ -79,10 +79,14 @@ export function initializeEditMode () {
     if (draw.getMode() === 'draw_paint_mode') {
       functions.e('.mapbox-gl-draw_paint', e => { e.classList.add('active') })
       functions.e('.ctrl-line-menu', e => { e.classList.remove('hidden') })
+      status('Paint Mode: Click on the map to start drawing, double click to finish',
+        'info', 'medium', 8000)
     } else if (draw.getMode() === 'road') {
       functions.e('.mapbox-gl-draw_road', e => { e.classList.add('active') })
       functions.e('.mapbox-gl-draw_line', e => { e.classList.remove('active') })
       functions.e('.ctrl-line-menu', e => { e.classList.remove('hidden') })
+      status('Road Mode: Click on the map to set waypoints, double click to finish',
+        'info', 'medium', 8000)
     } else if (draw.getMode() === 'draw_point') {
       status('Point Mode: Click on the map to place a marker', 'info', 'medium', 8000)
     } else if (draw.getMode() === 'draw_polygon') {
@@ -101,7 +105,7 @@ export function initializeEditMode () {
     if (!e.features?.length) { return }
     if (justCreated) { justCreated = false; return }
     selectedFeature = e.features[0]
-    if (selectedFeature) {
+    if (geojsonData.features.find(f => f.id === selectedFeature.id)) {
       console.log('selected: ' + JSON.stringify(selectedFeature))
       select(selectedFeature)
       highlightFeature(selectedFeature, true)
@@ -165,60 +169,25 @@ async function handleCreate (e) {
   let feature = e.features[0] // Assuming one feature is created at a time
   const mode = draw.getMode()
 
+  // simplify hand-drawing
+  if (mode === 'draw_paint_mode') {
+    const options = { tolerance: 0.00001, highQuality: true }
+    feature = window.turf.simplify(feature, options)
+  } else if (mode === 'road') {
+    feature = await getRouteFeature(feature, feature.geometry.coordinates, 'driving-car')
+  }
+  status('Feature ' + feature.id + ' created')
+  geojsonData.features.push(feature)
+  // redraw if the painted feature was changed in this method
+  if (mode === 'road' || mode === 'draw_paint_mode') { redrawGeojson(false) }
+  mapChannel.send_message('new_feature', feature)
+
   // Prevent automatic selection + stay in create mode
   justCreated = true
   setTimeout(() => {
     draw.changeMode(mode)
     map.fire('draw.modechange') // not fired automatically with draw.changeMode()
   }, 10)
-
-  // simplify hand-drawing
-  if (mode === 'draw_paint_mode') {
-    const options = { tolerance: 0.00001, highQuality: true }
-    feature = window.turf.simplify(feature, options)
-  } else if (mode === 'road') {
-    // const Snap = new Openrouteservice.Snap({ api_key: window.gon.map_keys.openrouteservice })
-    const orsDirections = new Openrouteservice.Directions({ api_key: window.gon.map_keys.openrouteservice })
-
-    try {
-      // let response = await Snap.calculate({
-      //   locations: feature.geometry.coordinates,
-      //   radius: 300,
-      //   profile: 'driving-car',
-      //   format: 'json'
-      // })
-
-      const response = await orsDirections.calculate({
-        coordinates: feature.geometry.coordinates,
-        profile: 'driving-hgv'
-      })
-
-      // Add your own result handling here
-      console.log('response: ', response.routes[0])
-
-      // polyline.setCompressionAlgorithm(polyline.Polyline5)
-      const locationValues = decodePolyline(
-        response.routes[0].geometry
-      )
-
-      // const locationValues = response.locations.map(item => item.location)
-      console.log('locationValues: ', locationValues)
-      feature.geometry.coordinates = locationValues
-      // response
-      // console.log("response: ", response)
-      status('Feature ' + feature.id + ' created')
-      geojsonData.features.push(feature)
-      mapChannel.send_message('new_feature', feature)
-      redrawGeojson(false)
-    } catch (err) {
-      console.log('An error occurred: ' + err)
-      // console.error(await err.response.json())
-    }
-  } else {
-    status('Feature ' + feature.id + ' created')
-    geojsonData.features.push(feature)
-    mapChannel.send_message('new_feature', feature)
-  }
 }
 
 function handleUpdate (e) {
@@ -264,7 +233,7 @@ export function enableEditControls () {
 function addLineMenu () {
   const originalButton = document.querySelector('.mapbox-gl-draw_line')
   originalButton.title = 'Draw line'
-  originalButton.setAttribute('data-bs-placement', "right")
+  originalButton.setAttribute('data-bs-placement', 'right')
   lineMenu = document.createElement('div')
   document.querySelector('.maplibregl-ctrl-top-left').appendChild(lineMenu)
   lineMenu.classList.add('maplibregl-ctrl-group')
@@ -277,8 +246,8 @@ function addLineMenu () {
   lineMenuButton.classList.add('ctrl-line-menu-btn')
   lineMenuButton.removeEventListener('click', null)
   lineMenuButton.addEventListener('click', (e) => {
+    draw.changeMode('simple_select')
     if (lineMenu.classList.contains('hidden')) {
-      draw.changeMode('simple_select')
       lineMenu.classList.remove('hidden')
     } else {
       lineMenu.classList.add('hidden')
@@ -289,7 +258,7 @@ function addLineMenu () {
   parentElement.insertBefore(lineMenuButton, originalButton.nextSibling)
   lineMenu.appendChild(originalButton)
   addPaintButton()
-  //addPaintButton2()
+  // addPaintButton2()
   if (window.gon.map_keys.openrouteservice) { addRoadButton() }
 }
 
@@ -309,8 +278,6 @@ function addPaintButton () {
       draw.changeMode('simple_select')
     } else {
       draw.changeMode('draw_paint_mode')
-      status('Paint Mode: Click on the map to start drawing, double click to finish',
-        'info', 'medium', 8000)
     }
     map.fire('draw.modechange')
   })
@@ -333,10 +300,37 @@ function addRoadButton () {
       draw.changeMode('simple_select')
     } else {
       draw.changeMode('road')
-      status('Road Mode: Click on the map to start drawing, double click to finish',
-        'info', 'medium', 8000)
     }
     map.fire('draw.modechange')
   })
   lineMenu.appendChild(roadButton)
+}
+
+async function getRouteFeature (feature, waypoints, profile) {
+  const Snap = new Openrouteservice.Snap({ api_key: window.gon.map_keys.openrouteservice })
+  const orsDirections = new Openrouteservice.Directions({ api_key: window.gon.map_keys.openrouteservice })
+
+  try {
+    const snapResponse = await Snap.calculate({
+      locations: waypoints,
+      radius: 300,
+      profile,
+      format: 'json'
+    })
+    // console.log('response: ', snapResponse)
+    const snapLocations = snapResponse.locations.map(item => item.location)
+    // console.log('snapped values: ', snapLocations)
+
+    const routeResponse = await orsDirections.calculate({
+      coordinates: snapLocations,
+      profile
+    })
+    // console.log('response: ', response.routes[0])
+    const routeLocations = decodePolyline(routeResponse.routes[0].geometry)
+    // console.log('routeLocations: ', routeLocations)
+    feature.geometry.coordinates = routeLocations
+  } catch (err) {
+    console.error('An error occurred: ' + err)
+  }
+  return feature
 }
