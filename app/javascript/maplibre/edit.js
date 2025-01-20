@@ -72,15 +72,16 @@ export function initializeEditMode () {
 
   map.on('draw.modechange', () => {
     resetControls()
+    functions.e('.ctrl-line-menu', e => { e.classList.add('hidden') })
     if (draw.getMode() !== 'simple_select') {
       functions.e('.maplibregl-canvas', e => { e.classList.add('cursor-crosshair') })
     }
-    functions.e('.mapbox-gl-draw_paint', e => { e.classList.remove('active') })
     if (draw.getMode() === 'draw_paint_mode') {
       functions.e('.mapbox-gl-draw_paint', e => { e.classList.add('active') })
       functions.e('.ctrl-line-menu', e => { e.classList.remove('hidden') })
     } else if (draw.getMode() === 'road') {
       functions.e('.mapbox-gl-draw_road', e => { e.classList.add('active') })
+      functions.e('.mapbox-gl-draw_line', e => { e.classList.remove('active') })
       functions.e('.ctrl-line-menu', e => { e.classList.remove('hidden') })
     } else if (draw.getMode() === 'draw_point') {
       status('Point Mode: Click on the map to place a marker', 'info', 'medium', 8000)
@@ -263,6 +264,7 @@ export function enableEditControls () {
 function addLineMenu () {
   const originalButton = document.querySelector('.mapbox-gl-draw_line')
   originalButton.title = 'Draw line'
+  originalButton.setAttribute('data-bs-placement', "right")
   lineMenu = document.createElement('div')
   document.querySelector('.maplibregl-ctrl-top-left').appendChild(lineMenu)
   lineMenu.classList.add('maplibregl-ctrl-group')
@@ -276,8 +278,10 @@ function addLineMenu () {
   lineMenuButton.removeEventListener('click', null)
   lineMenuButton.addEventListener('click', (e) => {
     if (lineMenu.classList.contains('hidden')) {
+      draw.changeMode('simple_select')
       lineMenu.classList.remove('hidden')
     } else {
+      lineMenu.classList.add('hidden')
       resetControls()
     }
   })
@@ -285,6 +289,7 @@ function addLineMenu () {
   parentElement.insertBefore(lineMenuButton, originalButton.nextSibling)
   lineMenu.appendChild(originalButton)
   addPaintButton()
+  //addPaintButton2()
   if (window.gon.map_keys.openrouteservice) { addRoadButton() }
 }
 
@@ -314,16 +319,16 @@ function addPaintButton () {
 
 function addRoadButton () {
   const originalButton = document.querySelector('.ctrl-line-menu .mapbox-gl-draw_line')
-  const paintButton = originalButton.cloneNode(true)
-  paintButton.title = 'Draw line along road'
-  paintButton.classList.remove('mapbox-gl-draw_line')
-  paintButton.classList.add('mapbox-gl-draw_road')
+  const roadButton = originalButton.cloneNode(true)
+  roadButton.title = 'Draw line along road'
+  roadButton.classList.remove('mapbox-gl-draw_line')
+  roadButton.classList.add('mapbox-gl-draw_road')
   const icon = document.createElement('i')
   icon.classList.add('bi')
   icon.classList.add('bi-car-front-fill')
-  paintButton.appendChild(icon)
-  paintButton.removeEventListener('click', null)
-  paintButton.addEventListener('click', (e) => {
+  roadButton.appendChild(icon)
+  roadButton.removeEventListener('click', null)
+  roadButton.addEventListener('click', (e) => {
     if (draw.getMode() === 'road') {
       draw.changeMode('simple_select')
     } else {
@@ -333,5 +338,5 @@ function addRoadButton () {
     }
     map.fire('draw.modechange')
   })
-  lineMenu.appendChild(paintButton)
+  lineMenu.appendChild(roadButton)
 }

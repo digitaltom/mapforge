@@ -30,6 +30,7 @@
   --color-dark-smoky-black: #1D1A05;
   --color-dark-charcoal: #354A51;
   --color-mid-steel-blue: #4D7A9C;
+  --color-ctrl-active: #2091b0;
   --text-color: var(--color-dark-smoky-black);
   --hover-color: var(--color-dark-charcoal);
   --accent-color: var(--color-mid-chili);

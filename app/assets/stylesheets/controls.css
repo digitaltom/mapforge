@@ -27,7 +27,7 @@
     background-color: rgb(0 0 0/15%) !important;
     transition:
       background-color 0.2s ease-in-out;
-    color: var(--hover-color) !important;
+    color: var(--color-ctrl-active) !important;
   }
 
   /* Need to overwrite the mapbox draw icons with hover color */
@@ -48,7 +48,7 @@
   background-color: rgb(0 0 0/15%) !important;
   transition:
     background-color 0.2s ease-in-out;
-  color: var(--hover-color) !important;
+  color: var(--color-ctrl-active) !important;
 }
 
 /* Need to overwrite the mapbox draw icons with hover color */
@@ -105,4 +105,5 @@
   position: absolute;
   left: 2.6em;
   top: 0;
+  opacity: 1;
 }
