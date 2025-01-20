@@ -34,10 +34,12 @@ export function initializeEditMode () {
   DirectSelectMode.dragFeature = function (state, e, delta) { /* noop */ }
 
   const RoadMode = { ...MapboxDraw.modes.draw_line_string }
+  const BicycleMode = { ...MapboxDraw.modes.draw_line_string }
 
   const modes = {
     ...MapboxDraw.modes,
     road: RoadMode,
+    bicycle: BicycleMode,
     direct_select: DirectSelectMode,
     draw_paint_mode: PaintMode
   }
@@ -86,6 +88,12 @@ export function initializeEditMode () {
       functions.e('.mapbox-gl-draw_line', e => { e.classList.remove('active') })
       functions.e('.ctrl-line-menu', e => { e.classList.remove('hidden') })
       status('Road Mode: Click on the map to set waypoints, double click to finish',
+        'info', 'medium', 8000)
+    } else if (draw.getMode() === 'bicycle') {
+      functions.e('.mapbox-gl-draw_bicycle', e => { e.classList.add('active') })
+      functions.e('.mapbox-gl-draw_line', e => { e.classList.remove('active') })
+      functions.e('.ctrl-line-menu', e => { e.classList.remove('hidden') })
+      status('Bicycle Mode: Click on the map to set waypoints, double click to finish',
         'info', 'medium', 8000)
     } else if (draw.getMode() === 'draw_point') {
       status('Point Mode: Click on the map to place a marker', 'info', 'medium', 8000)
@@ -175,11 +183,13 @@ async function handleCreate (e) {
     feature = window.turf.simplify(feature, options)
   } else if (mode === 'road') {
     feature = await getRouteFeature(feature, feature.geometry.coordinates, 'driving-car')
+  } else if (mode === 'bicycle') {
+    feature = await getRouteFeature(feature, feature.geometry.coordinates, 'cycling-mountain')
   }
   status('Feature ' + feature.id + ' created')
   geojsonData.features.push(feature)
   // redraw if the painted feature was changed in this method
-  if (mode === 'road' || mode === 'draw_paint_mode') { redrawGeojson(false) }
+  if (mode === 'road' || mode === 'bicycle' || mode === 'draw_paint_mode') { redrawGeojson(false) }
   mapChannel.send_message('new_feature', feature)
 
   // Prevent automatic selection + stay in create mode
@@ -262,8 +272,10 @@ function addLineMenu () {
   parentElement.insertBefore(lineMenuButton, originalButton.nextSibling)
   lineMenu.appendChild(originalButton)
   addPaintButton()
-  // addPaintButton2()
-  if (window.gon.map_keys.openrouteservice) { addRoadButton() }
+  if (window.gon.map_keys.openrouteservice) {
+    addBikeButton()
+    addRoadButton()
+  }
 }
 
 function addPaintButton () {
@@ -304,6 +316,28 @@ function addRoadButton () {
       draw.changeMode('simple_select')
     } else {
       draw.changeMode('road')
+    }
+    map.fire('draw.modechange')
+  })
+  lineMenu.appendChild(roadButton)
+}
+
+function addBikeButton () {
+  const originalButton = document.querySelector('.ctrl-line-menu .mapbox-gl-draw_line')
+  const roadButton = originalButton.cloneNode(true)
+  roadButton.title = 'Draw line along bikeways'
+  roadButton.classList.remove('mapbox-gl-draw_line')
+  roadButton.classList.add('mapbox-gl-draw_bike')
+  const icon = document.createElement('i')
+  icon.classList.add('bi')
+  icon.classList.add('bi-bicycle')
+  roadButton.appendChild(icon)
+  roadButton.removeEventListener('click', null)
+  roadButton.addEventListener('click', (e) => {
+    if (draw.getMode() === 'bicycle') {
+      draw.changeMode('simple_select')
+    } else {
+      draw.changeMode('bicycle')
     }
     map.fire('draw.modechange')
   })
