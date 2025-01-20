@@ -32,10 +32,11 @@ bundle
 
 `bin/thrust rails server`
 
-* To use [Maptiler](https://www.maptiler.com/) base maps, provide the key (MAPTILER_KEY) in `.env.development`
+* To use [Maptiler](https://www.maptiler.com/) base maps, provide the env MAPTILER_KEY
+* To use routing features provided by [openrouteservice.org](https://openrouteservice.org/), set env OPENROUTESERVICE_KEY
 * MongoDB backend is expected at: `ENV.fetch("MONGO_URL") { "localhost:27017" }`
 * Redis (for action cable) is expected at: `ENV.fetch("REDIS_URL") { "redis://localhost:6379/1" }`
-* To allow login via Github and Google, create oauth apps there, and set `GITHUB_CLIENT_ID`/`GITHUB_CLIENT_SECRET` and `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET`.
+* To allow login via Github and Google, create oauth apps there, and set `GITHUB_CLIENT_ID`/`GITHUB_CLIENT_SECRET` and `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET`
 * The first user that logs in automatically gets set as admin
 * The default base map can get set with `DEFAULT_MAP`
 

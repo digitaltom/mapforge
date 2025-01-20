@@ -285,7 +285,7 @@ function addLineMenu () {
   parentElement.insertBefore(lineMenuButton, originalButton.nextSibling)
   lineMenu.appendChild(originalButton)
   addPaintButton()
-  addRoadButton()
+  if (window.gon.map_keys.openrouteservice) { addRoadButton() }
 }
 
 function addPaintButton () {
