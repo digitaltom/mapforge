@@ -190,10 +190,14 @@ async function handleCreate (e) {
   }, 10)
 }
 
-function handleUpdate (e) {
+async function handleUpdate (e) {
   const feature = e.features[0] // Assuming one feature is updated at a time
-  const geojsonFeature = geojsonData.features.find(f => f.id === feature.id)
 
+  // TODO: change route
+  // let coords = [feature.geometry.coordinates[0], feature.geometry.coordinates.at(-1)]
+  // feature = await getRouteFeature(feature, coords, 'driving-car')
+
+  const geojsonFeature = geojsonData.features.find(f => f.id === feature.id)
   // mapbox-gl-draw-waypoint sends empty update when dragging on selected feature
   if (equal(geojsonFeature.geometry, feature.geometry)) {
     // console.log('Feature update event triggered without update')
@@ -306,10 +310,14 @@ function addRoadButton () {
   lineMenu.appendChild(roadButton)
 }
 
+// profiles are: driving-car, driving-hgv(heavy goods vehicle), cycling-regular,
+//               cycling-road, cycling-mountain, cycling-electric, foot-walking,
+//               foot-hiking,wheelchair
 async function getRouteFeature (feature, waypoints, profile) {
   const Snap = new Openrouteservice.Snap({ api_key: window.gon.map_keys.openrouteservice })
   const orsDirections = new Openrouteservice.Directions({ api_key: window.gon.map_keys.openrouteservice })
 
+  console.log('get ' + profile + ' route for: ' + waypoints)
   try {
     const snapResponse = await Snap.calculate({
       locations: waypoints,
@@ -317,18 +325,19 @@ async function getRouteFeature (feature, waypoints, profile) {
       profile,
       format: 'json'
     })
-    // console.log('response: ', snapResponse)
+    console.log('response: ', snapResponse)
     const snapLocations = snapResponse.locations.map(item => item.location)
-    // console.log('snapped values: ', snapLocations)
+    console.log('snapped values: ', snapLocations)
 
     const routeResponse = await orsDirections.calculate({
       coordinates: snapLocations,
       profile
     })
-    // console.log('response: ', response.routes[0])
+    console.log('response: ', routeResponse)
     const routeLocations = decodePolyline(routeResponse.routes[0].geometry)
-    // console.log('routeLocations: ', routeLocations)
+    console.log('routeLocations: ', routeLocations)
     feature.geometry.coordinates = routeLocations
+    feature.properties.route = { profile, waypoints }
   } catch (err) {
     console.error('An error occurred: ' + err)
   }
