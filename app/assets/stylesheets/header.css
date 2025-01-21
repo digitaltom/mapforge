@@ -33,9 +33,42 @@
   color: #fff;
 }
 
+.login-link {
+  position: absolute;
+  right: 1em;
+  top: 1.3em;
+  text-decoration: none;
+}
+
 .profile-dropdown {
-    display: flex;
-    align-items: center;
+  position: absolute;
+  right: 1em;
+  top: 0.9em;
+  display: flex;
+  align-items: center;
+}
+
+.navbar-toggler {
+  position: absolute;
+  right: 4em;
+  top: 0.6em;
+  border-width: 1px !important;
+}
+
+.navbar-toggler:focus {
+  box-shadow: unset;
+}
+
+.btn-create-map {
+  position: absolute;
+  right: 4em;
+  top: 0.85em;
+}
+
+.navbar-collapse.collapsing, .navbar-collapse.show {
+  .btn-create-map {
+    position: unset;
+  }
 }
 
 .profile-image {
@@ -50,12 +83,17 @@
   left: unset;
 }
 
-@media (width <= 990px) {
-  .dropdown-menu[data-bs-popper] {
-    left: 0;
+/* make max space on small screen < sm */
+@media (width <= 574px) {
+  .navbar .container-fluid {
+    padding-left: 0;
   }
-}
 
-.navbar-toggler {
-  border-width: 1px !important;
+  .navbar-brand {
+    margin-right: 0;
+  }
+
+  .navbar-collapse.collapsing, .navbar-collapse.show {
+    margin-left: 0.8em;
+  }
 }
