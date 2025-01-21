@@ -378,7 +378,7 @@ export function sortLayers () {
   mapExtrusions.filter(l => l.id === 'Building 3D').forEach((layer) => {
     layer.paint['fill-extrusion-opacity'] = 0.8
   })
-  const symbols = functions.reduceArray(layers, (e) => e.type === 'symbol')
+  const symbols = functions.reduceArray(layers, (e) => (e.type === 'symbol' || e.id === 'symbols-border-layer'))
   const mapLabels = functions.reduceArray(layers, (e) => e.layout && e.layout['text-field'])
 
   layers = layers.concat(mapExtrusions).concat(mapLabels).concat(symbols)

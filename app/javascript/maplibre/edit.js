@@ -33,6 +33,9 @@ export function initializeEditMode () {
   const DirectSelectMode = { ...MapboxDraw.modes.direct_select }
   DirectSelectMode.dragFeature = function (state, e, delta) { /* noop */ }
 
+  const SimpleSelectMode = { ...MapboxDraw.modes.simple_select }
+  // DirectSelectMode.dragFeature = function (state, e, delta) { /* noop */ }
+
   const RoadMode = { ...MapboxDraw.modes.draw_line_string }
   const BicycleMode = { ...MapboxDraw.modes.draw_line_string }
 
@@ -41,6 +44,7 @@ export function initializeEditMode () {
     road: RoadMode,
     bicycle: BicycleMode,
     direct_select: DirectSelectMode,
+    simple_select: SimpleSelectMode,
     draw_paint_mode: PaintMode
   }
 
@@ -110,7 +114,7 @@ export function initializeEditMode () {
     // probably mapbox draw bug: map can lose drag capabilities on double click
     map.dragPan.enable()
 
-    if (!e.features?.length) { return }
+    if (!e.features?.length) { justCreated = false; return }
     if (justCreated) { justCreated = false; return }
     selectedFeature = e.features[0]
     if (geojsonData.features.find(f => f.id === selectedFeature.id)) {
@@ -185,6 +189,10 @@ async function handleCreate (e) {
     feature = await getRouteFeature(feature, feature.geometry.coordinates, 'driving-car')
   } else if (mode === 'bicycle') {
     feature = await getRouteFeature(feature, feature.geometry.coordinates, 'cycling-mountain')
+  } else {
+    // std mapbox draw shapes will auto-select the feature.
+    // This prevents automatic selection + stays in current mode
+    justCreated = true
   }
   status('Feature ' + feature.id + ' created')
   geojsonData.features.push(feature)
@@ -192,8 +200,6 @@ async function handleCreate (e) {
   if (mode === 'road' || mode === 'bicycle' || mode === 'draw_paint_mode') { redrawGeojson(false) }
   mapChannel.send_message('new_feature', feature)
 
-  // Prevent automatic selection + stay in create mode
-  justCreated = true
   setTimeout(() => {
     draw.changeMode(mode)
     map.fire('draw.modechange') // not fired automatically with draw.changeMode()
@@ -273,7 +279,7 @@ function addLineMenu () {
   lineMenu.appendChild(originalButton)
   addPaintButton()
   if (window.gon.map_keys.openrouteservice) {
-    addBikeButton()
+    addBicycleButton()
     addRoadButton()
   }
 }
@@ -322,18 +328,18 @@ function addRoadButton () {
   lineMenu.appendChild(roadButton)
 }
 
-function addBikeButton () {
+function addBicycleButton () {
   const originalButton = document.querySelector('.ctrl-line-menu .mapbox-gl-draw_line')
-  const roadButton = originalButton.cloneNode(true)
-  roadButton.title = 'Draw line along bikeways'
-  roadButton.classList.remove('mapbox-gl-draw_line')
-  roadButton.classList.add('mapbox-gl-draw_bike')
+  const bicycleButton = originalButton.cloneNode(true)
+  bicycleButton.title = 'Draw line along bicycle ways'
+  bicycleButton.classList.remove('mapbox-gl-draw_line')
+  bicycleButton.classList.add('mapbox-gl-draw_bicycle')
   const icon = document.createElement('i')
   icon.classList.add('bi')
   icon.classList.add('bi-bicycle')
-  roadButton.appendChild(icon)
-  roadButton.removeEventListener('click', null)
-  roadButton.addEventListener('click', (e) => {
+  bicycleButton.appendChild(icon)
+  bicycleButton.removeEventListener('click', null)
+  bicycleButton.addEventListener('click', (e) => {
     if (draw.getMode() === 'bicycle') {
       draw.changeMode('simple_select')
     } else {
@@ -341,12 +347,13 @@ function addBikeButton () {
     }
     map.fire('draw.modechange')
   })
-  lineMenu.appendChild(roadButton)
+  lineMenu.appendChild(bicycleButton)
 }
 
 // profiles are: driving-car, driving-hgv(heavy goods vehicle), cycling-regular,
 //               cycling-road, cycling-mountain, cycling-electric, foot-walking,
 //               foot-hiking,wheelchair
+// openrouteservice API: https://giscience.github.io/openrouteservice/api-reference/
 async function getRouteFeature (feature, waypoints, profile) {
   const Snap = new Openrouteservice.Snap({ api_key: window.gon.map_keys.openrouteservice })
   const orsDirections = new Openrouteservice.Directions({ api_key: window.gon.map_keys.openrouteservice })

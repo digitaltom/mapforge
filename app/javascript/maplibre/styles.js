@@ -80,7 +80,7 @@ const fillOpacityActive = ['*', 0.7, fillOpacity]
 const lineColorPolygon = ['coalesce', ['get', 'stroke'], ['get', 'user_stroke'], featureOutlineColor]
 
 const lineColor = ['coalesce', ['get', 'stroke'], ['get', 'user_stroke'], featureColor]
-export const defaultLineWidth = 2
+export const defaultLineWidth = 3
 const lineWidthMin = ['ceil', ['/', ['to-number', ['coalesce',
   ['get', 'user_stroke-width'], ['get', 'stroke-width'], defaultLineWidth]], 2]]
 const lineWidthMax = ['*', ['to-number', ['coalesce',
@@ -284,7 +284,8 @@ export const styles = {
       ['==', '$type', 'Point'],
       ['!=', 'meta', 'midpoint'],
       ['!=', 'meta', 'vertex'],
-      ['none', ['has', 'user_marker-image-url'], ['has', 'marker-image-url']]
+      ['none', ['has', 'user_marker-image-url'], ['has', 'marker-image-url'],
+        ['has', 'user_marker-symbol'], ['has', 'marker-symbol']]
     ],
     paint: {
       'circle-pitch-scale': 'map', // points get bigger when camera is closer
@@ -307,7 +308,9 @@ export const styles = {
     source: 'geojson-source',
     filter: ['all',
       ['==', '$type', 'Point'],
-      ['!=', 'meta', 'midpoint']
+      ['!=', 'meta', 'midpoint'],
+      ['none', ['has', 'user_marker-image-url'], ['has', 'marker-image-url'],
+        ['has', 'user_marker-symbol'], ['has', 'marker-symbol']]
     ],
     paint: {
       'circle-pitch-scale': 'map', // points get bigger when camera is closer
@@ -339,6 +342,7 @@ export const styles = {
       'circle-opacity': 0
     }
   },
+  // background + border for symbols
   'symbols-border-layer': {
     id: 'symbols-border-layer',
     type: 'circle',
@@ -347,14 +351,25 @@ export const styles = {
       ['==', '$type', 'Point'],
       ['!=', 'meta', 'midpoint'],
       ['!=', 'meta', 'vertex'],
-      ['any', ['has', 'user_marker-image-url'], ['has', 'marker-image-url']]
+      ['any', ['has', 'user_marker-image-url'], ['has', 'marker-image-url'],
+        ['has', 'user_marker-symbol'], ['has', 'marker-symbol']]
     ],
     paint: {
       'circle-pitch-scale': 'map', // points get bigger when camera is closer
       'circle-radius': pointSize,
-      'circle-opacity': 0,
+      'circle-color': pointColor,
+      'circle-opacity': [
+        'match',
+        ['coalesce', ['get', 'user_marker-color'], ['get', 'marker-color']],
+        'transparent', 0, // If marker-color is 'transparent', set circle-radius to 0
+        [
+          'case',
+          ['boolean', ['feature-state', 'active'], false],
+          pointOpacityActive,
+          pointOpacity
+        ]],
       'circle-stroke-color': pointOutlineColor,
-      'circle-blur': 0.1,
+      'circle-blur': 0.05,
       'circle-stroke-width': [
         'case',
         ['boolean', ['feature-state', 'active'], false],

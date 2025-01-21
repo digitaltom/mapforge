@@ -6,6 +6,7 @@ export function initializeEditStyles () {
   // Adding those as extra layers to the map.
   // render the extrusion layer from "source: 'geojson-source' without having it available for edit in draw
   map.addLayer(styles['polygon-layer-extrusion'])
+  map.addLayer(styles['symbols-border-layer'])
   map.addLayer(styles['symbols-layer'])
   map.addLayer(styles['text-layer'])
   sortLayers()
@@ -115,7 +116,7 @@ export const editStyles = [
       'circle-color': '#ffffff',
       'circle-opacity': 0.2,
       'circle-stroke-color': highlightColor,
-      'circle-stroke-width': 1
+      'circle-stroke-width': 3
     }
   },
   // inactive single point features
@@ -153,8 +154,7 @@ export const editStyles = [
       'circle-radius': pointSize,
       'circle-color': highlightColor
     }
-  },
-  removeSource(styles['symbols-border-layer'])
+  }
 ]
 
 function removeSource (style) {
