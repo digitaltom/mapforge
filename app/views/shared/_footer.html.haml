@@ -2,29 +2,44 @@
   .footer-top
     .container
       .row.gy-4
-        .col-lg-5.col-md-12.footer-about
+        - # empty block on the left on lg screen
+        - # screen < sm, contact moves below links
+        .col-lg-5.col-0.footer-about.d-none.d-lg-block
 
-        .col-lg-2.col-6.footer-links
-          %h4 Docs
+        .col-lg-2.col-sm-4.col-6.footer-links.mb-sm-2
+          %h3.mapforge-font.white-shadow Docs
           %ul
             %li
-              %a{ href: "https://github.com/digitaltom/mapforge/blob/main/README.md" } Readme
+              %a{ href: "https://github.com/digitaltom/mapforge/blob/main/README.md" }
+                %i.bi.bi-file-text.me-1>
+                Readme
             %li
-              %a{ href: "https://github.com/digitaltom/mapforge/blob/main/CHANGELOG.md" } Changelog
+              %a{ href: "https://github.com/digitaltom/mapforge/blob/main/CHANGELOG.md" }
+                %i.bi.bi-file-text.me-1>
+                Changelog
             %li
-              %a{ href: "https://github.com/digitaltom/mapforge/blob/main/docs/geojson.md" } GeoJSON spec
+              %a{ href: "https://github.com/digitaltom/mapforge/blob/main/docs/geojson.md" }
+                %i.bi.bi-file-text.me-1>
+                Style spec
             %li
-              %a{ href: "https://github.com/digitaltom/mapforge/blob/main/engines/ulogger/README.md" } µlogger API
-        .col-lg-2.col-6.footer-links
-          %h4 Project
+              %a{ href: "https://github.com/digitaltom/mapforge/blob/main/engines/ulogger/README.md" }
+                %i.bi.bi-file-text.me-1>
+                µlogger API
+        .col-lg-2.col-sm-4.col-6.footer-links
+          %h3.mapforge-font.white-shadow Project
           %ul
             %li
-              %a{ href: "https://github.com/digitaltom/mapforge" } Github
+              %a{ href: "https://github.com/digitaltom/mapforge" }
+                %i.bi.bi-github.me-1>
+                Github
             %li
-              %a{ href: "https://github.com/digitaltom/mapforge/issues" } Report issue
-        .col-lg-3.col-md-12.footer-contact.text-center.text-md-start
-          %h4 Contact
+              %a{ href: "https://github.com/digitaltom/mapforge/issues" }
+                %i.bi.bi-github.me-1>
+                Report issue
+        .col-lg-3.col-sm-4.footer-contact.text-center.text-md-start.mb-2
+          %h3.mapforge-font.white-shadow Contact
           %p
-            %strong Email:
+            %strong
+              %i.bi.bi-envelope.me-1
             %span mapforge@digitalflow.de
 
