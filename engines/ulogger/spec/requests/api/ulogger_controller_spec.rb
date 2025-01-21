@@ -69,7 +69,7 @@ RSpec.describe Api::UloggerController do
 
     context "with attached image file" do
       before do
-        payload[:image] = fixture_file_upload('2024-04-04_00-14.png', 'image/png', :binary)
+        payload[:image] = fixture_file_upload('mapforge-logo-icon.png', 'image/png', :binary)
       end
 
       it "saves the image to the database" do

@@ -124,7 +124,7 @@ describe 'Feature edit' do
       end
 
       it 'can upload image' do
-        image_path = Rails.root.join('spec', 'fixtures', 'files', '2024-04-04_00-14.png')
+        image_path = Rails.root.join('public', 'icons', 'mapforge-logo.png')
         expect(page).to have_selector('#marker-image')
         attach_file('marker-image', image_path)
 
