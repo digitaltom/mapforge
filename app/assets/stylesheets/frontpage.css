@@ -10,22 +10,6 @@
   padding-left: unset;
 }
 
-.frontpage-subtitle {
-  text-align: center;
-  font-size: calc(max(min(3vw, 6em), 1.5em));
-  position: absolute; top: 45vh;
-  opacity: 0;
-  transition: opacity 1.5s;
-}
-
-.frontpage-buttons .btn {
-  font-size: calc(max(min(2vw, 6em), 1em));
-  font-weight: 300;
-  margin: 0.5em;
-  color: #000;
-  border-color: #000;
-  background-color: rgba(255 255 255 / 75%); /* 75% translucent white */
-}
 
 @media only screen and (orientation: portrait) {
   .frontpage-title {
@@ -37,23 +21,6 @@
     font-size: calc(max(min(5vw, 6em), 0.75em));
     font-weight: 500;
   }
-}
-
-.shadow {
-  /* offset-x | offset-y | blur-radius | color */
-  text-shadow: 1px 1px 2px white;
-}
-
-.frontpage-buttons {
-  position: absolute; bottom: calc(9vh - calc(max(min(2vw, 6em), 1em)));
-}
-
-.center {
-  text-align: center;
-}
-
-.small {
-  font-size: 60%;
 }
 
 .fade-in {
@@ -102,7 +69,7 @@ section,
   overflow: clip;
 }
 
-@media (width <= 1199px) {
+@media (width <= 992px) {
   section,
   .section {
     scroll-margin-top: 66px;
@@ -163,7 +130,7 @@ section,
   z-index: 2;
 }
 
-@media (width >= 1200px) {
+@media (width >= 992px) {
   .hero::after {
     position: absolute;
     content: "";
@@ -308,7 +275,7 @@ section,
   background-color: var(--accent-color);
 }
 
-@media (width <= 1200px) {
+@media (width <= 992px) {
   .why-us .swiper {
     margin: 60px 60px 40px;
   }
