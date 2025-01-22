@@ -115,7 +115,7 @@ collection_format: collection_format))
   end
 
   def screenshot
-    "/previews/#{safe_public_id}.png" if File.exist?(screenshot_file)
+    "/previews/#{safe_public_id}.png?#{Map.last.updated_at.to_i}" if File.exist?(screenshot_file)
   end
 
   def screenshot_file
