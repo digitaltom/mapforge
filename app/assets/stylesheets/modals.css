@@ -9,9 +9,10 @@
   border-radius: 10px;
   background-color: rgb(255 255 255 / 90%);
 
+  /* Todo: Looks cool, but slows down browsers */
+
   /* backdrop-filter: blur(3px); */
 
- /* Todo: Looks cool, but slows down browsers */
   z-index: 1000;
   padding: 1.5em 1em 1.5em 1.5em;
   border: 1px solid #ccc;
