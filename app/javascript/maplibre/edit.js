@@ -58,7 +58,7 @@ export function initializeEditMode () {
       combine_features: false
       // uncombine_features
     },
-    styles: editStyles,
+    styles: editStyles(),
     clickBuffer: 5,
     touchBuffer: 25, // default 25
     // user properties are available, prefixed with 'user_'

@@ -1,7 +1,7 @@
-import { basemaps } from 'maplibre/basemaps'
+import { basemaps, defaultFont } from 'maplibre/basemaps'
 import { draw } from 'maplibre/edit'
 import { resetControls, initSettingsModal, geocoderConfig, initCtrlTooltips } from 'maplibre/controls'
-import { initializeViewStyles } from 'maplibre/styles'
+import { initializeViewStyles, setStyleDefaultFont } from 'maplibre/styles'
 import { highlightFeature, resetHighlightedFeature } from 'maplibre/feature'
 import { AnimatePointAnimation } from 'maplibre/animations'
 import * as functions from 'helpers/functions'
@@ -16,8 +16,9 @@ export let geojsonData //= { type: 'FeatureCollection', features: [] }
 export let mapProperties
 export let lastMousePosition
 export let highlightedFeature
+export let backgroundMapLayer
+
 let mapInteracted
-let backgroundMapLayer
 let backgroundTerrain
 
 // workflow of event based map loading:
@@ -349,12 +350,13 @@ export function setBackgroundMapLayer (mapName = mapProperties.base_map, force =
   if (backgroundMapLayer === mapName && backgroundTerrain === mapProperties.terrain && !force) { return }
   if (basemaps[mapName]) {
     map.once('style.load', () => { status('Loaded base map ' + mapName) })
-    map.setStyle(basemaps[mapName],
+    backgroundMapLayer = mapName
+    backgroundTerrain = mapProperties.terrain
+    setStyleDefaultFont(basemaps[mapName].font || defaultFont)
+    map.setStyle(basemaps[mapName].style,
       // adding 'diff: false' so that 'style.load' gets triggered (https://github.com/maplibre/maplibre-gl-js/issues/2587)
       // which will trigger loadGeoJsonData()
       { diff: false, strictMode: true })
-    backgroundMapLayer = mapName
-    backgroundTerrain = mapProperties.terrain
   } else {
     console.error('Base map ' + mapName + ' not available!')
   }
