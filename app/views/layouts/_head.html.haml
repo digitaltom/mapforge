@@ -1,5 +1,5 @@
 %head
-  %title= content_for?(:title) ? yield(:title) : "Mapforge: Create and share individual maps"
+  %title= content_for?(:title) ? yield(:title) : "Mapforge: Create your own maps"
   %meta{ charset: "UTF-8"}
   %meta{ name: 'viewport', content: 'width=device-width, height=device-height, initial-scale=1' }
   %meta{ name: 'view-transition', content: 'same-origin' }
@@ -36,6 +36,7 @@
   / Bootstrap
   = javascript_include_tag "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
 
+  / dynamic head content
   = yield(:head)
 
   %link{ rel: "manifest", href: "/manifest.json" }

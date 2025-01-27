@@ -1,5 +1,3 @@
-console.log('Loaded frontpage.js');
-
 // loaded in /frontpage/index.html.haml
 ['turbo:load'].forEach(function (e) {
   window.addEventListener(e, function () {

@@ -6,14 +6,11 @@
 - # https://github.com/Ionaru/easy-markdown-editor
 = javascript_include_tag "https://unpkg.com/easymde/dist/easymde.min.js"
 
-- # Importmap modules
-= javascript_import_module_tag "maplibre"
-= javascript_import_module_tag "controllers"
-
 - content_for :title, "Mapforge: #{(@map.name.presence || @map.id)}"
 - content_for :head do
   - if @map.screenshot
     %meta{ 'og:image': "#{request.protocol}#{request.host_with_port}#{@map.screenshot}" }
+
 
 #preloader
   %img.mapforge-logo{ src: "/icons/mapforge-logo-header_white.png", alt: "Logo" }
