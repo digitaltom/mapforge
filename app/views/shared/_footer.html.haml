@@ -6,7 +6,7 @@
         - # screen < sm, contact moves below links
         .col-lg-5.col-0.footer-about.d-none.d-lg-block
 
-        .col-lg-2.col-sm-4.col-6.footer-links.mb-sm-2
+        .col-lg-2.col-sm-4.col-6.footer-links.footer-links-left.mb-sm-2
           %h3.mapforge-font.white-shadow Docs
           %ul
             %li
@@ -36,10 +36,21 @@
               %a{ href: "https://github.com/digitaltom/mapforge/issues" }
                 %i.bi.bi-github.me-1>
                 Report issue
-        .col-lg-3.col-sm-4.footer-contact.text-center.text-md-start.mb-2
-          %h3.mapforge-font.white-shadow Contact
-          %p
-            %strong
-              %i.bi.bi-envelope.me-1
-            %span mapforge@digitalflow.de
+        .col-lg-3.col-sm-4.mx-auto.footer-links.footer-links-about.text-center.text-sm-start.text-md-start.mb-2
+          %div
+            %h3.mapforge-font.white-shadow About
+            %ul
+              %li
+                .text-nowrap
+                  %strong
+                    %i.bi.bi-envelope.me-1
+                  %span mapforge@digitalflow.de
+              %li
+                %a{ href: "https://github.com/digitaltom/mapforge/blob/main/docs/terms.md" }
+                  %i.bi.bi-file-text.me-1>
+                  Terms of Use
+              %li
+                %a{ href: "https://github.com/digitaltom/mapforge/blob/main/docs/privacy.md" }
+                %i.bi.bi-file-text.me-1>
+                Privacy Policy
 

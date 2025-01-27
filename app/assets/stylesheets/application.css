@@ -65,16 +65,19 @@ a:hover, .link:hover {
 .flex-container {
   display: flex;
   flex-wrap: wrap;
-  align-items: center; /* Vertically centers the items */
 }
 
 .flex-center {
-  justify-content: center;
+  justify-content: center; /* Vertically centers the items */
   align-items: center;
 }
 
 .flex-no-wrap {
   flex-wrap: nowrap;
+}
+
+.flex-wrap-each {
+  flex-basis: 100%;
 }
 
 .hidden {
