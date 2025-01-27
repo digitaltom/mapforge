@@ -18,5 +18,4 @@ class ApplicationController < ActionController::Base
   def disable_session_cookies
     request.session_options[:skip] = true unless @user
   end
-
 end
