@@ -1,6 +1,8 @@
 class MapsController < ApplicationController
+  before_action :set_global_js_values, only: %i[show]
   before_action :set_map, only: %i[show properties]
   before_action :require_login, only: %i[my]
+  before_action :disable_session_cookies
 
   layout "map", only: [ :show ]
 
@@ -57,6 +59,10 @@ class MapsController < ApplicationController
   # :nocov:
 
   private
+
+  def set_global_js_values
+    gon.map_keys = Map.provider_keys
+  end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_map
