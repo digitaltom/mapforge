@@ -58,7 +58,7 @@ a, .link {
   cursor: pointer;
 }
 
-a:hover, .link:hover {
+a:hover, a:active, .link:hover, .link:active {
   color: var(--hover-color);
 }
 
