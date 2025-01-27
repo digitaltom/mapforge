@@ -36,11 +36,11 @@
   / Bootstrap
   = javascript_include_tag "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
 
-
-
-
   = yield(:head)
 
   %link{ rel: "manifest", href: "/manifest.json" }
   %link{ rel: "icon", href: "/icons/mapforge-logo-icon.png", type: "image/png" }
   %link{ rel: "apple-touch-icon", href: "/icons/mapforge-logo-icon.png", sizes: "100x100" }
+
+  - # js config for map
+  = Gon::Base.render_data

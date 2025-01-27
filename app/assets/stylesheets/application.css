@@ -113,3 +113,11 @@ a:hover, .link:hover {
   text-align: center;
 }
 
+.background-dark {
+  background-color: var(--color-dark-moss-green)
+}
+
+.background-bright {
+  background-color: var(--color-light-sand)
+}
+
