@@ -374,8 +374,6 @@ export function sortLayers () {
   const currentStyle = map.getStyle()
   let layers = currentStyle.layers
 
-  // const userExtrusions = layers.filter(l => l.properties &&
-  //   (l.properties['fill-extrusion-height'] || l.properties['user_fill-extrusion-height']))
   const mapExtrusions = functions.reduceArray(layers, (e) => e.paint && e.paint['fill-extrusion-height'])
   // increase opacity of 3D houses
   mapExtrusions.filter(l => l.id === 'Building 3D').forEach((layer) => {
@@ -383,8 +381,10 @@ export function sortLayers () {
   })
   const symbols = functions.reduceArray(layers, (e) => (e.type === 'symbol' || e.id === 'symbols-border-layer'))
   const mapLabels = functions.reduceArray(layers, (e) => e.layout && e.layout['text-field'])
+  const lineLayerHits = functions.reduceArray(layers, (e) => e.id === 'line-layer-hit')
+  const pointsLayerHits = functions.reduceArray(layers, (e) => e.id === 'points-hit-layer')
 
-  layers = layers.concat(mapExtrusions).concat(mapLabels).concat(symbols)
+  layers = layers.concat(mapExtrusions).concat(mapLabels).concat(symbols).concat(lineLayerHits).concat(pointsLayerHits)
   const newStyle = { ...currentStyle, layers }
   map.setStyle(newStyle, { diff: true })
   // console.log(map.getStyle().layers)
