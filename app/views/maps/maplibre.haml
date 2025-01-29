@@ -5,15 +5,12 @@
 
 - # https://github.com/Ionaru/easy-markdown-editor
 = javascript_include_tag "https://unpkg.com/easymde/dist/easymde.min.js"
-= stylesheet_link_tag "https://unpkg.com/easymde/dist/easymde.min.css"
-
-= stylesheet_link_tag "https://unpkg.com/@mapbox/mapbox-gl-draw@1.4.3/dist/mapbox-gl-draw.css"
-= stylesheet_link_tag "https://unpkg.com/@maplibre/maplibre-gl-geocoder@1.5.0/dist/maplibre-gl-geocoder.css"
 
 - content_for :title, "Mapforge: #{(@map.name.presence || @map.id)}"
 - content_for :head do
   - if @map.screenshot
     %meta{ 'og:image': "#{request.protocol}#{request.host_with_port}#{@map.screenshot}" }
+
 
 #preloader
   %img.mapforge-logo{ src: "/icons/mapforge-logo-header_white.png", alt: "Logo" }

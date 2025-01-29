@@ -4,7 +4,6 @@ import { initializeSocket } from 'channels/map_channel'
 
 ['turbo:load'].forEach(function (e) {
   window.addEventListener(e, function () {
-    // console.log(e)
     if (document.getElementById('maplibre-map')) {
       init()
     }

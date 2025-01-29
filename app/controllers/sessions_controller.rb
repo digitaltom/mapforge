@@ -1,4 +1,6 @@
 class SessionsController < ApplicationController
+  skip_before_action :disable_session_cookies
+
   layout "frontpage"
 
   def new

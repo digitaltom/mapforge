@@ -1,4 +1,4 @@
-.map-preview{id: dom_id(map)}
+.map-preview.background-bright{id: dom_id(map)}
   = link_to(map_path(id: (rw ? map.id : map.public_id)), 'aria-label': "Open map '#{map.name}'") do
     - if map.screenshot
       %img{src: map.screenshot,

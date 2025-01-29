@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
-  before_action :set_global_js_values, :set_user
+  before_action :set_user
+  before_action :disable_session_cookies
 
   def not_found!
     render file: "#{Rails.root}/public/404.html", layout: false, status: :not_found
@@ -7,15 +8,15 @@ class ApplicationController < ActionController::Base
 
   private
 
-  def set_global_js_values
-    gon.map_keys = Map.provider_keys
-  end
-
   def set_user
     @user = User.find_by(id: session[:user_id]) if session[:user_id]
   end
 
   def require_login
     not_found! unless @user
+  end
+
+  def disable_session_cookies
+    request.session_options[:skip] = true unless @user
   end
 end

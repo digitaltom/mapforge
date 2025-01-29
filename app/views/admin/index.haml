@@ -1,6 +1,6 @@
 #maps.flex-container
   - @maps.each do |map|
-    %div.flex-item.map-preview{id: dom_id(map)}
+    %div.flex-item.map-preview.background-bright{id: dom_id(map)}
       = link_to map_path(id: map.id) do
         - if map.screenshot
           %img{src: map.screenshot, class: 'preview-image', loading: 'lazy', alt: 'preview'}

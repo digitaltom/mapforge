@@ -9,29 +9,6 @@
   padding-top: 20px;
 }
 
-.footer .footer-about .logo {
-  line-height: 1;
-  margin-bottom: 25px;
-}
-
-.footer .footer-about .logo img {
-  max-height: 40px;
-  margin-right: 6px;
-}
-
-.footer .footer-about .logo span {
-  color: var(--heading-color);
-  font-size: 30px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  font-family: var(--heading-font);
-}
-
-.footer .footer-about p {
-  font-size: 14px;
-  font-family: var(--heading-font);
-}
-
 .footer h4 {
   font-size: 16px;
   font-weight: bold;
@@ -73,6 +50,24 @@
   color: var(--hover-color);
 }
 
-.footer .footer-contact p {
+.footer .footer-links p {
   margin-bottom: 5px;
 }
+
+/* improve alignment on small screen */
+@media (width <= 574px) {
+  .footer-links-left {
+    padding-left: 20vw;
+  }
+
+  .footer-links-about {
+    width: 15em;
+  }
+}
+
+@media (width <= 400px) {
+  .footer-links-left {
+    padding-left: 10vw;
+  }
+}
+

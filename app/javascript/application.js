@@ -1,10 +1,11 @@
 // Configure your import map in config/importmap.rb. Read more: https://github.com/rails/importmap-rails
 import '@hotwired/turbo-rails'
-import 'controllers'
 
-import 'frontpage'
+// Importing maplibre + controllers early here, because loading them later
+// from maplibre.haml caused issues with the turbo:load event which was received
+// before the module finished loading
 import 'maplibre'
-import 'animate'
+import 'controllers'
 
 import AOS from 'aos'
 
