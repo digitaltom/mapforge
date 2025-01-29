@@ -348,12 +348,13 @@ export function destroy (featureId) {
 
 export function setBackgroundMapLayer (mapName = mapProperties.base_map, force = false) {
   if (backgroundMapLayer === mapName && backgroundTerrain === mapProperties.terrain && !force) { return }
-  if (basemaps[mapName]) {
+  const basemap = basemaps()[mapName]
+  if (basemap) {
     map.once('style.load', () => { status('Loaded base map ' + mapName) })
     backgroundMapLayer = mapName
     backgroundTerrain = mapProperties.terrain
-    setStyleDefaultFont(basemaps[mapName].font || defaultFont)
-    map.setStyle(basemaps[mapName].style,
+    setStyleDefaultFont(basemap.font || defaultFont)
+    map.setStyle(basemap.style,
       // adding 'diff: false' so that 'style.load' gets triggered (https://github.com/maplibre/maplibre-gl-js/issues/2587)
       // which will trigger loadGeoJsonData()
       { diff: false, strictMode: true })

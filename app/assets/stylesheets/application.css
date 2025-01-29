@@ -58,23 +58,26 @@ a, .link {
   cursor: pointer;
 }
 
-a:hover, .link:hover {
+a:hover, a:active, .link:hover, .link:active {
   color: var(--hover-color);
 }
 
 .flex-container {
   display: flex;
   flex-wrap: wrap;
-  align-items: center; /* Vertically centers the items */
 }
 
 .flex-center {
-  justify-content: center;
+  justify-content: center; /* Vertically centers the items */
   align-items: center;
 }
 
 .flex-no-wrap {
   flex-wrap: nowrap;
+}
+
+.flex-wrap-each {
+  flex-basis: 100%;
 }
 
 .hidden {
@@ -108,5 +111,13 @@ a:hover, .link:hover {
 
 .center {
   text-align: center;
+}
+
+.background-dark {
+  background-color: var(--color-dark-moss-green)
+}
+
+.background-bright {
+  background-color: var(--color-light-sand)
 }
 
