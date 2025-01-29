@@ -207,7 +207,7 @@ GEM
       thor
       tilt
     hashie (5.0.0)
-    i18n (1.14.6)
+    i18n (1.14.7)
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
     importmap-rails (2.1.0)
@@ -422,7 +422,7 @@ GEM
     rspec-support (3.13.1)
     rspec-wait (1.0.1)
       rspec (>= 3.4)
-    rubocop (1.70.0)
+    rubocop (1.71.0)
       json (~> 2.3)
       language_server-protocol (>= 3.17.0)
       parallel (~> 1.10)
@@ -442,7 +442,7 @@ GEM
     rubocop-performance (1.23.1)
       rubocop (>= 1.48.1, < 2.0)
       rubocop-ast (>= 1.31.1, < 2.0)
-    rubocop-rails (2.29.0)
+    rubocop-rails (2.29.1)
       activesupport (>= 4.2.0)
       rack (>= 1.1)
       rubocop (>= 1.52.0, < 2.0)
