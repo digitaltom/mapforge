@@ -2,10 +2,6 @@ class ApplicationController < ActionController::Base
   before_action :set_user
   before_action :disable_session_cookies
 
-  def not_found!
-    render file: "#{Rails.root}/public/404.html", layout: false, status: :not_found
-  end
-
   private
 
   def set_user
@@ -13,7 +9,7 @@ class ApplicationController < ActionController::Base
   end
 
   def require_login
-    not_found! unless @user
+    redirect_to login_path unless @user
   end
 
   def disable_session_cookies

@@ -127,6 +127,11 @@ export default class extends Controller {
     const feature = this.getFeature()
     const image = document.querySelector('#marker-image').files[0]
     const formData = new FormData() // send using multipart/form-data
+
+    if (image && image.size > (4 * 1024 * 1024)) {
+      alert('Image is too large. Maximum size is 4MB.')
+    }
+
     formData.append('image', image)
     fetch('/images', {
       method: 'POST',
@@ -141,6 +146,7 @@ export default class extends Controller {
         console.log('Setting icon: ' + data.icon)
         feature.properties['marker-image-url'] = data.icon
         draw.setFeatureProperty(this.featureIdValue, 'marker-image-url', data.icon)
+        draw.setFeatureProperty(this.featureIdValue, 'marker-size', 15)
         setFeatureTitleImage(feature)
         redrawGeojson(false)
         this.saveFeature()

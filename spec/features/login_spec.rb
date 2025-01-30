@@ -15,7 +15,7 @@ describe 'Login' do
     fill_in 'name', with: 'Test User'
     fill_in 'email', with: 'test@mapforge.org'
     click_button('Sign In')
-    expect(page).to have_current_path(root_path)
+    expect(page).to have_current_path(my_path)
     expect(User.count).to eq 1
   end
 
@@ -24,7 +24,7 @@ describe 'Login' do
     fill_in 'name', with: 'Test User'
     fill_in 'email', with: 'test@mapforge.org'
     click_button('Sign In')
-    expect(page).to have_current_path(root_path)
+    expect(page).to have_current_path(my_path)
     expect(User.count).to eq 1
     visit maps_path
     find('.profile-image').click
