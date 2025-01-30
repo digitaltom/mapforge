@@ -35,8 +35,8 @@ describe 'Admin List' do
       visit admin_path
     end
 
-    it 'shows 404' do
-      expect(page).to have_text 'The page you were looking for doesn’t exist'
+    it 'shows login page' do
+      expect(page).to have_text 'Log in here'
     end
   end
 end
