@@ -50,9 +50,9 @@
 
 .navbar-toggler {
   position: absolute;
-  right: 4em;
-  top: 0.6em;
-  border-width: 1px !important;
+  right: calc(50% - 20px);
+  top: 0.7em;
+  border-width: 0 !important;
 }
 
 .navbar-toggler:focus {
@@ -95,5 +95,9 @@
 
   .navbar-collapse.collapsing, .navbar-collapse.show {
     margin-left: 0.8em;
+  }
+
+  .navbar-brand .mapforge-font {
+    display: none;
   }
 }
