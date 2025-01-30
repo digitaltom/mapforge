@@ -23,6 +23,6 @@ class SessionsController < ApplicationController
     # Make first user admin
     user.update!(admin: true) if User.count == 1
     session[:user_id] = user.id
-    redirect_to root_path
+    redirect_to my_path
   end
 end

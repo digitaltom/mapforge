@@ -14,6 +14,6 @@ class AdminController < ApplicationController
   private
 
   def require_admin_user
-    not_found! unless @user&.admin?
+    redirect_to login_path unless @user&.admin?
   end
 end
