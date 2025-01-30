@@ -19,27 +19,27 @@ function unload () {
 }
 
 function init () {
-  // initSwiper()
+  initSwiper()
 }
 
-// function initSwiper () {
-//   const config = {
-//     loop: true,
-//     speed: 600,
-//     autoplay: {
-//       delay: 5000
-//     },
-//     slidesPerView: 'auto',
-//     centeredSlides: true,
-//     pagination: {
-//       el: '.swiper-pagination',
-//       type: 'bullets',
-//       clickable: true
-//     },
-//     navigation: {
-//       nextEl: '.swiper-button-next',
-//       prevEl: '.swiper-button-prev'
-//     }
-//   }
-//   return new window.Swiper('.swiper', config)
-// }
+function initSwiper () {
+  const config = {
+    loop: true,
+    speed: 600,
+    autoplay: {
+      delay: 5000
+    },
+    slidesPerView: 'auto',
+    centeredSlides: true,
+    pagination: {
+      el: '.swiper-pagination',
+      type: 'bullets',
+      clickable: true
+    },
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev'
+    }
+  }
+  return new window.Swiper('.swiper', config)
+}

@@ -64,7 +64,7 @@ section,
 .section {
   color: var(--default-color);
   background-color: var(--background-color);
-  padding: 60px 0;
+  padding: 0;
   scroll-margin-top: 100px;
   overflow: clip;
 }
@@ -283,6 +283,11 @@ section,
   .why-us .swiper-button-prev,
   .why-us .swiper-button-next {
     display: none;
+  }
+
+  #features .img-bg, #features .img-bg img {
+    height: 10em;
+    min-height: 0;
   }
 }
 
