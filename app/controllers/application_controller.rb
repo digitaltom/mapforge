@@ -13,7 +13,7 @@ class ApplicationController < ActionController::Base
   end
 
   def require_login
-    not_found! unless @user
+    redirect_to login_path unless @user
   end
 
   def disable_session_cookies
