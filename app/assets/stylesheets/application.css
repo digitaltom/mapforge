@@ -34,6 +34,7 @@
   --text-color: var(--color-dark-smoky-black);
   --hover-color: var(--color-dark-charcoal);
   --accent-color: var(--color-mid-chili);
+  --default-color: var(--color-light-sand);
   --bs-btn-border-radius: 0px;
   --bs-border-radius: 0px;
 }
