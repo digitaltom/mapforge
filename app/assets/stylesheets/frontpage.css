@@ -212,13 +212,18 @@ section,
 }
 
 /* --------------------------------------------------------------
-# Why Us Section
+# Features Section
 -------------------------------------------------------------- */
-.why-us .img-bg {
+
+#features {
+  border-top: 2px solid var(--color-light-sand);
+}
+
+#features .img-bg {
   position: relative;
 }
 
-.why-us .img-bg img {
+#features .img-bg img {
   position: absolute;
   inset: 0;
   display: block;
@@ -228,64 +233,64 @@ section,
   z-index: 1;
 }
 
-.why-us h3 {
+#features h3 {
   font-size: 24px;
   font-weight: 700;
 }
 
-.why-us h4 {
+#features h4 {
   font-size: 18px;
   font-weight: 300;
   color: color-mix(in srgb, var(--default-color), transparent 30%);
 }
 
-.why-us .swiper {
+#features .swiper {
   margin: 3em 5em;
   overflow: hidden;
   color: var(--default-color)
 }
 
-.why-us .swiper-wrapper {
+#features .swiper-wrapper {
   height: auto;
 }
 
-.why-us .swiper-button-prev::after,
-.why-us .swiper-button-next::after {
+#features .swiper-button-prev::after,
+#features .swiper-button-next::after {
   font-size: 24px;
   color: color-mix(in srgb, var(--color-light-sand), transparent 50%);
 }
 
-.why-us .swiper-button-prev {
+#features .swiper-button-prev {
   left: 2em;
 }
 
-.why-us .swiper-button-next {
+#features .swiper-button-next {
   right: 2em;
 }
 
-.why-us .swiper-pagination {
+#features .swiper-pagination {
   margin-top: 1em;
   position: relative;
 }
 
-.why-us .swiper-pagination .swiper-pagination-bullet {
+#features .swiper-pagination .swiper-pagination-bullet {
   background-color: color-mix(in srgb, var(--color-light-sand), transparent 50%);
 }
 
-.why-us .swiper-pagination .swiper-pagination-bullet-active {
+#features .swiper-pagination .swiper-pagination-bullet-active {
   background-color: var(--color-light-teagreen);
 }
 
 @media (width <= 992px) {
-  .why-us .swiper {
+  #features .swiper {
     margin: 60px 60px 40px;
   }
 
-  .why-us .swiper-button-prev {
+  #features .swiper-button-prev {
     left: 1em;
   }
 
-  .why-us .swiper-button-next {
+  #features .swiper-button-next {
     right: 1em;
   }
 
@@ -296,7 +301,7 @@ section,
 }
 
 @media (width <= 575px) {
-  .why-us .swiper {
+  #features .swiper {
     margin: 40px 40px 20px;
   }
 
@@ -304,11 +309,11 @@ section,
     margin-left: 1em;
   }
 
-  .why-us .swiper-button-prev {
+  #features .swiper-button-prev {
     left: 0.3em;
   }
 
-  .why-us .swiper-button-next {
+  #features .swiper-button-next {
     right: 0.3em;
   }
 }
