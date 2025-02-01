@@ -16,7 +16,7 @@ The geojson layer can get styled to your needs in an extended version of the [ge
 
 
 ## Development Setup
-
+ 
 ### Install dependencies:
 
 For openSUSE (Debian package names in braces):
