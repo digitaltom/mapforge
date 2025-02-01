@@ -207,6 +207,10 @@ GEM
       thor
       tilt
     hashie (5.0.0)
+    hotwire-spark (0.1.13)
+      listen
+      rails (>= 7.0.0)
+      zeitwerk
     i18n (1.14.7)
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
@@ -557,6 +561,7 @@ DEPENDENCIES
   gon
   gpx
   haml
+  hotwire-spark
   importmap-rails
   jbuilder
   listen

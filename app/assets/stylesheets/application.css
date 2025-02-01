@@ -115,7 +115,16 @@ a:hover, a:active, .link:hover, .link:active {
 }
 
 .background-dark {
-  background-color: var(--color-dark-moss-green)
+  background-color: var(--color-dark-moss-green);
+
+  a, .link {
+    color: #fff;
+    cursor: pointer;
+  }
+
+  a:hover, a:active, .link:hover, .link:active {
+    color: var(--color-light-teagreen);
+  }
 }
 
 .background-bright {

@@ -74,6 +74,7 @@ group :development do
   gem "rubycritic", require: false
   gem "brakeman"
   gem "bundler-audit"
+  gem "hotwire-spark"
 
   gem "web-console"
   # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]

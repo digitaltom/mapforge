@@ -254,6 +254,10 @@ section,
   height: auto;
 }
 
+#features li {
+  margin-bottom: 0.3em;
+}
+
 #features .swiper-button-prev::after,
 #features .swiper-button-next::after {
   font-size: 24px;

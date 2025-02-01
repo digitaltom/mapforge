@@ -17,12 +17,3 @@
 .developer-form input {
   max-width: 400px;
 }
-
-#login a, #login .link {
-  color: #fff;
-  cursor: pointer;
-}
-
-#login a:hover, #login a:active, #login .link:hover, #login .link:active {
-  color: var(--color-light-teagreen);
-}
