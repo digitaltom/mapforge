@@ -114,10 +114,23 @@ a:hover, a:active, .link:hover, .link:active {
   text-align: center;
 }
 
-.background-dark {
-  background-color: var(--color-dark-moss-green);
+.background-bright {
+  background-color: var(--color-light-sand);
 
   a, .link {
+    color: var(--text-color);
+    cursor: pointer;
+  }
+
+  a:hover, a:active, .link:hover, .link:active {
+    color: var(--hover-color);
+  }
+}
+
+.background-dark, .dark-background {
+  background-color: var(--color-dark-moss-green);
+
+  a, .link { /* stylelint-disable-line */
     color: #fff;
     cursor: pointer;
   }
@@ -126,8 +139,3 @@ a:hover, a:active, .link:hover, .link:active {
     color: var(--color-light-teagreen);
   }
 }
-
-.background-bright {
-  background-color: var(--color-light-sand)
-}
-

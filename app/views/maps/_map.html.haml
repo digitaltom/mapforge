@@ -1,4 +1,9 @@
 .map-preview.background-bright{id: dom_id(map)}
+
+  - if map.user && avatar
+    -if map.user.image
+      = image_tag map.user.image, class: 'map-avatar', loading: 'lazy', alt: ""
+
   = link_to(map_path(id: (rw ? map.id : map.public_id)), 'aria-label': "Open map '#{map.name}'") do
     - if map.screenshot
       %img{src: map.screenshot,
@@ -8,4 +13,9 @@
     - else
       = image_tag "preview.png", class: 'preview-image', loading: 'lazy', alt: "Map '#{map.name}'"
     .map-preview-title= map.name
+
+- if last_change
   %i= "last change #{distance_of_time_in_words(DateTime.now, map.updated_at)} ago"
+
+- if delete
+  = button_to 'Delete', destroy_map_path(id: map.id), method: :delete, data: { turbo_method: :delete }, class: 'btn btn-secondary'

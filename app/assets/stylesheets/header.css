@@ -1,5 +1,6 @@
 .navbar {
-  background-color: #e5e5d7dd;
+  opacity: 0.9;
+  z-index: 10;
 }
 
 .mapforge-font {
@@ -23,14 +24,14 @@
 .btn-orange {
   background-color: #f60;
   border-color: #f60;
-  color: #fff;
+  color: #fff !important;
 }
 
 .btn-orange:hover,
 .btn-orange:focus,
 .btn-orange:active {
   background-color: #FF781F !important;
-  color: #fff;
+  color: #fff !important;
 }
 
 .login-link {
@@ -46,6 +47,7 @@
   top: 0.9em;
   display: flex;
   align-items: center;
+  background-color: var(--color-light-sand);
 }
 
 .navbar-toggler {
@@ -81,6 +83,7 @@
 .dropdown-menu[data-bs-popper] {
   right: -0.5rem;
   left: unset;
+  opacity: 1;
 }
 
 /* make max space on small screen < sm */
