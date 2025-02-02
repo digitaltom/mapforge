@@ -2,6 +2,7 @@ class MapsController < ApplicationController
   before_action :set_global_js_values, only: %i[show]
   before_action :set_map, only: %i[show properties destroy]
   before_action :require_login, only: %i[my]
+  before_action :require_map_owner, only: %i[destroy]
 
   layout "map", only: [ :show ]
 
@@ -58,15 +59,15 @@ class MapsController < ApplicationController
   # :nocov:
 
   def destroy
-    if @user&.admin? || (@map.user && @map.user == @user)
-      @map.destroy!
-      redirect_to admin_path, status: :see_other, notice: "Map was deleted."
-    else
-      redirect_to root_path
-    end
+    @map.destroy!
+    redirect_to my_path, status: :see_other, notice: "Map was deleted."
   end
 
   private
+
+  def require_map_owner
+    redirect_to maps_path unless @user&.admin? || (@map.user && @map.user == @user)
+  end
 
   def set_global_js_values
     gon.map_keys = Map.provider_keys
