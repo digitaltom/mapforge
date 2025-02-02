@@ -86,6 +86,10 @@
   opacity: 1;
 }
 
+.dropdown-menu .dropdown-item:active {
+    background-color: var(--color-light-sand) !important;
+}
+
 /* make max space on small screen < sm */
 @media (width <= 574px) {
   .navbar .container-fluid {

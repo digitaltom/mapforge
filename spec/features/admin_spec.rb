@@ -17,7 +17,9 @@ describe 'Admin List' do
     end
 
     it 'shows link to destroy map' do
-      find('button', text: "Delete", match: :first).click
+      accept_alert do
+        find("i[class='bi bi-trash']", match: :first).click
+      end
       expect(page).to have_text('Mapforge')
       expect(Map.count).to eq(2)
     end

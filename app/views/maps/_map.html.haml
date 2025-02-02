@@ -1,8 +1,17 @@
 .map-preview.background-bright{id: dom_id(map)}
 
+  - if auth
+    .map-auth
+      - if map.private
+        %i.bi.bi-lock-fill
+
   - if map.user && avatar
     -if map.user.image
       = image_tag map.user.image, class: 'map-avatar', loading: 'lazy', alt: ""
+
+  - if delete
+    = link_to destroy_map_path(id: map.id), data: { turbo_method: :delete, turbo_confirm: "Do you really want to delete this map?" }, class: 'map-delete' do
+      %i.bi.bi-trash
 
   = link_to(map_path(id: (rw ? map.id : map.public_id)), 'aria-label': "Open map '#{map.name}'") do
     - if map.screenshot
@@ -14,8 +23,10 @@
       = image_tag "preview.png", class: 'preview-image', loading: 'lazy', alt: "Map '#{map.name}'"
     .map-preview-title= map.name
 
-- if last_change
-  %i= "last change #{distance_of_time_in_words(DateTime.now, map.updated_at)} ago"
-
-- if delete
-  = button_to 'Delete', destroy_map_path(id: map.id), method: :delete, data: { turbo_method: :delete }, class: 'btn btn-secondary'
+  - if last_change
+    %i= "last change #{distance_of_time_in_words(DateTime.now, map.updated_at)} ago"
+    %br
+    = "#{map.layers.first.features_count} features"
+    %br
+    public id:
+    = link_to map.public_id, map_path(id: map.public_id)

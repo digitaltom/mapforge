@@ -25,13 +25,13 @@ Rails.application.routes.draw do
     get "/:id" => "maps#show", as: :map, constraints: { id: ID_PATTERN }
 
     post "" => "maps#create", as: :create_map
+    delete "/:id" => "maps#destroy", as: :destroy_map, constraints: { id: ID_PATTERN }
   end
   get "/my" => "maps#my", as: "my"
 
   get "/d/:id" => "maps#show", defaults: { engine: "deck" }, as: :deck, constraints: { id: ID_PATTERN }
 
   get "/admin" => "admin#index"
-  delete "/admin/:id" => "admin#destroy", as: :destroy_map, constraints: { id: ID_PATTERN }
 
   # map icons
   get "/icon/:public_id", to: "images#icon", as: "icon", constraints: { public_id: ID_PATTERN }

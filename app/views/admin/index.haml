@@ -1,13 +1,3 @@
 #maps.flex-container
   - @maps.each do |map|
-    .flex-item= render map, rw: true, last_change: false, avatar: true, delete: true
-
-
-
-    /   = "#{map.layers.first.features_count} features"
-    /   %br
-    /   public id:
-    /   = link_to map.public_id, map_path(id: map.public_id)
-    /   %br
-    /   = button_to 'Delete', destroy_map_path(id: map.id), method: :delete, data: { turbo_method: :delete }, class: 'btn btn-secondary'
-
+    .flex-item= render map, rw: true, last_change: true, avatar: true, delete: true, auth: true
