@@ -46,7 +46,7 @@
   font-size: 1.5em;
   color: #fff;
   color: var(--color-dark-moss-green);
-  text-shadow: -2px 0 white, 0 2px white, 2px 0 white, 0 -2px white;
+  text-shadow: 0 -4px 4px white, 4px 0 4px white, 0 4px 4px white, -4px 0 4px white;
   font-weight: bold;
   font-family: Lobster, serif;
 }
