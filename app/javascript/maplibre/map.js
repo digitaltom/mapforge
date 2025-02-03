@@ -366,8 +366,10 @@ export function setBackgroundMapLayer (mapName = mapProperties.base_map, force =
 // re-sort layers to overlay geojson layers with labels & extrusion objects
 // workflows to consider: first map load, basemap update, socket reconnect
 // sorting:
-// - lines, points etc.
+// - polygons, lines etc.
+// - map labels
 // - extrusions
+// - points
 // - text/symbol
 export function sortLayers () {
   // console.log('Sorting layers')
@@ -379,12 +381,18 @@ export function sortLayers () {
   mapExtrusions.filter(l => l.id === 'Building 3D').forEach((layer) => {
     layer.paint['fill-extrusion-opacity'] = 0.8
   })
-  const symbols = functions.reduceArray(layers, (e) => (e.type === 'symbol' || e.id === 'symbols-border-layer'))
-  const mapLabels = functions.reduceArray(layers, (e) => e.layout && e.layout['text-field'])
+  const editLayer = functions.reduceArray(layers, (e) => (e.id.startsWith('gl-draw-')))
+  const userSymbols = functions.reduceArray(layers, (e) => (e.id === 'symbols-layer' || e.id === 'symbols-border-layer'))
+  const userLabels = functions.reduceArray(layers, (e) => e.id === 'text-layer')
+  const mapSymbols = functions.reduceArray(layers, (e) => e.type === 'symbol')
+  const points = functions.reduceArray(layers, (e) => (e.id === 'points-layer.hot' || e.id === 'points-layer.cold' || e.id === 'points-layer' || e.id === 'points-border-layer' || e.id === 'points-border-layer.cold' || e.id === 'points-border-layer.hot'))
   const lineLayerHits = functions.reduceArray(layers, (e) => e.id === 'line-layer-hit')
   const pointsLayerHits = functions.reduceArray(layers, (e) => e.id === 'points-hit-layer')
 
-  layers = layers.concat(mapExtrusions).concat(mapLabels).concat(symbols).concat(lineLayerHits).concat(pointsLayerHits)
+  layers = layers.concat(mapExtrusions)
+    .concat(mapSymbols).concat(points).concat(userSymbols)
+    .concat(userLabels).concat(editLayer)
+    .concat(lineLayerHits).concat(pointsLayerHits)
   const newStyle = { ...currentStyle, layers }
   map.setStyle(newStyle, { diff: true })
   // console.log(map.getStyle().layers)

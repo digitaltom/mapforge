@@ -32,7 +32,7 @@ export function editStyles () {
 
     removeSource(styles()['polygon-layer']), // gl-draw-polygon-fill-inactive
     removeSource(styles()['polygon-layer-outline']),
-    removeSource(styles()['line-layer-outline']), , // line outline below line, because it's a wider line
+    removeSource(styles()['line-layer-outline']), // line outline below line, because it's a wider line
     removeSource(styles()['line-layer']), // 'gl-draw-line-inactive', 'gl-draw-polygon-stroke-inactive',
 
     // active polygon outline

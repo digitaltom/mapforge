@@ -430,7 +430,7 @@ export function styles () {
         // arrange text to avoid collision
         'text-variable-anchor': ['top'], // text under point
         // distance of the text in 'em'
-        'text-radial-offset': ['/', pointSizeMax, 14],
+        'text-radial-offset': ['+', ['/', pointSizeMax, 14], 0.4],
         'text-justify': 'auto',
         'text-ignore-placement': false, // hide on collision
         // TODO: sort keys on text are ascending, on symbols descending???
