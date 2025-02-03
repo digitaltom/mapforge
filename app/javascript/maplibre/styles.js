@@ -6,7 +6,8 @@ import {
 
 export const viewStyleNames = [
   'polygon-layer',
-  'line-layer-outline',
+  'polygon-layer-outline',
+  'line-layer-outline', // line outline below line, because it's a wider line
   'line-layer',
   'line-layer-hit',
   'points-border-layer',
@@ -79,14 +80,18 @@ const fillColor = ['coalesce',
 const fillOpacity = ['to-number', ['coalesce',
   ['get', 'fill-opacity'], ['get', 'user_fill-opacity'], 0.7]]
 const fillOpacityActive = ['*', 0.7, fillOpacity]
-const lineColorPolygon = ['coalesce', ['get', 'stroke'], ['get', 'user_stroke'], featureOutlineColor]
 
 const lineColor = ['coalesce', ['get', 'stroke'], ['get', 'user_stroke'], featureColor]
+const polygonOutlineColor = ['coalesce', ['get', 'stroke'], ['get', 'user_stroke'], featureOutlineColor]
+const lineOutlineColor = featureOutlineColor
+
 export const defaultLineWidth = 3
 const lineWidthMin = ['ceil', ['/', ['to-number', ['coalesce',
   ['get', 'user_stroke-width'], ['get', 'stroke-width'], defaultLineWidth]], 2]]
 const lineWidthMax = ['*', ['to-number', ['coalesce',
   ['get', 'user_stroke-width'], ['get', 'stroke-width'], defaultLineWidth]], 2]
+const outlineWidthPolygon = ['to-number', ['coalesce',
+  ['get', 'user_stroke-width'], ['get', 'stroke-width'], 3]]
 const lineWidth = [
   'interpolate',
   ['linear'],
@@ -108,7 +113,6 @@ const lineWidth = [
 const lineOpacity = ['to-number', ['coalesce',
   ['get', 'stroke-opacity'], ['get', 'user_stroke-opacity'], 0.8]]
 const lineOpacityActive = 1
-const outlineColor = featureOutlineColor
 
 const outlineWidthMin = ['+', 2, lineWidthMin]
 const outlineWidthMax = ['+', 4, lineWidthMax]
@@ -220,6 +224,24 @@ export function styles () {
         'fill-extrusion-opacity': 0.8
       }
     },
+    // polygon outlines
+    'polygon-layer-outline': {
+      id: 'polygon-layer-outline',
+      type: 'line',
+      source: 'geojson-source',
+      filter: ['all',
+        ['in', '$type', 'Polygon']],
+      layout: {
+        'line-join': 'round',
+        'line-cap': 'round'
+      },
+      paint: {
+        'line-color': polygonOutlineColor,
+        'line-width': outlineWidthPolygon,
+        'line-opacity': lineOpacity
+      }
+    },
+    // line outlines
     'line-layer-outline': {
       id: 'line-layer-outline',
       type: 'line',
@@ -231,35 +253,28 @@ export function styles () {
         'line-cap': 'round'
       },
       paint: {
-        'line-color': outlineColor,
+        'line-color': lineOutlineColor,
         'line-width': outlineWidth,
         'line-opacity': lineOpacity
       }
     },
-    // lines + polygon outlines
+    // lines
     'line-layer': {
       id: 'line-layer',
       type: 'line',
       source: 'geojson-source',
       filter: ['all',
-        ['in', '$type', 'LineString', 'Polygon']],
+        ['in', '$type', 'LineString']],
       layout: {
         'line-join': 'round',
         'line-cap': 'round'
       },
       paint: {
-        'line-color': [
-          'case',
-          ['boolean', ['==', ['geometry-type'], 'LineString'], true],
-          lineColor, lineColorPolygon
-        ],
+        'line-color': lineColor,
         'line-width': lineWidth,
         'line-opacity': [
-          'case',
-          ['boolean', ['==', ['geometry-type'], 'LineString'], true],
-          ['case', ['boolean', ['feature-state', 'active'], false],
-            lineOpacityActive, lineOpacity
-          ], 1
+          'case', ['boolean', ['feature-state', 'active'], false],
+          lineOpacityActive, lineOpacity
         ]
       }
     },
