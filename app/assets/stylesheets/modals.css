@@ -5,6 +5,7 @@
   width: calc(100% - 1em);
   max-width: 35em;
   max-height: calc(100% - 2em);
+  overflow-y: hidden;
   margin: 0.5em 1em 1.5em;
   border-radius: 10px;
   background-color: rgb(255 255 255 / 90%);

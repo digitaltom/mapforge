@@ -91,7 +91,7 @@ const lineWidthMin = ['ceil', ['/', ['to-number', ['coalesce',
 const lineWidthMax = ['*', ['to-number', ['coalesce',
   ['get', 'user_stroke-width'], ['get', 'stroke-width'], defaultLineWidth]], 2]
 const outlineWidthPolygon = ['to-number', ['coalesce',
-  ['get', 'user_stroke-width'], ['get', 'stroke-width'], 3]]
+  ['get', 'user_stroke-width'], ['get', 'stroke-width'], 2]]
 const lineWidth = [
   'interpolate',
   ['linear'],
