@@ -1,5 +1,7 @@
 // Default glyphs for Raster maps
 const openmaptilesGlyphs = 'https://fonts.openmaptiles.org/{fontstack}/{range}.pbf'
+const testGlyphs = 'fonts/test/{fontstack}/{range}.pbf'
+
 // fonts must be available via glyphs:
 // openmaptiles: https://github.com/openmaptiles/fonts/tree/gh-pages
 // maptiler: https://docs.maptiler.com/gl-style-specification/glyphs/
@@ -31,7 +33,7 @@ export function basemaps () {
           }
         },
         layers: defaultRasterLayer,
-        glyphs: openmaptilesGlyphs
+        glyphs: testGlyphs
       }
     },
 
@@ -141,7 +143,7 @@ export function basemaps () {
           }
         },
         layers: defaultRasterLayer,
-        glyphs: openmaptilesGlyphs
+        glyphs: testGlyphs
       }
     },
 
