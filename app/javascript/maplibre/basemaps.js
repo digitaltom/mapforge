@@ -143,7 +143,7 @@ export function basemaps () {
           }
         },
         layers: defaultRasterLayer,
-        glyphs: testGlyphs
+        glyphs: openmaptilesGlyphs
       }
     },
 
