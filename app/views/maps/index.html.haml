@@ -2,5 +2,5 @@
 
 #maps.flex-container
   - @maps.each do |map|
-    .flex-item{id: dom_id(map)}= render map, rw: false, last_change: false, avatar: false, delete: false, auth: false
+    = render map, rw: false, last_change: false, avatar: false, delete: false
 
