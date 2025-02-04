@@ -16,6 +16,7 @@ class Map
   field :description, type: String
   field :public_id, type: String
   field :private, type: Boolean
+  field :images_count, type: Integer, default: 0
 
   BASE_MAPS = [ "osmRasterTiles", "satelliteTiles", "openTopoTiles" ]
   STADIA_MAPS = [ "stamenTonerTiles", "stamenWatercolorTiles" ]

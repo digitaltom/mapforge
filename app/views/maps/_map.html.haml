@@ -26,7 +26,9 @@
   - if last_change
     %i= "last change #{distance_of_time_in_words(DateTime.now, map.updated_at)} ago"
     %br
-    = "#{map.layers.first.features_count} features"
+    = "#{map.layers.sum(:features_count)} features"
+    %br
+    = "#{map.images_count} images"
     %br
     public id:
     = link_to map.public_id, map_path(id: map.public_id)

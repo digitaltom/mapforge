@@ -12,4 +12,5 @@ class User
   field :image
   field :admin
   field :maps_count, type: Integer, default: 0
+  field :images_count, type: Integer, default: 0
 end

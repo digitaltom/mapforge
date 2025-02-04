@@ -133,6 +133,7 @@ export default class extends Controller {
     }
 
     formData.append('image', image)
+    formData.append('map_id', window.gon.map_id)
     fetch('/images', {
       method: 'POST',
       body: formData,

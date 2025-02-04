@@ -1,5 +1,6 @@
 class ImagesController < ApplicationController
   before_action :set_image, only: %i[icon image]
+  before_action :set_map, only: %i[upload]
 
   def icon
     redirect_to "/images/image-not-found_100.webp" and return unless @image
@@ -22,7 +23,7 @@ class ImagesController < ApplicationController
     filename = "#{SecureRandom.hex(4)}.#{ext}"
     raise "Image size exceeds 4MB" if file.size / (1024 * 1024) > 4
     uid = Dragonfly.app.store(file.tempfile, "name" => filename)
-    img = Image.create!(img_uid: uid)
+    img = Image.create!(img_uid: uid, user: @user, map: @map)
     render json: { icon: "/icon/#{img.public_id}", image: "/image/#{img.public_id}" }
   end
 
@@ -30,5 +31,9 @@ class ImagesController < ApplicationController
 
   def set_image
     @image = Image.find_by(public_id: params[:public_id])
+  end
+
+  def set_map
+    @map = Map.find_by(id: params[:map_id])
   end
 end
