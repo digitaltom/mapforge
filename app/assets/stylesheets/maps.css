@@ -86,3 +86,7 @@
   border-radius: 50%;
   background-color: var(--color-light-sand);
 }
+
+.empty-map-list {
+  min-height: 8em;
+}

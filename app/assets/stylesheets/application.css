@@ -116,6 +116,7 @@ a:hover, a:active, .link:hover, .link:active {
 
 .background-dark, .dark-background {
   background-color: var(--color-dark-moss-green);
+  color: var(--color-light-sand);
 
   a, .link {
     color: #fff;
@@ -129,6 +130,7 @@ a:hover, a:active, .link:hover, .link:active {
 
 .background-bright {
   background-color: var(--color-light-sand);
+  color: var(--text-color);
 
   a, .link { /* stylelint-disable-line */
     color: var(--text-color);
