@@ -12,7 +12,7 @@
   border-radius: 4px;
   border-width: 2px;
   border-style: solid;
-  border-color: #000;
+  border-color: var(--color-light-sand);
   min-width: 15em;
   max-width: 35em;
   text-align: center;
@@ -51,6 +51,18 @@
   font-family: Lobster, serif;
 }
 
+.map-auth {
+  position: absolute;
+  top: 0.4em;
+  left: 0.4em;
+  z-index: 2;
+  font-size: 1.2em;
+  background: var(--color-light-sand);
+  border-radius: 50%;
+  width: 1.5em;
+  height: 1.5em;
+}
+
 .map-avatar {
   position: absolute;
   width: 1.5em;
@@ -69,13 +81,8 @@
   bottom: 0;
   z-index: 2;
   font-size: 1.3em;
+  width: 1.5em;
+  height: 1.5em;
+  border-radius: 50%;
   background-color: var(--color-light-sand);
-}
-
-.map-auth {
-  position: absolute;
-  top: 0.4em;
-  left: 0.4em;
-  z-index: 2;
-  font-size: 1.2em;
 }

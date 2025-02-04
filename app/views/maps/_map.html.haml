@@ -1,8 +1,8 @@
-.map-preview.background-bright{id: dom_id(map)}
+.map-preview.background-bright
 
   - if auth
-    .map-auth
-      - if map.private
+    - if map.private
+      .map-auth{title: 'This map is private and not linked from the public listing.'}
         %i.bi.bi-lock-fill
 
   - if map.user && avatar
@@ -10,7 +10,7 @@
       = image_tag map.user.image, class: 'map-avatar', loading: 'lazy', alt: ""
 
   - if delete
-    = link_to destroy_map_path(id: map.id), data: { turbo_method: :delete, turbo_confirm: "Do you really want to delete this map?" }, class: 'map-delete' do
+    = link_to destroy_map_path(id: map.id), data: { turbo_method: :delete, turbo_confirm: "Do you really want to delete this map?" }, title: 'Delete map', class: 'map-delete' do
       %i.bi.bi-trash
 
   = link_to(map_path(id: (rw ? map.id : map.public_id)), 'aria-label': "Open map '#{map.name}'") do

@@ -58,9 +58,12 @@ class MapsController < ApplicationController
   end
   # :nocov:
 
+  # Turbo sends the DELETE request automatically with Content-Type: text/vnd.turbo-stream.html
+  # We can return a turbo stream command that removes the map element in place
+  # To avoid turbo_stream response, force format :html
   def destroy
     @map.destroy!
-    redirect_to my_path, status: :see_other, notice: "Map was deleted."
+    render turbo_stream: turbo_stream.remove(@map)
   end
 
   private

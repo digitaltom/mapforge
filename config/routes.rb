@@ -25,13 +25,13 @@ Rails.application.routes.draw do
     get "/:id" => "maps#show", as: :map, format: :html, constraints: { id: ID_PATTERN }
 
     post "" => "maps#create", as: :create_map
-    delete "/:id" => "maps#destroy", as: :destroy_map, defaults: { format: :html }, constraints: { id: ID_PATTERN }
+    delete "/:id" => "maps#destroy", as: :destroy_map, constraints: { id: ID_PATTERN }
   end
-  get "/my" => "maps#my", as: "my", defaults: { format: :html }
+  get "/my" => "maps#my", as: "my"
 
   get "/d/:id" => "maps#show", defaults: { engine: "deck" }, as: :deck, constraints: { id: ID_PATTERN }
 
-  get "/admin" => "admin#index", defaults: { format: :html }
+  get "/admin" => "admin#index"
 
   # map icons
   get "/icon/:public_id", to: "images#icon", as: "icon", constraints: { public_id: ID_PATTERN }
@@ -43,7 +43,7 @@ Rails.application.routes.draw do
   get "up" => "health#show", as: :rails_health_check
 
   # Defines the root path route ("/")
-  root "frontpage#index", defaults: { format: :html }
+  root "frontpage#index"
   get "/frontpage" => "frontpage#index"
 
   # Render dynamic PWA files from app/views/pwa/*
