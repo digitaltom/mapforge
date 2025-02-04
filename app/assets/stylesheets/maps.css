@@ -53,8 +53,8 @@
 
 .map-auth {
   position: absolute;
-  top: 0.4em;
-  left: 0.4em;
+  top: 0.2em;
+  left: 0.2em;
   z-index: 2;
   font-size: 1.2em;
   background: var(--color-light-sand);
@@ -69,16 +69,16 @@
   height: 1.5em;
   opacity: 0.8;
   border-radius: 50%;
-  top: 0.5em;
-  right: 0.5em;
+  top: 0.2em;
+  right: 0.2em;
   z-index: 2;
   box-shadow: 2px 2px 6px rgb(0 0 0 / 40%);
 }
 
 .map-delete {
   position: absolute;
-  right: 0;
-  bottom: 0;
+  right: 0.2em;
+  bottom: 0.2em;
   z-index: 2;
   font-size: 1.3em;
   width: 1.5em;

@@ -73,6 +73,7 @@ export function initializeMap (divId = 'maplibre-map') {
     pitch: mapProperties.pitch,
     bearing: mapProperties.bearing || 0,
     maxPitch: 72,
+    maplibreLogo: !functions.isMobileDevice(),
     interactive: (window.gon.map_mode !== 'static') // can move/zoom map
     // style: {} // style/map is getting loaded by 'setBackgroundMapLayer'
   })
@@ -390,12 +391,12 @@ export function sortLayers () {
   const pointsLayerHits = functions.reduceArray(layers, (e) => e.id === 'points-hit-layer')
 
   layers = layers.concat(mapExtrusions)
-    .concat(mapSymbols).concat(points).concat(userSymbols)
-    .concat(userLabels).concat(editLayer)
+    .concat(mapSymbols).concat(points).concat(editLayer)
+    .concat(userSymbols).concat(userLabels)
     .concat(lineLayerHits).concat(pointsLayerHits)
   const newStyle = { ...currentStyle, layers }
   map.setStyle(newStyle, { diff: true })
-  // console.log(map.getStyle().layers)
+  console.log(map.getStyle().layers)
 }
 
 export function updateMapName (name) {

@@ -97,7 +97,7 @@ export function editStyles () {
       ],
       paint: {
         'circle-radius': pointSize,
-        'circle-opacity': 0.2,
+        'circle-opacity': 0.1,
         'circle-color': '#ffffff',
         'circle-stroke-color': '#c0c0c0',
         'circle-stroke-width': 1
@@ -126,7 +126,7 @@ export function editStyles () {
     removeSource(styles()['points-layer']),
 
     // inactive vertex points on lines + polygons, outline
-    // renderingoutline seperately to generate nicer overlay effect
+    // rendering outline seperately to generate nicer overlay effect
     {
       id: 'gl-draw-polygon-and-line-vertex-outline-inactive',
       type: 'circle',
