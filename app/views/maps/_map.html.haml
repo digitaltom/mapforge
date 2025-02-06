@@ -30,7 +30,8 @@
   - if last_change
     %i= "last change #{distance_of_time_in_words(DateTime.now, map.updated_at)} ago"
     %br
-    = "#{map.layers.sum(:features_count)} features"
+    - # Use to_a here to avoid additional db query. Mongoid always runs a query to sum()
+    = "#{ map.layers.to_a.sum(&:features_count) } features"
     %br
     = "#{map.images_count} images"
     %br

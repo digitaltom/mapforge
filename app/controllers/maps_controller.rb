@@ -7,21 +7,23 @@ class MapsController < ApplicationController
   layout "map", only: [ :show ]
 
   def index
-    @maps = Map.where.not(private: true).includes(:layers).order(updated_at: :desc)
+    @maps = Map.where.not(private: true).includes(:layers, :user).order(updated_at: :desc)
   end
 
   def my
-    @maps = Map.where(user: @user).includes(:layers).order(updated_at: :desc)
+    @maps = Map.where(user: @user).includes(:layers, :user).order(updated_at: :desc)
   end
 
   def show
-    @map_properties = @map.properties
-    gon.map_id = params[:id]
-    gon.map_mode = (params[:id] == @map.id.to_s) ? "rw" : "ro"
-    gon.map_mode = "static" if params["static"]
-    @map_mode = gon.map_mode
-    gon.csrf_token = form_authenticity_token
-    gon.map_properties = @map_properties
+    if request.format.html?
+      @map_properties = @map.properties
+      gon.map_id = params[:id]
+      gon.map_mode = (params[:id] == @map.id.to_s) ? "rw" : "ro"
+      gon.map_mode = "static" if params["static"]
+      @map_mode = gon.map_mode
+      gon.csrf_token = form_authenticity_token
+      gon.map_properties = @map_properties
+    end
 
     respond_to do |format|
       format.html do
@@ -79,7 +81,8 @@ class MapsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_map
-    @map = Map.find_by(public_id: params[:id]) || Map.find_by(id: params[:id])
+    @map = Map.includes(:layers, :user)
+    @map = @map.find_by(public_id: params[:id]) || @map.find_by(id: params[:id])
     head :not_found unless @map
   end
 

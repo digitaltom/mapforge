@@ -33,3 +33,8 @@ rescue Mongo::Error::NoServerAvailable => e
   puts "Could not connect to MongoDB. #{e.message}"
   exit 1
 end
+
+if Rails.env.development?
+  Mongoid.logger = Logger.new($stdout)
+  # Mongo::Logger.logger = Logger.new($stdout)
+end
