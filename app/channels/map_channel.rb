@@ -1,4 +1,6 @@
 class MapChannel < ApplicationCable::Channel
+  # Allow to subscribe to changes with public + private id,
+  # Check auth on update methods by looking up map with private id
   def subscribed
     map = Map.find(params[:map_id]) || Map.find_by(public_id: params[:map_id])
     stream_from "map_channel_#{params[:map_id]}"

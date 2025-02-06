@@ -24,6 +24,10 @@ describe 'Admin List' do
       expect(Map.count).to eq(2)
     end
 
+    # FIXME: Somehow Turbo Stream broadcasts / responses aren't visible to capybara...
+    # context 'map change broadcasts' do
+    # end
+
     context 'navigating from admin list to map' do
       it 'shows map in edit mode without errors' do
         find("img[class='preview-image']", match: :first).click

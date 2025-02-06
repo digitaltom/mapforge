@@ -63,6 +63,7 @@ class MapsController < ApplicationController
   # To avoid turbo_stream response, force format :html
   def destroy
     @map.destroy!
+    # there is an additional broadcast from the model, for the admin page
     render turbo_stream: turbo_stream.remove(@map)
   end
 

@@ -5,6 +5,9 @@
   %meta{ name: 'view-transition', content: 'same-origin' }
 
   %meta{ name: 'turbo-prefetch', content: 'false' }
+  = turbo_refresh_method_tag :morph
+  = turbo_refresh_scroll_tag :preserve
+
   %meta{ name: 'mobile-web-app-capable', content: 'yes' }
 
   %meta{ name: 'description', content: "Create and share individual maps for events and locations. Choose from a base map like streets or satellite and 'paint' your custom layer onto it." }

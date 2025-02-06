@@ -7,16 +7,15 @@ class Map
   # mongoid callbacks: https://www.mongodb.com/docs/mongoid/current/data-modeling/callbacks/
   # broadcasts: https://www.rubydoc.info/github/hotwired/turbo-rails/Turbo/Streams/Broadcasts
   after_create do
-    broadcast_prepend_to("admin_maps_list", target: "maps", partial: "maps/map",
-      locals: { rw: true, avatar: true, delete: true, last_change: true })
-  end
-  # TODO: this doen't trigger on touch
-  after_update do
-    broadcast_update_to("admin_maps_list", target: self, partial: "maps/map",
-      locals: { rw: true, avatar: true, delete: true, last_change: true })
+    # using refresh to make sure map access is authorized
+    broadcast_refresh_to("admin_maps_list")
+    broadcast_refresh_to("public_maps_list") unless private
+    # broadcast_prepend_to("admin_maps_list", target: "maps", partial: "maps/map",
+    #  locals: { rw: true, avatar: true, delete: true, last_change: true })
   end
   after_destroy do
-    broadcast_remove_to("admin_maps_list", target: self)
+    broadcast_refresh_to("admin_maps_list")
+    broadcast_refresh_to("public_maps_list") unless private
   end
 
   has_many :layers
