@@ -26,7 +26,7 @@ MapboxDraw.constants.classes.CONTROL_GROUP = 'maplibregl-ctrl-group'
 
 // https://github.com/mapbox/mapbox-gl-draw
 export function initializeEditMode () {
-  console.log('Initializing MapboxDraw')
+  // console.log('Initializing MapboxDraw')
 
   // Patching direct select mode to not allow dragging features
   // similar to https://github.com/zakjan/mapbox-gl-draw-waypoint

@@ -1,15 +1,15 @@
 #feature-edit-ui.hidden
 
   #feature-title-input.form-floating.edit-ui.mt-2.hidden
-    %input.form-control{ "name": "feature-title", data: { action: "input->feature-edit#updateTitle" } }
+    %input.form-control{ "name": "feature-title", data: { action: "input->map--feature-edit#updateTitle" } }
     %label{ for: "feature-title"} Title
 
   %div
-    %button#button-add-label.mt-1.btn.btn-secondary{ type: "button", 'data-action': "click->feature-modal#show_add_label" } Add label
-    %button#button-add-desc.mt-1.btn.btn-secondary{ type: "button", 'data-action': "click->feature-modal#show_add_desc" } Add description
+    %button#button-add-label.mt-1.btn.btn-secondary{ type: "button", 'data-action': "click->map--feature-modal#show_add_label" } Add label
+    %button#button-add-desc.mt-1.btn.btn-secondary{ type: "button", 'data-action': "click->map--feature-modal#show_add_desc" } Add description
 
   #feature-label.form-floating.edit-ui.hidden
-    %input.form-control{"name": "feature-label", "data-action": "input->feature-edit#updateLabel"}
+    %input.form-control{"name": "feature-label", "data-action": "input->map--feature-edit#updateLabel"}
     %label{ for: "feature-label"} Label
 
   #feature-desc.hidden
@@ -19,39 +19,39 @@
 
   #point-size-ui.edit-ui.edit-point
     %label{ for: "point-size"} Size:
-    %input.slider#point-size{ type: "range", min: "1", max: "50", value: "1", 'data-action': "input->feature-edit#updatePointSize  change->feature-edit#saveFeature" }
+    %input.slider#point-size{ type: "range", min: "1", max: "50", value: "1", 'data-action': "input->map--feature-edit#updatePointSize  change->map--feature-edit#saveFeature" }
     %span#point-size-val.text-muted.small
 
   #line-width-ui.edit-ui.edit-line
     %label{ for: "line-width"} Width:
-    %input.slider#line-width{ type: "range", min: "1", max: "15", value: "1", 'data-action': "input->feature-edit#updateLineWidth change->feature-edit#saveFeature" }
+    %input.slider#line-width{ type: "range", min: "1", max: "15", value: "1", 'data-action': "input->map--feature-edit#updateLineWidth change->map--feature-edit#saveFeature" }
     %span#line-width-val.text-muted.small
 
   #outline-width-ui.edit-ui.edit-polygon
     %label{ for: "outline-width"} Line width:
-    %input.slider#outline-width{ type: "range", min: "0", max: "15", value: "1", 'data-action': "input->feature-edit#updateOutLineWidth change->feature-edit#saveFeature" }
+    %input.slider#outline-width{ type: "range", min: "0", max: "15", value: "1", 'data-action': "input->map--feature-edit#updateOutLineWidth change->map--feature-edit#saveFeature" }
     %span#outline-width-val.text-muted.small
 
   #stroke-color-ui.edit-ui.edit-line.edit-polygon.edit-point
     %label{ for: "stroke-color"} Line color:
-    %input#stroke-color{ type: "color", 'data-action': "input->feature-edit#updateStrokeColor change->feature-edit#saveFeature" }
+    %input#stroke-color{ type: "color", 'data-action': "input->map--feature-edit#updateStrokeColor change->map--feature-edit#saveFeature" }
 
   #fill-color-ui.edit-ui.edit-polygon.edit-point
     %label{ for: "fill-color"} Fill color:
-    %input#fill-color{ type: "color", 'data-action': "input->feature-edit#updateFillColor change->feature-edit#saveFeature" }
+    %input#fill-color{ type: "color", 'data-action': "input->map--feature-edit#updateFillColor change->map--feature-edit#saveFeature" }
 
   #fill-extrusion-height-ui.edit-ui.edit-line.edit-polygon
     %label{ for: "fill-extrusion-height"} Height:
-    %input.slider#fill-extrusion-height{ type: "range", min: "0", max: "500", value: "0", 'data-action': "input->feature-edit#updateFillExtrusionHeight change->feature-edit#saveFeature" }
+    %input.slider#fill-extrusion-height{ type: "range", min: "0", max: "500", value: "0", 'data-action': "input->map--feature-edit#updateFillExtrusionHeight change->map--feature-edit#saveFeature" }
     %span#fill-extrusion-height-val.text-muted.small
 
   #marker-symbol-ui.edit-ui.edit-point
     %label{ for: "marker-symbol"} Symbol:
-    %input#marker-symbol{ type: "text", size: '1', 'data-action': "input->feature-edit#updateMarkerSymbol change->feature-edit#saveFeature" }
+    %input#marker-symbol{ type: "text", size: '1', 'data-action': "input->map--feature-edit#updateMarkerSymbol change->map--feature-edit#saveFeature" }
     %span<
       = surround '(', ')' do
         %a{ href: 'https://emojipedia.org/google/15.1', target: '_blank'}>Emoji list
 
   #marker-image-ui.edit-ui.edit-point
     %label{ for: "marker-image"} Image:
-    %input#marker-image{ type: "file", name: 'marker-image', 'data-action': "input->feature-edit#updateMarkerImage" }
+    %input#marker-image{ type: "file", name: 'marker-image', 'data-action': "input->map--feature-edit#updateMarkerImage" }

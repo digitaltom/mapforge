@@ -83,7 +83,7 @@ export function initializeMap (divId = 'maplibre-map') {
 
   // after basemap style is ready/changed, load geojson layer
   map.on('style.load', () => {
-    console.log('Map style loaded')
+    // console.log('Map style loaded')
     loadGeoJsonData()
     if (mapProperties.terrain && window.gon.map_keys.maptiler) { addTerrain() }
   })
@@ -123,22 +123,22 @@ export function initializeMap (divId = 'maplibre-map') {
   map.on('click', resetControls)
   map.on('pitchend', function (e) {
     functions.e('#settings-modal', e => {
-      e.dataset.settingsCurrentPitchValue = map.getPitch().toFixed(0)
+      e.setAttribute('data-map--settings-current-pitch-value', map.getPitch().toFixed(0))
     })
   })
   map.on('zoomend', function (e) {
     functions.e('#settings-modal', e => {
-      e.dataset.settingsCurrentZoomValue = map.getZoom().toFixed(2)
+      e.setAttribute('data-map--settings-current-zoom-value', map.getZoom().toFixed(2))
     })
   })
   map.on('rotate', function (e) {
     functions.e('#settings-modal', e => {
-      e.dataset.settingsCurrentBearingValue = map.getBearing().toFixed(0)
+      e.setAttribute('data-map--settings-current-bearing-value', map.getBearing().toFixed(0))
     })
   })
   map.on('moveend', function (e) {
     functions.e('#settings-modal', e => {
-      e.dataset.settingsCurrentCenterValue = JSON.stringify([map.getCenter().lng, map.getCenter().lat])
+      e.setAttribute('data-map--settings-current-center-value', JSON.stringify([map.getCenter().lng, map.getCenter().lat]))
     })
   })
   map.on('error', (err) => {
@@ -396,7 +396,7 @@ export function sortLayers () {
     .concat(lineLayerHits).concat(pointsLayerHits)
   const newStyle = { ...currentStyle, layers }
   map.setStyle(newStyle, { diff: true })
-  console.log(map.getStyle().layers)
+  // console.log(map.getStyle().layers)
 }
 
 export function updateMapName (name) {

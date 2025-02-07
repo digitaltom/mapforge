@@ -1,5 +1,5 @@
-#layers-modal.map-modal.fade{'data-controller': "layers"}
-  %button.close-button{ data: { action: "click->layers#close" } } &times;
+#layers-modal.map-modal.fade{'data-controller': "map--layers"}
+  %button.close-button{ data: { action: "click->map--layers#close" } } &times;
   .map-modal-header
     %h3 Layers
 
@@ -11,7 +11,7 @@
         %br
         %small EPSG:4326 (WGS 84) format
       .col
-        %input.form-control#fileInput{ type: "file", data: { action: "input->layers#upload" } }
+        %input.form-control#fileInput{ type: "file", data: { action: "input->map--layers#upload" } }
 
     #default-layer
       %h4.layer-name Default Layer

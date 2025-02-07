@@ -1,6 +1,6 @@
 / Initialize settings modal with 'current' values from @map_properties.
 / Updates will get set from map event callbacks
-- data = { controller: 'settings',
+- data = { controller: 'map--settings',
            settings_current_pitch_value: @map_properties[:pitch].to_f.round(0),
            settings_current_zoom_value: (@map_properties[:zoom] || @map_properties[:default_zoom]).to_f.round(2),
            settings_current_bearing_value: @map_properties[:bearing].to_f.round(0),
@@ -14,7 +14,7 @@
   .map-modal-content
 
     .form-floating.edit-ui
-      %input.form-control#map-name{"name": "map-name", type: "text", size: 27, data: { action: "input->settings#updateName" } }
+      %input.form-control#map-name{"name": "map-name", type: "text", size: 27, data: { action: "input->map--settings#updateName" } }
       %label{ for: "map-name"} Name:
 
     %br
@@ -22,25 +22,25 @@
     %br
     - Map::BASE_MAPS.each do |base_map|
       - active = (@map_properties[:base_map] == base_map)
-      = image_tag("base_maps/#{base_map}.jpg", data: { base_map: base_map, action: "click->settings#updateBaseMap" }, class: "layer-preview", loading: 'lazy')
+      = image_tag("base_maps/#{base_map}.jpg", data: { base_map: base_map, action: "click->map--settings#updateBaseMap" }, class: "layer-preview", loading: 'lazy')
     %br
     Versatiles maps:
     %br
     - Map::VERSATILES_MAPS.each do |base_map|
       - active = (@map_properties[:base_map] == base_map)
-      = image_tag("base_maps/#{base_map}.jpg", data: { base_map: base_map, action: "click->settings#updateBaseMap" }, class: "layer-preview", loading: 'lazy')
+      = image_tag("base_maps/#{base_map}.jpg", data: { base_map: base_map, action: "click->map--settings#updateBaseMap" }, class: "layer-preview", loading: 'lazy')
     %br
     Openfreemaps:
     %br
     - Map::OPENFREE_MAPS.each do |base_map|
       - active = (@map_properties[:base_map] == base_map)
-      = image_tag("base_maps/#{base_map}.jpg", data: { base_map: base_map, action: "click->settings#updateBaseMap" }, class: "layer-preview", loading: 'lazy')
+      = image_tag("base_maps/#{base_map}.jpg", data: { base_map: base_map, action: "click->map--settings#updateBaseMap" }, class: "layer-preview", loading: 'lazy')
     - if ENV['MAPTILER_KEY']
       %br
       Maptiler maps:
       %br
       - Map::MAPTILER_MAPS.each do |base_map|
-        = image_tag("base_maps/#{base_map}.jpg", data: { base_map: base_map, action: "click->settings#updateBaseMap"}, class: "layer-preview", loading: 'lazy')
+        = image_tag("base_maps/#{base_map}.jpg", data: { base_map: base_map, action: "click->map--settings#updateBaseMap"}, class: "layer-preview", loading: 'lazy')
     %br
     %h4 Default view
     Center:
@@ -56,9 +56,9 @@
     %br
     %span
       %label{ for: "map-terrain"} Terrain:
-      %input#map-terrain{type: "checkbox", checked: @map_properties[:terrain], data: { action: "click->settings#updateTerrain"} }
+      %input#map-terrain{type: "checkbox", checked: @map_properties[:terrain], data: { action: "click->map--settings#updateTerrain"} }
     %br
-    %button#save-map-defaults{ data: { action: "click->settings#updateDefaultView" } }
+    %button#save-map-defaults{ data: { action: "click->map--settings#updateDefaultView" } }
       Use current view as new default (center:
       %span#map-center-current
       , pitch:

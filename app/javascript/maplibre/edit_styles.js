@@ -10,7 +10,7 @@ export function initializeEditStyles () {
   map.addLayer(styles()['symbols-layer'])
   map.addLayer(styles()['text-layer'])
   sortLayers()
-  console.log('Edit styles added')
+  // console.log('Edit styles added')
 
   map.on('styleimagemissing', loadImage)
   // TODO setting feature state (hover) doesn't work on draw features

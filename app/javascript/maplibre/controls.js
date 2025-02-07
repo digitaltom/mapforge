@@ -124,16 +124,16 @@ export class MapLayersControl {
 // initialize settings modal with default map values from mapProperties
 export function initSettingsModal () {
   functions.e('#settings-modal', e => {
-    if (mapProperties.name) { e.dataset.settingsMapNameValue = mapProperties.name }
-    e.dataset.settingsBaseMapValue = mapProperties.base_map
-    e.dataset.settingsMapTerrainValue = mapProperties.terrain
-    e.dataset.settingsDefaultPitchValue = Math.round(mapProperties.pitch)
-    e.dataset.settingsDefaultZoomValue = parseFloat(mapProperties.zoom || mapProperties.default_zoom).toFixed(2)
-    e.dataset.settingsDefaultBearingValue = Math.round(mapProperties.bearing)
+    if (mapProperties.name) { e.setAttribute('data-map--settings-map-name-value', mapProperties.name) }
+    e.setAttribute('data-map--settings-base-map-value', mapProperties.base_map)
+    e.setAttribute('data-map--settings-map-terrain-value', mapProperties.terrain)
+    e.setAttribute('data-map--settings-default-pitch-value', Math.round(mapProperties.pitch))
+    e.setAttribute('data-map--settings-default-zoom-value', parseFloat(mapProperties.zoom || mapProperties.default_zoom).toFixed(2))
+    e.setAttribute('data-map--settings-default-bearing-value', Math.round(mapProperties.bearing))
     if (mapProperties.center) {
-      e.dataset.settingsDefaultCenterValue = JSON.stringify(mapProperties.center)
+      e.setAttribute('data-map--settings-default-center-value', JSON.stringify(mapProperties.center))
     }
-    e.dataset.settingsDefaultAutoCenterValue = JSON.stringify(mapProperties.default_center)
+    e.setAttribute('data-map--settings-default-auto-center-value', JSON.stringify(mapProperties.default_center))
   })
 }
 
@@ -154,8 +154,8 @@ export function initLayersModal () {
       icon.classList.add('bi')
       icon.classList.add('bi-arrow-right-circle')
       icon.setAttribute('data-feature-id', feature.id)
-      icon.setAttribute('data-controller', 'layers')
-      icon.setAttribute('data-action', 'click->layers#flyto')
+      icon.setAttribute('data-controller', 'map--layers')
+      icon.setAttribute('data-action', 'click->map--layers#flyto')
       link.appendChild(icon)
       e.appendChild(listItem)
     })

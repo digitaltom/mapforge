@@ -4,8 +4,6 @@ import '@hotwired/turbo-rails'
 // Importing maplibre + controllers early here, because loading them later
 // from maplibre.haml caused issues with the turbo:load event which was received
 // before the module finished loading
-import 'maplibre'
-import 'frontpage'
 import 'controllers'
 
 import AOS from 'aos'
