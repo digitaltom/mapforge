@@ -171,7 +171,7 @@ export function resetControls () {
     e => { e.classList.remove('active') })
 
   // reset active modals
-  functions.e('.map-modal', e => { e.classList.remove('show') })
+  functions.e('.modal-center', e => { e.classList.remove('show') })
 }
 
 function resetEditControls () {

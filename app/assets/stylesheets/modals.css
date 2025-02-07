@@ -1,12 +1,22 @@
-.map-modal {
+.modal-center {
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  height: calc(100% - 1em); /* leave space at botom */
+  width: 100%;
   position: absolute;
-  left: calc(50% - 1em);
-  transform: translate(-50%);
+  top: 0;
+  pointer-events: none; /* This makes the div transparent to mouse events */
+}
+
+.map-modal {
+  position: relative;
+  pointer-events: auto;
   width: calc(100% - 1em);
   max-width: 35em;
   max-height: calc(100% - 2em);
   overflow-y: hidden;
-  margin: 0.5em 1em 1.5em;
+  margin: 0 1em 1.5em;
   border-radius: 10px;
   background-color: rgb(255 255 255 / 90%);
 
@@ -27,7 +37,7 @@
 .map-modal-content {
   margin-top: 1em;
   overflow-y: auto;
-  max-height: calc(100vh - 8em);
+  max-height: calc(100vh - 10em);
 }
 
 .layer-preview {

@@ -1,13 +1,14 @@
-#share-modal.map-modal.fade{'data-controller': "map--layers"}
-  %button.close-button{ data: { action: "click->map--layers#close" } } &times;
-  .map-modal-header
-    %h3 Share Map
+#share-modal.modal-center.fade
+  .map-modal{'data-controller': "map--layers"}
+    %button.close-button{ data: { action: "click->map--layers#close" } } &times;
+    .map-modal-header
+      %h3 Share Map
 
-  .map-modal-content
-    %ul
-      %li= link_to 'Viewer link', map_path(id: @map.public_id)
-      %li= link_to 'Edit link', map_path(@map)
-      %li= link_to 'Download geojson', map_path(@map.public_id, format: :geojson)
-      %li= link_to 'Download gpx', map_path(@map.public_id, format: :gpx)
-      %li= link_to 'Download map export', map_path(id: @map.public_id, format: :json)
+    .map-modal-content
+      %ul
+        %li= link_to 'Viewer link', map_path(id: @map.public_id)
+        %li= link_to 'Edit link', map_path(@map)
+        %li= link_to 'Download geojson', map_path(@map.public_id, format: :geojson)
+        %li= link_to 'Download gpx', map_path(@map.public_id, format: :gpx)
+        %li= link_to 'Download map export', map_path(id: @map.public_id, format: :json)
 

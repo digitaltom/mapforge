@@ -6,65 +6,66 @@
            settings_current_bearing_value: @map_properties[:bearing].to_f.round(0),
            settings_current_center_value: (@map_properties[:center] || @map_properties[:default_center]) }
 
-#settings-modal.map-modal.fade{ data: data}
-  %button.close-button{ data: { action: "click->settings#close" } } &times;
-  .map-modal-header
-    %h3 Configure Map
+#settings-modal.modal-center.fade{ data: data}
+  .map-modal
+    %button.close-button{ data: { action: "click->map--settings#close" } } &times;
+    .map-modal-header
+      %h3 Configure Map
 
-  .map-modal-content
+    .map-modal-content
 
-    .form-floating.edit-ui
-      %input.form-control#map-name{"name": "map-name", type: "text", size: 27, data: { action: "input->map--settings#updateName" } }
-      %label{ for: "map-name"} Name:
+      .form-floating.edit-ui
+        %input.form-control#map-name{"name": "map-name", type: "text", size: 27, data: { action: "input->map--settings#updateName" } }
+        %label{ for: "map-name"} Name:
 
-    %br
-    Free tile maps:
-    %br
-    - Map::BASE_MAPS.each do |base_map|
-      - active = (@map_properties[:base_map] == base_map)
-      = image_tag("base_maps/#{base_map}.jpg", data: { base_map: base_map, action: "click->map--settings#updateBaseMap" }, class: "layer-preview", loading: 'lazy')
-    %br
-    Versatiles maps:
-    %br
-    - Map::VERSATILES_MAPS.each do |base_map|
-      - active = (@map_properties[:base_map] == base_map)
-      = image_tag("base_maps/#{base_map}.jpg", data: { base_map: base_map, action: "click->map--settings#updateBaseMap" }, class: "layer-preview", loading: 'lazy')
-    %br
-    Openfreemaps:
-    %br
-    - Map::OPENFREE_MAPS.each do |base_map|
-      - active = (@map_properties[:base_map] == base_map)
-      = image_tag("base_maps/#{base_map}.jpg", data: { base_map: base_map, action: "click->map--settings#updateBaseMap" }, class: "layer-preview", loading: 'lazy')
-    - if ENV['MAPTILER_KEY']
       %br
-      Maptiler maps:
+      Free tile maps:
       %br
-      - Map::MAPTILER_MAPS.each do |base_map|
-        = image_tag("base_maps/#{base_map}.jpg", data: { base_map: base_map, action: "click->map--settings#updateBaseMap"}, class: "layer-preview", loading: 'lazy')
-    %br
-    %h4 Default view
-    Center:
-    %span#map-center
-    %br
-    Zoom:
-    %span#map-zoom
-    , Pitch:
-    %span#map-pitch
-    °, Bearing:
-    %span#map-bearing
-    °
-    %br
-    %span
-      %label{ for: "map-terrain"} Terrain:
-      %input#map-terrain{type: "checkbox", checked: @map_properties[:terrain], data: { action: "click->map--settings#updateTerrain"} }
-    %br
-    %button#save-map-defaults{ data: { action: "click->map--settings#updateDefaultView" } }
-      Use current view as new default (center:
-      %span#map-center-current
-      , pitch:
-      %span#map-pitch-current
-      °, zoom:
-      %span#map-zoom-current
-      , bearing:
-      %span#map-bearing-current
-      °)
+      - Map::BASE_MAPS.each do |base_map|
+        - active = (@map_properties[:base_map] == base_map)
+        = image_tag("base_maps/#{base_map}.jpg", data: { base_map: base_map, action: "click->map--settings#updateBaseMap" }, class: "layer-preview", loading: 'lazy')
+      %br
+      Versatiles maps:
+      %br
+      - Map::VERSATILES_MAPS.each do |base_map|
+        - active = (@map_properties[:base_map] == base_map)
+        = image_tag("base_maps/#{base_map}.jpg", data: { base_map: base_map, action: "click->map--settings#updateBaseMap" }, class: "layer-preview", loading: 'lazy')
+      %br
+      Openfreemaps:
+      %br
+      - Map::OPENFREE_MAPS.each do |base_map|
+        - active = (@map_properties[:base_map] == base_map)
+        = image_tag("base_maps/#{base_map}.jpg", data: { base_map: base_map, action: "click->map--settings#updateBaseMap" }, class: "layer-preview", loading: 'lazy')
+      - if ENV['MAPTILER_KEY']
+        %br
+        Maptiler maps:
+        %br
+        - Map::MAPTILER_MAPS.each do |base_map|
+          = image_tag("base_maps/#{base_map}.jpg", data: { base_map: base_map, action: "click->map--settings#updateBaseMap"}, class: "layer-preview", loading: 'lazy')
+      %br
+      %h4 Default view
+      Center:
+      %span#map-center
+      %br
+      Zoom:
+      %span#map-zoom
+      , Pitch:
+      %span#map-pitch
+      °, Bearing:
+      %span#map-bearing
+      °
+      %br
+      %span
+        %label{ for: "map-terrain"} 3D Terrain:
+        %input#map-terrain{type: "checkbox", checked: @map_properties[:terrain], data: { action: "click->map--settings#updateTerrain"} }
+      %br
+      %button#save-map-defaults{ data: { action: "click->map--settings#updateDefaultView" } }
+        Use current view as new default (center:
+        %span#map-center-current
+        , pitch:
+        %span#map-pitch-current
+        °, zoom:
+        %span#map-zoom-current
+        , bearing:
+        %span#map-bearing-current
+        °)
