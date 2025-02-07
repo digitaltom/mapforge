@@ -64,13 +64,15 @@ export default class extends Controller {
       document.querySelector('#line-width').value = size
       document.querySelector('#line-width-val').innerHTML = size
       dom.showElements(['#feature-edit-ui .edit-line'])
-    } else if (feature.geometry.type === 'Polygon') {
+    } else if (feature.geometry.type === 'Polygon' || feature.geometry.type === 'MultiPolygon') {
       dom.showElements(['#feature-edit-ui .edit-polygon'])
       document.querySelector('#fill-color').value = feature.properties.fill || '#0A870A'
       document.querySelector('#stroke-color').value = feature.properties.stroke || '#ffffff'
       const size = feature.properties['stroke-width'] || defaultLineWidth
       document.querySelector('#outline-width').value = size
       document.querySelector('#outline-width-val').innerHTML = size
+      document.querySelector('#opacity').value = feature.properties.fillOpacity || 7
+      document.querySelector('#opacity-val').textContent = (feature.properties.fillOpacity || 7) * 10 + '%'
     }
 
     if (feature.geometry.type === 'LineString' || feature.geometry.type === 'MultiLineString' ||

@@ -95,6 +95,16 @@ export default class extends Controller {
     redrawGeojson(false)
   }
 
+  updateOpacity () {
+    const feature = this.getFeature()
+    const opacity = document.querySelector('#opacity').value / 10
+    document.querySelector('#opacity-val').textContent = opacity * 100 + '%'
+    feature.properties['fill-opacity'] = opacity
+    // draw layer feature properties aren't getting updated by draw.set()
+    draw.setFeatureProperty(this.featureIdValue, 'fill-opacity', opacity)
+    redrawGeojson()
+  }
+
   updateStrokeColor () {
     const feature = this.getFeature()
     const color = document.querySelector('#stroke-color').value
