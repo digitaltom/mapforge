@@ -131,11 +131,11 @@ collection_format: collection_format))
   end
 
   def screenshot
-    "/previews/#{safe_public_id}.png?#{updated_at.to_i}" if File.exist?(screenshot_file)
+    "/previews/#{safe_public_id}.jpg?#{updated_at.to_i}" if File.exist?(screenshot_file)
   end
 
   def screenshot_file
-    Rails.root.join("public/previews/#{safe_public_id}.png").to_s
+    Rails.root.join("public/previews/#{safe_public_id}.jpg").to_s
   end
 
   private

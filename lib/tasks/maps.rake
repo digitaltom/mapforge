@@ -1,4 +1,3 @@
-
 require "selenium-webdriver"
 require_relative "../../spec/support/capybara.rb"
 
@@ -17,7 +16,7 @@ namespace :maps do
         Puppeteer.launch(headless: true, ignore_https_errors: true) do |browser|
           context = browser.create_incognito_browser_context
           page = browser.new_page
-          page.default_timeout = 60000
+          page.default_timeout = 90000
           map_url = base_url + map.public_id + "?static=true"
           failure = false
 
@@ -41,7 +40,11 @@ namespace :maps do
           page.wait_for_selector("#maplibre-map[map-loaded='true']", timeout: 30000)
 
           unless failure
-            page.screenshot(path: map.screenshot_file)
+            page.screenshot(path: map.screenshot_file,
+                            quality: 95)
+            image = Rszr::Image.load(map.screenshot_file)
+            image.resize!(400, :auto)
+            image.save(map.screenshot_file)
             puts "Updated #{map.screenshot_file}"
           end
          browser.close

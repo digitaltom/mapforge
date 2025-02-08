@@ -426,6 +426,7 @@ GEM
     rspec-support (3.13.1)
     rspec-wait (1.0.1)
       rspec (>= 3.4)
+    rszr (1.5.0)
     rubocop (1.71.1)
       json (~> 2.3)
       language_server-protocol (>= 3.17.0)
@@ -587,6 +588,7 @@ DEPENDENCIES
   rspec
   rspec-rails
   rspec-wait
+  rszr
   rubocop
   rubocop-capybara
   rubocop-performance
