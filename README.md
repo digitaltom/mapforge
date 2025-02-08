@@ -24,6 +24,7 @@ For openSUSE (Debian package names in braces):
 ```
 zypper in proj-devel # (libproj-dev) for building rgeo-proj4
 zypper in proj # (proj-bin) for running rgeo-proj4
+zypper in imlib2 imlib2-devel # (libimlib2, libimlib2-dev) to resize screenshots
 zypper in npm # for running eslint
 bundle
 ```

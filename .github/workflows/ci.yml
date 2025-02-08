@@ -19,7 +19,7 @@ jobs:
       - name: Update OS
         run: sudo apt-get update
       - name: Install dependencies
-        run: sudo apt-get install -y libproj-dev proj-bin
+        run: sudo apt-get install -y libproj-dev proj-bin libimlib2 libimlib2-dev
       - name: Install Ruby and gems
         uses: ruby/setup-ruby@v1
         with:
@@ -59,7 +59,7 @@ jobs:
       - name: Update OS
         run: sudo apt-get update
       - name: Install dependencies
-        run: sudo apt-get install -y ruby-dev build-essential git libvips pkg-config libproj-dev proj-bin
+        run: sudo apt-get install -y ruby-dev build-essential git libvips pkg-config libproj-dev proj-bin libimlib2 libimlib2-dev
       - name: Install Ruby and gems
         uses: ruby/setup-ruby@v1
         with:

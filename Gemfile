@@ -43,6 +43,7 @@ gem "haml"
 gem "capybara"
 gem "capybara-screenshot"
 gem "puppeteer-ruby"
+gem "rszr"
 
 # map + coordinates libraries
 gem "rgeo"
