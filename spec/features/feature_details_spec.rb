@@ -18,10 +18,13 @@ describe 'Feature details' do
       end
 
       it 'can enlarge modal with pull-up button' do
+        page.current_window.resize_to(290, 523)
+        height = find('#feature-details-modal').native.style('height').sub('px', '').to_i
+        expect(height).to be < 150
         find('.modal-pull-button').click
         sleep(0.3)
         height = find('#feature-details-modal').native.style('height').sub('px', '').to_i
-        expect(height).to be > 250
+        expect(height).to be > 150
       end
     end
   end

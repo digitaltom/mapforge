@@ -72,6 +72,11 @@ describe 'Feature edit' do
           .or have_text('Map view updated')
         expect(Feature.count).to eq(0)
       end
+
+      it 'shows feature meta data' do
+        find('#edit-button-edit').click
+        expect(page).to have_text('27.70 km²')
+      end
     end
   end
 

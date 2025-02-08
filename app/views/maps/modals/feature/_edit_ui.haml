@@ -1,5 +1,7 @@
 #feature-edit-ui.hidden
 
+  #feature-details-meta
+
   #feature-title-input.form-floating.edit-ui.mt-2.hidden
     %input.form-control{ "name": "feature-title", data: { action: "input->map--feature-edit#updateTitle" } }
     %label{ for: "feature-title"} Title
@@ -42,7 +44,7 @@
 
   #opacity-ui.edit-ui.edit-polygon
     %label{ for: "opacity"} Opacity:
-    %input#opacity{ type: "range", min: "1", max: "10", value: "7", 'data-action': "input->map--feature-edit#updateOpacity change->map--feature-edit#saveFeature" }
+    %input.slider#opacity{ type: "range", min: "1", max: "10", value: "7", 'data-action': "input->map--feature-edit#updateOpacity change->map--feature-edit#saveFeature" }
     %span#opacity-val.text-muted.small
 
   #fill-extrusion-height-ui.edit-ui.edit-line.edit-polygon

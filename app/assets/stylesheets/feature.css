@@ -1,16 +1,46 @@
 #feature-details-modal {
   position: absolute;
-  bottom: 0;
-  left: calc(50% - 1em);
-  transform: translate(-50%);
-  min-height: 125px;
-  max-width: 800px;
   padding: 0.7em;
   overflow-y: auto;
-  width: calc(100% - 1em);
-  margin: 0.5em 1em 1.5em;
+  margin: 0.4em 1em 1.5em;
   border-radius: 10px;
   background-color: rgb(255 255 255 / 90%);
+}
+
+@media (width <= 574px) {
+  #feature-details-modal {
+    bottom: 0;
+    left: calc(50% - 1em);
+    transform: translate(-50%);
+    min-height: 125px;
+    max-height: calc(100% - 1em);
+    overflow-y: auto;
+    width: calc(100% - 1em);
+    margin: 0.5em 1em;
+  }
+}
+
+@media (width > 574px) {
+  #feature-details-modal {
+    left: 2em;
+    top: 2em;
+    width: 25em;
+    height: 100%;
+    max-height: calc(100% - 3em);
+    margin: 0.4em 1em 1.5em;
+  }
+
+  .modal-pull-button {
+    visibility: hidden;
+  }
+}
+
+#feature-edit-ui {
+  margin-top: 1.1em;
+}
+
+#feature-edit-raw {
+  margin-top: 1.8em;
 }
 
 #feature-details-icon {
@@ -23,8 +53,8 @@
   font-size: 80%;
   color: #999;
   position: absolute;
-  right: 1em;
-  top: 4em;
+  left: 1em;
+  top: 1em;
 }
 
 #feature-details-body, #feature-edit-ui, #feature-edit-raw {

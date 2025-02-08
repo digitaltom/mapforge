@@ -102,7 +102,7 @@ export default class extends Controller {
     feature.properties['fill-opacity'] = opacity
     // draw layer feature properties aren't getting updated by draw.set()
     draw.setFeatureProperty(this.featureIdValue, 'fill-opacity', opacity)
-    redrawGeojson()
+    redrawGeojson(false)
   }
 
   updateStrokeColor () {
