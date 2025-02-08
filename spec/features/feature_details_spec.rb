@@ -25,6 +25,7 @@ describe 'Feature details' do
         sleep(0.3)
         height = find('#feature-details-modal').native.style('height').sub('px', '').to_i
         expect(height).to be > 150
+        page.current_window.resize_to(1024, 576)
       end
     end
   end
