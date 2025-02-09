@@ -3,7 +3,7 @@
   padding: 0.7em;
   overflow-y: auto;
   margin: 0.4em 1em 1.5em;
-  border-radius: 10px;
+  border-radius: 3px;
   background-color: rgb(255 255 255 / 90%);
 }
 
@@ -25,7 +25,6 @@
     left: 2em;
     top: 2em;
     width: 25em;
-    height: 100%;
     max-height: calc(100% - 3em);
     margin: 0.4em 1em 1.5em;
   }

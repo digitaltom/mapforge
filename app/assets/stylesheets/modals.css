@@ -16,7 +16,7 @@
   max-width: 35em;
   overflow-y: hidden;
   margin: 0 1em;
-  border-radius: 10px;
+  border-radius: 3px;
   background-color: rgb(255 255 255 / 90%);
 
   /* Todo: Looks cool, but slows down browsers */
@@ -25,8 +25,7 @@
 
   z-index: 1000;
   padding: 1.5em 1em 1.5em 1.5em;
-  border: 1px solid #ccc;
-  box-shadow: 0 0 6px 2px rgb(0 0 0 / 8%);
+  box-shadow: 0 0 0 2px rgb(0 0 0 / 10%);
 }
 
 .map-modal-header {

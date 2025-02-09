@@ -158,10 +158,8 @@ export default class extends Controller {
 
   pullUpModal (modal) {
     modal.classList.remove('modal-pull-down')
-    // console.log('screen height: ' + screen.height)
-    if (screen.height >= 600) {
-      modal.classList.add('modal-pull-up-half')
-    } else {
+    // console.log('screen width: ' + screen.width)
+    if (screen.width <= 574) {
       modal.classList.add('modal-pull-up')
     }
   }
