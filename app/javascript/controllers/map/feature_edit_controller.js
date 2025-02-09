@@ -117,7 +117,7 @@ export default class extends Controller {
   updateFillColor () {
     const feature = this.getFeature()
     const color = document.querySelector('#fill-color').value
-    if (feature.geometry.type === 'Polygon') { feature.properties.fill = color }
+    if (feature.geometry.type === 'Polygon' || feature.geometry.type === 'MultiPolygon') { feature.properties.fill = color }
     if (feature.geometry.type === 'Point') { feature.properties['marker-color'] = color }
     // draw layer feature properties aren't getting updated by draw.set()
     draw.setFeatureProperty(this.featureIdValue, 'fill', color)

@@ -107,7 +107,7 @@ export function initializeEditMode () {
       functions.e('.ctrl-line-menu', e => { e.classList.remove('hidden') })
       status('Line Mode: Click on the map to draw a line', 'info', 'medium', 8000)
     }
-    console.log('draw mode: ' + draw.getMode())
+    // console.log('draw mode: ' + draw.getMode())
   })
 
   map.on('draw.selectionchange', function (e) {
