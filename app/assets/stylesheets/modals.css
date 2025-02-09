@@ -79,6 +79,12 @@
     height 0.3s linear !important;
 }
 
+@media (width > 574px) {
+  .modal-pull-up {
+    height: auto;
+  }
+}
+
 .modal-pull-up-half {
   height: 50% !important;
   transition:

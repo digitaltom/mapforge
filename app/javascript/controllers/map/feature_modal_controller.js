@@ -159,9 +159,7 @@ export default class extends Controller {
   pullUpModal (modal) {
     modal.classList.remove('modal-pull-down')
     // console.log('screen width: ' + screen.width)
-    if (screen.width <= 574) {
-      modal.classList.add('modal-pull-up')
-    }
+    modal.classList.add('modal-pull-up')
   }
 
   getFeature () {

@@ -17,15 +17,15 @@ describe 'Feature details' do
         expect(page).to have_css('#feature-details-modal')
       end
 
-      it 'can enlarge modal with pull-up button' do
-        page.current_window.resize_to(290, 523)
+      it 'can enlarge modal with pull-up button', :mobile do
+        # page.current_window.resize_to(290, 523)
         height = find('#feature-details-modal').native.style('height').sub('px', '').to_i
         expect(height).to be < 150
         find('.modal-pull-button').click
         sleep(0.3)
         height = find('#feature-details-modal').native.style('height').sub('px', '').to_i
         expect(height).to be > 150
-        page.current_window.resize_to(1024, 576)
+        # page.current_window.resize_to(1024, 576)
       end
     end
   end
