@@ -21,10 +21,11 @@ The geojson layer can get styled to your needs in an extended version of the [ge
 
 For openSUSE (Debian package names in braces):
 
-```
+```bash
 zypper in proj-devel # (libproj-dev) for building rgeo-proj4
 zypper in proj # (proj-bin) for running rgeo-proj4
 zypper in imlib2 imlib2-devel # (libimlib2, libimlib2-dev) to resize screenshots
+zypper in ImageMagick # (imagemagick) for dragonfly image processing
 zypper in npm # for running eslint
 bundle
 ```
