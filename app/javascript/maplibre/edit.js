@@ -207,17 +207,29 @@ async function handleCreate (e) {
 }
 
 async function handleUpdate (e) {
-  const feature = e.features[0] // Assuming one feature is updated at a time
-
-  // TODO: change route
-  // let coords = [feature.geometry.coordinates[0], feature.geometry.coordinates.at(-1)]
-  // feature = await getRouteFeature(feature, coords, 'driving-car')
+  let feature = e.features[0] // Assuming one feature is updated at a time
 
   const geojsonFeature = geojsonData.features.find(f => f.id === feature.id)
   // mapbox-gl-draw-waypoint sends empty update when dragging on selected feature
   if (equal(geojsonFeature.geometry, feature.geometry)) {
     // console.log('Feature update event triggered without update')
     return
+  }
+
+  // change route
+  if (feature.properties.route) {
+    const coords = [feature.geometry.coordinates[0]]
+    // Track coordinate changes
+    feature.geometry.coordinates.slice(1, -1).forEach((coord, index) => {
+      if (coord[0] !== geojsonFeature.geometry.coordinates[index + 1][0] ||
+          coord[1] !== geojsonFeature.geometry.coordinates[index + 1][1]) {
+        coords.push(coord)
+      } else if (functions.hasCoordinate(feature.properties.route.waypoints, coord)) {
+        coords.push(coord)
+      }
+    })
+    coords.push(feature.geometry.coordinates.at(-1))
+    feature = await getRouteFeature(feature, coords, feature.properties.route.profile)
   }
 
   status('Feature ' + feature.id + ' changed')
@@ -309,7 +321,7 @@ function addPaintButton () {
 function addRoadButton () {
   const originalButton = document.querySelector('.ctrl-line-menu .mapbox-gl-draw_line')
   const roadButton = originalButton.cloneNode(true)
-  roadButton.title = 'Draw line along road'
+  roadButton.title = 'Calculate a car route'
   roadButton.classList.remove('mapbox-gl-draw_line')
   roadButton.classList.add('mapbox-gl-draw_road')
   const icon = document.createElement('i')
@@ -331,7 +343,7 @@ function addRoadButton () {
 function addBicycleButton () {
   const originalButton = document.querySelector('.ctrl-line-menu .mapbox-gl-draw_line')
   const bicycleButton = originalButton.cloneNode(true)
-  bicycleButton.title = 'Draw line along bicycle ways'
+  bicycleButton.title = 'Calculate a bike route'
   bicycleButton.classList.remove('mapbox-gl-draw_line')
   bicycleButton.classList.add('mapbox-gl-draw_bicycle')
   const icon = document.createElement('i')
@@ -367,11 +379,11 @@ async function getRouteFeature (feature, waypoints, profile) {
       format: 'json'
     })
     console.log('response: ', snapResponse)
-    const snapLocations = snapResponse.locations.map(item => item.location)
-    console.log('snapped values: ', snapLocations)
+    waypoints = snapResponse.locations.map(item => item.location)
+    console.log('snapped values: ', waypoints)
 
     const routeResponse = await orsDirections.calculate({
-      coordinates: snapLocations,
+      coordinates: waypoints,
       profile
     })
     console.log('response: ', routeResponse)

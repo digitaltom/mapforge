@@ -67,3 +67,10 @@ export function addEventListeners (element, events, callback) {
     element.addEventListener(event, callback)
   })
 }
+
+export function hasCoordinate (coordinates, coordinate) {
+  // console.log("checking " + coordinates + " for " + coordinate)
+  return coordinates.some(coord =>
+    coord[0].toFixed(5) === coordinate[0].toFixed(5) &&
+    coord[1].toFixed(5) === coordinate[1].toFixed(5))
+}

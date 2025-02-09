@@ -71,12 +71,14 @@ export function editStyles () {
       }
     },
     // midpoints to extend lines/polygons
+    // https://github.com/mapbox/mapbox-gl-draw/blob/main/src/lib/create_vertex.js
     {
       id: 'gl-draw-polygon-midpoint',
       type: 'circle',
       filter: ['all',
         ['==', '$type', 'Point'],
-        ['==', 'meta', 'midpoint']],
+        ['==', 'meta', 'midpoint']
+      ],
       paint: {
         'circle-radius': pointSize,
         'circle-color': 'grey',
