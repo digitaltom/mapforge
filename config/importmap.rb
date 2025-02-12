@@ -40,6 +40,7 @@ pin "openrouteservice-js", preload: false # @0.4.1
 pin "marked", to: "https://ga.jspm.io/npm:marked@15.0.6/lib/marked.esm.js", preload: false
 
 # https://github.com/mapbox/mapbox-gl-draw
+# Unminified + patched version to style midpoints & vertexes (https://github.com/mapbox/mapbox-gl-draw/pull/964)
 pin "@mapbox/mapbox-gl-draw", to: "@mapbox--mapbox-gl-draw.js", preload: false # @1.5.0
 pin "@mapbox/geojson-area", to: "@mapbox--geojson-area.js", preload: false # @0.2.2
 pin "@mapbox/geojson-normalize", to: "@mapbox--geojson-normalize.js", preload: false # @0.0.1
