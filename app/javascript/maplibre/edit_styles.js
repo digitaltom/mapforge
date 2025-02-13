@@ -5,11 +5,12 @@ export function initializeEditStyles () {
   // MapboxDraw cannot render symbol+text styles.
   // Adding those as extra layers to the map.
   // render the extrusion layer from "source: 'geojson-source' without having it available for edit in draw
-  map.addLayer(styles['polygon-layer-extrusion'])
-  map.addLayer(styles['symbols-layer'])
-  map.addLayer(styles['text-layer'])
+  map.addLayer(styles()['polygon-layer-extrusion'])
+  map.addLayer(styles()['symbols-border-layer'])
+  map.addLayer(styles()['symbols-layer'])
+  map.addLayer(styles()['text-layer'])
   sortLayers()
-  console.log('Edit styles added')
+  // console.log('Edit styles added')
 
   map.on('styleimagemissing', loadImage)
   // TODO setting feature state (hover) doesn't work on draw features
@@ -26,136 +27,166 @@ export function initializeEditStyles () {
 
 const highlightColor = '#fbb03b'
 
-export const editStyles = [
+export function editStyles () {
+  return [
 
-  removeSource(styles['polygon-layer']), // gl-draw-polygon-fill-inactive
-  removeSource(styles['line-layer-outline']),
-  removeSource(styles['line-layer']), // 'gl-draw-line-inactive', 'gl-draw-polygon-stroke-inactive',
+    removeSource(styles()['polygon-layer']), // gl-draw-polygon-fill-inactive
+    removeSource(styles()['polygon-layer-outline']),
+    removeSource(styles()['line-layer-outline']), // line outline below line, because it's a wider line
+    removeSource(styles()['line-layer']), // 'gl-draw-line-inactive', 'gl-draw-polygon-stroke-inactive',
 
-  // active polygon outline
-  {
-    id: 'gl-draw-polygon-stroke-active',
-    type: 'line',
-    filter: ['all',
-      ['==', 'active', 'true'],
-      ['==', '$type', 'Polygon']],
-    layout: {
-      'line-cap': 'round',
-      'line-join': 'round'
+    // active polygon outline
+    {
+      id: 'gl-draw-polygon-stroke-active',
+      type: 'line',
+      filter: ['all',
+        ['==', 'active', 'true'],
+        ['==', '$type', 'Polygon']],
+      layout: {
+        'line-cap': 'round',
+        'line-join': 'round'
+      },
+      paint: {
+        'line-color': highlightColor,
+        'line-dasharray': [0.2, 2],
+        'line-width': 5
+      }
     },
-    paint: {
-      'line-color': highlightColor,
-      'line-dasharray': [0.2, 2],
-      'line-width': 5
-    }
-  },
-  // active linestring
-  {
-    id: 'gl-draw-line-active',
-    type: 'line',
-    filter: ['all',
-      ['==', '$type', 'LineString'],
-      ['==', 'active', 'true']
-    ],
-    layout: {
-      'line-cap': 'round',
-      'line-join': 'round'
+    // active linestring
+    {
+      id: 'gl-draw-line-active',
+      type: 'line',
+      filter: ['all',
+        ['==', '$type', 'LineString'],
+        ['==', 'active', 'true']
+      ],
+      layout: {
+        'line-cap': 'round',
+        'line-join': 'round'
+      },
+      paint: {
+        'line-color': highlightColor,
+        'line-dasharray': [0.2, 2],
+        'line-width': 5
+      }
     },
-    paint: {
-      'line-color': highlightColor,
-      'line-dasharray': [0.2, 2],
-      'line-width': 5
-    }
-  },
-  // midpoints to extend lines/polygons
-  {
-    id: 'gl-draw-polygon-midpoint',
-    type: 'circle',
-    filter: ['all',
-      ['==', '$type', 'Point'],
-      ['==', 'meta', 'midpoint']],
-    paint: {
-      'circle-radius': pointSize,
-      'circle-color': 'grey',
-      'circle-opacity': 0.8,
-      'circle-stroke-color': '#ffffff',
-      'circle-stroke-width': 1
-    }
-  },
-  // default point behind symbols, transparent points etc.
-  {
-    id: 'gl-draw-point-point-stroke-inactive',
-    type: 'circle',
-    filter: ['all',
-      ['==', 'active', 'false'],
-      ['==', '$type', 'Point'],
-      ['==', 'meta', 'feature'],
-      ['!=', 'mode', 'static']
-    ],
-    paint: {
-      'circle-radius': pointSize,
-      'circle-opacity': 0.2,
-      'circle-color': '#ffffff',
-      'circle-stroke-color': '#c0c0c0',
-      'circle-stroke-width': 1
-    }
-  },
+    // midpoints to extend lines/polygons
+    // https://github.com/mapbox/mapbox-gl-draw/blob/main/src/lib/create_midpoint.js
+    {
+      id: 'gl-draw-polygon-midpoint',
+      type: 'circle',
+      filter: ['all',
+        ['==', '$type', 'Point'],
+        ['==', 'meta', 'midpoint'],
+        // only show midpoints if this is not a route
+        // parent properties are patched into the midpoint properties
+        ['!has', 'user_route']
+      ],
+      paint: {
+        'circle-radius': pointSize,
+        'circle-color': 'grey',
+        'circle-opacity': 0.8,
+        'circle-stroke-color': '#ffffff',
+        'circle-stroke-width': 1
+      }
+    },
+    // default point behind symbols, transparent points etc.
+    {
+      id: 'gl-draw-point-point-stroke-inactive',
+      type: 'circle',
+      filter: ['all',
+        ['==', 'active', 'false'],
+        ['==', '$type', 'Point'],
+        ['==', 'meta', 'feature'],
+        ['!=', 'mode', 'static']
+      ],
+      paint: {
+        'circle-radius': pointSize,
+        'circle-opacity': 0.1,
+        'circle-color': '#ffffff',
+        'circle-stroke-color': '#c0c0c0',
+        'circle-stroke-width': 1
+      }
+    },
 
-  // active point, either single or on a line / polygon
-  {
-    id: 'gl-draw-point-stroke-active',
-    type: 'circle',
-    filter: ['all',
-      ['==', '$type', 'Point'],
-      ['==', 'active', 'true'],
-      ['!=', 'meta', 'midpoint']
-    ],
-    paint: {
-      'circle-radius': ['*', pointSizeMax, 2],
-      'circle-color': '#ffffff',
-      'circle-opacity': 0.2,
-      'circle-stroke-color': highlightColor,
-      'circle-stroke-width': 1
-    }
-  },
-  // inactive single point features
-  removeSource(styles['points-border-layer']),
-  removeSource(styles['points-layer']),
+    // active point, either single or on a line / polygon
+    {
+      id: 'gl-draw-point-stroke-active',
+      type: 'circle',
+      filter: ['all',
+        ['==', '$type', 'Point'],
+        ['==', 'active', 'true'],
+        ['!=', 'meta', 'midpoint']
+      ],
+      paint: {
+        'circle-radius': ['*', pointSizeMax, 2],
+        'circle-color': '#ffffff',
+        'circle-opacity': 0.2,
+        'circle-stroke-color': highlightColor,
+        'circle-stroke-width': 3
+      }
+    },
+    // inactive single point features
+    removeSource(styles()['points-border-layer']),
+    removeSource(styles()['points-layer']),
 
-  // inactive vertex points on lines + polygons, outline
-  // renderingoutline seperately to generate nicer overlay effect
-  {
-    id: 'gl-draw-polygon-and-line-vertex-outline-inactive',
-    type: 'circle',
-    filter: ['all',
-      ['==', 'meta', 'vertex'],
-      ['==', '$type', 'Point'],
-      ['!=', 'mode', 'static']
-    ],
-    paint: {
-      'circle-radius': pointSize,
-      'circle-opacity': 0,
-      'circle-stroke-color': '#444',
-      'circle-stroke-width': pointOutlineSize,
-      'circle-stroke-opacity': 1
+    // inactive vertex points on lines + polygons, outline
+    // rendering outline seperately to generate nicer overlay effect
+    {
+      id: 'gl-draw-polygon-and-line-vertex-outline-inactive',
+      type: 'circle',
+      filter: ['all',
+        ['==', 'meta', 'vertex'],
+        ['==', '$type', 'Point'],
+        ['!=', 'mode', 'static']
+      ],
+      paint: {
+        'circle-radius': pointSize,
+        'circle-opacity': 0,
+        'circle-stroke-color': '#444',
+        'circle-stroke-width': pointOutlineSize,
+        'circle-stroke-opacity': 1
+      }
+    },
+    // inactive vertex points on lines + polygons (non-route)
+    {
+      id: 'gl-draw-polygon-and-line-vertex-inactive',
+      type: 'circle',
+      filter: ['all',
+        ['==', 'meta', 'vertex'],
+        ['==', '$type', 'Point'],
+        ['!=', 'mode', 'static'],
+        ['!has', 'user_route']
+      ],
+      paint: {
+        'circle-radius': pointSize,
+        'circle-color': highlightColor
+      }
+    },
+
+    {
+      id: 'gl-draw-route-vertex-inactive',
+      type: 'circle',
+      filter: ['all',
+        ['==', 'meta', 'vertex'],
+        ['==', '$type', 'Point'],
+        ['!=', 'mode', 'static'],
+        ['has', 'user_route']
+      ],
+      paint: {
+        'circle-radius': pointSize,
+        'circle-color': [
+          'case', ['in', ['get', 'coord_path'], ['get', 'user_waypointIndexes']],
+          highlightColor, 'lightgrey'
+        ],
+        'circle-opacity': [
+          'case', ['in', ['get', 'coord_path'], ['get', 'user_waypointIndexes']],
+          1, 0.5
+        ]
+      }
     }
-  },
-  // inactive vertex points on lines + polygons
-  {
-    id: 'gl-draw-polygon-and-line-vertex-inactive',
-    type: 'circle',
-    filter: ['all',
-      ['==', 'meta', 'vertex'],
-      ['==', '$type', 'Point'],
-      ['!=', 'mode', 'static']
-    ],
-    paint: {
-      'circle-radius': pointSize,
-      'circle-color': highlightColor
-    }
-  },
-  removeSource(styles['symbols-border-layer'])
-]
+  ]
+}
 
 function removeSource (style) {
   const { source, ...filteredStyle } = style

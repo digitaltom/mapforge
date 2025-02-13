@@ -18,12 +18,12 @@ export default class extends Controller {
   toggle_edit_feature (event) {
     dom.showElements('#edit-button-edit', '#edit-button-raw')
     if (document.querySelector('#feature-edit-raw').classList.contains('hidden') && event.currentTarget.dataset.raw) {
-      console.log('show_feature_edit_raw')
+      // console.log('show_feature_edit_raw')
       document.querySelector('#edit-button-raw').classList.add('active')
       document.querySelector('#feature-details-body').classList.add('hidden')
       this.show_feature_edit_raw()
     } else if (document.querySelector('#feature-edit-ui').classList.contains('hidden') && event.currentTarget.dataset.ui) {
-      console.log('show_feature_edit_ui')
+      // console.log('show_feature_edit_ui')
       document.querySelector('#edit-button-raw').classList.remove('hidden')
       document.querySelector('#edit-button-edit').classList.add('active')
       document.querySelector('#feature-details-body').classList.add('hidden')
@@ -64,13 +64,15 @@ export default class extends Controller {
       document.querySelector('#line-width').value = size
       document.querySelector('#line-width-val').innerHTML = size
       dom.showElements(['#feature-edit-ui .edit-line'])
-    } else if (feature.geometry.type === 'Polygon') {
+    } else if (feature.geometry.type === 'Polygon' || feature.geometry.type === 'MultiPolygon') {
       dom.showElements(['#feature-edit-ui .edit-polygon'])
       document.querySelector('#fill-color').value = feature.properties.fill || '#0A870A'
       document.querySelector('#stroke-color').value = feature.properties.stroke || '#ffffff'
       const size = feature.properties['stroke-width'] || defaultLineWidth
       document.querySelector('#outline-width').value = size
       document.querySelector('#outline-width-val').innerHTML = size
+      document.querySelector('#opacity').value = feature.properties.fillOpacity || 7
+      document.querySelector('#opacity-val').textContent = (feature.properties.fillOpacity || 7) * 10 + '%'
     }
 
     if (feature.geometry.type === 'LineString' || feature.geometry.type === 'MultiLineString' ||
@@ -139,7 +141,7 @@ export default class extends Controller {
 
   toggleModalSize (e) {
     const modal = this.element
-    console.log('toggleModalSize ' + modal.classList)
+    // console.log('toggleModalSize ' + modal.classList)
     if (modal.classList.contains('modal-pull-up') || modal.classList.contains('modal-pull-up-half')) {
       this.pullDownModal(modal)
     } else {
@@ -156,12 +158,8 @@ export default class extends Controller {
 
   pullUpModal (modal) {
     modal.classList.remove('modal-pull-down')
-    console.log('screen: ' + screen.height)
-    if (screen.height >= 600) {
-      modal.classList.add('modal-pull-up-half')
-    } else {
-      modal.classList.add('modal-pull-up')
-    }
+    // console.log('screen width: ' + screen.width)
+    modal.classList.add('modal-pull-up')
   }
 
   getFeature () {

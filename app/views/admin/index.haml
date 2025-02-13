@@ -1,18 +1,13 @@
+= turbo_stream_from "admin_maps_list"
+
 #maps.flex-container
   - @maps.each do |map|
-    %div.flex-item.map-preview{id: dom_id(map)}
-      = link_to map_path(id: map.id) do
-        - if map.screenshot
-          %img{src: map.screenshot, class: 'preview-image', loading: 'lazy', alt: 'preview'}
-        - else
-          = image_tag "preview.png", class: 'preview-image', loading: 'lazy', alt: 'no preview'
-        .map-preview-title= map.name
-      %i= "last change #{distance_of_time_in_words(DateTime.now, map.updated_at)} ago"
-      %br
-      = "#{map.layers.first.features_count} features"
-      %br
-      public id:
-      = link_to map.public_id, map_path(id: map.public_id)
-      %br
-      = button_to 'Delete', destroy_map_path(id: map.id), method: :delete, data: { turbo_method: :delete }, class: 'btn btn-secondary'
+    = render map, rw: true, last_change: true, avatar: true, delete: true
 
+- if @maps.empty?
+  .container.pt-4.mt-4.mb-4.empty-map-list.background-bright
+    %p.text-center
+      In this gallery, all maps of this instance will be shown.
+      %br
+      You can browse public maps of all users via the 'Explore' link, or
+      you can start with your first map by clicking on the "Create Map" button above.

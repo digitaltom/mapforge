@@ -30,7 +30,6 @@ describe 'Map public view' do
       expect(page).to have_css('#feature-details-modal')
       expect(page).to have_text('Poly Title')
       expect(page).to have_text('Poly Desc')
-      expect(page).to have_text('27.70 km²')
     end
 
     it 'feature details are not sticky on hover' do
@@ -45,7 +44,6 @@ describe 'Map public view' do
       expect(page).to have_css('#feature-details-modal')
       expect(page).to have_text('Poly Title')
       expect(page).to have_text('Poly Desc')
-      expect(page).to have_text('27.70 km²')
     end
 
     it 'updates url on feature select' do

@@ -7,13 +7,14 @@
     = image_tag "frontpage/background_map4.jpg", alt: "", 'data-aos': "zoom-out", 'data-aos-once': "true"
     .container
       .row
-        .col-xl-5
+        .col-xl-5.col-lg-5
 
           %h1.mb-4 Log in
           %p.mb-3
-            When logged in, you can manage your maps.
-            %br
-            You can log in with the following providers:
+            Log in here to manage your maps. Mapforge is storing only minimal data from
+            you, see the
+            %a{ href: "https://github.com/digitaltom/mapforge/blob/main/docs/privacy.md" }
+              Privacy Policy
 
           - if ENV["GITHUB_CLIENT_ID"] && ENV["GITHUB_CLIENT_SECRET"]
             = form_tag('/auth/github', method: 'post', data: {turbo: false}) do

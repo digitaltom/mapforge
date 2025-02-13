@@ -1,21 +1,31 @@
-.map-modal {
+.modal-center {
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  width: 100%;
+  height: 100%;
   position: absolute;
-  left: calc(50% - 1em);
-  transform: translate(-50%);
+  top: 0;
+  pointer-events: none; /* This makes the div transparent to mouse events */
+}
+
+.map-modal {
+  position: relative;
+  pointer-events: auto;
   width: calc(100% - 1em);
   max-width: 35em;
-  max-height: calc(100% - 2em);
-  margin: 0.5em 1em 1.5em;
-  border-radius: 10px;
+  overflow-y: hidden;
+  margin: 0 1em;
+  border-radius: 3px;
   background-color: rgb(255 255 255 / 90%);
+
+  /* Todo: Looks cool, but slows down browsers */
 
   /* backdrop-filter: blur(3px); */
 
- /* Todo: Looks cool, but slows down browsers */
   z-index: 1000;
   padding: 1.5em 1em 1.5em 1.5em;
-  border: 1px solid #ccc;
-  box-shadow: 0 0 6px 2px rgb(0 0 0 / 8%);
+  box-shadow: 0 0 0 2px rgb(0 0 0 / 10%);
 }
 
 .map-modal-header {
@@ -25,7 +35,7 @@
 .map-modal-content {
   margin-top: 1em;
   overflow-y: auto;
-  max-height: calc(100vh - 8em);
+  max-height: calc(100vh - 10em);
 }
 
 .layer-preview {
@@ -64,9 +74,15 @@
 }
 
 .modal-pull-up {
-  height: 100% !important;
+  height: calc(100% - 1em);
   transition:
     height 0.3s linear !important;
+}
+
+@media (width > 574px) {
+  .modal-pull-up {
+    height: auto;
+  }
 }
 
 .modal-pull-up-half {
@@ -94,4 +110,8 @@
 
 .close-button:hover {
   color: #666;
+}
+
+#tour-modal .map-modal {
+  background-image: url('/images/dark-wood-background.jpg');
 }

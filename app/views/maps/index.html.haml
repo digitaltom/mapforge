@@ -1,6 +1,8 @@
-- content_for :title, "Mapforge: Search maps"
+- content_for :title, "Mapforge: Explore maps"
+
+= turbo_stream_from "public_maps_list"
 
 #maps.flex-container
   - @maps.each do |map|
-    .flex-item= render map, rw: false
+    = render map, rw: false, last_change: false, avatar: false, delete: false
 

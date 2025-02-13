@@ -4,6 +4,8 @@
 
   %body
 
-    = render 'shared/header', menu: !!@user, create_button: !!@user, static: true
+    = render 'shared/header', menu: true, create_button: true, static: true
 
     = yield
+
+    = render 'shared/footer'

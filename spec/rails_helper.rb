@@ -48,6 +48,13 @@ RSpec.configure do |config|
     end
   end
 
+  config.around(:each, :mobile) do |spec|
+    browser = Capybara.current_session.driver.browser
+    browser.manage.window.resize_to(290, 523)
+    spec.run
+    browser.manage.window.resize_to(1024, 576)
+  end
+
   # raise on js console errors
   class JavaScriptError< StandardError; end
   RSpec.configure do |config|

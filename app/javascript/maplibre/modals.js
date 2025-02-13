@@ -40,8 +40,8 @@ function featureMeta (feature) {
   } else if (feature.geometry.type === 'Polygon') {
     const turfPolygon = turf.polygon(feature.geometry.coordinates)
     const area = turf.area(turfPolygon)
-    if (area < 1000000) {
-      meta = area.toFixed(2) + ' m²'
+    if (area < 100000) {
+      meta = area.toFixed(0) + ' m²'
     } else {
       meta = (area / 1000000).toFixed(2) + ' km²'
     }
@@ -57,13 +57,12 @@ export function showFeatureDetails (feature) {
   modal.classList.remove('expanded')
   modal.classList.add('show')
   modal.scrollTo(0, 0)
-  modal.dataset.featureModalFeatureIdValue = feature.id
-  modal.dataset.featureEditFeatureIdValue = feature.id
+  modal.setAttribute('data-map--feature-modal-feature-id-value', feature.id)
+  modal.setAttribute('data-map--feature-edit-feature-id-value', feature.id)
 
   functions.addEventListeners(modal, ['mousedown', 'touchstart', 'dragstart'], (event) => {
+    if (!functions.isTouchDevice()) return
     if (isDragging) return
-    // don't break multiline select -> disable drag on textarea
-    if (event.target.tagName.toLowerCase() === 'textarea' && !functions.isMobileDevice()) return
 
     isDragging = true
     dragStartY = event.clientY || event.touches[0].clientY

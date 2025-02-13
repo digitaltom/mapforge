@@ -12,6 +12,10 @@
   color: #404040;
 }
 
+.maplibregl-ctrl-group:not(:empty) {
+  box-shadow: 0 0 0 2px rgb(0 0 0 / 10%);
+}
+
 .mapbox-gl-draw_ctrl-draw-btn { /* stylelint-disable-line */
   color: #303030 !important;
   opacity: 0.75;
@@ -23,7 +27,7 @@
     background-color: rgb(0 0 0/15%) !important;
     transition:
       background-color 0.2s ease-in-out;
-    color: var(--hover-color) !important;
+    color: var(--color-ctrl-active) !important;
   }
 
   /* Need to overwrite the mapbox draw icons with hover color */
@@ -44,7 +48,7 @@
   background-color: rgb(0 0 0/15%) !important;
   transition:
     background-color 0.2s ease-in-out;
-  color: var(--hover-color) !important;
+  color: var(--color-ctrl-active) !important;
 }
 
 /* Need to overwrite the mapbox draw icons with hover color */
@@ -76,9 +80,12 @@
   margin-right: 0.5em;
 }
 
+.maplibregl-ctrl-geocoder--result div { /* stylelint-disable-line */
+  width: 100%;
+}
 
 .maplibregl-ctrl-top-left {
-  top: 2.4em !important;
+  top: 2.4em;
 }
 
 /* fix for https://github.com/maplibre/maplibre-gl-js/issues/5284 */
@@ -86,4 +93,17 @@
   .maplibregl-ctrl button:not(:disabled):hover {
     background-color: inherit;
   }
+}
+
+.maplibregl-ctrl-tooltip {
+  --bs-tooltip-bg: var(--color-dark-charcoal);
+  --bs-tooltip-border-radius: 2px;
+  --bs-tooltip-opacity: 0.9;
+}
+
+.ctrl-line-menu {
+  position: absolute;
+  left: 2.6em;
+  top: 0;
+  opacity: 1;
 }

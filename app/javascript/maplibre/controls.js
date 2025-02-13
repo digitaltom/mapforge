@@ -2,6 +2,7 @@ import { map, mapProperties, geojsonData } from 'maplibre/map'
 import * as functions from 'helpers/functions'
 import { draw } from 'maplibre/edit'
 import { resetHighlightedFeature } from 'maplibre/feature'
+import { initTooltips } from 'helpers/dom'
 
 export class ControlGroup {
   constructor (controls) {
@@ -123,16 +124,16 @@ export class MapLayersControl {
 // initialize settings modal with default map values from mapProperties
 export function initSettingsModal () {
   functions.e('#settings-modal', e => {
-    if (mapProperties.name) { e.dataset.settingsMapNameValue = mapProperties.name }
-    e.dataset.settingsBaseMapValue = mapProperties.base_map
-    e.dataset.settingsMapTerrainValue = mapProperties.terrain
-    e.dataset.settingsDefaultPitchValue = Math.round(mapProperties.pitch)
-    e.dataset.settingsDefaultZoomValue = parseFloat(mapProperties.zoom || mapProperties.default_zoom).toFixed(2)
-    e.dataset.settingsDefaultBearingValue = Math.round(mapProperties.bearing)
+    if (mapProperties.name) { e.setAttribute('data-map--settings-map-name-value', mapProperties.name) }
+    e.setAttribute('data-map--settings-base-map-value', mapProperties.base_map)
+    e.setAttribute('data-map--settings-map-terrain-value', mapProperties.terrain)
+    e.setAttribute('data-map--settings-default-pitch-value', Math.round(mapProperties.pitch))
+    e.setAttribute('data-map--settings-default-zoom-value', parseFloat(mapProperties.zoom || mapProperties.default_zoom).toFixed(2))
+    e.setAttribute('data-map--settings-default-bearing-value', Math.round(mapProperties.bearing))
     if (mapProperties.center) {
-      e.dataset.settingsDefaultCenterValue = JSON.stringify(mapProperties.center)
+      e.setAttribute('data-map--settings-default-center-value', JSON.stringify(mapProperties.center))
     }
-    e.dataset.settingsDefaultAutoCenterValue = JSON.stringify(mapProperties.default_center)
+    e.setAttribute('data-map--settings-default-auto-center-value', JSON.stringify(mapProperties.default_center))
   })
 }
 
@@ -153,8 +154,8 @@ export function initLayersModal () {
       icon.classList.add('bi')
       icon.classList.add('bi-arrow-right-circle')
       icon.setAttribute('data-feature-id', feature.id)
-      icon.setAttribute('data-controller', 'layers')
-      icon.setAttribute('data-action', 'click->layers#flyto')
+      icon.setAttribute('data-controller', 'map--layers')
+      icon.setAttribute('data-action', 'click->map--layers#flyto')
       link.appendChild(icon)
       e.appendChild(listItem)
     })
@@ -166,12 +167,11 @@ export function resetControls () {
   // reset cursor
   functions.e('.maplibregl-canvas', e => { e.classList.remove('cursor-crosshair') })
   // reset ctrl buttons
-  functions.e('.maplibregl-ctrl-btn', e => { e.classList.remove('active') })
+  functions.e('.maplibregl-ctrl-btn, .mapbox-gl-draw_paint, .mapbox-gl-draw_road, .mapbox-gl-draw_bicycle',
+    e => { e.classList.remove('active') })
 
   // reset active modals
-  functions.e('.map-modal', e => { e.classList.remove('show') })
-  // collapse menu
-  functions.e('#burger-menu-toggle', e => { e.checked = false })
+  functions.e('.modal-center', e => { e.classList.remove('show') })
 }
 
 function resetEditControls () {
@@ -212,4 +212,13 @@ export const geocoderConfig = {
       features
     }
   }
+}
+
+export function initCtrlTooltips () {
+  functions.e('.maplibregl-ctrl button', e => {
+    e.setAttribute('data-toggle', 'tooltip')
+    e.setAttribute('data-bs-custom-class', 'maplibregl-ctrl-tooltip')
+    e.setAttribute('data-bs-trigger', 'hover')
+  })
+  initTooltips()
 }

@@ -19,7 +19,7 @@ FROM base as build
 
 # Install packages needed to build gems
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y ruby-dev build-essential git npm libvips pkg-config libproj-dev proj-bin
+    apt-get install --no-install-recommends -y ruby-dev build-essential git npm libvips pkg-config libproj-dev proj-bin libimlib2-dev
 
 # Install application gems
 COPY Gemfile Gemfile.lock ./
@@ -46,7 +46,7 @@ FROM base
 
 # Install packages needed for deployment
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y libjemalloc2 vim less curl iputils-ping libsqlite3-0 libvips proj-bin wget gnupg ca-certificates imagemagick && \
+    apt-get install --no-install-recommends -y libjemalloc2 vim less curl iputils-ping libsqlite3-0 libvips proj-bin wget gnupg ca-certificates imagemagick libimlib2 && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Install chrome for screenshots (adds 400MB :-o)

@@ -2,8 +2,10 @@
 %html{ lang: 'en' }
   = render 'layouts/head'
 
-  %body.dark-background
+  %body.background-dark
 
-    = render 'shared/header', menu: true, create_button: true, static: false
+    = render 'shared/header', menu: true, create_button: true, static: true
 
     = yield
+
+    = render 'shared/footer'

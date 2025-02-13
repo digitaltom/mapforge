@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 * Maplibre 7.5
 * MyMaps view
+* Frontpage feature tour
 
 ## 2024-12
 

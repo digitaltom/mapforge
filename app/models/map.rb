@@ -2,6 +2,21 @@ class Map
   include ActiveModel::Model
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Turbo::Broadcastable
+
+  # mongoid callbacks: https://www.mongodb.com/docs/mongoid/current/data-modeling/callbacks/
+  # broadcasts: https://www.rubydoc.info/github/hotwired/turbo-rails/Turbo/Streams/Broadcasts
+  after_create do
+    # using refresh to make sure map access is authorized
+    broadcast_refresh_to("admin_maps_list")
+    broadcast_refresh_to("public_maps_list") unless private
+    # broadcast_prepend_to("admin_maps_list", target: "maps", partial: "maps/map",
+    #  locals: { rw: true, avatar: true, delete: true, last_change: true })
+  end
+  after_destroy do
+    broadcast_refresh_to("admin_maps_list")
+    broadcast_refresh_to("public_maps_list") unless private
+  end
 
   has_many :layers
   belongs_to :user, optional: true, counter_cache: true
@@ -16,6 +31,7 @@ class Map
   field :description, type: String
   field :public_id, type: String
   field :private, type: Boolean
+  field :images_count, type: Integer, default: 0
 
   BASE_MAPS = [ "osmRasterTiles", "satelliteTiles", "openTopoTiles" ]
   STADIA_MAPS = [ "stamenTonerTiles", "stamenWatercolorTiles" ]
@@ -56,7 +72,8 @@ class Map
 
   def self.provider_keys
     { mapbox: ENV["MAPBOX_KEY"],
-      maptiler: ENV["MAPTILER_KEY"] }
+      maptiler: ENV["MAPTILER_KEY"],
+      openrouteservice: ENV["OPENROUTESERVICE_KEY"] }
   end
 
   def create_public_id
@@ -114,11 +131,11 @@ collection_format: collection_format))
   end
 
   def screenshot
-    "/previews/#{safe_public_id}.png" if File.exist?(screenshot_file)
+    "/previews/#{safe_public_id}.jpg?#{updated_at.to_i}" if File.exist?(screenshot_file)
   end
 
   def screenshot_file
-    Rails.root.join("public/previews/#{safe_public_id}.png").to_s
+    Rails.root.join("public/previews/#{safe_public_id}.jpg").to_s
   end
 
   private

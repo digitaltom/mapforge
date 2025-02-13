@@ -1,7 +1,7 @@
-import { basemaps } from 'maplibre/basemaps'
+import { basemaps, defaultFont } from 'maplibre/basemaps'
 import { draw } from 'maplibre/edit'
-import { resetControls, initSettingsModal, geocoderConfig } from 'maplibre/controls'
-import { initializeViewStyles } from 'maplibre/styles'
+import { resetControls, initSettingsModal, geocoderConfig, initCtrlTooltips } from 'maplibre/controls'
+import { initializeViewStyles, setStyleDefaultFont } from 'maplibre/styles'
 import { highlightFeature, resetHighlightedFeature } from 'maplibre/feature'
 import { AnimatePointAnimation } from 'maplibre/animations'
 import * as functions from 'helpers/functions'
@@ -9,14 +9,16 @@ import { status } from 'helpers/status'
 import equal from 'fast-deep-equal' // https://github.com/epoberezkin/fast-deep-equal
 import maplibregl from 'maplibre-gl'
 import MaplibreGeocoder from 'maplibre-gl-geocoder'
+import { animateElement, initTooltips } from 'helpers/dom'
 
 export let map
 export let geojsonData //= { type: 'FeatureCollection', features: [] }
 export let mapProperties
 export let lastMousePosition
 export let highlightedFeature
+export let backgroundMapLayer
+
 let mapInteracted
-let backgroundMapLayer
 let backgroundTerrain
 
 // workflow of event based map loading:
@@ -71,6 +73,7 @@ export function initializeMap (divId = 'maplibre-map') {
     pitch: mapProperties.pitch,
     bearing: mapProperties.bearing || 0,
     maxPitch: 72,
+    maplibreLogo: !functions.isMobileDevice(),
     interactive: (window.gon.map_mode !== 'static') // can move/zoom map
     // style: {} // style/map is getting loaded by 'setBackgroundMapLayer'
   })
@@ -80,7 +83,7 @@ export function initializeMap (divId = 'maplibre-map') {
 
   // after basemap style is ready/changed, load geojson layer
   map.on('style.load', () => {
-    console.log('Map style loaded')
+    // console.log('Map style loaded')
     loadGeoJsonData()
     if (mapProperties.terrain && window.gon.map_keys.maptiler) { addTerrain() }
   })
@@ -100,6 +103,16 @@ export function initializeMap (divId = 'maplibre-map') {
     // on first map load, re-sort layers late, when all map,
     // view + edit layers are added
     sortLayers()
+    // trigger map fade-in
+    animateElement('.map', 'fade-in', 250)
+    initCtrlTooltips()
+    functions.e('.maplibregl-ctrl button', e => {
+      e.setAttribute('data-toggle', 'tooltip')
+      e.setAttribute('data-bs-custom-class', 'maplibregl-ctrl-tooltip')
+      e.setAttribute('data-bs-trigger', 'hover')
+    })
+    initTooltips()
+    functions.e('#preloader', e => { e.classList.add('hidden') })
     functions.e('.map', e => { e.setAttribute('map-loaded', true) })
     console.log('Map loaded')
   })
@@ -110,22 +123,22 @@ export function initializeMap (divId = 'maplibre-map') {
   map.on('click', resetControls)
   map.on('pitchend', function (e) {
     functions.e('#settings-modal', e => {
-      e.dataset.settingsCurrentPitchValue = map.getPitch().toFixed(0)
+      e.setAttribute('data-map--settings-current-pitch-value', map.getPitch().toFixed(0))
     })
   })
   map.on('zoomend', function (e) {
     functions.e('#settings-modal', e => {
-      e.dataset.settingsCurrentZoomValue = map.getZoom().toFixed(2)
+      e.setAttribute('data-map--settings-current-zoom-value', map.getZoom().toFixed(2))
     })
   })
   map.on('rotate', function (e) {
     functions.e('#settings-modal', e => {
-      e.dataset.settingsCurrentBearingValue = map.getBearing().toFixed(0)
+      e.setAttribute('data-map--settings-current-bearing-value', map.getBearing().toFixed(0))
     })
   })
   map.on('moveend', function (e) {
     functions.e('#settings-modal', e => {
-      e.dataset.settingsCurrentCenterValue = JSON.stringify([map.getCenter().lng, map.getCenter().lat])
+      e.setAttribute('data-map--settings-current-center-value', JSON.stringify([map.getCenter().lng, map.getCenter().lat]))
     })
   })
   map.on('error', (err) => {
@@ -200,7 +213,7 @@ export function initializeDefaultControls () {
       maplibregl
     }), 'top-right'
   )
-  document.querySelector('.maplibregl-ctrl-geocoder').setAttribute('data-aos', 'fade-left')
+  document.querySelector('.maplibregl-ctrl-geocoder').classList.add('hidden')
 
   const nav = new maplibregl.NavigationControl({
     visualizePitch: true,
@@ -208,7 +221,7 @@ export function initializeDefaultControls () {
     showCompass: true
   })
   map.addControl(nav)
-  document.querySelector('.maplibregl-ctrl:has(button.maplibregl-ctrl-zoom-in)').setAttribute('data-aos', 'fade-left')
+  document.querySelector('.maplibregl-ctrl:has(button.maplibregl-ctrl-zoom-in)').classList.add('hidden')
 
   // https://maplibre.org/maplibre-gl-js/docs/API/classes/GeolocateControl
   // Note: This might work only via https
@@ -222,7 +235,7 @@ export function initializeDefaultControls () {
     status('Error detecting location', 'warning')
   })
   map.addControl(geolocate, 'top-right')
-  document.querySelector('.maplibregl-ctrl:has(button.maplibregl-ctrl-geolocate)').setAttribute('data-aos', 'fade-left')
+  document.querySelector('.maplibregl-ctrl:has(button.maplibregl-ctrl-geolocate)').classList.add('hidden')
 
   const scale = new maplibregl.ScaleControl({
     maxWidth: 100,
@@ -230,6 +243,12 @@ export function initializeDefaultControls () {
   })
   map.addControl(scale)
   scale.setUnit('metric')
+
+  map.once('load', function (e) {
+    animateElement('.maplibregl-ctrl-geocoder', 'fade-left', 500)
+    animateElement('.maplibregl-ctrl:has(button.maplibregl-ctrl-zoom-in)', 'fade-left', 500)
+    animateElement('.maplibregl-ctrl:has(button.maplibregl-ctrl-geolocate)', 'fade-left', 500)
+  })
 }
 
 export function initializeStaticMode () {
@@ -330,14 +349,16 @@ export function destroy (featureId) {
 
 export function setBackgroundMapLayer (mapName = mapProperties.base_map, force = false) {
   if (backgroundMapLayer === mapName && backgroundTerrain === mapProperties.terrain && !force) { return }
-  if (basemaps[mapName]) {
+  const basemap = basemaps()[mapName]
+  if (basemap) {
     map.once('style.load', () => { status('Loaded base map ' + mapName) })
-    map.setStyle(basemaps[mapName],
+    backgroundMapLayer = mapName
+    backgroundTerrain = mapProperties.terrain
+    setStyleDefaultFont(basemap.font || defaultFont)
+    map.setStyle(basemap.style,
       // adding 'diff: false' so that 'style.load' gets triggered (https://github.com/maplibre/maplibre-gl-js/issues/2587)
       // which will trigger loadGeoJsonData()
       { diff: false, strictMode: true })
-    backgroundMapLayer = mapName
-    backgroundTerrain = mapProperties.terrain
   } else {
     console.error('Base map ' + mapName + ' not available!')
   }
@@ -346,25 +367,33 @@ export function setBackgroundMapLayer (mapName = mapProperties.base_map, force =
 // re-sort layers to overlay geojson layers with labels & extrusion objects
 // workflows to consider: first map load, basemap update, socket reconnect
 // sorting:
-// - lines, points etc.
+// - polygons, lines etc.
+// - map labels
 // - extrusions
+// - points
 // - text/symbol
 export function sortLayers () {
   // console.log('Sorting layers')
   const currentStyle = map.getStyle()
   let layers = currentStyle.layers
 
-  // const userExtrusions = layers.filter(l => l.properties &&
-  //   (l.properties['fill-extrusion-height'] || l.properties['user_fill-extrusion-height']))
   const mapExtrusions = functions.reduceArray(layers, (e) => e.paint && e.paint['fill-extrusion-height'])
   // increase opacity of 3D houses
   mapExtrusions.filter(l => l.id === 'Building 3D').forEach((layer) => {
     layer.paint['fill-extrusion-opacity'] = 0.8
   })
-  const symbols = functions.reduceArray(layers, (e) => e.type === 'symbol')
-  const mapLabels = functions.reduceArray(layers, (e) => e.layout && e.layout['text-field'])
+  const editLayer = functions.reduceArray(layers, (e) => (e.id.startsWith('gl-draw-')))
+  const userSymbols = functions.reduceArray(layers, (e) => (e.id === 'symbols-layer' || e.id === 'symbols-border-layer'))
+  const userLabels = functions.reduceArray(layers, (e) => e.id === 'text-layer')
+  const mapSymbols = functions.reduceArray(layers, (e) => e.type === 'symbol')
+  const points = functions.reduceArray(layers, (e) => (e.id === 'points-layer.hot' || e.id === 'points-layer.cold' || e.id === 'points-layer' || e.id === 'points-border-layer' || e.id === 'points-border-layer.cold' || e.id === 'points-border-layer.hot'))
+  const lineLayerHits = functions.reduceArray(layers, (e) => e.id === 'line-layer-hit')
+  const pointsLayerHits = functions.reduceArray(layers, (e) => e.id === 'points-hit-layer')
 
-  layers = layers.concat(mapExtrusions).concat(mapLabels).concat(symbols)
+  layers = layers.concat(mapExtrusions)
+    .concat(mapSymbols).concat(points).concat(editLayer)
+    .concat(userSymbols).concat(userLabels)
+    .concat(lineLayerHits).concat(pointsLayerHits)
   const newStyle = { ...currentStyle, layers }
   map.setStyle(newStyle, { diff: true })
   // console.log(map.getStyle().layers)

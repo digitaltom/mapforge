@@ -8,6 +8,10 @@ class Image
   # access with `img.url` (like /media/123..)
   # round icon: `thumb('150x').crop_quadrant.rounded.url´
   dragonfly_accessor :img
+
+  belongs_to :user, optional: true, counter_cache: true
+  belongs_to :map, optional: true, counter_cache: true
+
   field :img_uid, type: String
   field :public_id, type: String
 

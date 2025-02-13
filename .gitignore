@@ -42,3 +42,4 @@ capybara-*
 coverage/
 
 public/previews/*.png
+public/previews/*.jpg

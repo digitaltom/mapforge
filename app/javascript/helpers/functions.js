@@ -46,6 +46,14 @@ export function isMobileDevice () {
   return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
 }
 
+export function isTouchDevice () {
+  return ('ontouchstart' in window) ||
+         (navigator.maxTouchPoints > 0) ||
+         (navigator.msMaxTouchPoints > 0) ||
+         (window.matchMedia('(pointer: coarse)').matches) ||
+         (!!window.DocumentTouch && document instanceof window.DocumentTouch)
+}
+
 // takes a css selector and callback method
 export function e (selector, callback) {
   const elements = document.querySelectorAll(selector)
@@ -58,4 +66,21 @@ export function addEventListeners (element, events, callback) {
   events.forEach(event => {
     element.addEventListener(event, callback)
   })
+}
+
+export function hasCoordinate (coordinates, coordinate) {
+  // console.log("checking " + coordinates + " for " + coordinate)
+  return coordinates.some(coord =>
+    coord[0].toFixed(5) === coordinate[0].toFixed(5) &&
+    coord[1].toFixed(5) === coordinate[1].toFixed(5))
+}
+
+export function findCoordinate (coordinates, coordinate) {
+  for (let i = 0; i < coordinates.length; i++) {
+    if (coordinates[i][0].toFixed(5) === coordinate[0].toFixed(5) &&
+          coordinates[i][1].toFixed(5) === coordinate[1].toFixed(5)) {
+      return i
+    }
+  }
+  return -1
 }

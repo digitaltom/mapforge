@@ -1,20 +1,21 @@
-#layers-modal.map-modal.fade{'data-controller': "layers"}
-  %button.close-button{ data: { action: "click->layers#close" } } &times;
-  .map-modal-header
-    %h3 Layers
+#layers-modal.modal-center.fade
+  .map-modal{'data-controller': "map--layers"}
+    %button.close-button{ data: { action: "click->map--layers#close" } } &times;
+    .map-modal-header
+      %h3 Layers
 
-  .map-modal-content
+    .map-modal-content
 
-    #layer-upload.row.align-items-center
-      .col
-        %label{ for: "formFile" } Import gpx/kml (max. 800Kb)
-        %br
-        %small EPSG:4326 (WGS 84) format
-      .col
-        %input.form-control#fileInput{ type: "file", data: { action: "input->layers#upload" } }
+      #layer-upload.row.align-items-center
+        .col
+          %label{ for: "formFile" } Import gpx/kml (max. 800Kb)
+          %br
+          %small EPSG:4326 (WGS 84) format
+        .col
+          %input.form-control#fileInput{ type: "file", data: { action: "input->map--layers#upload" } }
 
-    #default-layer
-      %h4.layer-name Default Layer
-      %ul.layer-elements
+      #default-layer
+        %h4.layer-name Default Layer
+        %ul.layer-elements
 
 

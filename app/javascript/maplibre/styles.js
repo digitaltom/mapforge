@@ -6,7 +6,8 @@ import {
 
 export const viewStyleNames = [
   'polygon-layer',
-  'line-layer-outline',
+  'polygon-layer-outline',
+  'line-layer-outline', // line outline below line, because it's a wider line
   'line-layer',
   'line-layer-hit',
   'points-border-layer',
@@ -18,9 +19,11 @@ export const viewStyleNames = [
   'polygon-layer-extrusion'
 ]
 
+export function setStyleDefaultFont (font) { labelFont = [font] }
+
 export function initializeViewStyles () {
   viewStyleNames.forEach(styleName => {
-    map.addLayer(styles[styleName])
+    map.addLayer(styles()[styleName])
   })
   sortLayers()
   console.log('View styles added')
@@ -77,14 +80,18 @@ const fillColor = ['coalesce',
 const fillOpacity = ['to-number', ['coalesce',
   ['get', 'fill-opacity'], ['get', 'user_fill-opacity'], 0.7]]
 const fillOpacityActive = ['*', 0.7, fillOpacity]
-const lineColorPolygon = ['coalesce', ['get', 'stroke'], ['get', 'user_stroke'], featureOutlineColor]
 
 const lineColor = ['coalesce', ['get', 'stroke'], ['get', 'user_stroke'], featureColor]
-export const defaultLineWidth = 2
+const polygonOutlineColor = ['coalesce', ['get', 'stroke'], ['get', 'user_stroke'], featureOutlineColor]
+const lineOutlineColor = featureOutlineColor
+
+export const defaultLineWidth = 3
 const lineWidthMin = ['ceil', ['/', ['to-number', ['coalesce',
   ['get', 'user_stroke-width'], ['get', 'stroke-width'], defaultLineWidth]], 2]]
 const lineWidthMax = ['*', ['to-number', ['coalesce',
   ['get', 'user_stroke-width'], ['get', 'stroke-width'], defaultLineWidth]], 2]
+const outlineWidthPolygon = ['to-number', ['coalesce',
+  ['get', 'user_stroke-width'], ['get', 'stroke-width'], 2]]
 const lineWidth = [
   'interpolate',
   ['linear'],
@@ -106,7 +113,6 @@ const lineWidth = [
 const lineOpacity = ['to-number', ['coalesce',
   ['get', 'stroke-opacity'], ['get', 'user_stroke-opacity'], 0.8]]
 const lineOpacityActive = 1
-const outlineColor = featureOutlineColor
 
 const outlineWidthMin = ['+', 2, lineWidthMin]
 const outlineWidthMax = ['+', 4, lineWidthMax]
@@ -173,245 +179,268 @@ const iconSizeFactor = ['/', pointSizeMax, 6]
 const iconSize = ['*', 1 / 8, iconSizeFactor]
 // const iconSizeActive = ['*', 1.1, iconSize] // icon-size is not a paint property
 const labelSize = ['to-number', ['coalesce', ['get', 'user_label-size'], ['get', 'label-size'], 16]]
+// default font is set in basemap def basemaps[backgroundMapLayer]['font']
+let labelFont
 
-// font must be available via glyphs:
-// openmaptiles: https://github.com/openmaptiles/fonts/tree/gh-pages
-// maptiler: https://docs.maptiler.com/gl-style-specification/glyphs/
-// versatiles: https://github.com/versatiles-org/versatiles-fonts/tree/main/fonts
-// Emojis are not in the character range: https://github.com/maplibre/maplibre-gl-js/issues/2307
-const labelFont = ['Klokantech Noto Sans Bold']
-
-export const styles = {
-  'polygon-layer': {
-    id: 'polygon-layer',
-    type: 'fill',
-    source: 'geojson-source',
-    filter: ['all',
-      ['in', '$type', 'Polygon']],
-    paint: {
-      'fill-color': fillColor,
-      'fill-opacity': [
-        'case',
-        ['boolean', ['feature-state', 'active'], false],
-        fillOpacityActive,
-        fillOpacity
-      ]
-    }
-  },
-  'polygon-layer-extrusion': {
-    id: 'polygon-layer-extrusion',
-    type: 'fill-extrusion',
-    source: 'geojson-source',
-    filter: ['all',
-      ['in', '$type', 'Polygon'],
-      ['>', 'fill-extrusion-height', 0]],
-    paint: {
-      'fill-extrusion-color': ['coalesce',
-        ['get', 'fill-extrusion-color'],
-        ['get', 'user_fill-extrusion-color'],
-        ['get', 'fill'],
-        ['get', 'user_fill'],
-        featureColor],
-      'fill-extrusion-height': ['to-number', ['coalesce',
-        ['get', 'fill-extrusion-height'],
-        ['get', 'user_fill-extrusion-height']]],
-      'fill-extrusion-base': ['to-number', ['coalesce',
-        ['get', 'fill-extrusion-base'],
-        ['get', 'user_fill-extrusion-base']]],
-      // opacity does not support data expressions!?!
-      'fill-extrusion-opacity': 0.8
-    }
-  },
-  'line-layer-outline': {
-    id: 'line-layer-outline',
-    type: 'line',
-    source: 'geojson-source',
-    filter: ['all',
-      ['in', '$type', 'LineString']],
-    layout: {
-      'line-join': 'round',
-      'line-cap': 'round'
-    },
-    paint: {
-      'line-color': outlineColor,
-      'line-width': outlineWidth,
-      'line-opacity': lineOpacity
-    }
-  },
-  // lines + polygon outlines
-  'line-layer': {
-    id: 'line-layer',
-    type: 'line',
-    source: 'geojson-source',
-    filter: ['all',
-      ['in', '$type', 'LineString', 'Polygon']],
-    layout: {
-      'line-join': 'round',
-      'line-cap': 'round'
-    },
-    paint: {
-      'line-color': [
-        'case',
-        ['boolean', ['==', ['geometry-type'], 'LineString'], true],
-        lineColor, lineColorPolygon
-      ],
-      'line-width': lineWidth,
-      'line-opacity': [
-        'case',
-        ['boolean', ['==', ['geometry-type'], 'LineString'], true],
-        ['case', ['boolean', ['feature-state', 'active'], false],
-          lineOpacityActive, lineOpacity
-        ], 1
-      ]
-    }
-  },
-  'line-layer-hit': {
-    id: 'line-layer-hit',
-    type: 'line',
-    source: 'geojson-source',
-    filter: ['all',
-      ['in', '$type', 'LineString']],
-    paint: {
-      'line-width': ['+', 15, outlineWidthMax],
-      'line-opacity': 0
-    }
-  },
-  'points-border-layer': {
-    id: 'points-border-layer',
-    type: 'circle',
-    source: 'geojson-source',
-    filter: ['all',
-      ['==', '$type', 'Point'],
-      ['!=', 'meta', 'midpoint'],
-      ['!=', 'meta', 'vertex'],
-      ['none', ['has', 'user_marker-image-url'], ['has', 'marker-image-url']]
-    ],
-    paint: {
-      'circle-pitch-scale': 'map', // points get bigger when camera is closer
-      'circle-radius': pointSize,
-      'circle-opacity': 0,
-      'circle-stroke-color': pointOutlineColor,
-      'circle-blur': 0.1,
-      'circle-stroke-width': [
-        'case',
-        ['boolean', ['feature-state', 'active'], false],
-        pointOutlineSizeActive,
-        pointOutlineSize
-      ],
-      'circle-stroke-opacity': pointOpacity + 0.2
-    }
-  },
-  'points-layer': {
-    id: 'points-layer',
-    type: 'circle',
-    source: 'geojson-source',
-    filter: ['all',
-      ['==', '$type', 'Point'],
-      ['!=', 'meta', 'midpoint']
-    ],
-    paint: {
-      'circle-pitch-scale': 'map', // points get bigger when camera is closer
-      'circle-radius': pointSize,
-      'circle-color': pointColor,
-      'circle-opacity': [
-        'match',
-        ['coalesce', ['get', 'user_marker-color'], ['get', 'marker-color']],
-        'transparent', 0, // If marker-color is 'transparent', set circle-radius to 0
-        [
+export function styles () {
+  return {
+    'polygon-layer': {
+      id: 'polygon-layer',
+      type: 'fill',
+      source: 'geojson-source',
+      filter: ['all',
+        ['in', '$type', 'Polygon']],
+      paint: {
+        'fill-color': fillColor,
+        'fill-opacity': [
           'case',
           ['boolean', ['feature-state', 'active'], false],
-          pointOpacityActive,
-          pointOpacity
-        ]],
-      'circle-blur': 0.1
-    }
-  },
-  'points-hit-layer': {
-    id: 'points-hit-layer',
-    type: 'circle',
-    source: 'geojson-source',
-    filter: ['all',
-      ['==', '$type', 'Point'],
-      ['!=', 'active', 'true']
-    ],
-    paint: {
-      'circle-radius': ['+', 5, pointSizeMax],
-      'circle-opacity': 0
-    }
-  },
-  'symbols-border-layer': {
-    id: 'symbols-border-layer',
-    type: 'circle',
-    source: 'geojson-source',
-    filter: ['all',
-      ['==', '$type', 'Point'],
-      ['!=', 'meta', 'midpoint'],
-      ['!=', 'meta', 'vertex'],
-      ['any', ['has', 'user_marker-image-url'], ['has', 'marker-image-url']]
-    ],
-    paint: {
-      'circle-pitch-scale': 'map', // points get bigger when camera is closer
-      'circle-radius': pointSize,
-      'circle-opacity': 0,
-      'circle-stroke-color': pointOutlineColor,
-      'circle-blur': 0.1,
-      'circle-stroke-width': [
-        'case',
-        ['boolean', ['feature-state', 'active'], false],
-        pointOutlineSizeActive,
-        pointOutlineSize
+          fillOpacityActive,
+          fillOpacity
+        ]
+      }
+    },
+    'polygon-layer-extrusion': {
+      id: 'polygon-layer-extrusion',
+      type: 'fill-extrusion',
+      source: 'geojson-source',
+      filter: ['all',
+        ['in', '$type', 'Polygon'],
+        ['>', 'fill-extrusion-height', 0]],
+      paint: {
+        'fill-extrusion-color': ['coalesce',
+          ['get', 'fill-extrusion-color'],
+          ['get', 'user_fill-extrusion-color'],
+          ['get', 'fill'],
+          ['get', 'user_fill'],
+          featureColor],
+        'fill-extrusion-height': ['to-number', ['coalesce',
+          ['get', 'fill-extrusion-height'],
+          ['get', 'user_fill-extrusion-height']]],
+        'fill-extrusion-base': ['to-number', ['coalesce',
+          ['get', 'fill-extrusion-base'],
+          ['get', 'user_fill-extrusion-base']]],
+        // opacity does not support data expressions!?!
+        'fill-extrusion-opacity': 0.8
+      }
+    },
+    // polygon outlines
+    'polygon-layer-outline': {
+      id: 'polygon-layer-outline',
+      type: 'line',
+      source: 'geojson-source',
+      filter: ['all',
+        ['in', '$type', 'Polygon']],
+      layout: {
+        'line-join': 'round',
+        'line-cap': 'round'
+      },
+      paint: {
+        'line-color': polygonOutlineColor,
+        'line-width': outlineWidthPolygon,
+        'line-opacity': lineOpacity
+      }
+    },
+    // line outlines
+    'line-layer-outline': {
+      id: 'line-layer-outline',
+      type: 'line',
+      source: 'geojson-source',
+      filter: ['all',
+        ['in', '$type', 'LineString']],
+      layout: {
+        'line-join': 'round',
+        'line-cap': 'round'
+      },
+      paint: {
+        'line-color': lineOutlineColor,
+        'line-width': outlineWidth,
+        'line-opacity': lineOpacity
+      }
+    },
+    // lines
+    'line-layer': {
+      id: 'line-layer',
+      type: 'line',
+      source: 'geojson-source',
+      filter: ['all',
+        ['in', '$type', 'LineString']],
+      layout: {
+        'line-join': 'round',
+        'line-cap': 'round'
+      },
+      paint: {
+        'line-color': lineColor,
+        'line-width': lineWidth,
+        'line-opacity': [
+          'case', ['boolean', ['feature-state', 'active'], false],
+          lineOpacityActive, lineOpacity
+        ]
+      }
+    },
+    'line-layer-hit': {
+      id: 'line-layer-hit',
+      type: 'line',
+      source: 'geojson-source',
+      filter: ['all',
+        ['in', '$type', 'LineString']],
+      paint: {
+        'line-width': ['+', 15, outlineWidthMax],
+        'line-opacity': 0
+      }
+    },
+    'points-border-layer': {
+      id: 'points-border-layer',
+      type: 'circle',
+      source: 'geojson-source',
+      filter: ['all',
+        ['==', '$type', 'Point'],
+        ['!=', 'meta', 'midpoint'],
+        ['!=', 'meta', 'vertex'],
+        ['none', ['has', 'user_marker-image-url'], ['has', 'marker-image-url'],
+          ['has', 'user_marker-symbol'], ['has', 'marker-symbol']]
       ],
-      'circle-stroke-opacity': pointOpacity + 0.2
-    }
-  },
-  // support symbols on all feature types
-  'symbols-layer': {
-    id: 'symbols-layer',
-    type: 'symbol',
-    source: 'geojson-source',
-    filter: ['!=', 'active', 'true'],
-    // minzoom: 15, // TODO: only static values possible right now
-    layout: {
-      'symbol-sort-key': ['to-number', ['coalesce', ['get', 'user_sort-key'], ['get', 'sort-key'], 1]],
-      'icon-image': ['coalesce',
-        ['get', 'marker-image-url'],
-        // replacing marker-symbol value with path to emoji png
-        ['case',
-          ['has', 'marker-symbol'],
-          ['concat', '/emojis/noto/', ['get', 'marker-symbol'], '.png'],
-          '']
+      paint: {
+        'circle-pitch-scale': 'map', // points get bigger when camera is closer
+        'circle-radius': pointSize,
+        'circle-opacity': 0,
+        'circle-stroke-color': pointOutlineColor,
+        'circle-blur': 0.1,
+        'circle-stroke-width': [
+          'case',
+          ['boolean', ['feature-state', 'active'], false],
+          pointOutlineSizeActive,
+          pointOutlineSize
+        ],
+        'circle-stroke-opacity': pointOpacity + 0.2
+      }
+    },
+    'points-layer': {
+      id: 'points-layer',
+      type: 'circle',
+      source: 'geojson-source',
+      filter: ['all',
+        ['==', '$type', 'Point'],
+        ['!=', 'meta', 'midpoint'],
+        ['none', ['has', 'user_marker-image-url'], ['has', 'marker-image-url'],
+          ['has', 'user_marker-symbol'], ['has', 'marker-symbol']]
       ],
-      'icon-size': iconSize, // cannot scale on hover/zoom because it's not a paint property
-      'icon-overlap': 'always' // https://maplibre.org/maplibre-style-spec/layers/#icon-overlap
+      paint: {
+        'circle-pitch-scale': 'map', // points get bigger when camera is closer
+        'circle-radius': pointSize,
+        'circle-color': pointColor,
+        'circle-opacity': [
+          'match',
+          ['coalesce', ['get', 'user_marker-color'], ['get', 'marker-color']],
+          'transparent', 0, // If marker-color is 'transparent', set circle-radius to 0
+          [
+            'case',
+            ['boolean', ['feature-state', 'active'], false],
+            pointOpacityActive,
+            pointOpacity
+          ]],
+        'circle-blur': 0.1
+      }
+    },
+    'points-hit-layer': {
+      id: 'points-hit-layer',
+      type: 'circle',
+      source: 'geojson-source',
+      filter: ['all',
+        ['==', '$type', 'Point'],
+        ['!=', 'active', 'true']
+      ],
+      paint: {
+        'circle-radius': ['+', 5, pointSizeMax],
+        'circle-opacity': 0
+      }
+    },
+    // background + border for symbols
+    'symbols-border-layer': {
+      id: 'symbols-border-layer',
+      type: 'circle',
+      source: 'geojson-source',
+      filter: ['all',
+        ['==', '$type', 'Point'],
+        ['!=', 'meta', 'midpoint'],
+        ['!=', 'meta', 'vertex'],
+        ['any', ['has', 'user_marker-image-url'], ['has', 'marker-image-url'],
+          ['has', 'user_marker-symbol'], ['has', 'marker-symbol']]
+      ],
+      paint: {
+        'circle-pitch-scale': 'map', // points get bigger when camera is closer
+        'circle-radius': pointSize,
+        'circle-color': pointColor,
+        'circle-opacity': [
+          'match',
+          ['coalesce', ['get', 'user_marker-color'], ['get', 'marker-color']],
+          'transparent', 0, // If marker-color is 'transparent', set circle-radius to 0
+          [
+            'case',
+            ['boolean', ['feature-state', 'active'], false],
+            pointOpacityActive,
+            pointOpacity
+          ]],
+        'circle-stroke-color': pointOutlineColor,
+        'circle-blur': 0.05,
+        'circle-stroke-width': [
+          'case',
+          ['boolean', ['feature-state', 'active'], false],
+          pointOutlineSizeActive,
+          pointOutlineSize
+        ],
+        'circle-stroke-opacity': pointOpacity + 0.2
+      }
+    },
+    // support symbols on all feature types
+    'symbols-layer': {
+      id: 'symbols-layer',
+      type: 'symbol',
+      source: 'geojson-source',
+      filter: ['!=', 'active', 'true'],
+      // minzoom: 15, // TODO: only static values possible right now
+      layout: {
+        'symbol-sort-key': ['to-number', ['coalesce', ['get', 'user_sort-key'], ['get', 'sort-key'], 1]],
+        'icon-image': ['coalesce',
+          ['get', 'marker-image-url'],
+          // replacing marker-symbol value with path to emoji png
+          ['case',
+            ['has', 'marker-symbol'],
+            ['concat', '/emojis/noto/', ['get', 'marker-symbol'], '.png'],
+            '']
+        ],
+        'icon-size': iconSize, // cannot scale on hover/zoom because it's not a paint property
+        'icon-overlap': 'always' // https://maplibre.org/maplibre-style-spec/layers/#icon-overlap
       // 'icon-ignore-placement': true // other symbols can be visible even if they collide with the icon
-    },
-    paint: {
+      },
+      paint: {
       // cannot set circle-stroke-* in the symbol layer :-(
-    }
-  },
-  'text-layer': {
-    id: 'text-layer',
-    type: 'symbol',
-    source: 'geojson-source',
-    filter: ['has', 'label'],
-    layout: {
-      'icon-overlap': 'never',
-      'text-field': ['coalesce', ['get', 'label'], ['get', 'room']],
-      'text-size': labelSize,
-      'text-font': labelFont,
-      // arrange text to avoid collision
-      'text-variable-anchor': ['top'], // text under point
-      // distance of the text in 'em'
-      'text-radial-offset': ['/', pointSizeMax, 14],
-      'text-justify': 'auto',
-      'text-ignore-placement': false, // hide on collision
-      // TODO: sort keys on text are ascending, on symbols descending???
-      'symbol-sort-key': ['-', 1000, ['to-number', ['coalesce', ['get', 'user_sort-key'], ['get', 'sort-key'], 1]]]
+      }
     },
-    paint: {
-      'text-color': ['coalesce', ['get', 'user_label-color'], ['get', 'label-color'], '#000'],
-      'text-halo-color': ['coalesce', ['get', 'user_label-shadow'], ['get', 'label-shadow'], '#fff'],
-      'text-halo-width': 1
+    'text-layer': {
+      id: 'text-layer',
+      type: 'symbol',
+      source: 'geojson-source',
+      filter: ['has', 'label'],
+      layout: {
+        'icon-overlap': 'never',
+        'text-field': ['coalesce', ['get', 'label'], ['get', 'room']],
+        'text-size': labelSize,
+        'text-font': labelFont,
+        // arrange text to avoid collision
+        'text-variable-anchor': ['top'], // text under point
+        // distance of the text in 'em'
+        'text-radial-offset': ['+', ['/', pointSizeMax, 14], 0.4],
+        'text-justify': 'auto',
+        'text-ignore-placement': false, // hide on collision
+        // TODO: sort keys on text are ascending, on symbols descending???
+        'symbol-sort-key': ['-', 1000, ['to-number', ['coalesce', ['get', 'user_sort-key'], ['get', 'sort-key'], 1]]]
+      },
+      paint: {
+        'text-color': ['coalesce', ['get', 'user_label-color'], ['get', 'label-color'], '#000'],
+        'text-halo-color': ['coalesce', ['get', 'user_label-shadow'], ['get', 'label-shadow'], '#fff'],
+        'text-halo-width': 1
+      }
     }
   }
 }

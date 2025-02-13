@@ -17,15 +17,21 @@ describe 'Admin List' do
     end
 
     it 'shows link to destroy map' do
-      find('button', text: "Delete", match: :first).click
+      accept_alert do
+        find("i[class='bi bi-trash']", match: :first).click
+      end
       expect(page).to have_text('Mapforge')
       expect(Map.count).to eq(2)
     end
 
+    # FIXME: Somehow Turbo Stream broadcasts / responses aren't visible to capybara...
+    # context 'map change broadcasts' do
+    # end
+
     context 'navigating from admin list to map' do
       it 'shows map in edit mode without errors' do
         find("img[class='preview-image']", match: :first).click
-        expect(page).to have_selector(:xpath, "//button[@title='Map settings']")
+        expect(page).to have_selector(:xpath, "//button[@aria-label='Map settings']")
       end
     end
   end
@@ -35,8 +41,8 @@ describe 'Admin List' do
       visit admin_path
     end
 
-    it 'shows 404' do
-      expect(page).to have_text 'The page you were looking for doesn’t exist'
+    it 'shows login page' do
+      expect(page).to have_text 'Log in here'
     end
   end
 end

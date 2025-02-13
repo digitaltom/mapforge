@@ -1,5 +1,6 @@
 .navbar {
-  background-color: #e5e5d7a1;
+  opacity: 0.9;
+  z-index: 10;
 }
 
 .mapforge-font {
@@ -23,19 +24,53 @@
 .btn-orange {
   background-color: #f60;
   border-color: #f60;
-  color: #fff;
+  color: #fff !important;
 }
 
 .btn-orange:hover,
 .btn-orange:focus,
 .btn-orange:active {
   background-color: #FF781F !important;
-  color: #fff;
+  color: #fff !important;
+}
+
+.login-link {
+  position: absolute;
+  right: 1em;
+  top: 1.3em;
+  text-decoration: none;
 }
 
 .profile-dropdown {
-    display: flex;
-    align-items: center;
+  position: absolute;
+  right: 1em;
+  top: 0.9em;
+  display: flex;
+  align-items: center;
+  background-color: var(--color-light-sand);
+}
+
+.navbar-toggler {
+  position: absolute;
+  right: calc(50% - 27px);
+  top: 0.7em;
+  border-width: 0 !important;
+}
+
+.navbar-toggler:focus {
+  box-shadow: unset;
+}
+
+.btn-create-map {
+  position: absolute;
+  right: 4em;
+  top: 0.85em;
+}
+
+.navbar-collapse.collapsing, .navbar-collapse.show {
+  .btn-create-map {
+    position: unset;
+  }
 }
 
 .profile-image {
@@ -48,14 +83,28 @@
 .dropdown-menu[data-bs-popper] {
   right: -0.5rem;
   left: unset;
+  opacity: 1;
 }
 
-@media (width <= 990px) {
-  .dropdown-menu[data-bs-popper] {
-    left: 0;
+.dropdown-menu .dropdown-item:active {
+    background-color: var(--color-light-sand) !important;
+}
+
+/* make max space on small screen < sm */
+@media (width <= 574px) {
+  .navbar .container-fluid {
+    padding-left: 0;
   }
-}
 
-.navbar-toggler {
-  border-width: 1px !important;
+  .navbar-brand {
+    margin-right: 0;
+  }
+
+  .navbar-collapse.collapsing, .navbar-collapse.show {
+    margin-left: 0.8em;
+  }
+
+  .navbar-brand .mapforge-font {
+    display: none;
+  }
 }

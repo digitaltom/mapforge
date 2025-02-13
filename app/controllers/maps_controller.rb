@@ -1,25 +1,29 @@
 class MapsController < ApplicationController
-  before_action :set_map, only: %i[show properties]
+  before_action :set_global_js_values, only: %i[show]
+  before_action :set_map, only: %i[show properties destroy]
   before_action :require_login, only: %i[my]
+  before_action :require_map_owner, only: %i[destroy]
 
   layout "map", only: [ :show ]
 
   def index
-    @maps = Map.where.not(private: true).includes(:layers).order(updated_at: :desc)
+    @maps = Map.where.not(private: true).includes(:layers, :user).order(updated_at: :desc)
   end
 
   def my
-    @maps = Map.where(user: @user).includes(:layers).order(updated_at: :desc)
+    @maps = Map.where(user: @user).includes(:layers, :user).order(updated_at: :desc)
   end
 
   def show
-    @map_properties = @map.properties
-    gon.map_id = params[:id]
-    gon.map_mode = (params[:id] == @map.id.to_s) ? "rw" : "ro"
-    gon.map_mode = "static" if params["static"]
-    @map_mode = gon.map_mode
-    gon.csrf_token = form_authenticity_token
-    gon.map_properties = @map_properties
+    if request.format.html?
+      @map_properties = @map.properties
+      gon.map_id = params[:id]
+      gon.map_mode = (params[:id] == @map.id.to_s) ? "rw" : "ro"
+      gon.map_mode = "static" if params["static"]
+      @map_mode = gon.map_mode
+      gon.csrf_token = form_authenticity_token
+      gon.map_properties = @map_properties
+    end
 
     respond_to do |format|
       format.html do
@@ -56,11 +60,29 @@ class MapsController < ApplicationController
   end
   # :nocov:
 
+  # Turbo sends the DELETE request automatically with Content-Type: text/vnd.turbo-stream.html
+  # We can return a turbo stream command that removes the map element in place
+  # To avoid turbo_stream response, force format :html
+  def destroy
+    @map.destroy!
+    # there is an additional broadcast from the model, for the admin page
+    render turbo_stream: turbo_stream.remove(@map)
+  end
+
   private
+
+  def require_map_owner
+    redirect_to maps_path unless @user&.admin? || (@map.user && @map.user == @user)
+  end
+
+  def set_global_js_values
+    gon.map_keys = Map.provider_keys
+  end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_map
-    @map = Map.find_by(public_id: params[:id]) || Map.find_by(id: params[:id])
+    @map = Map.includes(:layers, :user)
+    @map = @map.find_by(public_id: params[:id]) || @map.find_by(id: params[:id])
     head :not_found unless @map
   end
 

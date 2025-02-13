@@ -10,22 +10,6 @@
   padding-left: unset;
 }
 
-.frontpage-subtitle {
-  text-align: center;
-  font-size: calc(max(min(3vw, 6em), 1.5em));
-  position: absolute; top: 45vh;
-  opacity: 0;
-  transition: opacity 1.5s;
-}
-
-.frontpage-buttons .btn {
-  font-size: calc(max(min(2vw, 6em), 1em));
-  font-weight: 300;
-  margin: 0.5em;
-  color: #000;
-  border-color: #000;
-  background-color: rgba(255 255 255 / 75%); /* 75% translucent white */
-}
 
 @media only screen and (orientation: portrait) {
   .frontpage-title {
@@ -37,23 +21,6 @@
     font-size: calc(max(min(5vw, 6em), 0.75em));
     font-weight: 500;
   }
-}
-
-.shadow {
-  /* offset-x | offset-y | blur-radius | color */
-  text-shadow: 1px 1px 2px white;
-}
-
-.frontpage-buttons {
-  position: absolute; bottom: calc(9vh - calc(max(min(2vw, 6em), 1em)));
-}
-
-.center {
-  text-align: center;
-}
-
-.small {
-  font-size: 60%;
 }
 
 .fade-in {
@@ -97,12 +64,12 @@ section,
 .section {
   color: var(--default-color);
   background-color: var(--background-color);
-  padding: 60px 0;
+  padding: 0;
   scroll-margin-top: 100px;
   overflow: clip;
 }
 
-@media (width <= 1199px) {
+@media (width <= 992px) {
   section,
   .section {
     scroll-margin-top: 66px;
@@ -163,11 +130,11 @@ section,
   z-index: 2;
 }
 
-@media (width >= 1200px) {
+@media (width >= 992px) {
   .hero::after {
     position: absolute;
     content: "";
-    width: 44%;
+    width: 50%;
     background-color: var(--background-color);
     opacity: 0.85;
     top: 0;
@@ -194,6 +161,12 @@ section,
 .hero .container-fluid {
   z-index: 3;
   position: relative;
+  padding-left: 0;
+  margin-left: 3em;
+}
+
+.welcome-text {
+  padding-right: 2em;
 }
 
 .hero h1 {
@@ -203,7 +176,6 @@ section,
 }
 
 .hero blockquote {
-  color: color-mix(in srgb, var(--default-color), transparent 20%);
   padding-left: 20px;
   border-left: 2px solid var(--accent-color);
   margin: 40px 0;
@@ -240,14 +212,18 @@ section,
 }
 
 /* --------------------------------------------------------------
-# Why Us Section
+# Features Section
 -------------------------------------------------------------- */
-.why-us .img-bg {
-  min-height: 500px;
+
+#features {
+  border-top: 2px solid var(--color-light-sand);
+}
+
+#features .img-bg {
   position: relative;
 }
 
-.why-us .img-bg img {
+#features .img-bg img {
   position: absolute;
   inset: 0;
   display: block;
@@ -257,70 +233,91 @@ section,
   z-index: 1;
 }
 
-.why-us .slides {
-  background-color: color-mix(in srgb, var(--default-color), transparent 97%);
-}
-
-.why-us h3 {
+#features h3 {
   font-size: 24px;
   font-weight: 700;
 }
 
-.why-us h4 {
+#features h4 {
   font-size: 18px;
   font-weight: 300;
   color: color-mix(in srgb, var(--default-color), transparent 30%);
 }
 
-.why-us .swiper {
-  margin: 140px 140px 120px;
+#features .swiper {
+  margin: 3em 5em;
   overflow: hidden;
+  color: var(--default-color)
 }
 
-.why-us .swiper-wrapper {
+#features .swiper-wrapper {
   height: auto;
 }
 
-.why-us .swiper-button-prev::after,
-.why-us .swiper-button-next::after {
+#features li {
+  margin-bottom: 0.3em;
+}
+
+#features .swiper-button-prev::after,
+#features .swiper-button-next::after {
   font-size: 24px;
-  color: color-mix(in srgb, var(--default-color), transparent 50%);
+  color: color-mix(in srgb, var(--color-light-sand), transparent 50%);
 }
 
-.why-us .swiper-button-prev {
-  left: 80px;
+#features .swiper-button-prev {
+  left: 2em;
 }
 
-.why-us .swiper-button-next {
-  right: 80px;
+#features .swiper-button-next {
+  right: 2em;
 }
 
-.why-us .swiper-pagination {
-  margin-top: 30px;
+#features .swiper-pagination {
+  margin-top: 1em;
   position: relative;
 }
 
-.why-us .swiper-pagination .swiper-pagination-bullet {
-  background-color: color-mix(in srgb, var(--default-color), transparent 50%);
+#features .swiper-pagination .swiper-pagination-bullet {
+  background-color: color-mix(in srgb, var(--color-light-sand), transparent 50%);
 }
 
-.why-us .swiper-pagination .swiper-pagination-bullet-active {
-  background-color: var(--accent-color);
+#features .swiper-pagination .swiper-pagination-bullet-active {
+  background-color: var(--color-light-teagreen);
 }
 
-@media (width <= 1200px) {
-  .why-us .swiper {
+@media (width <= 992px) {
+  #features .swiper {
     margin: 60px 60px 40px;
   }
 
-  .why-us .swiper-button-prev,
-  .why-us .swiper-button-next {
-    display: none;
+  #features .swiper-button-prev {
+    left: 1em;
+  }
+
+  #features .swiper-button-next {
+    right: 1em;
+  }
+
+  #features .img-bg, #features .img-bg img {
+    height: 10em;
+    min-height: 0;
   }
 }
 
 @media (width <= 575px) {
-  .why-us .swiper {
+  #features .swiper {
     margin: 40px 40px 20px;
+  }
+
+  #hero .container {
+    margin-left: 1em;
+  }
+
+  #features .swiper-button-prev {
+    left: 0.3em;
+  }
+
+  #features .swiper-button-next {
+    right: 0.3em;
   }
 }

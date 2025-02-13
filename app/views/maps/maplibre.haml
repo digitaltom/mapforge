@@ -5,21 +5,21 @@
 
 - # https://github.com/Ionaru/easy-markdown-editor
 = javascript_include_tag "https://unpkg.com/easymde/dist/easymde.min.js"
-= stylesheet_link_tag "https://unpkg.com/easymde/dist/easymde.min.css"
-
-= stylesheet_link_tag "https://unpkg.com/@mapbox/mapbox-gl-draw@1.4.3/dist/mapbox-gl-draw.css"
-= stylesheet_link_tag "https://unpkg.com/@maplibre/maplibre-gl-geocoder@1.5.0/dist/maplibre-gl-geocoder.css"
 
 - content_for :title, "Mapforge: #{(@map.name.presence || @map.id)}"
 - content_for :head do
   - if @map.screenshot
     %meta{ 'og:image': "#{request.protocol}#{request.host_with_port}#{@map.screenshot}" }
 
-#map-head.dark-shadow{ 'data-controller': "map", 'data-aos': "zoom-out-down", "data-aos-delay": "1000", 'data-action': "click->map#toggleNavigation" }
-  %i#map-nav-toggle.bi.bi-caret-down.me-2
+
+#preloader
+  %img.mapforge-logo{ src: "/icons/mapforge-logo-header_white.png", alt: "Logo" }
+
+#map-head.dark-shadow{ title: "Toggle Navigation", data: { 'controller': "map", 'action': "click->map#toggleNavigation", 'toggle': "tooltip", 'bs-placement': "bottom", 'bs-custom-class': 'maplibregl-ctrl-tooltip' } }
+  %i#map-nav-toggle.bi.bi-caret-down.ms-2.me-2
   #map-title
 
-#maplibre-map.map{ 'data-aos': "fade-in", "data-aos-delay": "250" }
+#maplibre-map.map.hidden
 
 - unless @map_mode == 'static'
   = render 'status'

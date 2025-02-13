@@ -43,6 +43,7 @@ gem "haml"
 gem "capybara"
 gem "capybara-screenshot"
 gem "puppeteer-ruby"
+gem "rszr"
 
 # map + coordinates libraries
 gem "rgeo"
@@ -74,6 +75,7 @@ group :development do
   gem "rubycritic", require: false
   gem "brakeman"
   gem "bundler-audit"
+  gem "hotwire-spark"
 
   gem "web-console"
   # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]
