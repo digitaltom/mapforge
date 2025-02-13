@@ -71,13 +71,16 @@ export function editStyles () {
       }
     },
     // midpoints to extend lines/polygons
-    // https://github.com/mapbox/mapbox-gl-draw/blob/main/src/lib/create_vertex.js
+    // https://github.com/mapbox/mapbox-gl-draw/blob/main/src/lib/create_midpoint.js
     {
       id: 'gl-draw-polygon-midpoint',
       type: 'circle',
       filter: ['all',
         ['==', '$type', 'Point'],
-        ['==', 'meta', 'midpoint']
+        ['==', 'meta', 'midpoint'],
+        // only show midpoints if this is not a route
+        // parent properties are patched into the midpoint properties
+        ['!has', 'user_route']
       ],
       paint: {
         'circle-radius': pointSize,
@@ -145,18 +148,41 @@ export function editStyles () {
         'circle-stroke-opacity': 1
       }
     },
-    // inactive vertex points on lines + polygons
+    // inactive vertex points on lines + polygons (non-route)
     {
       id: 'gl-draw-polygon-and-line-vertex-inactive',
       type: 'circle',
       filter: ['all',
         ['==', 'meta', 'vertex'],
         ['==', '$type', 'Point'],
-        ['!=', 'mode', 'static']
+        ['!=', 'mode', 'static'],
+        ['!has', 'user_route']
       ],
       paint: {
         'circle-radius': pointSize,
         'circle-color': highlightColor
+      }
+    },
+
+    {
+      id: 'gl-draw-route-vertex-inactive',
+      type: 'circle',
+      filter: ['all',
+        ['==', 'meta', 'vertex'],
+        ['==', '$type', 'Point'],
+        ['!=', 'mode', 'static'],
+        ['has', 'user_route']
+      ],
+      paint: {
+        'circle-radius': pointSize,
+        'circle-color': [
+          'case', ['in', ['get', 'coord_path'], ['get', 'user_waypointIndexes']],
+          highlightColor, 'lightgrey'
+        ],
+        'circle-opacity': [
+          'case', ['in', ['get', 'coord_path'], ['get', 'user_waypointIndexes']],
+          1, 0.5
+        ]
       }
     }
   ]

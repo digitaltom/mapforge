@@ -218,18 +218,19 @@ async function handleUpdate (e) {
 
   // change route
   if (feature.properties.route) {
-    const coords = [feature.geometry.coordinates[0]]
+    // new waypoints are start, end, changed point and current waypoints that are still in the feature
+    const waypoints = [feature.geometry.coordinates[0]]
     // Track coordinate changes
     feature.geometry.coordinates.slice(1, -1).forEach((coord, index) => {
       if (coord[0] !== geojsonFeature.geometry.coordinates[index + 1][0] ||
           coord[1] !== geojsonFeature.geometry.coordinates[index + 1][1]) {
-        coords.push(coord)
+        waypoints.push(coord)
       } else if (functions.hasCoordinate(feature.properties.route.waypoints, coord)) {
-        coords.push(coord)
+        waypoints.push(coord)
       }
     })
-    coords.push(feature.geometry.coordinates.at(-1))
-    feature = await getRouteFeature(feature, coords, feature.properties.route.profile)
+    waypoints.push(feature.geometry.coordinates.at(-1))
+    feature = await getRouteFeature(feature, waypoints, feature.properties.route.profile)
   }
 
   status('Feature ' + feature.id + ' changed')
@@ -378,7 +379,7 @@ async function getRouteFeature (feature, waypoints, profile) {
       profile,
       format: 'json'
     })
-    console.log('response: ', snapResponse)
+    console.log('snap response: ', snapResponse)
     waypoints = snapResponse.locations.map(item => item.location)
     console.log('snapped values: ', waypoints)
 
@@ -386,11 +387,20 @@ async function getRouteFeature (feature, waypoints, profile) {
       coordinates: waypoints,
       profile
     })
-    console.log('response: ', routeResponse)
+    console.log('route response: ', routeResponse)
     const routeLocations = decodePolyline(routeResponse.routes[0].geometry)
     console.log('routeLocations: ', routeLocations)
     feature.geometry.coordinates = routeLocations
+
+    // store waypoint indexes in coordinate for style highlight
+    const waypointIndexes = []
+    waypoints.forEach((waypoint) => {
+      const index = functions.findCoordinate(routeLocations, waypoint)
+      if (index >= 0) waypointIndexes.push(index + '')
+    })
+
     feature.properties.route = { profile, waypoints }
+    feature.properties.waypointIndexes = waypointIndexes
   } catch (err) {
     console.error('An error occurred: ' + err)
   }

@@ -1590,9 +1590,29 @@ var B = Object.freeze(
  *   where the point exists within its parent feature's coordinates.
  * @param {boolean} selected
  * @return {GeoJSON} Point
- */ function createVertex(e, t, o, n) {
-    return { type: u.FEATURE, properties: { meta: h.VERTEX, parent: e, coord_path: o, active: n ? f.ACTIVE : f.INACTIVE }, geometry: { type: u.POINT, coordinates: t } };
+ */
+function createVertex(parent, coordinates, path, selected) {  //(e, t, o, n) {
+//     return { type: u.FEATURE, properties: { meta: h.VERTEX, parent: e, coord_path: o, active: n ? f.ACTIVE : f.INACTIVE }, geometry: { type: u.POINT, coordinates: t } };
+    const vertex = {
+      type: u.FEATURE,
+      properties: {
+        ...parent.properties,
+        meta: h.VERTEX,
+        parent: parent.properties && parent.properties.id,
+        coord_path: path,
+        active: selected ?
+          f.ACTIVE :
+          f.INACTIVE
+      },
+      geometry: {
+        type: u.POINT,
+        coordinates
+      }
+    };
+    delete vertex.properties.id;
+    return vertex;
 }
+
 function createMidpoint(parent, startVertex, endVertex) { // e, t, o
     //const n = t.geometry.coordinates;
     //const r = o.geometry.coordinates;
@@ -1634,13 +1654,16 @@ function createMidpoint(parent, startVertex, endVertex) { // e, t, o
         coordinates: [mid.lng, mid.lat]
         }
     };
+
+    console.log(midpoint)
+
     delete midpoint.properties.id;
     return midpoint;
 }
 
 function createSupplementaryPoints(e, t = {}, o = null) {
     const { type: n, coordinates: r } = e.geometry;
-    const i = e.properties && e.properties.id;
+    const i = e;
     let s = [];
     n === u.POINT
         ? s.push(createVertex(i, r, o, isSelectedPath(o)))
@@ -2215,10 +2238,10 @@ Q.toDisplayFeatures = function (e, t, o) {
     const r = t.geometry.coordinates[0].length;
     if (!(r < 3)) {
         t.properties.meta = h.FEATURE;
-        o(createVertex(e.polygon.id, t.geometry.coordinates[0][0], "0.0", false));
+        o(createVertex(e.polygon, t.geometry.coordinates[0][0], "0.0", false));
         if (r > 3) {
             const n = t.geometry.coordinates[0].length - 3;
-            o(createVertex(e.polygon.id, t.geometry.coordinates[0][n], `0.${n}`, false));
+            o(createVertex(e.polygon, t.geometry.coordinates[0][n], `0.${n}`, false));
         }
         if (r <= 4) {
             const e = [
@@ -2320,7 +2343,7 @@ ee.toDisplayFeatures = function (e, t, o) {
     if (!n) return o(t);
     if (!(t.geometry.coordinates.length < 2)) {
         t.properties.meta = h.FEATURE;
-        o(createVertex(e.line.id, t.geometry.coordinates[e.direction === "forward" ? t.geometry.coordinates.length - 2 : 1], "" + (e.direction === "forward" ? t.geometry.coordinates.length - 2 : 1), false));
+        o(createVertex(e.line, t.geometry.coordinates[e.direction === "forward" ? t.geometry.coordinates.length - 2 : 1], "" + (e.direction === "forward" ? t.geometry.coordinates.length - 2 : 1), false));
         o(t);
     }
 };

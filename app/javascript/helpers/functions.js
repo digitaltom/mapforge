@@ -74,3 +74,13 @@ export function hasCoordinate (coordinates, coordinate) {
     coord[0].toFixed(5) === coordinate[0].toFixed(5) &&
     coord[1].toFixed(5) === coordinate[1].toFixed(5))
 }
+
+export function findCoordinate (coordinates, coordinate) {
+  for (let i = 0; i < coordinates.length; i++) {
+    if (coordinates[i][0].toFixed(5) === coordinate[0].toFixed(5) &&
+          coordinates[i][1].toFixed(5) === coordinate[1].toFixed(5)) {
+      return i
+    }
+  }
+  return -1
+}
