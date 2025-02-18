@@ -11,11 +11,11 @@
 
           %h1.mb-4 Log in
           %p.mb-3
-            Log in here to manage your maps. Mapforge is storing only minimal data from
-            you, see the
-            %a{ href: "https://github.com/digitaltom/mapforge/blob/main/docs/privacy.md" }
-              Privacy Policy
-
+            Log in here to manage your maps. Mapforge is storing only minimal data from you. By logging in, you accept the Mapforge
+            %a{ href: "https://github.com/digitaltom/mapforge/blob/main/docs/privacy.md" }Privacy Policy
+            and&nbsp;
+            %a{ href: "https://github.com/digitaltom/mapforge/blob/main/docs/terms.md" }>Terms of service
+            = '.'
           - if ENV["GITHUB_CLIENT_ID"] && ENV["GITHUB_CLIENT_SECRET"]
             = form_tag('/auth/github', method: 'post', data: {turbo: false}) do
               = button_tag class: 'btn w-100 btn-secondary btn-login btn-social btn-github mb-2' do

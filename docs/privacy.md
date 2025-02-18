@@ -46,3 +46,12 @@ You can export all your map data in GeoJSON format.
 We will retain your information as long as your account is active.
 
 You can choose to delete your Mapforge account at any time by sending a mail to mapforge@digitalflow.de. All your data will be permanently deleted immediately when you delete your account.
+
+
+### External policies
+
+Please see the privacy policies and terms of service of used services here:
+
+* OSM: https://osmfoundation.org/wiki/Privacy_Policy
+* Maptiler: https://www.maptiler.com/privacy-policy/
+* ESRI: https://developers.arcgis.com/maplibre-gl-js/terms-of-use/
