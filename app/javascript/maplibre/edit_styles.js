@@ -95,17 +95,15 @@ export function editStyles () {
       id: 'gl-draw-point-point-stroke-inactive',
       type: 'circle',
       filter: ['all',
-        ['==', 'active', 'false'],
         ['==', '$type', 'Point'],
         ['==', 'meta', 'feature'],
         ['!=', 'mode', 'static']
       ],
       paint: {
         'circle-radius': pointSize,
-        'circle-opacity': 0.1,
-        'circle-color': '#ffffff',
-        'circle-stroke-color': '#c0c0c0',
-        'circle-stroke-width': 1
+        'circle-opacity': [
+          'match', ['get', 'user_marker-color'], 'transparent', 0.9, 0],
+        'circle-color': '#c0c0c0'
       }
     },
 
