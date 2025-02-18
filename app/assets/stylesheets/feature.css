@@ -18,6 +18,11 @@
     width: calc(100% - 1em);
     margin: 0.5em 1em;
   }
+
+  .modal-pull-up #feature-details-body, .modal-pull-up #feature-edit-ui, .modal-pull-up #feature-edit-raw {
+    overflow-y: scroll;
+    max-height: calc(100vh - 8em);
+  }
 }
 
 @media (width > 574px) {
@@ -43,7 +48,7 @@
 }
 
 #feature-details-icon {
-  height: 2em;
+  height: 1.5em;
   margin: 0.3em;
   margin-right: 0.6em;
 }
@@ -58,11 +63,6 @@
 
 #feature-details-body, #feature-edit-ui, #feature-edit-raw {
   overflow-y: hidden;
-}
-
-.modal-pull-up #feature-details-body, .modal-pull-up #feature-edit-ui, .modal-pull-up #feature-edit-raw {
-  overflow-y: scroll;
-  max-height: calc(100vh - 8em);
 }
 
 #feature-details-body img {
