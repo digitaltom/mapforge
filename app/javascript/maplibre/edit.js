@@ -31,7 +31,7 @@ export function initializeEditMode () {
   // Patching direct select mode to not allow dragging features
   // similar to https://github.com/zakjan/mapbox-gl-draw-waypoint
   const DirectSelectMode = { ...MapboxDraw.modes.direct_select }
-  DirectSelectMode.dragFeature = function (state, e, delta) { /* noop */ }
+  DirectSelectMode.dragFeature = function (_state, _e, _delta) { /* noop */ }
 
   const SimpleSelectMode = { ...MapboxDraw.modes.simple_select }
   // DirectSelectMode.dragFeature = function (state, e, delta) { /* noop */ }
@@ -69,7 +69,7 @@ export function initializeEditMode () {
   initializeDefaultControls()
   initializeEditControls()
 
-  map.on('geojson.load', function (e) {
+  map.on('geojson.load', function (_e) {
     initializeEditStyles()
     const urlFeatureId = new URLSearchParams(window.location.search).get('f')
     const feature = geojsonData.features.find(f => f.id === urlFeatureId)
@@ -161,7 +161,7 @@ function initializeEditControls () {
   map.addControl(controlGroup, 'top-left')
   document.querySelector('.maplibregl-ctrl:has(button.maplibregl-ctrl-map)').classList.add('hidden') // hide for aos animation
 
-  map.once('load', function (e) {
+  map.once('load', function (_e) {
     animateElement('.maplibregl-ctrl:has(button.ctrl-line-menu-btn)', 'fade-right', 500)
     animateElement('.maplibregl-ctrl:has(button.maplibregl-ctrl-map)', 'fade-right', 500)
   })
@@ -278,7 +278,7 @@ function addLineMenu () {
   lineMenuButton.title = 'Select line draw mode'
   lineMenuButton.classList.add('ctrl-line-menu-btn')
   lineMenuButton.removeEventListener('click', null)
-  lineMenuButton.addEventListener('click', (e) => {
+  lineMenuButton.addEventListener('click', (_e) => {
     draw.changeMode('simple_select')
     if (lineMenu.classList.contains('hidden')) {
       lineMenu.classList.remove('hidden')
@@ -308,7 +308,7 @@ function addPaintButton () {
   icon.classList.add('bi-pencil-fill')
   paintButton.appendChild(icon)
   paintButton.removeEventListener('click', null)
-  paintButton.addEventListener('click', (e) => {
+  paintButton.addEventListener('click', (_e) => {
     if (draw.getMode() === 'draw_paint_mode') {
       draw.changeMode('simple_select')
     } else {
@@ -330,7 +330,7 @@ function addRoadButton () {
   icon.classList.add('bi-car-front-fill')
   roadButton.appendChild(icon)
   roadButton.removeEventListener('click', null)
-  roadButton.addEventListener('click', (e) => {
+  roadButton.addEventListener('click', (_e) => {
     if (draw.getMode() === 'road') {
       draw.changeMode('simple_select')
     } else {
@@ -352,7 +352,7 @@ function addBicycleButton () {
   icon.classList.add('bi-bicycle')
   bicycleButton.appendChild(icon)
   bicycleButton.removeEventListener('click', null)
-  bicycleButton.addEventListener('click', (e) => {
+  bicycleButton.addEventListener('click', (_e) => {
     if (draw.getMode() === 'bicycle') {
       draw.changeMode('simple_select')
     } else {

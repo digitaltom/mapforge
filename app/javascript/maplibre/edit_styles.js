@@ -187,6 +187,7 @@ export function editStyles () {
 }
 
 function removeSource (style) {
+  // eslint-disable-next-line no-unused-vars
   const { source, ...filteredStyle } = style
   return filteredStyle
 }

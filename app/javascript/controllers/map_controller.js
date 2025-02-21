@@ -20,7 +20,7 @@ export default class extends Controller {
     setBackgroundMapLayer()
   }
 
-  toggleNavigation (event) {
+  toggleNavigation (_event) {
     if (document.querySelector('#map-header').style.display === 'none') {
       functions.e('#map-header', e => { e.style.display = 'block' })
       resetControls()

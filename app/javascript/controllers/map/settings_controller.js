@@ -21,53 +21,53 @@ export default class extends Controller {
     currentCenter: Array
   }
 
-  mapNameValueChanged (value, previousValue) {
+  mapNameValueChanged (value, _previousValue) {
     // console.log('mapNameValueChanged(): ' + value)
     document.querySelector('#map-name').value = value
   }
 
-  mapTerrainValueChanged (value, previousValue) {
+  mapTerrainValueChanged (value, _previousValue) {
     // console.log('mapTerrainValueChanged(): ' + value)
     document.querySelector('#map-terrain').checked = value
   }
 
-  baseMapValueChanged (value, previousValue) {
+  baseMapValueChanged (value, _previousValue) {
     // console.log('baseMapValueChanged(): ' + value)
     functions.e('.layer-preview', e => { e.classList.remove('active') })
     functions.e('img[data-base-map="' + value + '"]', e => { e.classList.add('active') })
   }
 
-  defaultPitchValueChanged (value, previousValue) {
+  defaultPitchValueChanged (value, _previousValue) {
     // console.log('defaultPitchValueChanged(): ' + value)
     document.querySelector('#map-pitch').innerHTML = value
   }
 
-  currentPitchValueChanged (value, previousValue) {
+  currentPitchValueChanged (value, _previousValue) {
     // console.log('currentPitchValueChanged(): ' + value)
     document.querySelector('#map-pitch-current').innerHTML = value
   }
 
-  defaultZoomValueChanged (value, previousValue) {
+  defaultZoomValueChanged (value, _previousValue) {
     // console.log('defaultZoomValueChanged(): ' + value)
     document.querySelector('#map-zoom').innerHTML = value
   }
 
-  currentZoomValueChanged (value, previousValue) {
+  currentZoomValueChanged (value, _previousValue) {
     // console.log('currentZoomValueChanged(): ' + value)
     document.querySelector('#map-zoom-current').innerHTML = value
   }
 
-  defaultBearingValueChanged (value, previousValue) {
+  defaultBearingValueChanged (value, _previousValue) {
     // console.log('defaultBearingValueChanged(): ' + value)
     document.querySelector('#map-bearing').innerHTML = value
   }
 
-  currentBearingValueChanged (value, previousValue) {
+  currentBearingValueChanged (value, _previousValue) {
     // console.log('currentBearingValueChanged(): ' + value)
     document.querySelector('#map-bearing-current').innerHTML = value
   }
 
-  defaultCenterValueChanged (value, previousValue) {
+  defaultCenterValueChanged (value, _previousValue) {
     // console.log('defaultCenterValueChanged(): "' + value + '"')
     if (value.length !== 0) {
       value = value.map(coord => parseFloat(coord.toFixed(4)))
@@ -77,7 +77,7 @@ export default class extends Controller {
     document.querySelector('#map-center').innerHTML = value
   }
 
-  defaultAutoCenterValueChanged (value, previousValue) {
+  defaultAutoCenterValueChanged (value, _previousValue) {
     // console.log('defaultAutoCenterValueChanged(): "' + value + '"')
     if (value.length !== 0 && !window.gon.map_properties.center) {
       value = value.map(coord => parseFloat(coord.toFixed(4)))
@@ -85,7 +85,7 @@ export default class extends Controller {
     }
   }
 
-  currentCenterValueChanged (value, previousValue) {
+  currentCenterValueChanged (value, _previousValue) {
     // console.log('currentCenterValueChanged(): ' + value)
     value = value.map(coord => parseFloat(coord.toFixed(4)))
     document.querySelector('#map-center-current').innerHTML = value

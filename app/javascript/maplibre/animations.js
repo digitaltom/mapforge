@@ -79,7 +79,7 @@ export class AnimateLineAnimation extends AnimationManager {
     const steps = 500
     let counter = 0
 
-    function animate (frame) {
+    function animate (_frame) {
       const progress = counter / steps
       const distance = progress * lineDistance
       const coordinate = window.turf.along(path, distance, 'kilometers').geometry.coordinates
@@ -112,7 +112,7 @@ export class AnimatePolygonAnimation extends AnimationManager {
     const steps = 100
     let counter = 0
 
-    function animate (timestamp) {
+    function animate (_timestamp) {
       const progress = counter / steps
       polygon.properties['fill-extrusion-height'] = progress * height
       // console.log('New height: ' + polygon.properties['fill-extrusion-height'])

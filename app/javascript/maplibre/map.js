@@ -88,7 +88,7 @@ export function initializeMap (divId = 'maplibre-map') {
     if (mapProperties.terrain && window.gon.map_keys.maptiler) { addTerrain() }
   })
 
-  map.on('geojson.load', (e) => {
+  map.on('geojson.load', (_e) => {
     functions.e('#maplibre-map', e => { e.setAttribute('data-geojson-loaded', true) })
     const urlFeatureId = new URLSearchParams(window.location.search).get('f')
     const feature = geojsonData.features.find(f => f.id === urlFeatureId)
@@ -99,7 +99,7 @@ export function initializeMap (divId = 'maplibre-map') {
     }
   })
 
-  map.once('load', function (e) {
+  map.once('load', function (_e) {
     // on first map load, re-sort layers late, when all map,
     // view + edit layers are added
     sortLayers()
@@ -121,22 +121,22 @@ export function initializeMap (divId = 'maplibre-map') {
   map.on('touchend', (e) => { lastMousePosition = e.lngLat })
   map.on('drag', () => { mapInteracted = true })
   map.on('click', resetControls)
-  map.on('pitchend', function (e) {
+  map.on('pitchend', function (_e) {
     functions.e('#settings-modal', e => {
       e.setAttribute('data-map--settings-current-pitch-value', map.getPitch().toFixed(0))
     })
   })
-  map.on('zoomend', function (e) {
+  map.on('zoomend', function (_e) {
     functions.e('#settings-modal', e => {
       e.setAttribute('data-map--settings-current-zoom-value', map.getZoom().toFixed(2))
     })
   })
-  map.on('rotate', function (e) {
+  map.on('rotate', function (_e) {
     functions.e('#settings-modal', e => {
       e.setAttribute('data-map--settings-current-bearing-value', map.getBearing().toFixed(0))
     })
   })
-  map.on('moveend', function (e) {
+  map.on('moveend', function (_e) {
     functions.e('#settings-modal', e => {
       e.setAttribute('data-map--settings-current-center-value', JSON.stringify([map.getCenter().lng, map.getCenter().lat]))
     })
@@ -180,7 +180,7 @@ export function loadGeoJsonData () {
         // https://github.com/mapbox/mapbox-gl-js/issues/2716
         // because to highlight a feature we need the id,
         // and in the style layers it only accepts mumeric ids in the id field initially
-        geojsonData.features.forEach((feature, index) => { feature.properties.id = feature.id })
+        geojsonData.features.forEach((feature, _index) => { feature.properties.id = feature.id })
         redrawGeojson()
         // drop the properties.id after sending to the map
         geojsonData.features.forEach(feature => { delete feature.properties.id })
@@ -244,7 +244,7 @@ export function initializeDefaultControls () {
   map.addControl(scale)
   scale.setUnit('metric')
 
-  map.once('load', function (e) {
+  map.once('load', function (_e) {
     animateElement('.maplibregl-ctrl-geocoder', 'fade-left', 500)
     animateElement('.maplibregl-ctrl:has(button.maplibregl-ctrl-zoom-in)', 'fade-left', 500)
     animateElement('.maplibregl-ctrl:has(button.maplibregl-ctrl-geolocate)', 'fade-left', 500)

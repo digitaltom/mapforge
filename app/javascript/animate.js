@@ -12,7 +12,7 @@ import * as functions from 'helpers/functions'
 })
 
 async function init () {
-  map.on('geojson.load', async (e) => {
+  map.on('geojson.load', async (_e) => {
     const animateFeatureId = new URLSearchParams(window.location.search).get('a')
     const feature = geojsonData.features.find(f => f.id === animateFeatureId)
     console.log('Animating ' + feature.id)

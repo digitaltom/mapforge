@@ -82,7 +82,7 @@ export function showFeatureDetails (feature) {
     modal.style.height = (dragStartModalHeight - y) + 'px'
   })
 
-  functions.addEventListeners(modal, ['mouseout', 'mouseup', 'touchend'], (event) => {
+  functions.addEventListeners(modal, ['mouseout', 'mouseup', 'touchend'], (_event) => {
     isDragging = false
     modal.style.cursor = 'default'
   })

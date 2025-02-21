@@ -31,7 +31,7 @@ export class ControlGroup {
 }
 
 export class MapSettingsControl {
-  constructor (options) {
+  constructor (_options) {
     this._container = document.createElement('div')
     this._container.innerHTML = '<button class="maplibregl-ctrl-btn maplibregl-ctrl-map" type="button" title="Map settings" aria-label="Map settings" aria-pressed="false"><b><i class="bi bi-globe-americas"></i></b></button>'
     this._container.onclick = function (e) {
@@ -61,7 +61,7 @@ export class MapSettingsControl {
 }
 
 export class MapShareControl {
-  constructor (options) {
+  constructor (_options) {
     this._container = document.createElement('div')
     this._container.innerHTML = '<button class="maplibregl-ctrl-btn maplibregl-ctrl-share" type="button" title="Share map" aria-label="Share map" aria-pressed="false"><b><i class="bi bi-share-fill"></i></b></button>'
     this._container.onclick = function (e) {
@@ -90,7 +90,7 @@ export class MapShareControl {
 }
 
 export class MapLayersControl {
-  constructor (options) {
+  constructor (_options) {
     this._container = document.createElement('div')
     this._container.innerHTML = '<button class="maplibregl-ctrl-btn maplibregl-ctrl-layers" ' +
       'type="button" title="Map layers" aria-label="Map layers" aria-pressed="false">' +
