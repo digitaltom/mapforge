@@ -106,3 +106,10 @@ html:has(.map), body:has(.map) {
     transform: rotate(360deg);
   }
 }
+
+
+/* maptiler-sdk messes with the geolocate marker animation */
+.maplibregl-user-location-dot::before{
+  left: 0;
+}
+
