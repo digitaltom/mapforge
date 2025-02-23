@@ -29,7 +29,7 @@ pin_all_from "vendor/javascript/mapbox-gl-draw-paint-mode",
   under: "mapbox-gl-draw-paint-mode", preload: false
 
 # https://github.com/maplibre/maplibre-gl-js
-pin "maplibre-gl", preload: false # @5.1.0
+pin "maplibre-gl", preload: false # @5.1.1
 # https://github.com/maplibre/maplibre-gl-geocoder
 pin "maplibre-gl-geocoder",
 to: "https://ga.jspm.io/npm:@maplibre/maplibre-gl-geocoder@1.7.1/dist/maplibre-gl-geocoder.mjs", preload: false
@@ -37,7 +37,7 @@ to: "https://ga.jspm.io/npm:@maplibre/maplibre-gl-geocoder@1.7.1/dist/maplibre-g
 pin "openrouteservice-js", preload: false # @0.4.1
 
 # render markdown
-pin "marked", to: "https://ga.jspm.io/npm:marked@15.0.6/lib/marked.esm.js", preload: false
+pin "marked", preload: false # @15.0.7
 
 # https://github.com/mapbox/mapbox-gl-draw
 # Unminified + patched version to style midpoints & vertexes (https://github.com/mapbox/mapbox-gl-draw/pull/964)
@@ -46,7 +46,7 @@ pin "@mapbox/geojson-area", to: "@mapbox--geojson-area.js", preload: false # @0.
 pin "@mapbox/geojson-normalize", to: "@mapbox--geojson-normalize.js", preload: false # @0.0.1
 pin "@mapbox/point-geometry", to: "@mapbox--point-geometry.js", preload: false # @1.1.0
 pin "fast-deep-equal", preload: false # @3.1.3
-pin "nanoid/non-secure", to: "nanoid--non-secure.js", preload: false # @5.0.9
+pin "nanoid/non-secure", to: "nanoid--non-secure.js", preload: false # @5.1.2
 pin "wgs84", preload: false # @0.0.0
 
 # Animations for frontpage: https://github.com/michalsnik/aos
